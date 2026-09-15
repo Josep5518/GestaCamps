@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0, viewport-fit=cover"
+    >
+
+    <meta
+        name="theme-color"
+        content="#12372a"
+    >
+
+    <meta
+        name="description"
+        content="GestaCamps - Gestión agrícola de fincas, campanyas, cultivos, producción, facturación y explotación."
+    >
+
+    <meta
+        name="mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-capable"
+        content="yes"
+    >
+
+    <meta
+        name="apple-mobile-web-app-status-bar-style"
+        content="black-translucent"
+    >
+
+    <meta
+        name="apple-mobile-web-app-title"
+        content="GestaCamps"
+    >
+
+
+    <title>
+        GestaCamps
+    </title>
+
+
+    <link
+        rel="manifest"
+        href="./manifest.json"
+    >
+
+
+    <link
+        rel="icon"
+        type="image/png"
+        sizes="64x64"
+        href="./icons/favicon-64.png"
+    >
+
+
+    <link
+        rel="apple-touch-icon"
+        sizes="180x180"
+        href="./icons/apple-touch-icon.png"
+    >
+
+
+    <link
+        rel="stylesheet"
+        href="./css/style.css"
+    >
+
+</head>
+
+
+<body>
+
+    <div class="app">
+
+
+        <header class="mobile-header">
+
+            <button
+                id="mobileMenuButton"
+                class="mobile-menu-button"
+                type="button"
+                aria-label="Abrir menú"
+                aria-controls="sidebar"
+                aria-expanded="false"
+            >
+                ☰
+            </button>
+
+
+            <div class="mobile-brand">
+
+                <strong>
+                    GestaCamps
+                </strong>
+
+                <span>
+                    Gestión agrícola
+                </span>
+
+            </div>
+
+        </header>
+
+
+        <aside
+            id="sidebar"
+            class="sidebar"
+        >
+
+            <div class="sidebar-mobile-top">
+
+                <div>
+
+                    <h1>
+                        GestaCamps
+                    </h1>
+
+                    <p>
+                        Gestión agrícola
+                    </p>
+
+                </div>
+
+
+                <button
+                    id="mobileMenuClose"
+                    class="mobile-menu-close"
+                    type="button"
+                    aria-label="Cerrar menú"
+                >
+                    ×
+                </button>
+
+            </div>
+
+
+            <div class="sidebar-desktop-brand">
+
+                <h1>
+                    GestaCamps
+                </h1>
+
+                <p>
+                    Gestión agrícola
+                </p>
+
+            </div>
+
+
+            <nav>
+
+                <a
+                    href="#inicio"
+                    data-page="inicio"
+                    class="active"
+                >
+                    🏠 Inicio
+                </a>
+
+
+                <a
+                    href="#buscador"
+                    data-page="buscador"
+                >
+                    🔎 Buscar global
+                </a>
+
+
+                <a
+                    href="#fincas"
+                    data-page="fincas"
+                >
+                    🌾 Fincas y parcelas
+                </a>
+
+
+                <a
+                    href="#campanias"
+                    data-page="campanias"
+                >
+                    🗓️ Campanya
+                </a>
+
+
+                <a
+                    href="#cultivos"
+                    data-page="cultivos"
+                >
+                    🌱 Cultivos
+                </a>
+
+
+                <a
+                    href="#cuadernoCampo"
+                    data-page="cuadernoCampo"
+                >
+                    📖 Cuaderno de campo
+                </a>
+
+
+                <a
+                    href="#tratamientos"
+                    data-page="tratamientos"
+                >
+                    🧪 Tratamientos
+                </a>
+
+
+                <a
+                    href="#trabajos"
+                    data-page="trabajos"
+                >
+                    👨‍🌾 Trabajos y tareas
+                </a>
+
+
+                <a
+                    href="#trabajadores"
+                    data-page="trabajadores"
+                >
+                    👷 Trabajadores
+                </a>
+
+
+                <a
+                    href="#fichajes"
+                    data-page="fichajes"
+                >
+                    ⏱️ Fichajes
+                </a>
+
+
+                <a
+                    href="#trabajadorPortal"
+                    data-page="trabajadorPortal"
+                >
+                    👤 Portal trabajador
+                </a>
+
+
+                <a
+                    href="#incidencias"
+                    data-page="incidencias"
+                >
+                    ⚠️ Incidencias
+                </a>
+
+
+                <a
+                    href="#maquinaria"
+                    data-page="maquinaria"
+                >
+                    🚜 Maquinaria
+                </a>
+
+
+                <a
+                    href="#inventario"
+                    data-page="inventario"
+                >
+                    📦 Inventario
+                </a>
+
+
+                <a
+                    href="#produccion"
+                    data-page="produccion"
+                >
+                    🍎 Producción
+                </a>
+
+
+                <a
+                    href="#clientesProveedores"
+                    data-page="clientesProveedores"
+                >
+                    👥 Clientes y Proveedores
+                </a>
+
+
+                <a
+                    href="#albaranes"
+                    data-page="albaranes"
+                >
+                    🧾 Albaranes
+                </a>
+
+
+                <a
+                    href="#facturacion"
+                    data-page="facturacion"
+                >
+                    💶 Facturación
+                </a>
+
+
+                <a
+                    href="#cobrosPagos"
+                    data-page="cobrosPagos"
+                >
+                    💳 Cobros y pagos
+                </a>
+
+
+                <a
+                    href="#gastos"
+                    data-page="gastos"
+                >
+                    💰 Gastos
+                </a>
+
+
+                <a
+                    href="#estadisticas"
+                    data-page="estadisticas"
+                >
+                    📊 Estadísticas
+                </a>
+
+
+                <a
+                    href="#historial"
+                    data-page="historial"
+                >
+                    🕒 Historial
+                </a>
+
+
+                <a
+                    href="#usuarios"
+                    data-page="usuarios"
+                >
+                    🔐 Usuarios y permisos
+                </a>
+
+
+                <a
+                    href="#perfil"
+                    data-page="perfil"
+                >
+                    ⚙️ Perfil y explotación
+                </a>
+
+            </nav>
+
+        </aside>
+
+
+        <button
+            id="sidebarBackdrop"
+            class="sidebar-backdrop"
+            type="button"
+            aria-label="Cerrar menú"
+        ></button>
+
+
+        <main
+            id="main-content"
+            class="main-content"
+        >
+        </main>
+
+    </div>
+
+
+    <script
+        type="module"
+        src="./js/app.js"
+    ></script>
+
+</body>
+
+</html>
