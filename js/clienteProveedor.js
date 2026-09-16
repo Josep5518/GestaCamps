@@ -1,11 +1,19 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    normalizarTexto
+} from "./utils.js";
+
+
 export class ClienteProveedorService {
 
     constructor() {
 
         this.contactos =
-            StorageService.obtenerClientesProveedores();
+            StorageService
+                .obtenerClientesProveedores();
 
 
         if (
@@ -14,7 +22,8 @@ export class ClienteProveedorService {
             )
         ) {
 
-            this.contactos = [];
+            this.contactos =
+                [];
 
         }
 
@@ -46,14 +55,19 @@ export class ClienteProveedorService {
     // OBTENER POR ID
     // =====================================================
 
-    obtenerPorId(id) {
+    obtenerPorId(
+        id
+    ) {
 
         if (
-            id === undefined
+            id ===
+            undefined
             ||
-            id === null
+            id ===
+            null
             ||
-            id === ""
+            id ===
+            ""
         ) {
 
             return null;
@@ -62,16 +76,14 @@ export class ClienteProveedorService {
 
 
         return (
-            this.contactos.find(
-                contacto =>
-                    String(
-                        contacto.id
-                    )
-                    ===
-                    String(
-                        id
-                    )
-            )
+            this.contactos
+                .find(
+                    contacto =>
+                        mismoId(
+                            contacto.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -83,10 +95,12 @@ export class ClienteProveedorService {
     // OBTENER POR NOMBRE
     // =====================================================
 
-    obtenerPorNombre(nombre) {
+    obtenerPorNombre(
+        nombre
+    ) {
 
         const nombreBuscado =
-            this.normalizarTexto(
+            normalizarTexto(
                 nombre
             );
 
@@ -101,14 +115,15 @@ export class ClienteProveedorService {
 
 
         return (
-            this.contactos.find(
-                contacto =>
-                    this.normalizarTexto(
-                        contacto.nombre
-                    )
-                    ===
-                    nombreBuscado
-            )
+            this.contactos
+                .find(
+                    contacto =>
+                        normalizarTexto(
+                            contacto.nombre
+                        )
+                        ===
+                        nombreBuscado
+                )
             ||
             null
         );
@@ -122,33 +137,35 @@ export class ClienteProveedorService {
 
     obtenerClientes() {
 
-        return this.contactos.filter(
-            contacto =>
-                contacto.tipo ===
-                "Cliente"
-                ||
-                contacto.tipo ===
-                "Cliente y proveedor"
-        );
+        return this.contactos
+            .filter(
+                contacto =>
+                    contacto.tipo ===
+                    "Cliente"
+                    ||
+                    contacto.tipo ===
+                    "Cliente y proveedor"
+            );
 
     }
 
 
     obtenerClientesActivos() {
 
-        return this.contactos.filter(
-            contacto =>
-                contacto.activo ===
-                true
-                &&
-                (
-                    contacto.tipo ===
-                    "Cliente"
-                    ||
-                    contacto.tipo ===
-                    "Cliente y proveedor"
-                )
-        );
+        return this.contactos
+            .filter(
+                contacto =>
+                    contacto.activo ===
+                    true
+                    &&
+                    (
+                        contacto.tipo ===
+                        "Cliente"
+                        ||
+                        contacto.tipo ===
+                        "Cliente y proveedor"
+                    )
+            );
 
     }
 
@@ -159,33 +176,35 @@ export class ClienteProveedorService {
 
     obtenerProveedores() {
 
-        return this.contactos.filter(
-            contacto =>
-                contacto.tipo ===
-                "Proveedor"
-                ||
-                contacto.tipo ===
-                "Cliente y proveedor"
-        );
+        return this.contactos
+            .filter(
+                contacto =>
+                    contacto.tipo ===
+                    "Proveedor"
+                    ||
+                    contacto.tipo ===
+                    "Cliente y proveedor"
+            );
 
     }
 
 
     obtenerProveedoresActivos() {
 
-        return this.contactos.filter(
-            contacto =>
-                contacto.activo ===
-                true
-                &&
-                (
-                    contacto.tipo ===
-                    "Proveedor"
-                    ||
-                    contacto.tipo ===
-                    "Cliente y proveedor"
-                )
-        );
+        return this.contactos
+            .filter(
+                contacto =>
+                    contacto.activo ===
+                    true
+                    &&
+                    (
+                        contacto.tipo ===
+                        "Proveedor"
+                        ||
+                        contacto.tipo ===
+                        "Cliente y proveedor"
+                    )
+            );
 
     }
 
@@ -194,7 +213,9 @@ export class ClienteProveedorService {
     // OBTENER NIF / CIF
     // =====================================================
 
-    obtenerNif(id) {
+    obtenerNif(
+        id
+    ) {
 
         const contacto =
             this.obtenerPorId(
@@ -224,7 +245,9 @@ export class ClienteProveedorService {
     }
 
 
-    obtenerNifPorNombre(nombre) {
+    obtenerNifPorNombre(
+        nombre
+    ) {
 
         const contacto =
             this.obtenerPorNombre(
@@ -255,15 +278,37 @@ export class ClienteProveedorService {
 
 
     // =====================================================
-    // CREAR
+    // VALIDAR DATOS
     // =====================================================
 
-    crear(datos) {
+    validarDatos(
+        datos
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del cliente o proveedor no son válidos."
+
+            };
+
+        }
+
 
         const nombre =
             String(
                 datos.nombre
-                ||
+                ??
                 ""
             )
                 .trim();
@@ -274,10 +319,85 @@ export class ClienteProveedorService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El nombre o razón social es obligatorio."
+
             };
+
+        }
+
+
+        const tipo =
+            String(
+                datos.tipo
+                ??
+                "Cliente"
+            )
+                .trim();
+
+
+        if (
+            ![
+                "Cliente",
+                "Proveedor",
+                "Cliente y proveedor"
+            ].includes(
+                tipo
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El tipo de contacto no es válido."
+
+            };
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            nombre:
+                nombre,
+
+            tipo:
+                tipo
+
+        };
+
+    }
+
+
+    // =====================================================
+    // CREAR
+    // =====================================================
+
+    crear(
+        datos
+    ) {
+
+        const validacion =
+            this.validarDatos(
+                datos
+            );
+
+
+        if (
+            !validacion.ok
+        ) {
+
+            return validacion;
 
         }
 
@@ -285,22 +405,20 @@ export class ClienteProveedorService {
         const nuevoContacto = {
 
             id:
-                Date.now(),
+                generarId(),
 
             tipo:
-                datos.tipo
-                ||
-                "Cliente",
+                validacion.tipo,
 
             nombre:
-                nombre,
+                validacion.nombre,
 
             nif:
                 String(
                     datos.nif
-                    ||
+                    ??
                     datos.nifCif
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -308,7 +426,7 @@ export class ClienteProveedorService {
             telefono:
                 String(
                     datos.telefono
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -316,7 +434,7 @@ export class ClienteProveedorService {
             email:
                 String(
                     datos.email
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -324,7 +442,7 @@ export class ClienteProveedorService {
             direccion:
                 String(
                     datos.direccion
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -332,7 +450,7 @@ export class ClienteProveedorService {
             localidad:
                 String(
                     datos.localidad
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -340,7 +458,7 @@ export class ClienteProveedorService {
             provincia:
                 String(
                     datos.provincia
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -348,7 +466,7 @@ export class ClienteProveedorService {
             codigoPostal:
                 String(
                     datos.codigoPostal
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -356,10 +474,12 @@ export class ClienteProveedorService {
             pais:
                 String(
                     datos.pais
-                    ||
+                    ??
                     "España"
                 )
-                    .trim(),
+                    .trim()
+                ||
+                "España",
 
             activo:
                 datos.activo !==
@@ -368,7 +488,7 @@ export class ClienteProveedorService {
             notas:
                 String(
                     datos.notas
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -385,13 +505,48 @@ export class ClienteProveedorService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            this.contactos =
+                this.contactos
+                    .filter(
+                        contacto =>
+                            !mismoId(
+                                contacto.id,
+                                nuevoContacto.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el cliente o proveedor."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             contacto:
                 nuevoContacto
+
         };
 
     }
@@ -417,46 +572,47 @@ export class ClienteProveedorService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El cliente o proveedor no existe."
+
             };
 
         }
 
 
-        const nombre =
-            String(
-                datos.nombre
-                ||
-                ""
-            )
-                .trim();
+        const validacion =
+            this.validarDatos(
+                datos
+            );
 
 
         if (
-            !nombre
+            !validacion.ok
         ) {
 
-            return {
-                ok: false,
-                mensaje:
-                    "El nombre o razón social es obligatorio."
-            };
+            return validacion;
 
         }
 
 
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    contacto
+                )
+            );
+
+
         contacto.tipo =
-            datos.tipo
-            ||
-            contacto.tipo
-            ||
-            "Cliente";
+            validacion.tipo;
 
 
         contacto.nombre =
-            nombre;
+            validacion.nombre;
 
 
         contacto.nif =
@@ -529,10 +685,12 @@ export class ClienteProveedorService {
         contacto.pais =
             String(
                 datos.pais
-                ||
+                ??
                 "España"
             )
-                .trim();
+                .trim()
+            ||
+            "España";
 
 
         contacto.activo =
@@ -549,13 +707,43 @@ export class ClienteProveedorService {
                 .trim();
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            this.restaurarObjeto(
+                contacto,
+                estadoAnterior
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del cliente o proveedor."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             contacto:
                 contacto
+
         };
 
     }
@@ -565,7 +753,9 @@ export class ClienteProveedorService {
     // VÍNCULOS
     // =====================================================
 
-    obtenerVinculos(id) {
+    obtenerVinculos(
+        id
+    ) {
 
         const contacto =
             this.obtenerPorId(
@@ -578,10 +768,19 @@ export class ClienteProveedorService {
         ) {
 
             return {
-                albaranes: 0,
-                facturas: 0,
-                gastos: 0,
-                total: 0
+
+                albaranes:
+                    0,
+
+                facturas:
+                    0,
+
+                gastos:
+                    0,
+
+                total:
+                    0
+
             };
 
         }
@@ -605,160 +804,148 @@ export class ClienteProveedorService {
             );
 
 
-        const idContacto =
-            String(
-                contacto.id
-            );
-
-
         const nombreContacto =
-            this.normalizarTexto(
+            normalizarTexto(
                 contacto.nombre
             );
 
 
         const albaranesVinculados =
-            albaranes.filter(
-                albaran => {
+            albaranes
+                .filter(
+                    albaran => {
 
-                    if (
-                        albaran.clienteId !==
-                        undefined
-                        &&
-                        albaran.clienteId !==
-                        null
-                        &&
-                        albaran.clienteId !==
-                        ""
-                    ) {
+                        if (
+                            albaran.clienteId !==
+                            undefined
+                            &&
+                            albaran.clienteId !==
+                            null
+                            &&
+                            albaran.clienteId !==
+                            ""
+                        ) {
+
+                            return mismoId(
+                                albaran.clienteId,
+                                contacto.id
+                            );
+
+                        }
+
+
+                        const nombre =
+                            normalizarTexto(
+                                albaran.clienteNombre
+                                ||
+                                albaran.cliente
+                                ||
+                                ""
+                            );
+
 
                         return (
-                            String(
-                                albaran.clienteId
-                            )
-                            ===
-                            idContacto
+                            nombre
+                            &&
+                            nombre ===
+                            nombreContacto
                         );
 
                     }
-
-
-                    const nombre =
-                        this.normalizarTexto(
-                            albaran.clienteNombre
-                            ||
-                            albaran.cliente
-                            ||
-                            ""
-                        );
-
-
-                    return (
-                        nombre
-                        &&
-                        nombre ===
-                        nombreContacto
-                    );
-
-                }
-            )
-            .length;
+                )
+                .length;
 
 
         const facturasVinculadas =
-            facturas.filter(
-                factura => {
+            facturas
+                .filter(
+                    factura => {
 
-                    if (
-                        factura.clienteId !==
-                        undefined
-                        &&
-                        factura.clienteId !==
-                        null
-                        &&
-                        factura.clienteId !==
-                        ""
-                    ) {
+                        if (
+                            factura.clienteId !==
+                            undefined
+                            &&
+                            factura.clienteId !==
+                            null
+                            &&
+                            factura.clienteId !==
+                            ""
+                        ) {
+
+                            return mismoId(
+                                factura.clienteId,
+                                contacto.id
+                            );
+
+                        }
+
+
+                        const nombre =
+                            normalizarTexto(
+                                factura.clienteNombre
+                                ||
+                                factura.cliente
+                                ||
+                                ""
+                            );
+
 
                         return (
-                            String(
-                                factura.clienteId
-                            )
-                            ===
-                            idContacto
+                            nombre
+                            &&
+                            nombre ===
+                            nombreContacto
                         );
 
                     }
-
-
-                    const nombre =
-                        this.normalizarTexto(
-                            factura.clienteNombre
-                            ||
-                            factura.cliente
-                            ||
-                            ""
-                        );
-
-
-                    return (
-                        nombre
-                        &&
-                        nombre ===
-                        nombreContacto
-                    );
-
-                }
-            )
-            .length;
+                )
+                .length;
 
 
         const gastosVinculados =
-            gastos.filter(
-                gasto => {
+            gastos
+                .filter(
+                    gasto => {
 
-                    if (
-                        gasto.proveedorId !==
-                        undefined
-                        &&
-                        gasto.proveedorId !==
-                        null
-                        &&
-                        gasto.proveedorId !==
-                        ""
-                    ) {
+                        if (
+                            gasto.proveedorId !==
+                            undefined
+                            &&
+                            gasto.proveedorId !==
+                            null
+                            &&
+                            gasto.proveedorId !==
+                            ""
+                        ) {
+
+                            return mismoId(
+                                gasto.proveedorId,
+                                contacto.id
+                            );
+
+                        }
+
+
+                        const nombre =
+                            normalizarTexto(
+                                gasto.proveedorNombre
+                                ||
+                                gasto.proveedor
+                                ||
+                                ""
+                            );
+
 
                         return (
-                            String(
-                                gasto.proveedorId
-                            )
-                            ===
-                            idContacto
+                            nombre
+                            &&
+                            nombre ===
+                            nombreContacto
                         );
 
                     }
-
-
-                    const nombre =
-                        this.normalizarTexto(
-                            gasto.proveedorNombre
-                            ||
-                            gasto.proveedor
-                            ||
-                            ""
-                        );
-
-
-                    return (
-                        nombre
-                        &&
-                        nombre ===
-                        nombreContacto
-                    );
-
-                }
-            )
-            .length;
+                )
+                .length;
 
 
         return {
@@ -784,6 +971,10 @@ export class ClienteProveedorService {
     }
 
 
+    // =====================================================
+    // STORAGE SEGURO
+    // =====================================================
+
     obtenerStorageSeguro(
         metodo
     ) {
@@ -791,11 +982,9 @@ export class ClienteProveedorService {
         try {
 
             if (
-                typeof
-                StorageService[
+                typeof StorageService[
                     metodo
-                ]
-                !==
+                ] !==
                 "function"
             ) {
 
@@ -831,7 +1020,9 @@ export class ClienteProveedorService {
     // ELIMINAR
     // =====================================================
 
-    eliminar(id) {
+    eliminar(
+        id
+    ) {
 
         const contacto =
             this.obtenerPorId(
@@ -844,9 +1035,13 @@ export class ClienteProveedorService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El cliente o proveedor no existe."
+
             };
 
         }
@@ -874,7 +1069,8 @@ export class ClienteProveedorService {
 
                 partes.push(
                     `${vinculos.albaranes} albarán${
-                        vinculos.albaranes === 1
+                        vinculos.albaranes ===
+                        1
                             ? ""
                             : "es"
                     }`
@@ -890,7 +1086,8 @@ export class ClienteProveedorService {
 
                 partes.push(
                     `${vinculos.facturas} factura${
-                        vinculos.facturas === 1
+                        vinculos.facturas ===
+                        1
                             ? ""
                             : "s"
                     }`
@@ -906,7 +1103,8 @@ export class ClienteProveedorService {
 
                 partes.push(
                     `${vinculos.gastos} gasto${
-                        vinculos.gastos === 1
+                        vinculos.gastos ===
+                        1
                             ? ""
                             : "s"
                     }`
@@ -916,35 +1114,69 @@ export class ClienteProveedorService {
 
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     `No puedes eliminar "${contacto.nombre}" porque tiene información vinculada: ${partes.join(
                         ", "
                     )}.`
+
             };
 
         }
 
 
+        const contactosAnteriores =
+            [
+                ...this.contactos
+            ];
+
+
         this.contactos =
-            this.contactos.filter(
-                item =>
-                    String(
-                        item.id
-                    )
-                    !==
-                    String(
-                        id
-                    )
-            );
+            this.contactos
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            this.contactos =
+                contactosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el cliente o proveedor."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -960,80 +1192,82 @@ export class ClienteProveedorService {
             false;
 
 
-        this.contactos.forEach(
-            contacto => {
+        this.contactos
+            .forEach(
+                contacto => {
 
-                if (
-                    !contacto.nif
-                    &&
-                    contacto.nifCif
-                ) {
+                    if (
+                        !contacto.nif
+                        &&
+                        contacto.nifCif
+                    ) {
 
-                    contacto.nif =
-                        contacto.nifCif;
+                        contacto.nif =
+                            contacto.nifCif;
 
-                    cambios =
-                        true;
+                        cambios =
+                            true;
+
+                    }
+
+
+                    if (
+                        !contacto.nif
+                        &&
+                        contacto.cif
+                    ) {
+
+                        contacto.nif =
+                            contacto.cif;
+
+                        cambios =
+                            true;
+
+                    }
+
+
+                    if (
+                        contacto.nif ===
+                        undefined
+                    ) {
+
+                        contacto.nif =
+                            "";
+
+                        cambios =
+                            true;
+
+                    }
+
+
+                    if (
+                        contacto.activo ===
+                        undefined
+                    ) {
+
+                        contacto.activo =
+                            true;
+
+                        cambios =
+                            true;
+
+                    }
+
+
+                    if (
+                        !contacto.tipo
+                    ) {
+
+                        contacto.tipo =
+                            "Cliente";
+
+                        cambios =
+                            true;
+
+                    }
 
                 }
-
-
-                if (
-                    !contacto.nif
-                    &&
-                    contacto.cif
-                ) {
-
-                    contacto.nif =
-                        contacto.cif;
-
-                    cambios =
-                        true;
-
-                }
-
-
-                if (
-                    contacto.nif ===
-                    undefined
-                ) {
-
-                    contacto.nif = "";
-
-                    cambios =
-                        true;
-
-                }
-
-
-                if (
-                    contacto.activo ===
-                    undefined
-                ) {
-
-                    contacto.activo =
-                        true;
-
-                    cambios =
-                        true;
-
-                }
-
-
-                if (
-                    !contacto.tipo
-                ) {
-
-                    contacto.tipo =
-                        "Cliente";
-
-                    cambios =
-                        true;
-
-                }
-
-            }
-        );
+            );
 
 
         if (
@@ -1048,25 +1282,72 @@ export class ClienteProveedorService {
 
 
     // =====================================================
+    // RESTAURAR OBJETO
+    // =====================================================
+
+    restaurarObjeto(
+        destino,
+        origen
+    ) {
+
+        Object.keys(
+            destino
+        )
+            .forEach(
+                clave => {
+
+                    if (
+                        !Object.prototype
+                            .hasOwnProperty
+                            .call(
+                                origen,
+                                clave
+                            )
+                    ) {
+
+                        delete destino[
+                            clave
+                        ];
+
+                    }
+
+                }
+            );
+
+
+        Object.assign(
+            destino,
+            origen
+        );
+
+    }
+
+
+    // =====================================================
+    // GUARDADO CORRECTO
+    // =====================================================
+
+    guardadoCorrecto(
+        resultado
+    ) {
+
+        return resultado !==
+            false;
+
+    }
+
+
+    // =====================================================
     // NORMALIZAR TEXTO
     // =====================================================
 
-    normalizarTexto(texto) {
+    normalizarTexto(
+        texto
+    ) {
 
-        return String(
+        return normalizarTexto(
             texto
-            ||
-            ""
-        )
-            .trim()
-            .toLowerCase()
-            .normalize(
-                "NFD"
-            )
-            .replace(
-                /[\u0300-\u036f]/g,
-                ""
-            );
+        );
 
     }
 
@@ -1077,7 +1358,7 @@ export class ClienteProveedorService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarClientesProveedores(
                 this.contactos
             );

@@ -1,5 +1,12 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    normalizarTexto
+} from "./utils.js";
+
+
 export class CampaniaService {
 
     constructor(
@@ -10,7 +17,8 @@ export class CampaniaService {
             fincaService;
 
         this.campanias =
-            StorageService.obtenerCampanias();
+            StorageService
+                .obtenerCampanias();
 
 
         if (
@@ -19,7 +27,8 @@ export class CampaniaService {
             )
         ) {
 
-            this.campanias = [];
+            this.campanias =
+                [];
 
         }
 
@@ -44,19 +53,23 @@ export class CampaniaService {
     }
 
 
-    obtenerPorId(id) {
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
+    obtenerPorId(
+        id
+    ) {
 
         return (
-            this.campanias.find(
-                campania =>
-                    Number(
-                        campania.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            this.campanias
+                .find(
+                    campania =>
+                        mismoId(
+                            campania.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -64,56 +77,91 @@ export class CampaniaService {
     }
 
 
+    // =====================================================
+    // ACTIVAS
+    // =====================================================
+
     obtenerActivas() {
 
-        return this.campanias.filter(
-            campania =>
-                campania.estado ===
-                "Activa"
-        );
+        return this.campanias
+            .filter(
+                campania =>
+                    campania.estado ===
+                    "Activa"
+            );
 
     }
 
+
+    // =====================================================
+    // CERRADAS
+    // =====================================================
 
     obtenerCerradas() {
 
-        return this.campanias.filter(
-            campania =>
-                campania.estado ===
-                "Cerrada"
-        );
+        return this.campanias
+            .filter(
+                campania =>
+                    campania.estado ===
+                    "Cerrada"
+            );
 
     }
 
+
+    // =====================================================
+    // POR FINCA
+    // =====================================================
 
     obtenerPorFinca(
         fincaId
     ) {
 
-        return this.campanias.filter(
-            campania =>
-                Number(
-                    campania.fincaId
-                )
-                ===
-                Number(
-                    fincaId
-                )
-        );
+        return this.campanias
+            .filter(
+                campania =>
+                    mismoId(
+                        campania.fincaId,
+                        fincaId
+                    )
+            );
 
     }
 
 
     // =====================================================
-    // CREAR
+    // VALIDAR DATOS
     // =====================================================
 
-    crear(datos) {
+    validar(
+        datos,
+        idIgnorado = null
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos de la campanya no son válidos."
+
+            };
+
+        }
+
 
         const nombre =
             String(
                 datos.nombre
-                ||
+                ??
                 ""
             )
                 .trim();
@@ -124,10 +172,13 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce el nombre de la campanya."
+
             };
 
         }
@@ -136,9 +187,7 @@ export class CampaniaService {
         const finca =
             this.fincaService
                 .obtenerPorId(
-                    Number(
-                        datos.fincaId
-                    )
+                    datos.fincaId
                 );
 
 
@@ -147,10 +196,13 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Selecciona una finca válida."
+
             };
 
         }
@@ -161,10 +213,13 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce la fecha de inicio."
+
             };
 
         }
@@ -178,36 +233,90 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "La fecha de fin no puede ser anterior a la fecha de inicio."
+
             };
 
         }
 
 
-        const duplicada =
-            this.campanias.some(
-                campania =>
-                    Number(
-                        campania.fincaId
-                    )
-                    ===
-                    Number(
-                        finca.id
-                    )
-                    &&
-                    String(
-                        campania.nombre
-                        ||
-                        ""
-                    )
-                        .trim()
-                        .toLowerCase()
-                    ===
-                    nombre.toLowerCase()
+        const estado =
+            String(
+                datos.estado
+                ??
+                "Activa"
+            )
+                .trim();
+
+
+        if (
+            ![
+                "Activa",
+                "Cerrada"
+            ].includes(
+                estado
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El estado de la campanya no es válido."
+
+            };
+
+        }
+
+
+        const nombreNormalizado =
+            normalizarTexto(
+                nombre
             );
+
+
+        const duplicada =
+            this.campanias
+                .some(
+                    campania => {
+
+                        if (
+                            idIgnorado !==
+                            null
+                            &&
+                            mismoId(
+                                campania.id,
+                                idIgnorado
+                            )
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        return (
+                            mismoId(
+                                campania.fincaId,
+                                finca.id
+                            )
+                            &&
+                            normalizarTexto(
+                                campania.nombre
+                            )
+                            ===
+                            nombreNormalizado
+                        );
+
+                    }
+                );
 
 
         if (
@@ -215,19 +324,74 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
-                    "Ya existe una campanya con ese nombre en esta finca."
+                    idIgnorado !==
+                    null
+                        ? "Ya existe otra campanya con ese nombre en esta finca."
+                        : "Ya existe una campanya con ese nombre en esta finca."
+
             };
 
         }
 
 
-        const nuevaCampania = {
+        return {
 
-            id:
-                Date.now(),
+            ok:
+                true,
+
+            finca:
+                finca,
+
+            nombre:
+                nombre,
+
+            estado:
+                estado
+
+        };
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR DATOS
+    // =====================================================
+
+    normalizarDatos(
+        datos,
+        finca,
+        nombre,
+        estado
+    ) {
+
+        let fechaFin =
+            String(
+                datos.fechaFin
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            estado ===
+            "Cerrada"
+            &&
+            !fechaFin
+        ) {
+
+            fechaFin =
+                this.obtenerFechaHoy();
+
+        }
+
+
+        return {
 
             nombre:
                 nombre,
@@ -239,44 +403,79 @@ export class CampaniaService {
                 finca.nombre,
 
             fechaInicio:
-                datos.fechaInicio,
-
-            fechaFin:
-                datos.fechaFin
-                ||
-                "",
-
-            estado:
-                datos.estado
-                ||
-                "Activa",
-
-            notas:
                 String(
-                    datos.notas
-                    ||
+                    datos.fechaInicio
+                    ??
                     ""
                 )
                     .trim(),
 
-            fechaCreacion:
-                new Date()
-                    .toISOString()
+            fechaFin:
+                fechaFin,
+
+            estado:
+                estado,
+
+            notas:
+                String(
+                    datos.notas
+                    ??
+                    ""
+                )
+                    .trim()
 
         };
 
+    }
+
+
+    // =====================================================
+    // CREAR
+    // =====================================================
+
+    crear(
+        datos
+    ) {
+
+        const validacion =
+            this.validar(
+                datos
+            );
+
 
         if (
-            nuevaCampania.estado ===
-            "Cerrada"
-            &&
-            !nuevaCampania.fechaFin
+            !validacion.ok
         ) {
 
-            nuevaCampania.fechaFin =
-                this.obtenerFechaHoy();
+            return validacion;
 
         }
+
+
+        const ahora =
+            new Date()
+                .toISOString();
+
+
+        const nuevaCampania = {
+
+            id:
+                generarId(),
+
+            ...this.normalizarDatos(
+                datos,
+                validacion.finca,
+                validacion.nombre,
+                validacion.estado
+            ),
+
+            fechaCreacion:
+                ahora,
+
+            fechaModificacion:
+                ahora
+
+        };
 
 
         this.campanias.push(
@@ -284,14 +483,46 @@ export class CampaniaService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.campanias =
+                this.campanias
+                    .filter(
+                        campania =>
+                            !mismoId(
+                                campania.id,
+                                nuevaCampania.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar la campanya."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             campania:
                 nuevaCampania
+
         };
 
     }
@@ -317,189 +548,134 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "La campanya no existe."
+
             };
 
         }
 
 
-        const finca =
-            this.fincaService
-                .obtenerPorId(
-                    Number(
-                        datos.fincaId
-                    )
-                );
-
-
-        if (
-            !finca
-        ) {
-
-            return {
-                ok: false,
-
-                mensaje:
-                    "Selecciona una finca válida."
-            };
-
-        }
-
-
-        const nombre =
-            String(
-                datos.nombre
-                ||
-                ""
-            )
-                .trim();
-
-
-        if (
-            !nombre
-        ) {
-
-            return {
-                ok: false,
-
-                mensaje:
-                    "Introduce el nombre de la campanya."
-            };
-
-        }
-
-
-        if (
-            !datos.fechaInicio
-        ) {
-
-            return {
-                ok: false,
-
-                mensaje:
-                    "Introduce la fecha de inicio."
-            };
-
-        }
-
-
-        if (
-            datos.fechaFin
-            &&
-            datos.fechaFin <
-            datos.fechaInicio
-        ) {
-
-            return {
-                ok: false,
-
-                mensaje:
-                    "La fecha de fin no puede ser anterior a la fecha de inicio."
-            };
-
-        }
-
-
-        const duplicada =
-            this.campanias.some(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        campania.id
-                    )
-                    &&
-                    Number(
-                        item.fincaId
-                    )
-                    ===
-                    Number(
-                        finca.id
-                    )
-                    &&
-                    String(
-                        item.nombre
-                        ||
-                        ""
-                    )
-                        .trim()
-                        .toLowerCase()
-                    ===
-                    nombre.toLowerCase()
+        const validacion =
+            this.validar(
+                datos,
+                campania.id
             );
 
 
         if (
-            duplicada
+            !validacion.ok
         ) {
 
+            return validacion;
+
+        }
+
+
+        const fincaCambia =
+            !mismoId(
+                campania.fincaId,
+                validacion.finca.id
+            );
+
+
+        if (
+            fincaCambia
+        ) {
+
+            const vinculos =
+                this.obtenerVinculos(
+                    campania.id
+                );
+
+
+            if (
+                vinculos.total >
+                0
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        `No puedes cambiar la finca de esta campanya porque tiene información vinculada: ${this.formatearVinculos(
+                            vinculos
+                        )}.`
+
+                };
+
+            }
+
+        }
+
+
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    campania
+                )
+            );
+
+
+        Object.assign(
+            campania,
+            this.normalizarDatos(
+                datos,
+                validacion.finca,
+                validacion.nombre,
+                validacion.estado
+            ),
+            {
+
+                fechaModificacion:
+                    new Date()
+                        .toISOString()
+
+            }
+        );
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            Object.assign(
+                campania,
+                estadoAnterior
+            );
+
+
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
-                    "Ya existe otra campanya con ese nombre en esta finca."
+                    "No se han podido guardar los cambios de la campanya."
+
             };
 
         }
 
 
-        campania.nombre =
-            nombre;
-
-        campania.fincaId =
-            finca.id;
-
-        campania.fincaNombre =
-            finca.nombre;
-
-        campania.fechaInicio =
-            datos.fechaInicio;
-
-        campania.fechaFin =
-            datos.fechaFin
-            ||
-            "";
-
-        campania.estado =
-            datos.estado
-            ||
-            "Activa";
-
-        campania.notas =
-            String(
-                datos.notas
-                ||
-                ""
-            )
-                .trim();
-
-
-        if (
-            campania.estado ===
-            "Cerrada"
-            &&
-            !campania.fechaFin
-        ) {
-
-            campania.fechaFin =
-                this.obtenerFechaHoy();
-
-        }
-
-
-        this.guardar();
-
-
         return {
-            ok: true,
+
+            ok:
+                true,
 
             campania:
                 campania
+
         };
 
     }
@@ -525,10 +701,13 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "La campanya no existe."
+
             };
 
         }
@@ -544,13 +723,31 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El estado de la campanya no es válido."
+
             };
 
         }
+
+
+        const estadoAnterior =
+            {
+
+                estado:
+                    campania.estado,
+
+                fechaFin:
+                    campania.fechaFin,
+
+                fechaModificacion:
+                    campania.fechaModificacion
+
+            };
 
 
         campania.estado =
@@ -571,20 +768,54 @@ export class CampaniaService {
 
 
         /*
-         * Al reabrir mantenemos la fecha de fin.
-         * Así no perdemos información histórica.
-         * El usuario puede quitarla desde Editar si quiere.
+         * Al reabrir mantenemos fechaFin.
+         * Así conservamos la información histórica.
          */
 
+        campania.fechaModificacion =
+            new Date()
+                .toISOString();
 
-        this.guardar();
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            campania.estado =
+                estadoAnterior.estado;
+
+            campania.fechaFin =
+                estadoAnterior.fechaFin;
+
+            campania.fechaModificacion =
+                estadoAnterior.fechaModificacion;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido cambiar el estado de la campanya."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             campania:
                 campania
+
         };
 
     }
@@ -609,7 +840,31 @@ export class CampaniaService {
         ) {
 
             return {
-                total: 0
+
+                cultivos:
+                    0,
+
+                produccion:
+                    0,
+
+                trabajos:
+                    0,
+
+                gastos:
+                    0,
+
+                lineasAlbaran:
+                    0,
+
+                cuaderno:
+                    0,
+
+                tratamientos:
+                    0,
+
+                total:
+                    0
+
             };
 
         }
@@ -645,15 +900,32 @@ export class CampaniaService {
             );
 
 
+        const cuaderno =
+            this.obtenerStorage(
+                "obtenerCuadernoCampo"
+            );
+
+
+        const tratamientos =
+            this.obtenerStorage(
+                "obtenerTratamientos"
+            );
+
+
         const coincide =
             registro => {
 
                 if (
-                    Number(
-                        registro?.campaniaId
-                    )
-                    ===
-                    Number(
+                    registro
+                    &&
+                    registro.campaniaId !==
+                    null
+                    &&
+                    registro.campaniaId !==
+                    undefined
+                    &&
+                    mismoId(
+                        registro.campaniaId,
                         campania.id
                     )
                 ) {
@@ -663,14 +935,21 @@ export class CampaniaService {
                 }
 
 
+                /*
+                 * Compatibilidad con datos antiguos que
+                 * pudieran guardar solo el nombre.
+                 */
+
                 return (
-                    registro?.campaniaNombre
+                    registro
                     &&
-                    String(
+                    registro.campaniaNombre
+                    &&
+                    normalizarTexto(
                         registro.campaniaNombre
                     )
                     ===
-                    String(
+                    normalizarTexto(
                         campania.nombre
                     )
                 );
@@ -679,69 +958,95 @@ export class CampaniaService {
 
 
         const cultivosVinculados =
-            cultivos.filter(
-                coincide
-            ).length;
+            cultivos
+                .filter(
+                    coincide
+                )
+                .length;
 
 
         const produccionVinculada =
-            produccion.filter(
-                coincide
-            ).length;
+            produccion
+                .filter(
+                    coincide
+                )
+                .length;
 
 
         const trabajosVinculados =
-            trabajos.filter(
-                coincide
-            ).length;
+            trabajos
+                .filter(
+                    coincide
+                )
+                .length;
 
 
         const gastosVinculados =
-            gastos.filter(
-                coincide
-            ).length;
+            gastos
+                .filter(
+                    coincide
+                )
+                .length;
+
+
+        const cuadernoVinculado =
+            cuaderno
+                .filter(
+                    coincide
+                )
+                .length;
+
+
+        const tratamientosVinculados =
+            tratamientos
+                .filter(
+                    coincide
+                )
+                .length;
 
 
         let lineasAlbaran =
             0;
 
 
-        albaranes.forEach(
-            albaran => {
+        albaranes
+            .forEach(
+                albaran => {
 
-                const lineas =
-                    Array.isArray(
-                        albaran.lineas
-                    )
-                    &&
-                    albaran.lineas.length >
-                    0
+                    const lineas =
+                        Array.isArray(
+                            albaran.lineas
+                        )
+                        &&
+                        albaran.lineas.length >
+                        0
 
-                        ? albaran.lineas
+                            ? albaran.lineas
 
-                        : [
-                            albaran
-                        ];
+                            : [
+                                albaran
+                            ];
 
 
-                lineas.forEach(
-                    linea => {
+                    lineas
+                        .forEach(
+                            linea => {
 
-                        if (
-                            coincide(
-                                linea
-                            )
-                        ) {
+                                if (
+                                    coincide(
+                                        linea
+                                    )
+                                ) {
 
-                            lineasAlbaran++;
+                                    lineasAlbaran++;
 
-                        }
+                                }
 
-                    }
-                );
+                            }
+                        );
 
-            }
-        );
+                }
+            );
 
 
         return {
@@ -761,6 +1066,12 @@ export class CampaniaService {
             lineasAlbaran:
                 lineasAlbaran,
 
+            cuaderno:
+                cuadernoVinculado,
+
+            tratamientos:
+                tratamientosVinculados,
+
             total:
                 cultivosVinculados
                 +
@@ -771,8 +1082,143 @@ export class CampaniaService {
                 gastosVinculados
                 +
                 lineasAlbaran
+                +
+                cuadernoVinculado
+                +
+                tratamientosVinculados
 
         };
+
+    }
+
+
+    // =====================================================
+    // FORMATEAR VÍNCULOS
+    // =====================================================
+
+    formatearVinculos(
+        vinculos
+    ) {
+
+        const partes =
+            [];
+
+
+        if (
+            vinculos.cultivos >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.cultivos} cultivo${
+                    vinculos.cultivos === 1
+                        ? ""
+                        : "s"
+                }`
+            );
+
+        }
+
+
+        if (
+            vinculos.produccion >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.produccion} registro${
+                    vinculos.produccion === 1
+                        ? ""
+                        : "s"
+                } de producción`
+            );
+
+        }
+
+
+        if (
+            vinculos.trabajos >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.trabajos} trabajo${
+                    vinculos.trabajos === 1
+                        ? ""
+                        : "s"
+                }`
+            );
+
+        }
+
+
+        if (
+            vinculos.gastos >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.gastos} gasto${
+                    vinculos.gastos === 1
+                        ? ""
+                        : "s"
+                }`
+            );
+
+        }
+
+
+        if (
+            vinculos.lineasAlbaran >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.lineasAlbaran} línea${
+                    vinculos.lineasAlbaran === 1
+                        ? ""
+                        : "s"
+                } de albarán`
+            );
+
+        }
+
+
+        if (
+            vinculos.cuaderno >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.cuaderno} registro${
+                    vinculos.cuaderno === 1
+                        ? ""
+                        : "s"
+                } del cuaderno de campo`
+            );
+
+        }
+
+
+        if (
+            vinculos.tratamientos >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.tratamientos} tratamiento${
+                    vinculos.tratamientos === 1
+                        ? ""
+                        : "s"
+                }`
+            );
+
+        }
+
+
+        return partes.join(
+            ", "
+        );
 
     }
 
@@ -781,7 +1227,9 @@ export class CampaniaService {
     // ELIMINAR
     // =====================================================
 
-    eliminar(id) {
+    eliminar(
+        id
+    ) {
 
         const campania =
             this.obtenerPorId(
@@ -794,10 +1242,13 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "La campanya no existe."
+
             };
 
         }
@@ -815,33 +1266,67 @@ export class CampaniaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
-                    "No puedes eliminar esta campanya porque ya tiene información vinculada. Si ha terminado, ciérrala en lugar de eliminarla."
+                    `No puedes eliminar esta campanya porque tiene información vinculada: ${this.formatearVinculos(
+                        vinculos
+                    )}. Si ha terminado, ciérrala en lugar de eliminarla.`
+
             };
 
         }
 
 
+        const campaniasAnteriores =
+            [
+                ...this.campanias
+            ];
+
+
         this.campanias =
-            this.campanias.filter(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        id
-                    )
-            );
+            this.campanias
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.campanias =
+                campaniasAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar la campanya."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -858,8 +1343,7 @@ export class CampaniaService {
         try {
 
             if (
-                typeof
-                StorageService[
+                typeof StorageService[
                     metodo
                 ]
                 !==
@@ -885,7 +1369,15 @@ export class CampaniaService {
 
         }
 
-        catch {
+        catch (
+            error
+        ) {
+
+            console.error(
+                `Error obteniendo vínculos de Campanya mediante ${metodo}:`,
+                error
+            );
+
 
             return [];
 
@@ -900,7 +1392,7 @@ export class CampaniaService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarCampanias(
                 this.campanias
             );
@@ -914,38 +1406,10 @@ export class CampaniaService {
 
     obtenerFechaHoy() {
 
-        const fecha =
-            new Date();
-
-
-        const year =
-            fecha.getFullYear();
-
-
-        const month =
-            String(
-                fecha.getMonth() +
-                1
-            )
-                .padStart(
-                    2,
-                    "0"
-                );
-
-
-        const day =
-            String(
-                fecha.getDate()
-            )
-                .padStart(
-                    2,
-                    "0"
-                );
-
-
-        return (
-            `${year}-${month}-${day}`
-        );
+        return StorageService
+            .obtenerFechaLocal(
+                new Date()
+            );
 
     }
 

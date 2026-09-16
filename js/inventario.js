@@ -93,7 +93,36 @@ export class InventarioService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.productos =
+                this.productos
+                    .filter(
+                        producto =>
+                            !mismoId(
+                                producto.id,
+                                nuevoProducto.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el producto."
+
+            };
+
+        }
 
 
         return {
@@ -156,6 +185,14 @@ export class InventarioService {
         }
 
 
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    producto
+                )
+            );
+
+
         Object.assign(
             producto,
             this.normalizarDatos(
@@ -164,7 +201,31 @@ export class InventarioService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            Object.assign(
+                producto,
+                estadoAnterior
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del producto."
+
+            };
+
+        }
 
 
         return {
@@ -211,6 +272,12 @@ export class InventarioService {
         }
 
 
+        const productosAnteriores =
+            [
+                ...this.productos
+            ];
+
+
         this.productos =
             this.productos
                 .filter(
@@ -222,7 +289,29 @@ export class InventarioService {
                 );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.productos =
+                productosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el producto."
+
+            };
+
+        }
 
 
         return {
@@ -242,6 +331,26 @@ export class InventarioService {
     validar(
         datos
     ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del producto no son válidos."
+
+            };
+
+        }
+
 
         const nombre =
             String(
@@ -490,7 +599,7 @@ export class InventarioService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarInventario(
                 this.productos
             );

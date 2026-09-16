@@ -1,5 +1,9 @@
 import { StorageService } from "./storage.js";
 
+import {
+    normalizarTexto
+} from "./utils.js";
+
 
 export class HistorialService {
 
@@ -9,17 +13,39 @@ export class HistorialService {
 
     obtenerTodos() {
 
-        return StorageService
-            .obtenerHistorial()
+        const historial =
+            StorageService
+                .obtenerHistorial();
+
+
+        if (
+            !Array.isArray(
+                historial
+            )
+        ) {
+
+            return [];
+
+        }
+
+
+        return historial
             .slice()
             .sort(
-                (a, b) =>
+                (
+                    a,
+                    b
+                ) =>
                     new Date(
                         b.fechaHora
+                        ||
+                        0
                     )
                     -
                     new Date(
                         a.fechaHora
+                        ||
+                        0
                     )
             );
 
@@ -34,8 +60,14 @@ export class HistorialService {
         modulo
     ) {
 
+        const moduloBuscado =
+            normalizarTexto(
+                modulo
+            );
+
+
         if (
-            !modulo
+            !moduloBuscado
         ) {
 
             return this.obtenerTodos();
@@ -46,8 +78,11 @@ export class HistorialService {
         return this.obtenerTodos()
             .filter(
                 registro =>
-                    registro.modulo ===
-                    modulo
+                    normalizarTexto(
+                        registro.modulo
+                    )
+                    ===
+                    moduloBuscado
             );
 
     }
@@ -62,13 +97,9 @@ export class HistorialService {
     ) {
 
         const texto =
-            String(
+            normalizarTexto(
                 usuario
-                ||
-                ""
-            )
-                .trim()
-                .toLowerCase();
+            );
 
 
         if (
@@ -83,12 +114,9 @@ export class HistorialService {
         return this.obtenerTodos()
             .filter(
                 registro =>
-                    String(
+                    normalizarTexto(
                         registro.usuarioNombre
-                        ||
-                        ""
                     )
-                        .toLowerCase()
                         .includes(
                             texto
                         )
@@ -120,10 +148,15 @@ export class HistorialService {
                     a,
                     b
                 ) =>
-                    a.localeCompare(
-                        b,
-                        "es"
+                    String(
+                        a
                     )
+                        .localeCompare(
+                            String(
+                                b
+                            ),
+                            "es"
+                        )
             );
 
     }
@@ -140,8 +173,16 @@ export class HistorialService {
 
 
         const fecha =
-            StorageService
-                .obtenerFechaLocal(
+            typeof StorageService
+                .obtenerFechaLocal ===
+            "function"
+
+                ? StorageService
+                    .obtenerFechaLocal(
+                        ahora
+                    )
+
+                : this.obtenerFechaLocalFallback(
                     ahora
                 );
 
@@ -152,6 +193,46 @@ export class HistorialService {
                     registro.fecha ===
                     fecha
             );
+
+    }
+
+
+    // =====================================================
+    // FALLBACK FECHA LOCAL
+    // =====================================================
+
+    obtenerFechaLocalFallback(
+        fecha
+    ) {
+
+        const anio =
+            fecha.getFullYear();
+
+
+        const mes =
+            String(
+                fecha.getMonth() +
+                1
+            )
+                .padStart(
+                    2,
+                    "0"
+                );
+
+
+        const dia =
+            String(
+                fecha.getDate()
+            )
+                .padStart(
+                    2,
+                    "0"
+                );
+
+
+        return (
+            `${anio}-${mes}-${dia}`
+        );
 
     }
 

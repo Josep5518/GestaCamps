@@ -1,21 +1,32 @@
 import { StorageService } from "./storage.js";
 
+
 export class ExplotacionService {
 
     constructor() {
 
         this.datos =
-            StorageService.obtenerExplotacion
+            typeof StorageService.obtenerExplotacion ===
+            "function"
+
                 ? StorageService.obtenerExplotacion()
+
                 : null;
 
 
         if (
-            !this.datos ||
-            typeof this.datos !== "object"
+            !this.datos
+            ||
+            typeof this.datos !==
+            "object"
+            ||
+            Array.isArray(
+                this.datos
+            )
         ) {
 
-            this.datos = {};
+            this.datos =
+                {};
 
         }
 
@@ -31,37 +42,45 @@ export class ExplotacionService {
 
     migrarDatos() {
 
-        let cambios = false;
+        let cambios =
+            false;
 
 
         if (
-            this.datos.nombre === undefined &&
+            this.datos.nombre ===
+            undefined
+            &&
             this.datos.nombreExplotacion
         ) {
 
             this.datos.nombre =
                 this.datos.nombreExplotacion;
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.nombreExplotacion === undefined &&
+            this.datos.nombreExplotacion ===
+            undefined
+            &&
             this.datos.nombre
         ) {
 
             this.datos.nombreExplotacion =
                 this.datos.nombre;
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.titular === undefined
+            this.datos.titular ===
+            undefined
         ) {
 
             this.datos.titular =
@@ -71,13 +90,15 @@ export class ExplotacionService {
                 ||
                 "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.razonSocial === undefined
+            this.datos.razonSocial ===
+            undefined
         ) {
 
             this.datos.razonSocial =
@@ -85,13 +106,15 @@ export class ExplotacionService {
                 ||
                 "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.nifCif === undefined
+            this.datos.nifCif ===
+            undefined
         ) {
 
             this.datos.nifCif =
@@ -101,128 +124,148 @@ export class ExplotacionService {
                 ||
                 "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.telefono === undefined
+            this.datos.telefono ===
+            undefined
         ) {
 
-            this.datos.telefono = "";
+            this.datos.telefono =
+                "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.email === undefined
+            this.datos.email ===
+            undefined
         ) {
 
-            this.datos.email = "";
+            this.datos.email =
+                "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.direccion === undefined
+            this.datos.direccion ===
+            undefined
         ) {
 
-            this.datos.direccion = "";
+            this.datos.direccion =
+                "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.localidad === undefined
+            this.datos.localidad ===
+            undefined
         ) {
 
-            this.datos.localidad = "";
+            this.datos.localidad =
+                "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.provincia === undefined
+            this.datos.provincia ===
+            undefined
         ) {
 
-            this.datos.provincia = "";
+            this.datos.provincia =
+                "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.codigoPostal === undefined
+            this.datos.codigoPostal ===
+            undefined
         ) {
 
-            this.datos.codigoPostal = "";
+            this.datos.codigoPostal =
+                "";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.pais === undefined
+            this.datos.pais ===
+            undefined
         ) {
 
             this.datos.pais =
                 "España";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.nombreUsuario === undefined
+            this.datos.nombreUsuario ===
+            undefined
         ) {
 
             this.datos.nombreUsuario =
                 "Josep";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
         if (
-            this.datos.cargo === undefined
+            this.datos.cargo ===
+            undefined
         ) {
 
             this.datos.cargo =
                 "Administrador";
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
 
-        // ==========================================
-        // NUEVA OPCIÓN DE DOCUMENTOS
-        // ==========================================
-
         if (
-            this.datos.mostrarMarcaGestaCamps === undefined
+            this.datos.mostrarMarcaGestaCamps ===
+            undefined
         ) {
 
-            /*
-             * Por defecto DESACTIVADA.
-             */
             this.datos.mostrarMarcaGestaCamps =
                 false;
 
-            cambios = true;
+            cambios =
+                true;
 
         }
 
@@ -260,45 +303,83 @@ export class ExplotacionService {
     // ACTUALIZAR
     // =====================================================
 
-    actualizar(datos) {
+    actualizar(
+        datos
+    ) {
 
         if (
-            !datos.nombre &&
-            !datos.nombreExplotacion
+            !datos
+            ||
+            typeof datos !==
+            "object"
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
-                    "Introduce el nombre de la explotación."
+                    "Los datos de la explotación no son válidos."
+
             };
 
         }
 
 
         const nombre =
-            datos.nombre
-            ||
-            datos.nombreExplotacion
-            ||
-            "";
+            String(
+                datos.nombre
+                ??
+                datos.nombreExplotacion
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            !nombre
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Introduce el nombre de la explotación."
+
+            };
+
+        }
+
+
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    this.datos
+                )
+            );
 
 
         this.datos.nombre =
-            nombre.trim();
+            nombre;
+
 
         this.datos.nombreExplotacion =
-            nombre.trim();
+            nombre;
 
 
         this.datos.titular =
-            (
+            String(
                 datos.titular
-                ||
+                ??
                 datos.razonSocial
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.razonSocial =
@@ -306,96 +387,140 @@ export class ExplotacionService {
 
 
         this.datos.nifCif =
-            (
+            String(
                 datos.nifCif
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.telefono =
-            (
+            String(
                 datos.telefono
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.email =
-            (
+            String(
                 datos.email
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.direccion =
-            (
+            String(
                 datos.direccion
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.localidad =
-            (
+            String(
                 datos.localidad
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.provincia =
-            (
+            String(
                 datos.provincia
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.codigoPostal =
-            (
+            String(
                 datos.codigoPostal
-                ||
+                ??
                 ""
-            ).trim();
+            )
+                .trim();
 
 
         this.datos.pais =
-            (
+            String(
                 datos.pais
-                ||
+                ??
                 "España"
-            ).trim();
+            )
+                .trim()
+            ||
+            "España";
 
 
         this.datos.nombreUsuario =
-            (
+            String(
                 datos.nombreUsuario
-                ||
+                ??
                 "Josep"
-            ).trim();
+            )
+                .trim()
+            ||
+            "Josep";
 
 
         this.datos.cargo =
-            (
+            String(
                 datos.cargo
-                ||
+                ??
                 "Administrador"
-            ).trim();
+            )
+                .trim()
+            ||
+            "Administrador";
 
 
         this.datos.mostrarMarcaGestaCamps =
-            datos.mostrarMarcaGestaCamps === true;
+            datos.mostrarMarcaGestaCamps ===
+            true;
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            guardado ===
+            false
+        ) {
+
+            this.datos =
+                estadoAnterior;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los datos de la explotación."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             datos:
                 this.datos
+
         };
 
     }
@@ -407,30 +532,55 @@ export class ExplotacionService {
 
     guardar() {
 
-        if (
-            StorageService.guardarExplotacion
-        ) {
+        try {
 
-            StorageService
-                .guardarExplotacion(
+            if (
+                typeof StorageService.guardarExplotacion ===
+                "function"
+            ) {
+
+                const resultado =
+                    StorageService
+                        .guardarExplotacion(
+                            this.datos
+                        );
+
+
+                return resultado !==
+                    false;
+
+            }
+
+
+            /*
+             * Compatibilidad por si StorageService
+             * todavía no dispone de estos métodos.
+             */
+            localStorage.setItem(
+                "gestacamps_explotacion",
+                JSON.stringify(
                     this.datos
-                );
+                )
+            );
 
-            return;
+
+            return true;
 
         }
 
+        catch (
+            error
+        ) {
 
-        /*
-         * Compatibilidad si tu StorageService
-         * todavía no tiene esos métodos.
-         */
-        localStorage.setItem(
-            "gestacamps_explotacion",
-            JSON.stringify(
-                this.datos
-            )
-        );
+            console.error(
+                "Error guardando los datos de explotación:",
+                error
+            );
+
+
+            return false;
+
+        }
 
     }
 

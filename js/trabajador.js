@@ -1,17 +1,30 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId
+} from "./utils.js";
+
+import {
+    obtenerNombreTrabajador
+} from "./entityHelpers.js";
+
 
 export class TrabajadorService {
 
     constructor() {
 
         this.trabajadores =
-            StorageService.obtenerTrabajadores()
+            StorageService
+                .obtenerTrabajadores()
                 .map(
                     trabajador => ({
                         ...trabajador,
+
                         pin:
-                            trabajador.pin || ""
+                            trabajador.pin
+                            ||
+                            ""
                     })
                 );
 
@@ -33,12 +46,21 @@ export class TrabajadorService {
     // OBTENER POR ID
     // =====================================================
 
-    obtenerPorId(id) {
+    obtenerPorId(
+        id
+    ) {
 
-        return this.trabajadores.find(
-            trabajador =>
-                Number(trabajador.id) ===
-                Number(id)
+        return (
+            this.trabajadores
+                .find(
+                    trabajador =>
+                        mismoId(
+                            trabajador.id,
+                            id
+                        )
+                )
+            ||
+            null
         );
 
     }
@@ -48,17 +70,33 @@ export class TrabajadorService {
     // OBTENER POR PIN
     // =====================================================
 
-    obtenerPorPin(pin) {
+    obtenerPorPin(
+        pin
+    ) {
 
         const pinBuscado =
-            String(pin || "").trim();
+            String(
+                pin
+                ||
+                ""
+            )
+                .trim();
 
 
-        return this.trabajadores.find(
-            trabajador =>
-                String(
-                    trabajador.pin || ""
-                ) === pinBuscado
+        return (
+            this.trabajadores
+                .find(
+                    trabajador =>
+                        String(
+                            trabajador.pin
+                            ||
+                            ""
+                        )
+                        ===
+                        pinBuscado
+                )
+            ||
+            null
         );
 
     }
@@ -74,7 +112,11 @@ export class TrabajadorService {
     ) {
 
         const pinLimpio =
-            String(pin || "")
+            String(
+                pin
+                ||
+                ""
+            )
                 .trim();
 
 
@@ -85,28 +127,57 @@ export class TrabajadorService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El PIN debe tener exactamente 4 números."
+
             };
 
         }
 
 
         const repetido =
-            this.trabajadores.find(
-                trabajador =>
-                    String(
-                        trabajador.pin || ""
-                    ) === pinLimpio
-                    &&
-                    Number(
-                        trabajador.id
-                    ) !==
-                    Number(
-                        idIgnorado
-                    )
-            );
+            this.trabajadores
+                .find(
+                    trabajador => {
+
+                        if (
+                            String(
+                                trabajador.pin
+                                ||
+                                ""
+                            )
+                            !==
+                            pinLimpio
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        if (
+                            idIgnorado !==
+                            null
+                            &&
+                            mismoId(
+                                trabajador.id,
+                                idIgnorado
+                            )
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        return true;
+
+                    }
+                );
 
 
         if (
@@ -114,16 +185,206 @@ export class TrabajadorService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Este PIN ya está asignado a otro trabajador."
+
             };
 
         }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
+        };
+
+    }
+
+
+    // =====================================================
+    // VALIDAR DATOS
+    // =====================================================
+
+    validar(
+        datos,
+        idIgnorado = null
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del trabajador no son válidos."
+
+            };
+
+        }
+
+
+        const nombre =
+            String(
+                datos.nombre
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            !nombre
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El nombre es obligatorio."
+
+            };
+
+        }
+
+
+        const estado =
+            String(
+                datos.estado
+                ??
+                "Activo"
+            )
+                .trim();
+
+
+        if (
+            ![
+                "Activo",
+                "Inactivo"
+            ].includes(
+                estado
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El estado del trabajador no es válido."
+
+            };
+
+        }
+
+
+        return this.validarPin(
+            datos.pin,
+            idIgnorado
+        );
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR DATOS
+    // =====================================================
+
+    normalizarDatos(
+        datos
+    ) {
+
+        return {
+
+            nombre:
+                String(
+                    datos.nombre
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            apellidos:
+                String(
+                    datos.apellidos
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            telefono:
+                String(
+                    datos.telefono
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            email:
+                String(
+                    datos.email
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            puesto:
+                String(
+                    datos.puesto
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            estado:
+                String(
+                    datos.estado
+                    ??
+                    "Activo"
+                )
+                    .trim()
+                ||
+                "Activo",
+
+            fechaAlta:
+                String(
+                    datos.fechaAlta
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            pin:
+                String(
+                    datos.pin
+                    ??
+                    ""
+                )
+                    .trim(),
+
+            notas:
+                String(
+                    datos.notas
+                    ??
+                    ""
+                )
+                    .trim()
+
         };
 
     }
@@ -133,32 +394,21 @@ export class TrabajadorService {
     // CREAR
     // =====================================================
 
-    crear(datos) {
+    crear(
+        datos
+    ) {
 
-        if (
-            !datos.nombre
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "El nombre es obligatorio."
-            };
-
-        }
-
-
-        const validacionPin =
-            this.validarPin(
-                datos.pin
+        const validacion =
+            this.validar(
+                datos
             );
 
 
         if (
-            !validacionPin.ok
+            !validacion.ok
         ) {
 
-            return validacionPin;
+            return validacion;
 
         }
 
@@ -166,36 +416,11 @@ export class TrabajadorService {
         const nuevoTrabajador = {
 
             id:
-                Date.now(),
+                generarId(),
 
-            nombre:
-                datos.nombre,
-
-            apellidos:
-                datos.apellidos || "",
-
-            telefono:
-                datos.telefono || "",
-
-            email:
-                datos.email || "",
-
-            puesto:
-                datos.puesto || "",
-
-            estado:
-                datos.estado || "Activo",
-
-            fechaAlta:
-                datos.fechaAlta || "",
-
-            pin:
-                String(
-                    datos.pin
-                ),
-
-            notas:
-                datos.notas || ""
+            ...this.normalizarDatos(
+                datos
+            )
 
         };
 
@@ -205,13 +430,46 @@ export class TrabajadorService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.trabajadores =
+                this.trabajadores
+                    .filter(
+                        trabajador =>
+                            !mismoId(
+                                trabajador.id,
+                                nuevoTrabajador.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el trabajador."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             trabajador:
                 nuevoTrabajador
+
         };
 
     }
@@ -237,80 +495,85 @@ export class TrabajadorService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El trabajador no existe."
+
             };
 
         }
 
 
-        if (
-            !datos.nombre
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "El nombre es obligatorio."
-            };
-
-        }
-
-
-        const validacionPin =
-            this.validarPin(
-                datos.pin,
+        const validacion =
+            this.validar(
+                datos,
                 id
             );
 
 
         if (
-            !validacionPin.ok
+            !validacion.ok
         ) {
 
-            return validacionPin;
+            return validacion;
 
         }
 
 
-        trabajador.nombre =
-            datos.nombre;
-
-        trabajador.apellidos =
-            datos.apellidos || "";
-
-        trabajador.telefono =
-            datos.telefono || "";
-
-        trabajador.email =
-            datos.email || "";
-
-        trabajador.puesto =
-            datos.puesto || "";
-
-        trabajador.estado =
-            datos.estado;
-
-        trabajador.fechaAlta =
-            datos.fechaAlta || "";
-
-        trabajador.pin =
-            String(
-                datos.pin
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    trabajador
+                )
             );
 
-        trabajador.notas =
-            datos.notas || "";
+
+        Object.assign(
+            trabajador,
+            this.normalizarDatos(
+                datos
+            )
+        );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            Object.assign(
+                trabajador,
+                estadoAnterior
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del trabajador."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             trabajador:
                 trabajador
+
         };
 
     }
@@ -320,51 +583,300 @@ export class TrabajadorService {
     // ELIMINAR
     // =====================================================
 
-    eliminar(id) {
+    eliminar(
+        id
+    ) {
 
-        const fichajes =
-            StorageService.obtenerFichajes();
-
-
-        const tieneFichajes =
-            fichajes.some(
-                fichaje =>
-                    Number(
-                        fichaje.trabajadorId
-                    ) ===
-                    Number(id)
+        const trabajador =
+            this.obtenerPorId(
+                id
             );
 
 
         if (
-            tieneFichajes
+            !trabajador
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
-                    "No puedes eliminar este trabajador porque tiene fichajes registrados. Puedes marcarlo como inactivo para conservar el historial."
+                    "El trabajador no existe."
+
             };
 
         }
 
 
-        this.trabajadores =
-            this.trabajadores.filter(
-                trabajador =>
-                    Number(
-                        trabajador.id
-                    ) !==
-                    Number(id)
+        const dependencia =
+            this.obtenerDependencia(
+                id
             );
 
 
-        this.guardar();
+        if (
+            dependencia
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    `No puedes eliminar este trabajador porque tiene ${dependencia}. Puedes marcarlo como inactivo para conservar el historial.`
+
+            };
+
+        }
+
+
+        const trabajadoresAnteriores =
+            [
+                ...this.trabajadores
+            ];
+
+
+        this.trabajadores =
+            this.trabajadores
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.trabajadores =
+                trabajadoresAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el trabajador."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
+
+    }
+
+
+    // =====================================================
+    // COMPROBAR DEPENDENCIAS
+    // =====================================================
+
+    obtenerDependencia(
+        trabajadorId
+    ) {
+
+        const fichajes =
+            StorageService
+                .obtenerFichajes();
+
+
+        if (
+            fichajes.some(
+                fichaje =>
+                    mismoId(
+                        fichaje.trabajadorId,
+                        trabajadorId
+                    )
+            )
+        ) {
+
+            return "fichajes registrados";
+
+        }
+
+
+        const incidencias =
+            StorageService
+                .obtenerIncidencias();
+
+
+        if (
+            incidencias.some(
+                incidencia =>
+                    mismoId(
+                        incidencia.trabajadorId,
+                        trabajadorId
+                    )
+            )
+        ) {
+
+            return "incidencias asociadas";
+
+        }
+
+
+        const trabajos =
+            StorageService
+                .obtenerTrabajos();
+
+
+        if (
+            trabajos.some(
+                trabajo =>
+                    this.trabajoTieneTrabajador(
+                        trabajo,
+                        trabajadorId
+                    )
+            )
+        ) {
+
+            return "trabajos o tareas asociados";
+
+        }
+
+
+        const cuaderno =
+            StorageService
+                .obtenerCuadernoCampo();
+
+
+        if (
+            cuaderno.some(
+                registro =>
+                    Array.isArray(
+                        registro.trabajadorIds
+                    )
+                    &&
+                    registro.trabajadorIds
+                        .some(
+                            id =>
+                                mismoId(
+                                    id,
+                                    trabajadorId
+                                )
+                        )
+            )
+        ) {
+
+            return "registros en el cuaderno de campo";
+
+        }
+
+
+        const tratamientos =
+            StorageService
+                .obtenerTratamientos();
+
+
+        if (
+            tratamientos.some(
+                tratamiento =>
+                    mismoId(
+                        tratamiento.trabajadorId,
+                        trabajadorId
+                    )
+            )
+        ) {
+
+            return "tratamientos asociados";
+
+        }
+
+
+        const usuarios =
+            StorageService
+                .obtenerUsuarios();
+
+
+        if (
+            usuarios.some(
+                usuario =>
+                    mismoId(
+                        usuario.trabajadorId,
+                        trabajadorId
+                    )
+            )
+        ) {
+
+            return "un usuario de acceso vinculado";
+
+        }
+
+
+        return null;
+
+    }
+
+
+    // =====================================================
+    // TRABAJO TIENE TRABAJADOR
+    // =====================================================
+
+    trabajoTieneTrabajador(
+        trabajo,
+        trabajadorId
+    ) {
+
+        if (
+            !trabajo
+        ) {
+
+            return false;
+
+        }
+
+
+        if (
+            mismoId(
+                trabajo.trabajadorId,
+                trabajadorId
+            )
+        ) {
+
+            return true;
+
+        }
+
+
+        if (
+            Array.isArray(
+                trabajo.trabajadorIds
+            )
+            &&
+            trabajo.trabajadorIds
+                .some(
+                    id =>
+                        mismoId(
+                            id,
+                            trabajadorId
+                        )
+                )
+        ) {
+
+            return true;
+
+        }
+
+
+        return false;
 
     }
 
@@ -375,11 +887,12 @@ export class TrabajadorService {
 
     obtenerActivos() {
 
-        return this.trabajadores.filter(
-            trabajador =>
-                trabajador.estado ===
-                "Activo"
-        );
+        return this.trabajadores
+            .filter(
+                trabajador =>
+                    trabajador.estado ===
+                    "Activo"
+            );
 
     }
 
@@ -392,12 +905,9 @@ export class TrabajadorService {
         trabajador
     ) {
 
-        return [
-            trabajador.nombre,
-            trabajador.apellidos
-        ]
-            .filter(Boolean)
-            .join(" ");
+        return obtenerNombreTrabajador(
+            trabajador
+        );
 
     }
 
@@ -408,7 +918,7 @@ export class TrabajadorService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarTrabajadores(
                 this.trabajadores
             );

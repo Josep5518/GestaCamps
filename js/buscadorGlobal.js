@@ -1,5 +1,9 @@
 import { StorageService } from "./storage.js";
 
+import {
+    normalizarTexto
+} from "./utils.js";
+
 
 export class BuscadorGlobalService {
 
@@ -12,140 +16,275 @@ export class BuscadorGlobalService {
         return [
 
             {
-                modulo: "Fincas",
-                pagina: "fincas",
-                icono: "🌾",
-                obtener: () =>
-                    StorageService.obtenerFincas()
+                modulo:
+                    "Fincas",
+
+                pagina:
+                    "fincas",
+
+                icono:
+                    "🌾",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerFincas()
             },
 
             {
-                modulo: "Campanyas",
-                pagina: "campanias",
-                icono: "🗓️",
-                obtener: () =>
-                    StorageService.obtenerCampanias()
+                modulo:
+                    "Campanyas",
+
+                pagina:
+                    "campanias",
+
+                icono:
+                    "🗓️",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerCampanias()
             },
 
             {
-                modulo: "Cultivos",
-                pagina: "cultivos",
-                icono: "🌱",
-                obtener: () =>
-                    StorageService.obtenerCultivos()
+                modulo:
+                    "Cultivos",
+
+                pagina:
+                    "cultivos",
+
+                icono:
+                    "🌱",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerCultivos()
             },
 
             {
-                modulo: "Cuaderno de campo",
-                pagina: "cuadernoCampo",
-                icono: "📖",
-                obtener: () =>
-                    StorageService.obtenerCuadernoCampo()
+                modulo:
+                    "Cuaderno de campo",
+
+                pagina:
+                    "cuadernoCampo",
+
+                icono:
+                    "📖",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerCuadernoCampo()
             },
 
             {
-                modulo: "Tratamientos",
-                pagina: "tratamientos",
-                icono: "🧪",
-                obtener: () =>
-                    StorageService.obtenerTratamientos()
+                modulo:
+                    "Tratamientos",
+
+                pagina:
+                    "tratamientos",
+
+                icono:
+                    "🧪",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerTratamientos()
             },
 
             {
-                modulo: "Trabajos",
-                pagina: "trabajos",
-                icono: "👨‍🌾",
-                obtener: () =>
-                    StorageService.obtenerTrabajos()
+                modulo:
+                    "Trabajos",
+
+                pagina:
+                    "trabajos",
+
+                icono:
+                    "👨‍🌾",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerTrabajos()
             },
 
             {
-                modulo: "Trabajadores",
-                pagina: "trabajadores",
-                icono: "👷",
-                obtener: () =>
-                    StorageService.obtenerTrabajadores()
+                modulo:
+                    "Trabajadores",
+
+                pagina:
+                    "trabajadores",
+
+                icono:
+                    "👷",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerTrabajadores()
             },
 
             {
-                modulo: "Fichajes",
-                pagina: "fichajes",
-                icono: "⏱️",
-                obtener: () =>
-                    StorageService.obtenerFichajes()
+                modulo:
+                    "Fichajes",
+
+                pagina:
+                    "fichajes",
+
+                icono:
+                    "⏱️",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerFichajes()
             },
 
             {
-                modulo: "Incidencias",
-                pagina: "incidencias",
-                icono: "⚠️",
-                obtener: () =>
-                    StorageService.obtenerIncidencias()
+                modulo:
+                    "Incidencias",
+
+                pagina:
+                    "incidencias",
+
+                icono:
+                    "⚠️",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerIncidencias()
             },
 
             {
-                modulo: "Maquinaria",
-                pagina: "maquinaria",
-                icono: "🚜",
-                obtener: () =>
-                    StorageService.obtenerMaquinaria()
+                modulo:
+                    "Maquinaria",
+
+                pagina:
+                    "maquinaria",
+
+                icono:
+                    "🚜",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerMaquinaria()
             },
 
             {
-                modulo: "Inventario",
-                pagina: "inventario",
-                icono: "📦",
-                obtener: () =>
-                    StorageService.obtenerInventario()
+                modulo:
+                    "Inventario",
+
+                pagina:
+                    "inventario",
+
+                icono:
+                    "📦",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerInventario()
             },
 
             {
-                modulo: "Producción",
-                pagina: "produccion",
-                icono: "🍎",
-                obtener: () =>
-                    StorageService.obtenerProduccion()
+                modulo:
+                    "Producción",
+
+                pagina:
+                    "produccion",
+
+                icono:
+                    "🍎",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerProduccion()
             },
 
             {
-                modulo: "Clientes y Proveedores",
-                pagina: "clientesProveedores",
-                icono: "👥",
-                obtener: () =>
-                    StorageService
-                        .obtenerClientesProveedores()
+                modulo:
+                    "Clientes y Proveedores",
+
+                pagina:
+                    "clientesProveedores",
+
+                icono:
+                    "👥",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerClientesProveedores()
             },
 
             {
-                modulo: "Albaranes",
-                pagina: "albaranes",
-                icono: "🧾",
-                obtener: () =>
-                    StorageService.obtenerAlbaranes()
+                modulo:
+                    "Albaranes",
+
+                pagina:
+                    "albaranes",
+
+                icono:
+                    "🧾",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerAlbaranes()
             },
 
             {
-                modulo: "Facturación",
-                pagina: "facturacion",
-                icono: "💶",
-                obtener: () =>
-                    StorageService.obtenerFacturas()
+                modulo:
+                    "Facturación",
+
+                pagina:
+                    "facturacion",
+
+                icono:
+                    "💶",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerFacturas()
             },
 
             {
-                modulo: "Cobros y pagos",
-                pagina: "cobrosPagos",
-                icono: "💳",
-                obtener: () =>
-                    StorageService.obtenerCobrosPagos()
+                modulo:
+                    "Cobros y pagos",
+
+                pagina:
+                    "cobrosPagos",
+
+                icono:
+                    "💳",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerCobrosPagos()
             },
 
             {
-                modulo: "Gastos",
-                pagina: "gastos",
-                icono: "💰",
-                obtener: () =>
-                    StorageService.obtenerGastos()
+                modulo:
+                    "Gastos",
+
+                pagina:
+                    "gastos",
+
+                icono:
+                    "💰",
+
+                obtener:
+                    () =>
+                        StorageService
+                            .obtenerGastos()
             }
 
         ];
@@ -179,7 +318,7 @@ export class BuscadorGlobalService {
     ) {
 
         const consulta =
-            this.normalizarTexto(
+            normalizarTexto(
                 texto
             );
 
@@ -194,20 +333,28 @@ export class BuscadorGlobalService {
         }
 
 
+        const moduloBuscado =
+            normalizarTexto(
+                modulo
+            );
+
+
         const resultados =
             [];
 
 
-        this
-            .obtenerConfiguracion()
+        this.obtenerConfiguracion()
             .forEach(
                 configuracion => {
 
                     if (
-                        modulo
+                        moduloBuscado
                         &&
-                        configuracion.modulo !==
-                        modulo
+                        normalizarTexto(
+                            configuracion.modulo
+                        )
+                        !==
+                        moduloBuscado
                     ) {
 
                         return;
@@ -215,109 +362,89 @@ export class BuscadorGlobalService {
                     }
 
 
-                    let elementos =
-                        [];
-
-
-                    try {
-
-                        elementos =
-                            configuracion.obtener()
-                            ||
-                            [];
-
-                    }
-
-                    catch (
-                        error
-                    ) {
-
-                        console.error(
-                            `Error buscando en ${configuracion.modulo}:`,
-                            error
+                    const elementos =
+                        this.obtenerElementosSeguro(
+                            configuracion
                         );
 
 
-                        elementos =
-                            [];
+                    elementos
+                        .forEach(
+                            elemento => {
 
-                    }
+                                if (
+                                    !elemento
+                                    ||
+                                    typeof elemento !==
+                                    "object"
+                                ) {
 
-
-                    if (
-                        !Array.isArray(
-                            elementos
-                        )
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    elementos.forEach(
-                        elemento => {
-
-                            const textoElemento =
-                                this.obtenerTextoBusqueda(
-                                    elemento
-                                );
-
-
-                            if (
-                                !textoElemento.includes(
-                                    consulta
-                                )
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            resultados.push(
-                                {
-
-                                    id:
-                                        elemento.id
-                                        ??
-                                        null,
-
-                                    modulo:
-                                        configuracion.modulo,
-
-                                    pagina:
-                                        configuracion.pagina,
-
-                                    icono:
-                                        configuracion.icono,
-
-                                    titulo:
-                                        this.obtenerTitulo(
-                                            elemento,
-                                            configuracion.modulo
-                                        ),
-
-                                    subtitulo:
-                                        this.obtenerSubtitulo(
-                                            elemento,
-                                            configuracion.modulo
-                                        ),
-
-                                    detalle:
-                                        this.obtenerDetalle(
-                                            elemento,
-                                            configuracion.modulo
-                                        ),
-
-                                    elemento:
-                                        elemento
+                                    return;
 
                                 }
-                            );
 
-                        }
-                    );
+
+                                const textoElemento =
+                                    this.obtenerTextoBusqueda(
+                                        elemento
+                                    );
+
+
+                                if (
+                                    !textoElemento
+                                        .includes(
+                                            consulta
+                                        )
+                                ) {
+
+                                    return;
+
+                                }
+
+
+                                resultados.push(
+                                    {
+
+                                        id:
+                                            elemento.id
+                                            ??
+                                            null,
+
+                                        modulo:
+                                            configuracion.modulo,
+
+                                        pagina:
+                                            configuracion.pagina,
+
+                                        icono:
+                                            configuracion.icono,
+
+                                        titulo:
+                                            this.obtenerTitulo(
+                                                elemento,
+                                                configuracion.modulo
+                                            ),
+
+                                        subtitulo:
+                                            this.obtenerSubtitulo(
+                                                elemento,
+                                                configuracion.modulo
+                                            ),
+
+                                        detalle:
+                                            this.obtenerDetalle(
+                                                elemento,
+                                                configuracion.modulo
+                                            ),
+
+                                        elemento:
+                                            elemento
+
+                                    }
+                                );
+
+                            }
+                        );
 
                 }
             );
@@ -331,27 +458,29 @@ export class BuscadorGlobalService {
                 ) => {
 
                     const tituloA =
-                        this.normalizarTexto(
+                        normalizarTexto(
                             a.titulo
                         );
 
 
                     const tituloB =
-                        this.normalizarTexto(
+                        normalizarTexto(
                             b.titulo
                         );
 
 
                     const empiezaA =
-                        tituloA.startsWith(
-                            consulta
-                        );
+                        tituloA
+                            .startsWith(
+                                consulta
+                            );
 
 
                     const empiezaB =
-                        tituloB.startsWith(
-                            consulta
-                        );
+                        tituloB
+                            .startsWith(
+                                consulta
+                            );
 
 
                     if (
@@ -376,14 +505,103 @@ export class BuscadorGlobalService {
                     }
 
 
-                    return a.modulo
+                    const comparacionModulo =
+                        String(
+                            a.modulo
+                            ??
+                            ""
+                        )
+                            .localeCompare(
+                                String(
+                                    b.modulo
+                                    ??
+                                    ""
+                                ),
+                                "es"
+                            );
+
+
+                    if (
+                        comparacionModulo !==
+                        0
+                    ) {
+
+                        return comparacionModulo;
+
+                    }
+
+
+                    return String(
+                        a.titulo
+                        ??
+                        ""
+                    )
                         .localeCompare(
-                            b.modulo,
+                            String(
+                                b.titulo
+                                ??
+                                ""
+                            ),
                             "es"
                         );
 
                 }
             );
+
+    }
+
+
+    // =====================================================
+    // OBTENER ELEMENTOS SEGURO
+    // =====================================================
+
+    obtenerElementosSeguro(
+        configuracion
+    ) {
+
+        try {
+
+            if (
+                !configuracion
+                ||
+                typeof configuracion.obtener !==
+                "function"
+            ) {
+
+                return [];
+
+            }
+
+
+            const elementos =
+                configuracion.obtener();
+
+
+            return Array.isArray(
+                elementos
+            )
+                ? elementos
+                : [];
+
+        }
+
+        catch (
+            error
+        ) {
+
+            console.error(
+                `Error buscando en ${
+                    configuracion?.modulo
+                    ||
+                    "módulo desconocido"
+                }:`,
+                error
+            );
+
+
+            return [];
+
+        }
 
     }
 
@@ -400,13 +618,19 @@ export class BuscadorGlobalService {
             [];
 
 
+        const visitados =
+            new WeakSet();
+
+
         const recorrer =
             valor => {
 
                 if (
-                    valor === null
+                    valor ===
+                    null
                     ||
-                    valor === undefined
+                    valor ===
+                    undefined
                 ) {
 
                     return;
@@ -438,6 +662,22 @@ export class BuscadorGlobalService {
                     "object"
                 ) {
 
+                    if (
+                        visitados.has(
+                            valor
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    visitados.add(
+                        valor
+                    );
+
+
                     Object.values(
                         valor
                     )
@@ -468,7 +708,7 @@ export class BuscadorGlobalService {
         );
 
 
-        return this.normalizarTexto(
+        return normalizarTexto(
             valores.join(
                 " "
             )
@@ -491,14 +731,20 @@ export class BuscadorGlobalService {
             "Trabajadores"
         ) {
 
-            return [
-                elemento.nombre,
-                elemento.apellidos
-            ]
-                .filter(Boolean)
-                .join(" ")
+            return (
+                [
+                    elemento.nombre,
+                    elemento.apellidos
+                ]
+                    .filter(
+                        Boolean
+                    )
+                    .join(
+                        " "
+                    )
                 ||
-                "Trabajador";
+                "Trabajador"
+            );
 
         }
 
@@ -783,7 +1029,9 @@ export class BuscadorGlobalService {
 
 
         return partes
-            .filter(Boolean)
+            .filter(
+                Boolean
+            )
             .join(
                 " · "
             );
@@ -805,9 +1053,11 @@ export class BuscadorGlobalService {
             "Incidencias"
         ) {
 
-            return elemento.descripcion
+            return (
+                elemento.descripcion
                 ||
-                "";
+                ""
+            );
 
         }
 
@@ -817,9 +1067,11 @@ export class BuscadorGlobalService {
             "Trabajos"
         ) {
 
-            return elemento.notas
+            return (
+                elemento.notas
                 ||
-                "";
+                ""
+            );
 
         }
 
@@ -834,8 +1086,12 @@ export class BuscadorGlobalService {
                 elemento.descripcion,
                 elemento.productoNombre
             ]
-                .filter(Boolean)
-                .join(" · ");
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " · "
+                );
 
         }
 
@@ -850,8 +1106,12 @@ export class BuscadorGlobalService {
                 elemento.dosis,
                 elemento.plagaObjetivo
             ]
-                .filter(Boolean)
-                .join(" · ");
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " · "
+                );
 
         }
 
@@ -865,8 +1125,12 @@ export class BuscadorGlobalService {
                 elemento.telefono,
                 elemento.email
             ]
-                .filter(Boolean)
-                .join(" · ");
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " · "
+                );
 
         }
 
@@ -880,8 +1144,12 @@ export class BuscadorGlobalService {
                 elemento.telefono,
                 elemento.email
             ]
-                .filter(Boolean)
-                .join(" · ");
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " · "
+                );
 
         }
 
@@ -896,8 +1164,12 @@ export class BuscadorGlobalService {
                 elemento.modelo,
                 elemento.matricula
             ]
-                .filter(Boolean)
-                .join(" · ");
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " · "
+                );
 
         }
 
@@ -927,26 +1199,17 @@ export class BuscadorGlobalService {
 
     // =====================================================
     // NORMALIZAR
+    // Compatibilidad con código antiguo que pueda llamar
+    // servicio.normalizarTexto(...)
     // =====================================================
 
     normalizarTexto(
         valor
     ) {
 
-        return String(
+        return normalizarTexto(
             valor
-            ??
-            ""
-        )
-            .toLowerCase()
-            .normalize(
-                "NFD"
-            )
-            .replace(
-                /[\u0300-\u036f]/g,
-                ""
-            )
-            .trim();
+        );
 
     }
 

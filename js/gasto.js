@@ -1,5 +1,16 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    numeroSeguro
+} from "./utils.js";
+
+import {
+    obtenerNombreMaquinaria
+} from "./entityHelpers.js";
+
+
 export class GastoService {
 
     constructor(
@@ -22,7 +33,8 @@ export class GastoService {
             campaniaService;
 
         this.gastos =
-            StorageService.obtenerGastos();
+            StorageService
+                .obtenerGastos();
 
 
         if (
@@ -31,7 +43,8 @@ export class GastoService {
             )
         ) {
 
-            this.gastos = [];
+            this.gastos =
+                [];
 
         }
 
@@ -182,11 +195,12 @@ export class GastoService {
                     gasto.pagadoAcumulado =
                         gasto.estado ===
                         "Pagado"
-                            ? Number(
-                                gasto.importe
-                                ||
+
+                            ? numeroSeguro(
+                                gasto.importe,
                                 0
                             )
+
                             : 0;
 
                     cambios =
@@ -203,15 +217,13 @@ export class GastoService {
                     gasto.pendientePago =
                         Math.max(
                             0,
-                            Number(
-                                gasto.importe
-                                ||
+                            numeroSeguro(
+                                gasto.importe,
                                 0
                             )
                             -
-                            Number(
-                                gasto.pagadoAcumulado
-                                ||
+                            numeroSeguro(
+                                gasto.pagadoAcumulado,
                                 0
                             )
                         );
@@ -233,25 +245,10 @@ export class GastoService {
                 ) {
 
                     gasto.estado =
-                        Number(
-                            gasto.pagadoAcumulado
-                            ||
-                            0
-                        ) >
-                        0
-
-                            ? (
-                                Number(
-                                    gasto.pendientePago
-                                    ||
-                                    0
-                                ) <=
-                                0
-                                    ? "Pagado"
-                                    : "Parcialmente pagado"
-                            )
-
-                            : "Pendiente";
+                        this.calcularEstadoFinanciero(
+                            gasto.pagadoAcumulado,
+                            gasto.pendientePago
+                        );
 
                     cambios =
                         true;
@@ -262,6 +259,10 @@ export class GastoService {
         );
 
 
+        /*
+         * Esta escritura solo ocurre si realmente existen
+         * datos antiguos que necesitan migrarse.
+         */
         if (
             cambios
         ) {
@@ -291,19 +292,19 @@ export class GastoService {
     }
 
 
-    obtenerPorId(id) {
+    obtenerPorId(
+        id
+    ) {
 
         return (
-            this.gastos.find(
-                gasto =>
-                    Number(
-                        gasto.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            this.gastos
+                .find(
+                    gasto =>
+                        mismoId(
+                            gasto.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -315,16 +316,14 @@ export class GastoService {
         campaniaId
     ) {
 
-        return this.gastos.filter(
-            gasto =>
-                Number(
-                    gasto.campaniaId
-                )
-                ===
-                Number(
-                    campaniaId
-                )
-        );
+        return this.gastos
+            .filter(
+                gasto =>
+                    mismoId(
+                        gasto.campaniaId,
+                        campaniaId
+                    )
+            );
 
     }
 
@@ -335,33 +334,80 @@ export class GastoService {
 
     obtenerPendientes() {
 
-        return this.gastos.filter(
-            gasto =>
-                gasto.estado ===
-                "Pendiente"
-        );
+        return this.gastos
+            .filter(
+                gasto =>
+                    gasto.estado ===
+                    "Pendiente"
+            );
 
     }
 
 
     obtenerParcialmentePagados() {
 
-        return this.gastos.filter(
-            gasto =>
-                gasto.estado ===
-                "Parcialmente pagado"
-        );
+        return this.gastos
+            .filter(
+                gasto =>
+                    gasto.estado ===
+                    "Parcialmente pagado"
+            );
 
     }
 
 
     obtenerPagados() {
 
-        return this.gastos.filter(
-            gasto =>
-                gasto.estado ===
-                "Pagado"
-        );
+        return this.gastos
+            .filter(
+                gasto =>
+                    gasto.estado ===
+                    "Pagado"
+            );
+
+    }
+
+
+    calcularEstadoFinanciero(
+        pagado,
+        pendiente
+    ) {
+
+        pagado =
+            numeroSeguro(
+                pagado,
+                0
+            );
+
+
+        pendiente =
+            numeroSeguro(
+                pendiente,
+                0
+            );
+
+
+        if (
+            pagado <=
+            0.001
+        ) {
+
+            return "Pendiente";
+
+        }
+
+
+        if (
+            pendiente <=
+            0.001
+        ) {
+
+            return "Pagado";
+
+        }
+
+
+        return "Parcialmente pagado";
 
     }
 
@@ -382,9 +428,13 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El gasto no existe."
+
             };
 
         }
@@ -401,25 +451,59 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Estado no válido."
+
             };
 
         }
+
+
+        const estadoAnterior =
+            gasto.estado;
 
 
         gasto.estado =
             estado;
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            gasto.estado =
+                estadoAnterior;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el estado del gasto."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             gasto:
                 gasto
+
         };
 
     }
@@ -438,6 +522,10 @@ export class GastoService {
     }
 
 
+    // =====================================================
+    // ACTUALIZAR ESTADO FINANCIERO
+    // =====================================================
+
     actualizarEstadoFinanciero(
         id,
         pagado,
@@ -455,35 +543,56 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El gasto no existe."
+
             };
 
         }
 
 
+        const estadoAnterior =
+            {
+
+                pagadoAcumulado:
+                    gasto.pagadoAcumulado,
+
+                pendientePago:
+                    gasto.pendientePago,
+
+                estado:
+                    gasto.estado
+
+            };
+
+
         pagado =
-            Number(
-                pagado
-                ||
+            numeroSeguro(
+                pagado,
                 0
             );
 
 
         pendiente =
-            Number(
-                pendiente
-                ||
+            numeroSeguro(
+                pendiente,
                 0
             );
 
 
         gasto.pagadoAcumulado =
             Number(
-                pagado.toFixed(
-                    2
+                Math.max(
+                    0,
+                    pagado
                 )
+                    .toFixed(
+                        2
+                    )
             );
 
 
@@ -499,41 +608,52 @@ export class GastoService {
             );
 
 
+        gasto.estado =
+            this.calcularEstadoFinanciero(
+                gasto.pagadoAcumulado,
+                gasto.pendientePago
+            );
+
+
+        const guardado =
+            this.guardar();
+
+
         if (
-            gasto.pagadoAcumulado <=
-            0.001
+            !guardado
         ) {
 
-            gasto.estado =
-                "Pendiente";
+            gasto.pagadoAcumulado =
+                estadoAnterior.pagadoAcumulado;
 
-        }
-
-        else if (
-            gasto.pendientePago <=
-            0.001
-        ) {
+            gasto.pendientePago =
+                estadoAnterior.pendientePago;
 
             gasto.estado =
-                "Pagado";
+                estadoAnterior.estado;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido actualizar el estado financiero del gasto."
+
+            };
 
         }
-
-        else {
-
-            gasto.estado =
-                "Parcialmente pagado";
-
-        }
-
-
-        this.guardar();
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             gasto:
                 gasto
+
         };
 
     }
@@ -545,62 +665,62 @@ export class GastoService {
 
     obtenerTotal() {
 
-        return this.gastos.reduce(
-            (
-                total,
-                gasto
-            ) =>
-                total
-                +
-                Number(
-                    gasto.importe
-                    ||
-                    0
-                ),
-            0
-        );
+        return this.gastos
+            .reduce(
+                (
+                    total,
+                    gasto
+                ) =>
+                    total
+                    +
+                    numeroSeguro(
+                        gasto.importe,
+                        0
+                    ),
+                0
+            );
 
     }
 
 
     obtenerTotalPagado() {
 
-        return this.gastos.reduce(
-            (
-                total,
-                gasto
-            ) =>
-                total
-                +
-                Number(
-                    gasto.pagadoAcumulado
-                    ||
-                    0
-                ),
-            0
-        );
+        return this.gastos
+            .reduce(
+                (
+                    total,
+                    gasto
+                ) =>
+                    total
+                    +
+                    numeroSeguro(
+                        gasto.pagadoAcumulado,
+                        0
+                    ),
+                0
+            );
 
     }
 
 
     obtenerTotalPendiente() {
 
-        return this.gastos.reduce(
-            (
-                total,
-                gasto
-            ) =>
-                total
-                +
-                Number(
-                    gasto.pendientePago
-                    ??
-                    gasto.importe
-                    ??
-                    0
-                ),
-            0
-        );
+        return this.gastos
+            .reduce(
+                (
+                    total,
+                    gasto
+                ) =>
+                    total
+                    +
+                    numeroSeguro(
+                        gasto.pendientePago
+                        ??
+                        gasto.importe,
+                        0
+                    ),
+                0
+            );
 
     }
 
@@ -619,9 +739,8 @@ export class GastoService {
                 ) =>
                     total
                     +
-                    Number(
-                        gasto.importe
-                        ||
+                    numeroSeguro(
+                        gasto.importe,
                         0
                     ),
                 0
@@ -631,42 +750,89 @@ export class GastoService {
 
 
     // =====================================================
-    // CREAR
+    // VALIDAR DATOS
     // =====================================================
 
-    crear(datos) {
+    validarDatos(
+        datos
+    ) {
 
         if (
-            !datos.concepto
+            !datos
             ||
-            !datos.concepto.trim()
+            typeof datos !==
+            "object"
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
-                    "Introduce el concepto del gasto."
+                    "Los datos del gasto no son válidos."
+
             };
 
         }
 
 
+        const concepto =
+            String(
+                datos.concepto
+                ??
+                ""
+            )
+                .trim();
+
+
         if (
-            !datos.categoria
+            !concepto
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Introduce el concepto del gasto."
+
+            };
+
+        }
+
+
+        const categoria =
+            String(
+                datos.categoria
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            !categoria
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
                 mensaje:
                     "Selecciona una categoría."
+
             };
 
         }
 
 
         const importe =
-            Number(
-                datos.importe
+            numeroSeguro(
+                datos.importe,
+                NaN
             );
 
 
@@ -680,9 +846,13 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Introduce un importe válido."
+
             };
 
         }
@@ -693,9 +863,13 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Introduce una fecha."
+
             };
 
         }
@@ -714,9 +888,13 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "La finca seleccionada no existe."
+
             };
 
         }
@@ -735,9 +913,13 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "La campanya seleccionada no existe."
+
             };
 
         }
@@ -748,19 +930,20 @@ export class GastoService {
             &&
             campania
             &&
-            Number(
-                campania.fincaId
-            )
-            !==
-            Number(
+            !mismoId(
+                campania.fincaId,
                 finca.id
             )
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "La campanya no pertenece a la finca seleccionada."
+
             };
 
         }
@@ -772,22 +955,60 @@ export class GastoService {
             );
 
 
+        if (
+            datos.maquinariaId
+            &&
+            !maquina
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La maquinaria seleccionada no existe."
+
+            };
+
+        }
+
+
         const proveedor =
             this.obtenerProveedor(
                 datos.proveedorId
             );
 
 
-        const nuevoGasto = {
+        if (
+            datos.proveedorId
+            &&
+            !proveedor
+        ) {
 
-            id:
-                Date.now(),
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El proveedor seleccionado no existe o no está registrado como proveedor."
+
+            };
+
+        }
+
+
+        return {
+
+            ok:
+                true,
 
             concepto:
-                datos.concepto.trim(),
+                concepto,
 
             categoria:
-                datos.categoria,
+                categoria,
 
             importe:
                 Number(
@@ -795,6 +1016,60 @@ export class GastoService {
                         2
                     )
                 ),
+
+            finca:
+                finca,
+
+            campania:
+                campania,
+
+            maquina:
+                maquina,
+
+            proveedor:
+                proveedor
+
+        };
+
+    }
+
+
+    // =====================================================
+    // CREAR
+    // =====================================================
+
+    crear(
+        datos
+    ) {
+
+        const validacion =
+            this.validarDatos(
+                datos
+            );
+
+
+        if (
+            !validacion.ok
+        ) {
+
+            return validacion;
+
+        }
+
+
+        const nuevoGasto = {
+
+            id:
+                generarId(),
+
+            concepto:
+                validacion.concepto,
+
+            categoria:
+                validacion.categoria,
+
+            importe:
+                validacion.importe,
 
             fecha:
                 datos.fecha,
@@ -809,69 +1084,71 @@ export class GastoService {
                 0,
 
             pendientePago:
-                Number(
-                    importe.toFixed(
-                        2
-                    )
-                ),
+                validacion.importe,
 
             fincaId:
-                finca
-                    ? finca.id
+                validacion.finca
+                    ? validacion.finca.id
                     : null,
 
             fincaNombre:
-                finca
-                    ? finca.nombre
+                validacion.finca
+                    ? validacion.finca.nombre
                     : "",
 
             parcela:
-                datos.parcela?.trim()
-                ||
-                "",
+                String(
+                    datos.parcela
+                    ??
+                    ""
+                )
+                    .trim(),
 
             campaniaId:
-                campania
-                    ? campania.id
+                validacion.campania
+                    ? validacion.campania.id
                     : null,
 
             campaniaNombre:
-                campania
-                    ? campania.nombre
+                validacion.campania
+                    ? validacion.campania.nombre
                     : "",
 
             maquinariaId:
-                maquina
-                    ? maquina.id
+                validacion.maquina
+                    ? validacion.maquina.id
                     : null,
 
             maquinariaNombre:
-                maquina
-                    ? this.obtenerNombreMaquinaria(
-                        maquina
+                validacion.maquina
+                    ? obtenerNombreMaquinaria(
+                        validacion.maquina
                     )
                     : "",
 
             proveedorId:
-                proveedor
-                    ? proveedor.id
+                validacion.proveedor
+                    ? validacion.proveedor.id
                     : null,
 
             proveedorNombre:
-                proveedor
+                validacion.proveedor
                     ? (
-                        proveedor.nombre
+                        validacion.proveedor.nombre
                         ||
-                        proveedor.razonSocial
+                        validacion.proveedor.razonSocial
                         ||
                         ""
                     )
                     : "",
 
             observaciones:
-                datos.observaciones?.trim()
-                ||
-                "",
+                String(
+                    datos.observaciones
+                    ??
+                    ""
+                )
+                    .trim(),
 
             fechaCreacion:
                 new Date()
@@ -885,13 +1162,46 @@ export class GastoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.gastos =
+                this.gastos
+                    .filter(
+                        gasto =>
+                            !mismoId(
+                                gasto.id,
+                                nuevoGasto.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el gasto."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             gasto:
                 nuevoGasto
+
         };
 
     }
@@ -917,203 +1227,97 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El gasto no existe."
+
             };
 
         }
 
 
-        if (
-            !datos.concepto
-            ||
-            !datos.concepto.trim()
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "Introduce el concepto del gasto."
-            };
-
-        }
-
-
-        if (
-            !datos.categoria
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "Selecciona una categoría."
-            };
-
-        }
-
-
-        const importe =
-            Number(
-                datos.importe
+        const validacion =
+            this.validarDatos(
+                datos
             );
 
 
         if (
-            !Number.isFinite(
-                importe
-            )
-            ||
-            importe <=
-            0
+            !validacion.ok
         ) {
 
-            return {
-                ok: false,
-                mensaje:
-                    "Introduce un importe válido."
-            };
+            return validacion;
 
         }
-
-
-        const pagado =
-            Number(
-                gasto.pagadoAcumulado
-                ||
-                0
-            );
 
 
         /*
-         * No se puede reducir un gasto por debajo
-         * de lo que ya se ha pagado.
+         * Utilizamos los movimientos reales como fuente
+         * de verdad. Si no existen, mantenemos compatibilidad
+         * con pagadoAcumulado.
          */
+        const totalPagado =
+            this.obtenerTotalPagadoReal(
+                gasto.id
+            );
+
+
+        const pagado =
+            totalPagado >
+            0.001
+
+                ? totalPagado
+
+                : numeroSeguro(
+                    gasto.pagadoAcumulado,
+                    0
+                );
+
 
         if (
-            importe <
+            validacion.importe <
             pagado -
             0.001
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     `No puedes reducir el gasto a ${this.formatearDinero(
-                        importe
+                        validacion.importe
                     )} porque ya se han pagado ${this.formatearDinero(
                         pagado
                     )}.`
+
             };
 
         }
 
 
-        if (
-            !datos.fecha
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "Introduce una fecha."
-            };
-
-        }
-
-
-        const finca =
-            this.obtenerFinca(
-                datos.fincaId
-            );
-
-
-        if (
-            datos.fincaId
-            &&
-            !finca
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "La finca seleccionada no existe."
-            };
-
-        }
-
-
-        const campania =
-            this.obtenerCampania(
-                datos.campaniaId
-            );
-
-
-        if (
-            datos.campaniaId
-            &&
-            !campania
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "La campanya seleccionada no existe."
-            };
-
-        }
-
-
-        if (
-            finca
-            &&
-            campania
-            &&
-            Number(
-                campania.fincaId
-            )
-            !==
-            Number(
-                finca.id
-            )
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "La campanya no pertenece a la finca seleccionada."
-            };
-
-        }
-
-
-        const maquina =
-            this.obtenerMaquina(
-                datos.maquinariaId
-            );
-
-
-        const proveedor =
-            this.obtenerProveedor(
-                datos.proveedorId
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    gasto
+                )
             );
 
 
         gasto.concepto =
-            datos.concepto.trim();
+            validacion.concepto;
 
 
         gasto.categoria =
-            datos.categoria;
+            validacion.categoria;
 
 
         gasto.importe =
-            Number(
-                importe.toFixed(
-                    2
-                )
-            );
+            validacion.importe;
 
 
         gasto.fecha =
@@ -1121,61 +1325,64 @@ export class GastoService {
 
 
         gasto.fincaId =
-            finca
-                ? finca.id
+            validacion.finca
+                ? validacion.finca.id
                 : null;
 
 
         gasto.fincaNombre =
-            finca
-                ? finca.nombre
+            validacion.finca
+                ? validacion.finca.nombre
                 : "";
 
 
         gasto.parcela =
-            datos.parcela?.trim()
-            ||
-            "";
+            String(
+                datos.parcela
+                ??
+                ""
+            )
+                .trim();
 
 
         gasto.campaniaId =
-            campania
-                ? campania.id
+            validacion.campania
+                ? validacion.campania.id
                 : null;
 
 
         gasto.campaniaNombre =
-            campania
-                ? campania.nombre
+            validacion.campania
+                ? validacion.campania.nombre
                 : "";
 
 
         gasto.maquinariaId =
-            maquina
-                ? maquina.id
+            validacion.maquina
+                ? validacion.maquina.id
                 : null;
 
 
         gasto.maquinariaNombre =
-            maquina
-                ? this.obtenerNombreMaquinaria(
-                    maquina
+            validacion.maquina
+                ? obtenerNombreMaquinaria(
+                    validacion.maquina
                 )
                 : "";
 
 
         gasto.proveedorId =
-            proveedor
-                ? proveedor.id
+            validacion.proveedor
+                ? validacion.proveedor.id
                 : null;
 
 
         gasto.proveedorNombre =
-            proveedor
+            validacion.proveedor
                 ? (
-                    proveedor.nombre
+                    validacion.proveedor.nombre
                     ||
-                    proveedor.razonSocial
+                    validacion.proveedor.razonSocial
                     ||
                     ""
                 )
@@ -1183,21 +1390,28 @@ export class GastoService {
 
 
         gasto.observaciones =
-            datos.observaciones?.trim()
-            ||
-            "";
+            String(
+                datos.observaciones
+                ??
+                ""
+            )
+                .trim();
 
 
-        /*
-         * Recalculamos pendiente después
-         * de cambiar el importe.
-         */
+        gasto.pagadoAcumulado =
+            Number(
+                pagado.toFixed(
+                    2
+                )
+            );
+
 
         gasto.pendientePago =
             Number(
                 Math.max(
                     0,
-                    gasto.importe -
+                    gasto.importe
+                    -
                     pagado
                 )
                     .toFixed(
@@ -1206,42 +1420,146 @@ export class GastoService {
             );
 
 
+        gasto.estado =
+            this.calcularEstadoFinanciero(
+                gasto.pagadoAcumulado,
+                gasto.pendientePago
+            );
+
+
+        const guardado =
+            this.guardar();
+
+
         if (
-            pagado <=
-            0.001
+            !guardado
         ) {
 
-            gasto.estado =
-                "Pendiente";
+            Object.assign(
+                gasto,
+                estadoAnterior
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del gasto."
+
+            };
 
         }
-
-        else if (
-            gasto.pendientePago <=
-            0.001
-        ) {
-
-            gasto.estado =
-                "Pagado";
-
-        }
-
-        else {
-
-            gasto.estado =
-                "Parcialmente pagado";
-
-        }
-
-
-        this.guardar();
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             gasto:
                 gasto
+
         };
+
+    }
+
+
+    // =====================================================
+    // PAGOS REALES
+    // =====================================================
+
+    obtenerPagosVinculados(
+        gastoId
+    ) {
+
+        try {
+
+            if (
+                typeof StorageService
+                    .obtenerCobrosPagos !==
+                "function"
+            ) {
+
+                return [];
+
+            }
+
+
+            const movimientos =
+                StorageService
+                    .obtenerCobrosPagos();
+
+
+            if (
+                !Array.isArray(
+                    movimientos
+                )
+            ) {
+
+                return [];
+
+            }
+
+
+            return movimientos
+                .filter(
+                    movimiento =>
+                        movimiento.tipo ===
+                        "Pago"
+                        &&
+                        mismoId(
+                            movimiento.gastoId,
+                            gastoId
+                        )
+                );
+
+        }
+
+        catch (
+            error
+        ) {
+
+            console.error(
+                "Error obteniendo pagos vinculados al gasto:",
+                error
+            );
+
+
+            return [];
+
+        }
+
+    }
+
+
+    obtenerTotalPagadoReal(
+        gastoId
+    ) {
+
+        return Number(
+            this.obtenerPagosVinculados(
+                gastoId
+            )
+                .reduce(
+                    (
+                        total,
+                        movimiento
+                    ) =>
+                        total
+                        +
+                        numeroSeguro(
+                            movimiento.importe,
+                            0
+                        ),
+                    0
+                )
+                .toFixed(
+                    2
+                )
+        );
 
     }
 
@@ -1250,7 +1568,9 @@ export class GastoService {
     // ELIMINAR
     // =====================================================
 
-    eliminar(id) {
+    eliminar(
+        id
+    ) {
 
         const gasto =
             this.obtenerPorId(
@@ -1263,51 +1583,123 @@ export class GastoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El gasto no existe."
+
             };
 
         }
 
 
+        const pagos =
+            this.obtenerPagosVinculados(
+                gasto.id
+            );
+
+
         if (
-            Number(
-                gasto.pagadoAcumulado
-                ||
+            pagos.length >
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    `No puedes eliminar este gasto porque tiene ${pagos.length} pago${
+                        pagos.length === 1
+                            ? ""
+                            : "s"
+                    } registrado${
+                        pagos.length === 1
+                            ? ""
+                            : "s"
+                    }. Elimina primero sus pagos desde Cobros y pagos.`
+
+            };
+
+        }
+
+
+        /*
+         * Compatibilidad con posibles datos antiguos donde
+         * exista pagadoAcumulado pero no el movimiento.
+         */
+        if (
+            numeroSeguro(
+                gasto.pagadoAcumulado,
                 0
-            ) >
+            )
+            >
             0.001
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "No puedes eliminar un gasto que ya tiene pagos registrados. Elimina primero sus pagos desde Cobros y pagos."
+
             };
 
         }
 
 
+        const gastosAnteriores =
+            [
+                ...this.gastos
+            ];
+
+
         this.gastos =
-            this.gastos.filter(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        id
-                    )
-            );
+            this.gastos
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.gastos =
+                gastosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el gasto."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -1317,10 +1709,19 @@ export class GastoService {
     // FINCA
     // =====================================================
 
-    obtenerFinca(id) {
+    obtenerFinca(
+        id
+    ) {
 
         if (
-            !id
+            id ===
+            null
+            ||
+            id ===
+            undefined
+            ||
+            id ===
+            ""
         ) {
 
             return null;
@@ -1331,8 +1732,7 @@ export class GastoService {
         if (
             this.fincaService
             &&
-            typeof
-            this.fincaService
+            typeof this.fincaService
                 .obtenerPorId ===
             "function"
         ) {
@@ -1340,9 +1740,7 @@ export class GastoService {
             return (
                 this.fincaService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     )
                 ||
                 null
@@ -1360,10 +1758,19 @@ export class GastoService {
     // CAMPANYA
     // =====================================================
 
-    obtenerCampania(id) {
+    obtenerCampania(
+        id
+    ) {
 
         if (
-            !id
+            id ===
+            null
+            ||
+            id ===
+            undefined
+            ||
+            id ===
+            ""
         ) {
 
             return null;
@@ -1374,8 +1781,7 @@ export class GastoService {
         if (
             this.campaniaService
             &&
-            typeof
-            this.campaniaService
+            typeof this.campaniaService
                 .obtenerPorId ===
             "function"
         ) {
@@ -1383,9 +1789,7 @@ export class GastoService {
             return (
                 this.campaniaService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     )
                 ||
                 null
@@ -1403,10 +1807,19 @@ export class GastoService {
     // MAQUINARIA
     // =====================================================
 
-    obtenerMaquina(id) {
+    obtenerMaquina(
+        id
+    ) {
 
         if (
-            !id
+            id ===
+            null
+            ||
+            id ===
+            undefined
+            ||
+            id ===
+            ""
         ) {
 
             return null;
@@ -1417,8 +1830,7 @@ export class GastoService {
         if (
             this.maquinariaService
             &&
-            typeof
-            this.maquinariaService
+            typeof this.maquinariaService
                 .obtenerPorId ===
             "function"
         ) {
@@ -1426,9 +1838,7 @@ export class GastoService {
             return (
                 this.maquinariaService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     )
                 ||
                 null
@@ -1440,8 +1850,7 @@ export class GastoService {
         const maquinaria =
             this.maquinariaService
             &&
-            typeof
-            this.maquinariaService
+            typeof this.maquinariaService
                 .obtenerTodos ===
             "function"
 
@@ -1452,16 +1861,14 @@ export class GastoService {
 
 
         return (
-            maquinaria.find(
-                maquina =>
-                    Number(
-                        maquina.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            maquinaria
+                .find(
+                    maquina =>
+                        mismoId(
+                            maquina.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -1473,10 +1880,19 @@ export class GastoService {
     // PROVEEDOR
     // =====================================================
 
-    obtenerProveedor(id) {
+    obtenerProveedor(
+        id
+    ) {
 
         if (
-            !id
+            id ===
+            null
+            ||
+            id ===
+            undefined
+            ||
+            id ===
+            ""
         ) {
 
             return null;
@@ -1484,84 +1900,94 @@ export class GastoService {
         }
 
 
+        let proveedor =
+            null;
+
+
         if (
             this.clienteProveedorService
             &&
-            typeof
-            this.clienteProveedorService
+            typeof this.clienteProveedorService
                 .obtenerPorId ===
             "function"
         ) {
 
-            const proveedor =
+            proveedor =
                 this.clienteProveedorService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
-                    );
-
-
-            if (
-                proveedor
-            ) {
-
-                return proveedor;
-
-            }
+                        id
+                    )
+                ||
+                null;
 
         }
 
 
-        const contactos =
-            this.clienteProveedorService
-            &&
-            typeof
-            this.clienteProveedorService
-                .obtenerTodos ===
-            "function"
+        if (
+            !proveedor
+        ) {
 
-                ? this.clienteProveedorService
-                    .obtenerTodos()
+            const contactos =
+                this.clienteProveedorService
+                &&
+                typeof this.clienteProveedorService
+                    .obtenerTodos ===
+                "function"
 
-                : [];
+                    ? this.clienteProveedorService
+                        .obtenerTodos()
+
+                    : [];
 
 
-        return (
-            contactos.find(
-                contacto =>
-                    Number(
-                        contacto.id
+            proveedor =
+                contactos
+                    .find(
+                        contacto =>
+                            mismoId(
+                                contacto.id,
+                                id
+                            )
                     )
-                    ===
-                    Number(
-                        id
-                    )
+                ||
+                null;
+
+        }
+
+
+        if (
+            !proveedor
+        ) {
+
+            return null;
+
+        }
+
+
+        const tipo =
+            String(
+                proveedor.tipo
+                ??
+                ""
             )
-            ||
-            null
-        );
-
-    }
+                .trim()
+                .toLowerCase();
 
 
-    // =====================================================
-    // NOMBRE MAQUINARIA
-    // =====================================================
+        if (
+            tipo !==
+            "proveedor"
+            &&
+            tipo !==
+            "cliente y proveedor"
+        ) {
 
-    obtenerNombreMaquinaria(
-        maquina
-    ) {
+            return null;
 
-        return [
-            maquina.nombre,
-            maquina.marca,
-            maquina.modelo
-        ]
-            .filter(Boolean)
-            .join(
-                " · "
-            );
+        }
+
+
+        return proveedor;
 
     }
 
@@ -1570,21 +1996,24 @@ export class GastoService {
     // FORMATO
     // =====================================================
 
-    formatearDinero(numero) {
+    formatearDinero(
+        numero
+    ) {
 
-        return Number(
-            numero
-            ||
+        return numeroSeguro(
+            numero,
             0
         )
             .toLocaleString(
                 "es-ES",
                 {
+
                     minimumFractionDigits:
                         2,
 
                     maximumFractionDigits:
                         2
+
                 }
             )
             +
@@ -1599,7 +2028,7 @@ export class GastoService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarGastos(
                 this.gastos
             );

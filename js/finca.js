@@ -1,11 +1,19 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    numeroSeguro
+} from "./utils.js";
+
+
 export class FincaService {
 
     constructor() {
 
         this.fincas =
-            StorageService.obtenerFincas();
+            StorageService
+                .obtenerFincas();
 
 
         if (
@@ -14,12 +22,17 @@ export class FincaService {
             )
         ) {
 
-            this.fincas = [];
+            this.fincas =
+                [];
 
         }
 
     }
 
+
+    // =====================================================
+    // OBTENER TODAS
+    // =====================================================
 
     obtenerTodas() {
 
@@ -28,6 +41,10 @@ export class FincaService {
     }
 
 
+    // =====================================================
+    // OBTENER TODOS
+    // =====================================================
+
     obtenerTodos() {
 
         return this.fincas;
@@ -35,25 +52,33 @@ export class FincaService {
     }
 
 
-    obtenerPorId(id) {
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
+    obtenerPorId(
+        id
+    ) {
 
         return (
-            this.fincas.find(
-                finca =>
-                    Number(
-                        finca.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            this.fincas
+                .find(
+                    finca =>
+                        mismoId(
+                            finca.id,
+                            id
+                        )
+                )
             ||
             null
         );
 
     }
 
+
+    // =====================================================
+    // CREAR
+    // =====================================================
 
     crear(
         nombre,
@@ -62,24 +87,67 @@ export class FincaService {
         notas
     ) {
 
+        const nombreLimpio =
+            String(
+                nombre
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            !nombreLimpio
+        ) {
+
+            return null;
+
+        }
+
+
+        const superficieNumerica =
+            numeroSeguro(
+                superficie,
+                0
+            );
+
+
+        if (
+            superficieNumerica <
+            0
+        ) {
+
+            return null;
+
+        }
+
+
         const nuevaFinca = {
 
             id:
-                Date.now(),
+                generarId(),
 
             nombre:
-                nombre,
+                nombreLimpio,
 
             ubicacion:
-                ubicacion,
+                String(
+                    ubicacion
+                    ??
+                    ""
+                )
+                    .trim(),
 
             superficie:
-                Number(
-                    superficie
-                ),
+                superficieNumerica,
 
             notas:
-                notas,
+                String(
+                    notas
+                    ??
+                    ""
+                )
+                    .trim(),
 
             parcelas:
                 []
@@ -92,7 +160,28 @@ export class FincaService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.fincas =
+                this.fincas
+                    .filter(
+                        finca =>
+                            !mismoId(
+                                finca.id,
+                                nuevaFinca.id
+                            )
+                    );
+
+
+            return null;
+
+        }
 
 
         return nuevaFinca;
@@ -104,7 +193,9 @@ export class FincaService {
     // VÍNCULOS / TRAZABILIDAD
     // =====================================================
 
-    obtenerVinculos(id) {
+    obtenerVinculos(
+        id
+    ) {
 
         const finca =
             this.obtenerPorId(
@@ -117,13 +208,37 @@ export class FincaService {
         ) {
 
             return {
-                campanias: 0,
-                cultivos: 0,
-                produccion: 0,
-                trabajos: 0,
-                gastos: 0,
-                albaranes: 0,
-                total: 0
+
+                campanias:
+                    0,
+
+                cultivos:
+                    0,
+
+                produccion:
+                    0,
+
+                trabajos:
+                    0,
+
+                gastos:
+                    0,
+
+                albaranes:
+                    0,
+
+                incidencias:
+                    0,
+
+                cuaderno:
+                    0,
+
+                tratamientos:
+                    0,
+
+                total:
+                    0
+
             };
 
         }
@@ -165,98 +280,159 @@ export class FincaService {
             );
 
 
-        const mismoId =
-            valor =>
-                Number(
-                    valor
-                )
-                ===
-                Number(
-                    finca.id
-                );
+        const incidencias =
+            this.obtenerStorageSeguro(
+                "obtenerIncidencias"
+            );
+
+
+        const cuaderno =
+            this.obtenerStorageSeguro(
+                "obtenerCuadernoCampo"
+            );
+
+
+        const tratamientos =
+            this.obtenerStorageSeguro(
+                "obtenerTratamientos"
+            );
 
 
         const campaniasVinculadas =
-            campanias.filter(
-                campania =>
-                    mismoId(
-                        campania.fincaId
-                    )
-            ).length;
+            campanias
+                .filter(
+                    campania =>
+                        mismoId(
+                            campania.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
         const cultivosVinculados =
-            cultivos.filter(
-                cultivo =>
-                    mismoId(
-                        cultivo.fincaId
-                    )
-            ).length;
+            cultivos
+                .filter(
+                    cultivo =>
+                        mismoId(
+                            cultivo.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
         const produccionVinculada =
-            produccion.filter(
-                registro =>
-                    mismoId(
-                        registro.fincaId
-                    )
-            ).length;
+            produccion
+                .filter(
+                    registro =>
+                        mismoId(
+                            registro.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
         const trabajosVinculados =
-            trabajos.filter(
-                trabajo =>
-                    mismoId(
-                        trabajo.fincaId
-                    )
-            ).length;
+            trabajos
+                .filter(
+                    trabajo =>
+                        mismoId(
+                            trabajo.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
         const gastosVinculados =
-            gastos.filter(
-                gasto =>
-                    mismoId(
-                        gasto.fincaId
-                    )
-            ).length;
+            gastos
+                .filter(
+                    gasto =>
+                        mismoId(
+                            gasto.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
-        let albaranesVinculados = 0;
+        const incidenciasVinculadas =
+            incidencias
+                .filter(
+                    incidencia =>
+                        mismoId(
+                            incidencia.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
-        albaranes.forEach(
-            albaran => {
-
-                const lineas =
-                    Array.isArray(
-                        albaran.lineas
-                    )
-                    &&
-                    albaran.lineas.length >
-                    0
-
-                        ? albaran.lineas
-
-                        : [
-                            albaran
-                        ];
+        const cuadernoVinculado =
+            cuaderno
+                .filter(
+                    registro =>
+                        mismoId(
+                            registro.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
 
-                if (
-                    lineas.some(
-                        linea =>
-                            mismoId(
-                                linea.fincaId
-                            )
-                    )
-                ) {
+        const tratamientosVinculados =
+            tratamientos
+                .filter(
+                    tratamiento =>
+                        mismoId(
+                            tratamiento.fincaId,
+                            finca.id
+                        )
+                )
+                .length;
 
-                    albaranesVinculados++;
+
+        let albaranesVinculados =
+            0;
+
+
+        albaranes
+            .forEach(
+                albaran => {
+
+                    const lineas =
+                        Array.isArray(
+                            albaran.lineas
+                        )
+                        &&
+                        albaran.lineas.length >
+                        0
+
+                            ? albaran.lineas
+
+                            : [
+                                albaran
+                            ];
+
+
+                    if (
+                        lineas.some(
+                            linea =>
+                                mismoId(
+                                    linea.fincaId,
+                                    finca.id
+                                )
+                        )
+                    ) {
+
+                        albaranesVinculados++;
+
+                    }
 
                 }
-
-            }
-        );
+            );
 
 
         return {
@@ -279,6 +455,15 @@ export class FincaService {
             albaranes:
                 albaranesVinculados,
 
+            incidencias:
+                incidenciasVinculadas,
+
+            cuaderno:
+                cuadernoVinculado,
+
+            tratamientos:
+                tratamientosVinculados,
+
             total:
                 campaniasVinculadas
                 +
@@ -291,19 +476,32 @@ export class FincaService {
                 gastosVinculados
                 +
                 albaranesVinculados
+                +
+                incidenciasVinculadas
+                +
+                cuadernoVinculado
+                +
+                tratamientosVinculados
 
         };
 
     }
 
 
-    obtenerStorageSeguro(metodo) {
+    // =====================================================
+    // STORAGE SEGURO
+    // =====================================================
+
+    obtenerStorageSeguro(
+        metodo
+    ) {
 
         try {
 
             if (
-                typeof
-                StorageService[metodo]
+                typeof StorageService[
+                    metodo
+                ]
                 !==
                 "function"
             ) {
@@ -314,7 +512,9 @@ export class FincaService {
 
 
             const datos =
-                StorageService[metodo]();
+                StorageService[
+                    metodo
+                ]();
 
 
             return Array.isArray(
@@ -325,7 +525,15 @@ export class FincaService {
 
         }
 
-        catch {
+        catch (
+            error
+        ) {
+
+            console.error(
+                `Error obteniendo datos para comprobar vínculos de finca mediante ${metodo}:`,
+                error
+            );
+
 
             return [];
 
@@ -334,7 +542,13 @@ export class FincaService {
     }
 
 
-    eliminar(id) {
+    // =====================================================
+    // ELIMINAR
+    // =====================================================
+
+    eliminar(
+        id
+    ) {
 
         const finca =
             this.obtenerPorId(
@@ -347,9 +561,13 @@ export class FincaService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "La finca no existe."
+
             };
 
         }
@@ -366,7 +584,8 @@ export class FincaService {
             0
         ) {
 
-            const partes = [];
+            const partes =
+                [];
 
 
             if (
@@ -376,7 +595,8 @@ export class FincaService {
 
                 partes.push(
                     `${vinculos.campanias} campanya${
-                        vinculos.campanias === 1
+                        vinculos.campanias ===
+                        1
                             ? ""
                             : "s"
                     }`
@@ -392,7 +612,8 @@ export class FincaService {
 
                 partes.push(
                     `${vinculos.cultivos} cultivo${
-                        vinculos.cultivos === 1
+                        vinculos.cultivos ===
+                        1
                             ? ""
                             : "s"
                     }`
@@ -408,7 +629,8 @@ export class FincaService {
 
                 partes.push(
                     `${vinculos.produccion} registro${
-                        vinculos.produccion === 1
+                        vinculos.produccion ===
+                        1
                             ? ""
                             : "s"
                     } de producción`
@@ -424,7 +646,8 @@ export class FincaService {
 
                 partes.push(
                     `${vinculos.trabajos} trabajo${
-                        vinculos.trabajos === 1
+                        vinculos.trabajos ===
+                        1
                             ? ""
                             : "s"
                     }`
@@ -440,7 +663,8 @@ export class FincaService {
 
                 partes.push(
                     `${vinculos.gastos} gasto${
-                        vinculos.gastos === 1
+                        vinculos.gastos ===
+                        1
                             ? ""
                             : "s"
                     }`
@@ -456,7 +680,8 @@ export class FincaService {
 
                 partes.push(
                     `${vinculos.albaranes} albarán${
-                        vinculos.albaranes === 1
+                        vinculos.albaranes ===
+                        1
                             ? ""
                             : "es"
                     }`
@@ -465,46 +690,134 @@ export class FincaService {
             }
 
 
+            if (
+                vinculos.incidencias >
+                0
+            ) {
+
+                partes.push(
+                    `${vinculos.incidencias} incidencia${
+                        vinculos.incidencias ===
+                        1
+                            ? ""
+                            : "s"
+                    }`
+                );
+
+            }
+
+
+            if (
+                vinculos.cuaderno >
+                0
+            ) {
+
+                partes.push(
+                    `${vinculos.cuaderno} registro${
+                        vinculos.cuaderno ===
+                        1
+                            ? ""
+                            : "s"
+                    } del cuaderno de campo`
+                );
+
+            }
+
+
+            if (
+                vinculos.tratamientos >
+                0
+            ) {
+
+                partes.push(
+                    `${vinculos.tratamientos} tratamiento${
+                        vinculos.tratamientos ===
+                        1
+                            ? ""
+                            : "s"
+                    }`
+                );
+
+            }
+
+
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     `No puedes eliminar la finca "${finca.nombre}" porque tiene información vinculada: ${partes.join(
                         ", "
                     )}.`
+
             };
 
         }
 
 
+        const fincasAnteriores =
+            [
+                ...this.fincas
+            ];
+
+
         this.fincas =
-            this.fincas.filter(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        id
-                    )
-            );
+            this.fincas
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.fincas =
+                fincasAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar la finca."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
 
 
+    // =====================================================
+    // GUARDAR
+    // =====================================================
+
     guardar() {
 
-        StorageService.guardarFincas(
-            this.fincas
-        );
+        return StorageService
+            .guardarFincas(
+                this.fincas
+            );
 
     }
 

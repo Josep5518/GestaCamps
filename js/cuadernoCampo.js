@@ -54,19 +54,21 @@ export class CuadernoCampoService {
         id
     ) {
 
-        return this.registros
-            .find(
-                registro =>
-                    Number(
-                        registro.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+        return (
+            this.registros
+                .find(
+                    registro =>
+                        Number(
+                            registro.id
+                        )
+                        ===
+                        Number(
+                            id
+                        )
+                )
             ||
-            null;
+            null
+        );
 
     }
 
@@ -219,7 +221,8 @@ export class CuadernoCampoService {
         const registro = {
 
             id:
-                Date.now(),
+                StorageService
+                    .generarId(),
 
             fecha:
                 datos.fecha,
@@ -314,17 +317,20 @@ export class CuadernoCampoService {
                 "",
 
             dosis:
-                datos.dosis?.trim()
+                datos.dosis
+                    ?.trim()
                 ||
                 "",
 
             descripcion:
-                datos.descripcion?.trim()
+                datos.descripcion
+                    ?.trim()
                 ||
                 "",
 
             observaciones:
-                datos.observaciones?.trim()
+                datos.observaciones
+                    ?.trim()
                 ||
                 "",
 
@@ -351,15 +357,49 @@ export class CuadernoCampoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.registros =
+                this.registros
+                    .filter(
+                        item =>
+                            Number(
+                                item.id
+                            )
+                            !==
+                            Number(
+                                registro.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar la actuación."
+
+            };
+
+        }
 
 
         return {
+
             ok:
                 true,
 
             registro:
                 registro
+
         };
 
     }
@@ -385,11 +425,13 @@ export class CuadernoCampoService {
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "El registro del cuaderno no existe."
+
             };
 
         }
@@ -423,6 +465,14 @@ export class CuadernoCampoService {
             return relaciones;
 
         }
+
+
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    registro
+                )
+            );
 
 
         registro.fecha =
@@ -535,19 +585,22 @@ export class CuadernoCampoService {
 
 
         registro.dosis =
-            datos.dosis?.trim()
+            datos.dosis
+                ?.trim()
             ||
             "";
 
 
         registro.descripcion =
-            datos.descripcion?.trim()
+            datos.descripcion
+                ?.trim()
             ||
             "";
 
 
         registro.observaciones =
-            datos.observaciones?.trim()
+            datos.observaciones
+                ?.trim()
             ||
             "";
 
@@ -557,15 +610,41 @@ export class CuadernoCampoService {
                 .toISOString();
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            Object.assign(
+                registro,
+                estadoAnterior
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios."
+
+            };
+
+        }
 
 
         return {
+
             ok:
                 true,
 
             registro:
                 registro
+
         };
 
     }
@@ -590,14 +669,22 @@ export class CuadernoCampoService {
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "El registro del cuaderno no existe."
+
             };
 
         }
+
+
+        const registrosAnteriores =
+            [
+                ...this.registros
+            ];
 
 
         this.registros =
@@ -614,12 +701,36 @@ export class CuadernoCampoService {
                 );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.registros =
+                registrosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar la actuación."
+
+            };
+
+        }
 
 
         return {
+
             ok:
                 true
+
         };
 
     }
@@ -634,15 +745,37 @@ export class CuadernoCampoService {
     ) {
 
         if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos de la actuación no son válidos."
+
+            };
+
+        }
+
+
+        if (
             !datos.fecha
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "Introduce la fecha de la actuación."
+
             };
 
         }
@@ -655,11 +788,33 @@ export class CuadernoCampoService {
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "Selecciona el tipo de actuación."
+
+            };
+
+        }
+
+
+        if (
+            !this.obtenerTiposActuacion()
+                .includes(
+                    datos.tipoActuacion.trim()
+                )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El tipo de actuación no es válido."
+
             };
 
         }
@@ -670,11 +825,13 @@ export class CuadernoCampoService {
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "Selecciona una finca."
+
             };
 
         }
@@ -683,6 +840,12 @@ export class CuadernoCampoService {
         if (
             datos.cantidad !==
             ""
+            &&
+            datos.cantidad !==
+            null
+            &&
+            datos.cantidad !==
+            undefined
             &&
             (
                 Number.isNaN(
@@ -700,19 +863,23 @@ export class CuadernoCampoService {
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "La cantidad no es válida."
+
             };
 
         }
 
 
         return {
+
             ok:
                 true
+
         };
 
     }
@@ -774,11 +941,13 @@ export class CuadernoCampoService {
         ) {
 
             return {
+
                 ok:
                     false,
 
                 mensaje:
                     "La finca seleccionada no existe."
+
             };
 
         }
@@ -810,11 +979,13 @@ export class CuadernoCampoService {
             ) {
 
                 return {
+
                     ok:
                         false,
 
                     mensaje:
                         "La campanya seleccionada no existe."
+
                 };
 
             }
@@ -831,11 +1002,13 @@ export class CuadernoCampoService {
             ) {
 
                 return {
+
                     ok:
                         false,
 
                     mensaje:
                         "La campanya no pertenece a la finca seleccionada."
+
                 };
 
             }
@@ -869,11 +1042,13 @@ export class CuadernoCampoService {
             ) {
 
                 return {
+
                     ok:
                         false,
 
                     mensaje:
                         "El cultivo seleccionado no existe."
+
                 };
 
             }
@@ -892,11 +1067,13 @@ export class CuadernoCampoService {
             ) {
 
                 return {
+
                     ok:
                         false,
 
                     mensaje:
                         "El cultivo no pertenece a la finca seleccionada."
+
                 };
 
             }
@@ -910,20 +1087,55 @@ export class CuadernoCampoService {
             )
                 ? datos.trabajadorIds
                     .map(
-                        Number
+                        id =>
+                            Number(
+                                id
+                            )
+                    )
+                    .filter(
+                        id =>
+                            !Number.isNaN(
+                                id
+                            )
                     )
                 : [];
+
+
+        const trabajadorIdsUnicos =
+            [
+                ...new Set(
+                    trabajadorIds
+                )
+            ];
 
 
         const trabajadoresSeleccionados =
             trabajadores.filter(
                 trabajador =>
-                    trabajadorIds.includes(
+                    trabajadorIdsUnicos.includes(
                         Number(
                             trabajador.id
                         )
                     )
             );
+
+
+        if (
+            trabajadoresSeleccionados.length !==
+            trabajadorIdsUnicos.length
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Uno o varios trabajadores seleccionados ya no existen."
+
+            };
+
+        }
 
 
         let maquina =
@@ -947,6 +1159,23 @@ export class CuadernoCampoService {
                 )
                 ||
                 null;
+
+
+            if (
+                !maquina
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La maquinaria seleccionada no existe."
+
+                };
+
+            }
 
         }
 
@@ -973,10 +1202,28 @@ export class CuadernoCampoService {
                 ||
                 null;
 
+
+            if (
+                !producto
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "El producto o material seleccionado no existe en el inventario."
+
+                };
+
+            }
+
         }
 
 
         return {
+
             ok:
                 true,
 
@@ -997,6 +1244,7 @@ export class CuadernoCampoService {
 
             producto:
                 producto
+
         };
 
     }
@@ -1014,8 +1262,12 @@ export class CuadernoCampoService {
             trabajador.nombre,
             trabajador.apellidos
         ]
-            .filter(Boolean)
-            .join(" ");
+            .filter(
+                Boolean
+            )
+            .join(
+                " "
+            );
 
     }
 
@@ -1031,8 +1283,12 @@ export class CuadernoCampoService {
                 cultivo.tipo,
                 cultivo.variedad
             ]
-                .filter(Boolean)
-                .join(" · ")
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " · "
+                )
             ||
             `Cultivo ${cultivo.id}`
         );
@@ -1051,8 +1307,12 @@ export class CuadernoCampoService {
                 maquinaria.marca,
                 maquinaria.modelo
             ]
-                .filter(Boolean)
-                .join(" ")
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " "
+                )
             ||
             `Maquinaria ${maquinaria.id}`
         );
@@ -1083,7 +1343,7 @@ export class CuadernoCampoService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarCuadernoCampo(
                 this.registros
             );

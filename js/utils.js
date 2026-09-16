@@ -98,7 +98,9 @@ export function formatearFecha(
         3
     ) {
 
-        return fecha;
+        return String(
+            fecha
+        );
 
     }
 
@@ -268,14 +270,25 @@ export function numeroSeguro(
 
 export function generarId() {
 
+    if (
+        typeof crypto !==
+        "undefined"
+        &&
+        typeof crypto.randomUUID ===
+        "function"
+    ) {
+
+        return crypto.randomUUID();
+
+    }
+
+
     return (
-        Date.now()
-        +
-        Math.floor(
+        `${Date.now()}-${Math.floor(
             Math.random()
             *
-            1000
-        )
+            1000000
+        )}`
     );
 
 }

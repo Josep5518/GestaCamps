@@ -1,5 +1,12 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    numeroSeguro
+} from "./utils.js";
+
+
 export class CultivoService {
 
     constructor(
@@ -14,7 +21,8 @@ export class CultivoService {
             campaniaService;
 
         this.cultivos =
-            StorageService.obtenerCultivos();
+            StorageService
+                .obtenerCultivos();
 
 
         if (
@@ -23,12 +31,17 @@ export class CultivoService {
             )
         ) {
 
-            this.cultivos = [];
+            this.cultivos =
+                [];
 
         }
 
     }
 
+
+    // =====================================================
+    // OBTENER TODOS
+    // =====================================================
 
     obtenerTodos() {
 
@@ -44,19 +57,23 @@ export class CultivoService {
     }
 
 
-    obtenerPorId(id) {
+    // =====================================================
+    // OBTENER POR ID
+    // =====================================================
+
+    obtenerPorId(
+        id
+    ) {
 
         return (
-            this.cultivos.find(
-                cultivo =>
-                    Number(
-                        cultivo.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            this.cultivos
+                .find(
+                    cultivo =>
+                        mismoId(
+                            cultivo.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -64,108 +81,65 @@ export class CultivoService {
     }
 
 
+    // =====================================================
+    // ACTIVOS
+    // =====================================================
+
     obtenerActivos() {
 
-        return this.cultivos.filter(
-            cultivo =>
-                cultivo.estado ===
-                "Activo"
-        );
+        return this.cultivos
+            .filter(
+                cultivo =>
+                    cultivo.estado ===
+                    "Activo"
+            );
 
     }
 
+
+    // =====================================================
+    // POR FINCA
+    // =====================================================
 
     obtenerPorFinca(
         fincaId
     ) {
 
-        return this.cultivos.filter(
-            cultivo =>
-                Number(
-                    cultivo.fincaId
-                )
-                ===
-                Number(
-                    fincaId
-                )
-        );
+        return this.cultivos
+            .filter(
+                cultivo =>
+                    mismoId(
+                        cultivo.fincaId,
+                        fincaId
+                    )
+            );
 
     }
 
+
+    // =====================================================
+    // POR CAMPANYA
+    // =====================================================
 
     obtenerPorCampania(
         campaniaId
     ) {
 
-        return this.cultivos.filter(
-            cultivo =>
-                Number(
-                    cultivo.campaniaId
-                )
-                ===
-                Number(
-                    campaniaId
-                )
-        );
-
-    }
-
-
-    obtenerProduccionVinculada(
-        cultivoId
-    ) {
-
-        try {
-
-            if (
-                typeof
-                StorageService.obtenerProduccion
-                !==
-                "function"
-            ) {
-
-                return [];
-
-            }
-
-
-            const produccion =
-                StorageService
-                    .obtenerProduccion();
-
-
-            if (
-                !Array.isArray(
-                    produccion
-                )
-            ) {
-
-                return [];
-
-            }
-
-
-            return produccion.filter(
-                registro =>
-                    Number(
-                        registro.cultivoId
-                    )
-                    ===
-                    Number(
-                        cultivoId
+        return this.cultivos
+            .filter(
+                cultivo =>
+                    mismoId(
+                        cultivo.campaniaId,
+                        campaniaId
                     )
             );
 
-        }
-
-        catch {
-
-            return [];
-
-        }
-
     }
 
+
+    // =====================================================
+    // VALIDAR CAMPANYA / FINCA
+    // =====================================================
 
     validarCampaniaFinca(
         campania,
@@ -177,51 +151,86 @@ export class CultivoService {
         ) {
 
             return {
-                ok: true
+                ok:
+                    true
             };
 
         }
 
 
         if (
-            Number(
-                campania.fincaId
-            )
-            !==
-            Number(
+            !mismoId(
+                campania.fincaId,
                 finca.id
             )
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "La campanya seleccionada no pertenece a la finca seleccionada."
+
             };
 
         }
 
 
         return {
-            ok: true
+            ok:
+                true
         };
 
     }
 
 
-    crear(datos) {
+    // =====================================================
+    // VALIDAR DATOS
+    // =====================================================
+
+    validar(
+        datos
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del cultivo no son válidos."
+
+            };
+
+        }
+
 
         if (
             !datos.tipo
             ||
-            !datos.tipo.trim()
+            !String(
+                datos.tipo
+            )
+                .trim()
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Introduce el tipo de cultivo."
+
             };
 
         }
@@ -230,24 +239,101 @@ export class CultivoService {
         if (
             !datos.variedad
             ||
-            !datos.variedad.trim()
+            !String(
+                datos.variedad
+            )
+                .trim()
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Introduce la variedad."
+
             };
 
         }
 
 
+        const superficie =
+            numeroSeguro(
+                datos.superficie,
+                0
+            );
+
+
+        if (
+            superficie <
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La superficie no puede ser negativa."
+
+            };
+
+        }
+
+
+        const estado =
+            String(
+                datos.estado
+                ??
+                "Activo"
+            )
+                .trim();
+
+
+        if (
+            ![
+                "Activo",
+                "Inactivo"
+            ].includes(
+                estado
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El estado del cultivo no es válido."
+
+            };
+
+        }
+
+
+        return {
+            ok:
+                true
+        };
+
+    }
+
+
+    // =====================================================
+    // OBTENER RELACIONES
+    // =====================================================
+
+    obtenerRelaciones(
+        datos
+    ) {
+
         const finca =
             this.fincaService
                 .obtenerPorId(
-                    Number(
-                        datos.fincaId
-                    )
+                    datos.fincaId
                 );
 
 
@@ -256,15 +342,20 @@ export class CultivoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Selecciona una finca válida."
+
             };
 
         }
 
 
-        let campania = null;
+        let campania =
+            null;
 
 
         if (
@@ -274,9 +365,7 @@ export class CultivoService {
             campania =
                 this.campaniaService
                     .obtenerPorId(
-                        Number(
-                            datos.campaniaId
-                        )
+                        datos.campaniaId
                     );
 
 
@@ -285,9 +374,13 @@ export class CultivoService {
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
+
                     mensaje:
                         "La campanya seleccionada no existe."
+
                 };
 
             }
@@ -311,42 +404,49 @@ export class CultivoService {
         }
 
 
-        const superficie =
-            Number(
-                datos.superficie
-                ||
-                0
-            );
+        return {
+
+            ok:
+                true,
+
+            finca:
+                finca,
+
+            campania:
+                campania
+
+        };
+
+    }
 
 
-        if (
-            !Number.isFinite(
-                superficie
-            )
-            ||
-            superficie <
-            0
-        ) {
+    // =====================================================
+    // NORMALIZAR DATOS
+    // =====================================================
 
-            return {
-                ok: false,
-                mensaje:
-                    "La superficie no puede ser negativa."
-            };
+    normalizarDatos(
+        datos,
+        finca,
+        campania
+    ) {
 
-        }
-
-
-        const nuevoCultivo = {
-
-            id:
-                Date.now(),
+        return {
 
             tipo:
-                datos.tipo.trim(),
+                String(
+                    datos.tipo
+                    ??
+                    ""
+                )
+                    .trim(),
 
             variedad:
-                datos.variedad.trim(),
+                String(
+                    datos.variedad
+                    ??
+                    ""
+                )
+                    .trim(),
 
             fincaId:
                 finca.id,
@@ -355,22 +455,36 @@ export class CultivoService {
                 finca.nombre,
 
             parcela:
-                datos.parcela?.trim()
-                ||
-                "",
+                String(
+                    datos.parcela
+                    ??
+                    ""
+                )
+                    .trim(),
 
             superficie:
-                superficie,
+                numeroSeguro(
+                    datos.superficie,
+                    0
+                ),
 
             estado:
-                datos.estado
+                String(
+                    datos.estado
+                    ??
+                    "Activo"
+                )
+                    .trim()
                 ||
                 "Activo",
 
             fechaInicio:
-                datos.fechaInicio
-                ||
-                "",
+                String(
+                    datos.fechaInicio
+                    ??
+                    ""
+                )
+                    .trim(),
 
             campaniaId:
                 campania
@@ -383,13 +497,77 @@ export class CultivoService {
                     : "",
 
             notas:
-                datos.notas?.trim()
-                ||
-                "",
+                String(
+                    datos.notas
+                    ??
+                    ""
+                )
+                    .trim()
+
+        };
+
+    }
+
+
+    // =====================================================
+    // CREAR
+    // =====================================================
+
+    crear(
+        datos
+    ) {
+
+        const validacion =
+            this.validar(
+                datos
+            );
+
+
+        if (
+            !validacion.ok
+        ) {
+
+            return validacion;
+
+        }
+
+
+        const relaciones =
+            this.obtenerRelaciones(
+                datos
+            );
+
+
+        if (
+            !relaciones.ok
+        ) {
+
+            return relaciones;
+
+        }
+
+
+        const ahora =
+            new Date()
+                .toISOString();
+
+
+        const nuevoCultivo = {
+
+            id:
+                generarId(),
+
+            ...this.normalizarDatos(
+                datos,
+                relaciones.finca,
+                relaciones.campania
+            ),
 
             fechaCreacion:
-                new Date()
-                    .toISOString()
+                ahora,
+
+            fechaModificacion:
+                ahora
 
         };
 
@@ -399,17 +577,54 @@ export class CultivoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.cultivos =
+                this.cultivos
+                    .filter(
+                        cultivo =>
+                            !mismoId(
+                                cultivo.id,
+                                nuevoCultivo.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el cultivo."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             cultivo:
                 nuevoCultivo
+
         };
 
     }
 
+
+    // =====================================================
+    // EDITAR
+    // =====================================================
 
     editar(
         id,
@@ -427,265 +642,471 @@ export class CultivoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El cultivo no existe."
+
             };
 
         }
 
 
+        const validacion =
+            this.validar(
+                datos
+            );
+
+
         if (
-            !datos.tipo
-            ||
-            !datos.tipo.trim()
+            !validacion.ok
         ) {
 
-            return {
-                ok: false,
-                mensaje:
-                    "Introduce el tipo de cultivo."
-            };
+            return validacion;
 
         }
 
 
+        const relaciones =
+            this.obtenerRelaciones(
+                datos
+            );
+
+
         if (
-            !datos.variedad
-            ||
-            !datos.variedad.trim()
+            !relaciones.ok
         ) {
 
-            return {
-                ok: false,
-                mensaje:
-                    "Introduce la variedad."
-            };
+            return relaciones;
 
         }
 
 
         const finca =
-            this.fincaService
-                .obtenerPorId(
-                    Number(
-                        datos.fincaId
-                    )
-                );
+            relaciones.finca;
 
 
-        if (
-            !finca
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "Selecciona una finca válida."
-            };
-
-        }
-
-
-        let campania = null;
-
-
-        if (
-            datos.campaniaId
-        ) {
-
-            campania =
-                this.campaniaService
-                    .obtenerPorId(
-                        Number(
-                            datos.campaniaId
-                        )
-                    );
-
-
-            if (
-                !campania
-            ) {
-
-                return {
-                    ok: false,
-                    mensaje:
-                        "La campanya seleccionada no existe."
-                };
-
-            }
-
-
-            const validacion =
-                this.validarCampaniaFinca(
-                    campania,
-                    finca
-                );
-
-
-            if (
-                !validacion.ok
-            ) {
-
-                return validacion;
-
-            }
-
-        }
-
-
-        const superficie =
-            Number(
-                datos.superficie
-                ||
-                0
-            );
-
-
-        if (
-            !Number.isFinite(
-                superficie
-            )
-            ||
-            superficie <
-            0
-        ) {
-
-            return {
-                ok: false,
-                mensaje:
-                    "La superficie no puede ser negativa."
-            };
-
-        }
-
-
-        const produccionVinculada =
-            this.obtenerProduccionVinculada(
-                cultivo.id
-            );
+        const campania =
+            relaciones.campania;
 
 
         const fincaCambia =
-            Number(
-                cultivo.fincaId
-            )
-            !==
-            Number(
+            !mismoId(
+                cultivo.fincaId,
                 finca.id
             );
 
 
-        const campaniaActualId =
-            cultivo.campaniaId
-                ? Number(
-                    cultivo.campaniaId
-                )
-                : null;
-
-
-        const nuevaCampaniaId =
-            campania
-                ? Number(
+        const campaniaCambia =
+            (
+                cultivo.campaniaId ===
+                null
+                &&
+                campania !==
+                null
+            )
+            ||
+            (
+                cultivo.campaniaId !==
+                null
+                &&
+                campania ===
+                null
+            )
+            ||
+            (
+                cultivo.campaniaId !==
+                null
+                &&
+                campania !==
+                null
+                &&
+                !mismoId(
+                    cultivo.campaniaId,
                     campania.id
                 )
-                : null;
-
-
-        const campaniaCambia =
-            campaniaActualId
-            !==
-            nuevaCampaniaId;
+            );
 
 
         if (
-            produccionVinculada.length >
-            0
-            &&
-            (
-                fincaCambia
-                ||
-                campaniaCambia
-            )
+            fincaCambia
+            ||
+            campaniaCambia
         ) {
 
+            const vinculos =
+                this.obtenerVinculos(
+                    cultivo.id
+                );
+
+
+            if (
+                vinculos.total >
+                0
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        `No puedes cambiar la finca ni la campanya de este cultivo porque tiene información vinculada: ${this.formatearVinculos(
+                            vinculos
+                        )}.`
+
+                };
+
+            }
+
+        }
+
+
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    cultivo
+                )
+            );
+
+
+        Object.assign(
+            cultivo,
+            this.normalizarDatos(
+                datos,
+                finca,
+                campania
+            ),
+            {
+
+                fechaModificacion:
+                    new Date()
+                        .toISOString()
+
+            }
+        );
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            Object.assign(
+                cultivo,
+                estadoAnterior
+            );
+
+
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
-                    `No puedes cambiar la finca ni la campanya de este cultivo porque ya tiene ${produccionVinculada.length} registro${
-                        produccionVinculada.length === 1
-                            ? ""
-                            : "s"
-                    } de producción vinculado${
-                        produccionVinculada.length === 1
-                            ? ""
-                            : "s"
-                    }.`
+                    "No se han podido guardar los cambios del cultivo."
+
             };
 
         }
 
 
-        cultivo.tipo =
-            datos.tipo.trim();
-
-        cultivo.variedad =
-            datos.variedad.trim();
-
-        cultivo.fincaId =
-            finca.id;
-
-        cultivo.fincaNombre =
-            finca.nombre;
-
-        cultivo.parcela =
-            datos.parcela?.trim()
-            ||
-            "";
-
-        cultivo.superficie =
-            superficie;
-
-        cultivo.estado =
-            datos.estado
-            ||
-            "Activo";
-
-        cultivo.fechaInicio =
-            datos.fechaInicio
-            ||
-            "";
-
-        cultivo.campaniaId =
-            campania
-                ? campania.id
-                : null;
-
-        cultivo.campaniaNombre =
-            campania
-                ? campania.nombre
-                : "";
-
-        cultivo.notas =
-            datos.notas?.trim()
-            ||
-            "";
-
-
-        this.guardar();
-
-
         return {
-            ok: true,
+
+            ok:
+                true,
+
             cultivo:
                 cultivo
+
         };
 
     }
 
 
-    eliminar(id) {
+    // =====================================================
+    // VÍNCULOS / TRAZABILIDAD
+    // =====================================================
+
+    obtenerVinculos(
+        cultivoId
+    ) {
+
+        const produccion =
+            this.obtenerStorageSeguro(
+                "obtenerProduccion"
+            );
+
+
+        const trabajos =
+            this.obtenerStorageSeguro(
+                "obtenerTrabajos"
+            );
+
+
+        const cuaderno =
+            this.obtenerStorageSeguro(
+                "obtenerCuadernoCampo"
+            );
+
+
+        const tratamientos =
+            this.obtenerStorageSeguro(
+                "obtenerTratamientos"
+            );
+
+
+        const produccionVinculada =
+            produccion
+                .filter(
+                    registro =>
+                        mismoId(
+                            registro.cultivoId,
+                            cultivoId
+                        )
+                )
+                .length;
+
+
+        const trabajosVinculados =
+            trabajos
+                .filter(
+                    trabajo =>
+                        mismoId(
+                            trabajo.cultivoId,
+                            cultivoId
+                        )
+                )
+                .length;
+
+
+        const cuadernoVinculado =
+            cuaderno
+                .filter(
+                    registro =>
+                        mismoId(
+                            registro.cultivoId,
+                            cultivoId
+                        )
+                )
+                .length;
+
+
+        const tratamientosVinculados =
+            tratamientos
+                .filter(
+                    tratamiento =>
+                        mismoId(
+                            tratamiento.cultivoId,
+                            cultivoId
+                        )
+                )
+                .length;
+
+
+        return {
+
+            produccion:
+                produccionVinculada,
+
+            trabajos:
+                trabajosVinculados,
+
+            cuaderno:
+                cuadernoVinculado,
+
+            tratamientos:
+                tratamientosVinculados,
+
+            total:
+                produccionVinculada
+                +
+                trabajosVinculados
+                +
+                cuadernoVinculado
+                +
+                tratamientosVinculados
+
+        };
+
+    }
+
+
+    // =====================================================
+    // FORMATEAR VÍNCULOS
+    // =====================================================
+
+    formatearVinculos(
+        vinculos
+    ) {
+
+        const partes =
+            [];
+
+
+        if (
+            vinculos.produccion >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.produccion} registro${
+                    vinculos.produccion ===
+                    1
+                        ? ""
+                        : "s"
+                } de producción`
+            );
+
+        }
+
+
+        if (
+            vinculos.trabajos >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.trabajos} trabajo${
+                    vinculos.trabajos ===
+                    1
+                        ? ""
+                        : "s"
+                }`
+            );
+
+        }
+
+
+        if (
+            vinculos.cuaderno >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.cuaderno} registro${
+                    vinculos.cuaderno ===
+                    1
+                        ? ""
+                        : "s"
+                } del cuaderno de campo`
+            );
+
+        }
+
+
+        if (
+            vinculos.tratamientos >
+            0
+        ) {
+
+            partes.push(
+                `${vinculos.tratamientos} tratamiento${
+                    vinculos.tratamientos ===
+                    1
+                        ? ""
+                        : "s"
+                }`
+            );
+
+        }
+
+
+        return partes.join(
+            ", "
+        );
+
+    }
+
+
+    // =====================================================
+    // STORAGE SEGURO
+    // =====================================================
+
+    obtenerStorageSeguro(
+        metodo
+    ) {
+
+        try {
+
+            if (
+                typeof StorageService[
+                    metodo
+                ]
+                !==
+                "function"
+            ) {
+
+                return [];
+
+            }
+
+
+            const datos =
+                StorageService[
+                    metodo
+                ]();
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+        catch (
+            error
+        ) {
+
+            console.error(
+                `Error obteniendo vínculos del cultivo mediante ${metodo}:`,
+                error
+            );
+
+
+            return [];
+
+        }
+
+    }
+
+
+    // =====================================================
+    // PRODUCCIÓN VINCULADA
+    // =====================================================
+
+    obtenerProduccionVinculada(
+        cultivoId
+    ) {
+
+        return this.obtenerStorageSeguro(
+            "obtenerProduccion"
+        )
+            .filter(
+                registro =>
+                    mismoId(
+                        registro.cultivoId,
+                        cultivoId
+                    )
+            );
+
+    }
+
+
+    // =====================================================
+    // ELIMINAR
+    // =====================================================
+
+    eliminar(
+        id
+    ) {
 
         const cultivo =
             this.obtenerPorId(
@@ -698,69 +1119,101 @@ export class CultivoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El cultivo no existe."
+
             };
 
         }
 
 
-        const produccionVinculada =
-            this.obtenerProduccionVinculada(
+        const vinculos =
+            this.obtenerVinculos(
                 cultivo.id
             );
 
 
         if (
-            produccionVinculada.length >
+            vinculos.total >
             0
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
-                    `No puedes eliminar este cultivo porque ya tiene ${produccionVinculada.length} registro${
-                        produccionVinculada.length === 1
-                            ? ""
-                            : "s"
-                    } de producción vinculado${
-                        produccionVinculada.length === 1
-                            ? ""
-                            : "s"
-                    }. Puedes marcarlo como inactivo para conservar la trazabilidad.`
+                    `No puedes eliminar este cultivo porque tiene información vinculada: ${this.formatearVinculos(
+                        vinculos
+                    )}. Puedes marcarlo como inactivo para conservar la trazabilidad.`
+
             };
 
         }
 
 
+        const cultivosAnteriores =
+            [
+                ...this.cultivos
+            ];
+
+
         this.cultivos =
-            this.cultivos.filter(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        id
-                    )
-            );
+            this.cultivos
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.cultivos =
+                cultivosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el cultivo."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+            ok:
+                true
         };
 
     }
 
 
+    // =====================================================
+    // GUARDAR
+    // =====================================================
+
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarCultivos(
                 this.cultivos
             );

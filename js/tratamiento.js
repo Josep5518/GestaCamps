@@ -222,7 +222,48 @@ export class TratamientoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.tratamientos =
+                this.tratamientos
+                    .filter(
+                        item =>
+                            !mismoId(
+                                item.id,
+                                tratamiento.id
+                            )
+                    );
+
+
+            this.cuadernoCampoService
+                .eliminar(
+                    tratamiento.cuadernoRegistroId
+                );
+
+
+            this.ajustarStock(
+                producto.id,
+                cantidadUsada
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el tratamiento."
+
+            };
+
+        }
 
 
         return {
@@ -327,6 +368,14 @@ export class TratamientoService {
         }
 
 
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    tratamiento
+                )
+            );
+
+
         // =================================================
         // AJUSTAR STOCK
         // =================================================
@@ -350,19 +399,7 @@ export class TratamientoService {
 
 
         // =================================================
-        // GUARDAR COPIA DE SEGURIDAD DEL TRATAMIENTO
-        // =================================================
-
-        const estadoAnterior =
-            JSON.parse(
-                JSON.stringify(
-                    tratamiento
-                )
-            );
-
-
-        // =================================================
-        // ACTUALIZAR DATOS
+        // ACTUALIZAR TRATAMIENTO EN MEMORIA
         // =================================================
 
         this.aplicarDatosTratamiento(
@@ -416,7 +453,54 @@ export class TratamientoService {
         }
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.revertirStockEdicion(
+                productoAnteriorId,
+                cantidadAnterior,
+                productoNuevo.id,
+                cantidadNueva
+            );
+
+
+            Object.assign(
+                tratamiento,
+                estadoAnterior
+            );
+
+
+            if (
+                estadoAnterior.cuadernoRegistroId
+            ) {
+
+                this.cuadernoCampoService
+                    .editar(
+                        estadoAnterior.cuadernoRegistroId,
+                        this.crearDatosCuaderno(
+                            estadoAnterior
+                        )
+                    );
+
+            }
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del tratamiento."
+
+            };
+
+        }
 
 
         return {
@@ -463,6 +547,20 @@ export class TratamientoService {
         }
 
 
+        const tratamientosAnteriores =
+            [
+                ...this.tratamientos
+            ];
+
+
+        const cantidadUsada =
+            Number(
+                tratamiento.cantidadUsada
+                ||
+                0
+            );
+
+
         // =================================================
         // RESTAURAR STOCK
         // =================================================
@@ -470,11 +568,7 @@ export class TratamientoService {
         const resultadoStock =
             this.ajustarStock(
                 tratamiento.productoId,
-                Number(
-                    tratamiento.cantidadUsada
-                    ||
-                    0
-                )
+                cantidadUsada
             );
 
 
@@ -511,11 +605,7 @@ export class TratamientoService {
 
                 this.ajustarStock(
                     tratamiento.productoId,
-                    -Number(
-                        tratamiento.cantidadUsada
-                        ||
-                        0
-                    )
+                    -cantidadUsada
                 );
 
 
@@ -537,7 +627,66 @@ export class TratamientoService {
                 );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.tratamientos =
+                tratamientosAnteriores;
+
+
+            this.ajustarStock(
+                tratamiento.productoId,
+                -cantidadUsada
+            );
+
+
+            /*
+             * Si se había eliminado el registro del cuaderno,
+             * intentamos recrearlo para no dejar el tratamiento
+             * y el cuaderno desincronizados.
+             */
+
+            if (
+                tratamiento.cuadernoRegistroId
+            ) {
+
+                const recreado =
+                    this.cuadernoCampoService
+                        .crear(
+                            this.crearDatosCuaderno(
+                                tratamiento
+                            )
+                        );
+
+
+                if (
+                    recreado.ok
+                ) {
+
+                    tratamiento.cuadernoRegistroId =
+                        recreado.registro.id;
+
+                }
+
+            }
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el tratamiento."
+
+            };
+
+        }
 
 
         return {
@@ -1233,6 +1382,26 @@ export class TratamientoService {
     ) {
 
         if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del tratamiento no son válidos."
+
+            };
+
+        }
+
+
+        if (
             !datos.fecha
         ) {
 
@@ -1478,6 +1647,34 @@ export class TratamientoService {
         }
 
 
+        const cultivo =
+            cultivoResultado.valor;
+
+
+        if (
+            cultivo
+            &&
+            cultivo.fincaId
+            &&
+            !mismoId(
+                cultivo.fincaId,
+                finca.id
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El cultivo seleccionado no pertenece a la finca indicada."
+
+            };
+
+        }
+
+
         const producto =
             this.buscarPorId(
                 this.inventarioService
@@ -1503,24 +1700,74 @@ export class TratamientoService {
         }
 
 
-        const trabajador =
+        let trabajador =
+            null;
+
+
+        if (
             datos.trabajadorId
-                ? this.buscarPorId(
+        ) {
+
+            trabajador =
+                this.buscarPorId(
                     StorageService
                         .obtenerTrabajadores(),
                     datos.trabajadorId
-                )
-                : null;
+                );
 
 
-        const maquinaria =
+            if (
+                !trabajador
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "El trabajador seleccionado no existe."
+
+                };
+
+            }
+
+        }
+
+
+        let maquinaria =
+            null;
+
+
+        if (
             datos.maquinariaId
-                ? this.buscarPorId(
+        ) {
+
+            maquinaria =
+                this.buscarPorId(
                     StorageService
                         .obtenerMaquinaria(),
                     datos.maquinariaId
-                )
-                : null;
+                );
+
+
+            if (
+                !maquinaria
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La maquinaria seleccionada no existe."
+
+                };
+
+            }
+
+        }
 
 
         return {
@@ -1535,7 +1782,7 @@ export class TratamientoService {
                 campania,
 
             cultivo:
-                cultivoResultado.valor,
+                cultivo,
 
             producto:
                 producto,
@@ -1624,6 +1871,17 @@ export class TratamientoService {
         id
     ) {
 
+        if (
+            !Array.isArray(
+                coleccion
+            )
+        ) {
+
+            return null;
+
+        }
+
+
         return (
             coleccion.find(
                 elemento =>
@@ -1703,37 +1961,63 @@ export class TratamientoService {
         }
 
 
-        return this.inventarioService
-            .actualizar(
-                producto.id,
-                {
+        const resultado =
+            this.inventarioService
+                .actualizar(
+                    producto.id,
+                    {
 
-                    nombre:
-                        producto.nombre,
+                        nombre:
+                            producto.nombre,
 
-                    categoria:
-                        producto.categoria,
+                        categoria:
+                            producto.categoria,
 
-                    cantidad:
-                        nuevaCantidad,
+                        cantidad:
+                            nuevaCantidad,
 
-                    unidad:
-                        producto.unidad,
+                        unidad:
+                            producto.unidad,
 
-                    stockMinimo:
-                        producto.stockMinimo,
+                        stockMinimo:
+                            producto.stockMinimo,
 
-                    proveedor:
-                        producto.proveedor,
+                        proveedor:
+                            producto.proveedor,
 
-                    ubicacion:
-                        producto.ubicacion,
+                        ubicacion:
+                            producto.ubicacion,
 
-                    notas:
-                        producto.notas
+                        notas:
+                            producto.notas
 
-                }
-            );
+                    }
+                );
+
+
+        if (
+            resultado
+            &&
+            resultado.ok ===
+            false
+        ) {
+
+            return resultado;
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            producto:
+                resultado?.producto
+                ||
+                producto
+
+        };
 
     }
 
@@ -1807,7 +2091,7 @@ export class TratamientoService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarTratamientos(
                 this.tratamientos
             );

@@ -31,13 +31,18 @@ export function obtenerNombreTrabajador(
             )
             .join(
                 " "
-            );
+            )
+            .trim();
 
 
     return (
         nombre
         ||
-        `Trabajador ${trabajador.id || ""}`
+        `Trabajador ${String(
+            trabajador.id
+            ??
+            ""
+        )}`
     );
 
 }
@@ -60,9 +65,7 @@ export function obtenerNombreCultivo(
     }
 
 
-    return (
-        cultivo.nombre
-        ||
+    const descripcion =
         [
             cultivo.tipo,
             cultivo.variedad
@@ -73,8 +76,19 @@ export function obtenerNombreCultivo(
             .join(
                 " · "
             )
+            .trim();
+
+
+    return (
+        cultivo.nombre
         ||
-        `Cultivo ${cultivo.id || ""}`
+        descripcion
+        ||
+        `Cultivo ${String(
+            cultivo.id
+            ??
+            ""
+        )}`
     );
 
 }
@@ -97,9 +111,7 @@ export function obtenerNombreMaquinaria(
     }
 
 
-    return (
-        maquina.nombre
-        ||
+    const descripcion =
         [
             maquina.marca,
             maquina.modelo
@@ -110,8 +122,19 @@ export function obtenerNombreMaquinaria(
             .join(
                 " "
             )
+            .trim();
+
+
+    return (
+        maquina.nombre
         ||
-        `Maquinaria ${maquina.id || ""}`
+        descripcion
+        ||
+        `Maquinaria ${String(
+            maquina.id
+            ??
+            ""
+        )}`
     );
 
 }
@@ -141,7 +164,11 @@ export function obtenerNombreProducto(
         ||
         producto.descripcion
         ||
-        `Producto ${producto.id || ""}`
+        `Producto ${String(
+            producto.id
+            ??
+            ""
+        )}`
     );
 
 }
@@ -167,7 +194,11 @@ export function obtenerNombreFinca(
     return (
         finca.nombre
         ||
-        `Finca ${finca.id || ""}`
+        `Finca ${String(
+            finca.id
+            ??
+            ""
+        )}`
     );
 
 }
@@ -193,7 +224,11 @@ export function obtenerNombreCampania(
     return (
         campania.nombre
         ||
-        `Campanya ${campania.id || ""}`
+        `Campanya ${String(
+            campania.id
+            ??
+            ""
+        )}`
     );
 
 }

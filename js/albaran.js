@@ -1,5 +1,13 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    numeroSeguro,
+    normalizarTexto as normalizarTextoUtil
+} from "./utils.js";
+
+
 export class AlbaranService {
 
     constructor(
@@ -18,7 +26,8 @@ export class AlbaranService {
             clienteProveedorService;
 
         this.albaranes =
-            StorageService.obtenerAlbaranes();
+            StorageService
+                .obtenerAlbaranes();
 
 
         if (
@@ -27,7 +36,8 @@ export class AlbaranService {
             )
         ) {
 
-            this.albaranes = [];
+            this.albaranes =
+                [];
 
         }
 
@@ -60,7 +70,8 @@ export class AlbaranService {
     ) {
 
         if (
-            facturado === true
+            facturado ===
+            true
         ) {
 
             return true;
@@ -69,11 +80,14 @@ export class AlbaranService {
 
 
         return (
-            estado === "Pendiente"
+            estado ===
+            "Pendiente"
             ||
-            estado === "Entregado"
+            estado ===
+            "Entregado"
             ||
-            estado === "Facturado"
+            estado ===
+            "Facturado"
         );
 
     }
@@ -84,7 +98,8 @@ export class AlbaranService {
     ) {
 
         return (
-            estado === "Pendiente"
+            estado ===
+            "Pendiente"
         );
 
     }
@@ -96,11 +111,14 @@ export class AlbaranService {
     ) {
 
         return (
-            facturado === true
+            facturado ===
+            true
             ||
-            estado === "Entregado"
+            estado ===
+            "Entregado"
             ||
-            estado === "Facturado"
+            estado ===
+            "Facturado"
         );
 
     }
@@ -124,19 +142,19 @@ export class AlbaranService {
     }
 
 
-    obtenerPorId(id) {
+    obtenerPorId(
+        id
+    ) {
 
         return (
-            this.albaranes.find(
-                albaran =>
-                    Number(
-                        albaran.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            this.albaranes
+                .find(
+                    albaran =>
+                        mismoId(
+                            albaran.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -146,61 +164,66 @@ export class AlbaranService {
 
     obtenerBorradores() {
 
-        return this.albaranes.filter(
-            albaran =>
-                albaran.estado ===
-                "Borrador"
-        );
+        return this.albaranes
+            .filter(
+                albaran =>
+                    albaran.estado ===
+                    "Borrador"
+            );
 
     }
 
 
     obtenerPendientes() {
 
-        return this.albaranes.filter(
-            albaran =>
-                albaran.estado ===
-                "Pendiente"
-        );
+        return this.albaranes
+            .filter(
+                albaran =>
+                    albaran.estado ===
+                    "Pendiente"
+            );
 
     }
 
 
     obtenerEntregados() {
 
-        return this.albaranes.filter(
-            albaran =>
-                albaran.estado ===
-                "Entregado"
-                &&
-                albaran.facturado !==
-                true
-        );
+        return this.albaranes
+            .filter(
+                albaran =>
+                    albaran.estado ===
+                    "Entregado"
+                    &&
+                    albaran.facturado !==
+                    true
+            );
 
     }
 
 
     obtenerFacturados() {
 
-        return this.albaranes.filter(
-            albaran =>
-                albaran.facturado ===
-                true
-                ||
-                albaran.estado ===
-                "Facturado"
-        );
+        return this.albaranes
+            .filter(
+                albaran =>
+                    albaran.facturado ===
+                    true
+                    ||
+                    albaran.estado ===
+                    "Facturado"
+            );
 
     }
 
 
     obtenerCancelados() {
 
-        return this.albaranes.filter(
-            albaran =>
-                albaran.estado ===
-                "Cancelado"
-        );
+        return this.albaranes
+            .filter(
+                albaran =>
+                    albaran.estado ===
+                    "Cancelado"
+            );
 
     }
 
@@ -214,8 +237,7 @@ export class AlbaranService {
         if (
             this.produccionService
             &&
-            typeof
-            this.produccionService
+            typeof this.produccionService
                 .obtenerTodos ===
             "function"
         ) {
@@ -237,8 +259,7 @@ export class AlbaranService {
         if (
             this.produccionService
             &&
-            typeof
-            this.produccionService
+            typeof this.produccionService
                 .obtenerTodas ===
             "function"
         ) {
@@ -262,14 +283,19 @@ export class AlbaranService {
     }
 
 
-    obtenerProduccionPorId(id) {
+    obtenerProduccionPorId(
+        id
+    ) {
 
         if (
-            id === undefined
+            id ===
+            undefined
             ||
-            id === null
+            id ===
+            null
             ||
-            id === ""
+            id ===
+            ""
         ) {
 
             return null;
@@ -280,8 +306,7 @@ export class AlbaranService {
         if (
             this.produccionService
             &&
-            typeof
-            this.produccionService
+            typeof this.produccionService
                 .obtenerPorId ===
             "function"
         ) {
@@ -289,9 +314,7 @@ export class AlbaranService {
             const produccion =
                 this.produccionService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     );
 
 
@@ -310,11 +333,8 @@ export class AlbaranService {
             this.obtenerProducciones()
                 .find(
                     produccion =>
-                        Number(
-                            produccion.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            produccion.id,
                             id
                         )
                 )
@@ -338,23 +358,14 @@ export class AlbaranService {
         }
 
 
-        const cantidad =
-            Number(
-                produccion.cantidad
-                ??
-                produccion.kilos
-                ??
-                produccion.kg
-                ??
-                0
-            );
-
-
-        return Number.isFinite(
-            cantidad
-        )
-            ? cantidad
-            : 0;
+        return numeroSeguro(
+            produccion.cantidad
+            ??
+            produccion.kilos
+            ??
+            produccion.kg,
+            0
+        );
 
     }
 
@@ -381,8 +392,7 @@ export class AlbaranService {
         if (
             this.clienteProveedorService
             &&
-            typeof
-            this.clienteProveedorService
+            typeof this.clienteProveedorService
                 .obtenerTodos ===
             "function"
         ) {
@@ -404,8 +414,7 @@ export class AlbaranService {
         if (
             this.clienteProveedorService
             &&
-            typeof
-            this.clienteProveedorService
+            typeof this.clienteProveedorService
                 .obtenerTodas ===
             "function"
         ) {
@@ -429,43 +438,62 @@ export class AlbaranService {
     }
 
 
+    esCliente(
+        contacto
+    ) {
+
+        if (
+            !contacto
+        ) {
+
+            return false;
+
+        }
+
+
+        const tipo =
+            normalizarTextoUtil(
+                contacto.tipo
+            );
+
+
+        return (
+            tipo ===
+            "cliente"
+            ||
+            tipo ===
+            "cliente y proveedor"
+        );
+
+    }
+
+
     obtenerClientes() {
 
         return this.obtenerContactos()
             .filter(
-                contacto => {
-
-                    const tipo =
-                        String(
-                            contacto.tipo
-                            ||
-                            ""
-                        )
-                            .trim()
-                            .toLowerCase();
-
-
-                    return (
-                        tipo === "cliente"
-                        ||
-                        tipo ===
-                        "cliente y proveedor"
-                    );
-
-                }
+                contacto =>
+                    this.esCliente(
+                        contacto
+                    )
             );
 
     }
 
 
-    obtenerClientePorId(id) {
+    obtenerClientePorId(
+        id
+    ) {
 
         if (
-            id === undefined
+            id ===
+            undefined
             ||
-            id === null
+            id ===
+            null
             ||
-            id === ""
+            id ===
+            ""
         ) {
 
             return null;
@@ -476,26 +504,27 @@ export class AlbaranService {
         if (
             this.clienteProveedorService
             &&
-            typeof
-            this.clienteProveedorService
+            typeof this.clienteProveedorService
                 .obtenerPorId ===
             "function"
         ) {
 
-            const cliente =
+            const contacto =
                 this.clienteProveedorService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     );
 
 
             if (
-                cliente
+                contacto
+                &&
+                this.esCliente(
+                    contacto
+                )
             ) {
 
-                return cliente;
+                return contacto;
 
             }
 
@@ -506,11 +535,8 @@ export class AlbaranService {
             this.obtenerClientes()
                 .find(
                     cliente =>
-                        String(
-                            cliente.id
-                        )
-                        ===
-                        String(
+                        mismoId(
+                            cliente.id,
                             id
                         )
                 )
@@ -575,14 +601,19 @@ export class AlbaranService {
 
             return [
                 {
+
                     id:
-                        Date.now(),
+                        albaran.lineaId
+                        ??
+                        `legacy-${albaran.id ?? albaran.produccionId}`,
 
                     produccionId:
                         albaran.produccionId,
 
                     fincaId:
-                        albaran.fincaId,
+                        albaran.fincaId
+                        ??
+                        null,
 
                     fincaNombre:
                         albaran.fincaNombre
@@ -606,7 +637,7 @@ export class AlbaranService {
 
                     campaniaId:
                         albaran.campaniaId
-                        ||
+                        ??
                         null,
 
                     campaniaNombre:
@@ -615,9 +646,8 @@ export class AlbaranService {
                         "",
 
                     cantidad:
-                        Number(
-                            albaran.cantidad
-                            ||
+                        numeroSeguro(
+                            albaran.cantidad,
                             0
                         ),
 
@@ -627,18 +657,17 @@ export class AlbaranService {
                         "kg",
 
                     precio:
-                        Number(
-                            albaran.precio
-                            ||
+                        numeroSeguro(
+                            albaran.precio,
                             0
                         ),
 
                     total:
-                        Number(
-                            albaran.total
-                            ||
+                        numeroSeguro(
+                            albaran.total,
                             0
                         )
+
                 }
             ];
 
@@ -663,68 +692,62 @@ export class AlbaranService {
             0;
 
 
-        this.albaranes.forEach(
-            albaran => {
+        this.albaranes
+            .forEach(
+                albaran => {
 
-                if (
-                    excluirAlbaranId !==
-                    null
-                    &&
-                    Number(
-                        albaran.id
+                    if (
+                        excluirAlbaranId !==
+                        null
+                        &&
+                        mismoId(
+                            albaran.id,
+                            excluirAlbaranId
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        !this.estadoReservaStock(
+                            albaran.estado
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    this.obtenerLineasAlbaran(
+                        albaran
                     )
-                    ===
-                    Number(
-                        excluirAlbaranId
-                    )
-                ) {
+                        .forEach(
+                            linea => {
 
-                    return;
+                                if (
+                                    mismoId(
+                                        linea.produccionId,
+                                        produccionId
+                                    )
+                                ) {
 
-                }
+                                    total +=
+                                        numeroSeguro(
+                                            linea.cantidad,
+                                            0
+                                        );
 
-
-                if (
-                    !this.estadoReservaStock(
-                        albaran.estado
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                this.obtenerLineasAlbaran(
-                    albaran
-                )
-                    .forEach(
-                        linea => {
-
-                            if (
-                                Number(
-                                    linea.produccionId
-                                )
-                                ===
-                                Number(
-                                    produccionId
-                                )
-                            ) {
-
-                                total +=
-                                    Number(
-                                        linea.cantidad
-                                        ||
-                                        0
-                                    );
+                                }
 
                             }
+                        );
 
-                        }
-                    );
-
-            }
-        );
+                }
+            );
 
 
         return Number(
@@ -749,69 +772,63 @@ export class AlbaranService {
             0;
 
 
-        this.albaranes.forEach(
-            albaran => {
+        this.albaranes
+            .forEach(
+                albaran => {
 
-                if (
-                    excluirAlbaranId !==
-                    null
-                    &&
-                    Number(
-                        albaran.id
+                    if (
+                        excluirAlbaranId !==
+                        null
+                        &&
+                        mismoId(
+                            albaran.id,
+                            excluirAlbaranId
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    if (
+                        !this.estadoConsumeStock(
+                            albaran.estado,
+                            albaran.facturado
+                        )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    this.obtenerLineasAlbaran(
+                        albaran
                     )
-                    ===
-                    Number(
-                        excluirAlbaranId
-                    )
-                ) {
+                        .forEach(
+                            linea => {
 
-                    return;
+                                if (
+                                    mismoId(
+                                        linea.produccionId,
+                                        produccionId
+                                    )
+                                ) {
 
-                }
+                                    total +=
+                                        numeroSeguro(
+                                            linea.cantidad,
+                                            0
+                                        );
 
-
-                if (
-                    !this.estadoConsumeStock(
-                        albaran.estado,
-                        albaran.facturado
-                    )
-                ) {
-
-                    return;
-
-                }
-
-
-                this.obtenerLineasAlbaran(
-                    albaran
-                )
-                    .forEach(
-                        linea => {
-
-                            if (
-                                Number(
-                                    linea.produccionId
-                                )
-                                ===
-                                Number(
-                                    produccionId
-                                )
-                            ) {
-
-                                total +=
-                                    Number(
-                                        linea.cantidad
-                                        ||
-                                        0
-                                    );
+                                }
 
                             }
+                        );
 
-                        }
-                    );
-
-            }
-        );
+                }
+            );
 
 
         return Number(
@@ -927,12 +944,25 @@ export class AlbaranService {
         ) {
 
             return {
-                producido: 0,
-                reservado: 0,
-                consumido: 0,
-                utilizado: 0,
-                disponible: 0,
-                unidad: "kg"
+
+                producido:
+                    0,
+
+                reservado:
+                    0,
+
+                consumido:
+                    0,
+
+                utilizado:
+                    0,
+
+                disponible:
+                    0,
+
+                unidad:
+                    "kg"
+
             };
 
         }
@@ -1044,37 +1074,37 @@ export class AlbaranService {
 
 
         const cantidad =
-            Number(
-                linea.cantidad
-                ??
+            numeroSeguro(
+                linea.cantidad,
                 0
             );
 
 
         let precio =
-            Number(
+            numeroSeguro(
                 linea.precio
                 ??
-                linea.precioUnidad
-                ??
+                linea.precioUnidad,
                 0
             );
 
 
         let total =
-            Number(
-                linea.total
-                ??
+            numeroSeguro(
+                linea.total,
                 0
             );
 
 
         if (
-            precio <= 0
+            precio <=
+            0
             &&
-            cantidad > 0
+            cantidad >
+            0
             &&
-            total > 0
+            total >
+            0
         ) {
 
             precio =
@@ -1085,11 +1115,14 @@ export class AlbaranService {
 
 
         if (
-            total <= 0
+            total <=
+            0
             &&
-            cantidad > 0
+            cantidad >
+            0
             &&
-            precio >= 0
+            precio >=
+            0
         ) {
 
             total =
@@ -1099,28 +1132,34 @@ export class AlbaranService {
         }
 
 
-        let producto =
-            linea.producto
-            ||
-            produccion?.producto
-            ||
-            produccion?.productoNombre
-            ||
-            albaran?.producto
-            ||
-            "";
+        const producto =
+            String(
+                linea.producto
+                ??
+                produccion?.producto
+                ??
+                produccion?.productoNombre
+                ??
+                albaran?.producto
+                ??
+                ""
+            )
+                .trim();
 
 
         let variedad =
-            linea.variedad
-            ||
-            produccion?.variedad
-            ||
-            produccion?.variedadNombre
-            ||
-            albaran?.variedad
-            ||
-            "";
+            String(
+                linea.variedad
+                ??
+                produccion?.variedad
+                ??
+                produccion?.variedadNombre
+                ??
+                albaran?.variedad
+                ??
+                ""
+            )
+                .trim();
 
 
         if (
@@ -1128,11 +1167,11 @@ export class AlbaranService {
             &&
             variedad
             &&
-            this.normalizarTexto(
+            normalizarTextoUtil(
                 producto
             )
             ===
-            this.normalizarTexto(
+            normalizarTextoUtil(
                 variedad
             )
         ) {
@@ -1147,49 +1186,50 @@ export class AlbaranService {
 
             id:
                 linea.id
-                ||
-                Date.now()
-                +
-                Math.floor(
-                    Math.random() *
-                    100000
-                ),
+                ??
+                generarId(),
 
             produccionId:
                 linea.produccionId
-                ||
+                ??
                 produccion?.id
-                ||
+                ??
                 null,
 
             fincaId:
                 linea.fincaId
-                ||
+                ??
                 produccion?.fincaId
-                ||
+                ??
                 albaran?.fincaId
-                ||
+                ??
                 null,
 
             fincaNombre:
-                linea.fincaNombre
-                ||
-                produccion?.fincaNombre
-                ||
-                produccion?.finca
-                ||
-                albaran?.fincaNombre
-                ||
-                "",
+                String(
+                    linea.fincaNombre
+                    ??
+                    produccion?.fincaNombre
+                    ??
+                    produccion?.finca
+                    ??
+                    albaran?.fincaNombre
+                    ??
+                    ""
+                )
+                    .trim(),
 
             parcela:
-                linea.parcela
-                ||
-                produccion?.parcela
-                ||
-                albaran?.parcela
-                ||
-                "",
+                String(
+                    linea.parcela
+                    ??
+                    produccion?.parcela
+                    ??
+                    albaran?.parcela
+                    ??
+                    ""
+                )
+                    .trim(),
 
             producto:
                 producto,
@@ -1199,59 +1239,59 @@ export class AlbaranService {
 
             campaniaId:
                 linea.campaniaId
-                ||
+                ??
                 produccion?.campaniaId
-                ||
+                ??
                 albaran?.campaniaId
-                ||
+                ??
                 null,
 
             campaniaNombre:
-                linea.campaniaNombre
-                ||
-                produccion?.campaniaNombre
-                ||
-                albaran?.campaniaNombre
-                ||
-                "",
+                String(
+                    linea.campaniaNombre
+                    ??
+                    produccion?.campaniaNombre
+                    ??
+                    albaran?.campaniaNombre
+                    ??
+                    ""
+                )
+                    .trim(),
 
             cantidad:
-                Number.isFinite(
-                    cantidad
-                )
-                    ? cantidad
-                    : 0,
+                Number(
+                    cantidad.toFixed(
+                        2
+                    )
+                ),
 
             unidad:
-                produccion?.unidad
-                ||
-                linea.unidad
-                ||
-                albaran?.unidad
+                String(
+                    produccion?.unidad
+                    ??
+                    linea.unidad
+                    ??
+                    albaran?.unidad
+                    ??
+                    "kg"
+                )
+                    .trim()
                 ||
                 "kg",
 
             precio:
-                Number.isFinite(
-                    precio
-                )
-                    ? Number(
-                        precio.toFixed(
-                            4
-                        )
+                Number(
+                    precio.toFixed(
+                        4
                     )
-                    : 0,
+                ),
 
             total:
-                Number.isFinite(
-                    total
-                )
-                    ? Number(
-                        total.toFixed(
-                            2
-                        )
+                Number(
+                    total.toFixed(
+                        2
                     )
-                    : 0
+                )
 
         };
 
@@ -1288,63 +1328,71 @@ export class AlbaranService {
             albaran.total =
                 0;
 
+            albaran.unidad =
+                "kg";
+
             return;
 
         }
 
 
         const total =
-            lineas.reduce(
-                (
-                    suma,
-                    linea
-                ) =>
-                    suma
-                    +
-                    Number(
-                        linea.total
-                        ??
-                        0
-                    ),
-                0
-            );
-
-
-        const mismaUnidad =
-            lineas.every(
-                linea =>
-                    String(
-                        linea.unidad
-                        ||
-                        "kg"
-                    )
-                    ===
-                    String(
-                        lineas[0]
-                            .unidad
-                        ||
-                        "kg"
-                    )
-            );
-
-
-        const cantidadTotal =
-            mismaUnidad
-
-                ? lineas.reduce(
+            lineas
+                .reduce(
                     (
                         suma,
                         linea
                     ) =>
                         suma
                         +
-                        Number(
-                            linea.cantidad
-                            ||
+                        numeroSeguro(
+                            linea.total,
                             0
                         ),
                     0
-                )
+                );
+
+
+        const unidadReferencia =
+            String(
+                lineas[0]
+                    .unidad
+                ||
+                "kg"
+            );
+
+
+        const mismaUnidad =
+            lineas
+                .every(
+                    linea =>
+                        String(
+                            linea.unidad
+                            ||
+                            "kg"
+                        )
+                        ===
+                        unidadReferencia
+                );
+
+
+        const cantidadTotal =
+            mismaUnidad
+
+                ? lineas
+                    .reduce(
+                        (
+                            suma,
+                            linea
+                        ) =>
+                            suma
+                            +
+                            numeroSeguro(
+                                linea.cantidad,
+                                0
+                            ),
+                        0
+                    )
 
                 : 0;
 
@@ -1369,7 +1417,8 @@ export class AlbaranService {
             mismaUnidad
 
                 ? (
-                    lineas[0].unidad
+                    lineas[0]
+                        .unidad
                     ||
                     "kg"
                 )
@@ -1411,9 +1460,8 @@ export class AlbaranService {
                 linea.campaniaNombre;
 
             albaran.precio =
-                Number(
-                    linea.precio
-                    ||
+                numeroSeguro(
+                    linea.precio,
                     0
                 );
 
@@ -1429,8 +1477,23 @@ export class AlbaranService {
                         linea =>
                             linea.fincaId
                     )
-                    .filter(Boolean)
-                    .map(Number)
+                    .filter(
+                        id =>
+                            id !==
+                            null
+                            &&
+                            id !==
+                            undefined
+                            &&
+                            id !==
+                            ""
+                    )
+                    .map(
+                        id =>
+                            String(
+                                id
+                            )
+                    )
             );
 
 
@@ -1441,8 +1504,23 @@ export class AlbaranService {
                         linea =>
                             linea.campaniaId
                     )
-                    .filter(Boolean)
-                    .map(Number)
+                    .filter(
+                        id =>
+                            id !==
+                            null
+                            &&
+                            id !==
+                            undefined
+                            &&
+                            id !==
+                            ""
+                    )
+                    .map(
+                        id =>
+                            String(
+                                id
+                            )
+                    )
             );
 
 
@@ -1531,171 +1609,193 @@ export class AlbaranService {
             false;
 
 
-        this.albaranes.forEach(
-            albaran => {
+        this.albaranes
+            .forEach(
+                albaran => {
 
-                // ESTADO
-
-                if (
-                    albaran.facturado ===
-                    true
-                ) {
-
-                    if (
-                        albaran.estado !==
-                        "Facturado"
-                    ) {
-
-                        albaran.estado =
-                            "Facturado";
-
-                        cambios =
-                            true;
-
-                    }
-
-                }
-
-                else if (
-                    !this.obtenerEstados()
-                        .includes(
-                            albaran.estado
-                        )
-                ) {
-
-                    albaran.estado =
-                        "Pendiente";
-
-                    cambios =
-                        true;
-
-                }
-
-
-                // CLIENTE
-
-                if (
-                    !albaran.clienteNombre
-                ) {
-
-                    const cliente =
-                        this.obtenerClientePorId(
-                            albaran.clienteId
-                        );
-
-
-                    if (
-                        cliente
-                    ) {
-
-                        albaran.clienteNombre =
-                            this.obtenerNombreCliente(
-                                cliente
-                            );
-
-                        cambios =
-                            true;
-
-                    }
-
-                }
-
-
-                // MULTILÍNEA
-
-                if (
-                    Array.isArray(
-                        albaran.lineas
-                    )
-                    &&
-                    albaran.lineas.length >
-                    0
-                ) {
-
-                    albaran.lineas =
-                        albaran.lineas
-                            .map(
-                                linea =>
-                                    this.normalizarLinea(
-                                        linea,
-                                        albaran
-                                    )
-                            )
-                            .filter(Boolean);
-
-
-                    this.sincronizarResumenAlbaran(
-                        albaran
-                    );
-
-
-                    cambios =
-                        true;
-
-                    return;
-
-                }
-
-
-                if (
-                    albaran.produccionId
-                ) {
-
-                    const linea =
-                        this.normalizarLinea(
-                            {
-                                produccionId:
-                                    albaran.produccionId,
-
-                                fincaId:
-                                    albaran.fincaId,
-
-                                fincaNombre:
-                                    albaran.fincaNombre,
-
-                                parcela:
-                                    albaran.parcela,
-
-                                producto:
-                                    albaran.producto,
-
-                                variedad:
-                                    albaran.variedad,
-
-                                campaniaId:
-                                    albaran.campaniaId,
-
-                                campaniaNombre:
-                                    albaran.campaniaNombre,
-
-                                cantidad:
-                                    albaran.cantidad,
-
-                                unidad:
-                                    albaran.unidad,
-
-                                precio:
-                                    albaran.precio,
-
-                                total:
-                                    albaran.total
-                            },
+                    const antes =
+                        JSON.stringify(
                             albaran
                         );
 
 
                     if (
-                        linea
+                        albaran.facturado ===
+                        true
+                    ) {
+
+                        albaran.estado =
+                            "Facturado";
+
+                    }
+
+                    else if (
+                        !this.obtenerEstados()
+                            .includes(
+                                albaran.estado
+                            )
+                    ) {
+
+                        albaran.estado =
+                            "Pendiente";
+
+                    }
+
+
+                    if (
+                        albaran.facturado ===
+                        undefined
+                    ) {
+
+                        albaran.facturado =
+                            albaran.estado ===
+                            "Facturado";
+
+                    }
+
+
+                    if (
+                        albaran.facturaId ===
+                        undefined
+                    ) {
+
+                        albaran.facturaId =
+                            null;
+
+                    }
+
+
+                    if (
+                        !albaran.clienteNombre
+                    ) {
+
+                        const cliente =
+                            this.obtenerClientePorId(
+                                albaran.clienteId
+                            );
+
+
+                        if (
+                            cliente
+                        ) {
+
+                            albaran.clienteNombre =
+                                this.obtenerNombreCliente(
+                                    cliente
+                                );
+
+                        }
+
+                    }
+
+
+                    if (
+                        Array.isArray(
+                            albaran.lineas
+                        )
+                        &&
+                        albaran.lineas.length >
+                        0
                     ) {
 
                         albaran.lineas =
-                            [linea];
+                            albaran.lineas
+                                .map(
+                                    linea =>
+                                        this.normalizarLinea(
+                                            linea,
+                                            albaran
+                                        )
+                                )
+                                .filter(
+                                    Boolean
+                                );
 
 
                         this.sincronizarResumenAlbaran(
                             albaran
                         );
 
+                    }
+
+                    else if (
+                        albaran.produccionId
+                    ) {
+
+                        const linea =
+                            this.normalizarLinea(
+                                {
+
+                                    produccionId:
+                                        albaran.produccionId,
+
+                                    fincaId:
+                                        albaran.fincaId,
+
+                                    fincaNombre:
+                                        albaran.fincaNombre,
+
+                                    parcela:
+                                        albaran.parcela,
+
+                                    producto:
+                                        albaran.producto,
+
+                                    variedad:
+                                        albaran.variedad,
+
+                                    campaniaId:
+                                        albaran.campaniaId,
+
+                                    campaniaNombre:
+                                        albaran.campaniaNombre,
+
+                                    cantidad:
+                                        albaran.cantidad,
+
+                                    unidad:
+                                        albaran.unidad,
+
+                                    precio:
+                                        albaran.precio,
+
+                                    total:
+                                        albaran.total
+
+                                },
+                                albaran
+                            );
+
+
+                        if (
+                            linea
+                        ) {
+
+                            albaran.lineas =
+                                [
+                                    linea
+                                ];
+
+
+                            this.sincronizarResumenAlbaran(
+                                albaran
+                            );
+
+                        }
+
+                    }
+
+
+                    const despues =
+                        JSON.stringify(
+                            albaran
+                        );
+
+
+                    if (
+                        antes !==
+                        despues
+                    ) {
 
                         cambios =
                             true;
@@ -1703,9 +1803,7 @@ export class AlbaranService {
                     }
 
                 }
-
-            }
-        );
+            );
 
 
         if (
@@ -1729,7 +1827,7 @@ export class AlbaranService {
 
         const entradas =
             Array.isArray(
-                datos.lineas
+                datos?.lineas
             )
                 ? datos.lineas
                 : [];
@@ -1741,10 +1839,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Añade al menos una línea al albarán."
+
             };
 
         }
@@ -1756,7 +1857,8 @@ export class AlbaranService {
 
         for (
             let i = 0;
-            i < entradas.length;
+            i <
+            entradas.length;
             i++
         ) {
 
@@ -1775,18 +1877,22 @@ export class AlbaranService {
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
 
                     mensaje:
                         `Selecciona una producción válida en la línea ${i + 1}.`
+
                 };
 
             }
 
 
             const cantidad =
-                Number(
-                    entrada.cantidad
+                numeroSeguro(
+                    entrada.cantidad,
+                    NaN
                 );
 
 
@@ -1800,18 +1906,22 @@ export class AlbaranService {
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
 
                     mensaje:
                         `Introduce una cantidad válida en la línea ${i + 1}.`
+
                 };
 
             }
 
 
             const precio =
-                Number(
-                    entrada.precio
+                numeroSeguro(
+                    entrada.precio,
+                    NaN
                 );
 
 
@@ -1825,28 +1935,29 @@ export class AlbaranService {
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
 
                     mensaje:
                         `Introduce un precio válido en la línea ${i + 1}.`
+
                 };
 
             }
 
 
-            lineas.push(
+            const linea =
                 this.normalizarLinea(
                     {
+
                         id:
                             entrada.id
-                            ||
-                            Date.now()
-                            +
-                            i
-                            +
-                            Math.floor(
-                                Math.random() *
-                                10000
+                            ??
+                            (
+                                generarId()
+                                +
+                                i
                             ),
 
                         produccionId:
@@ -1854,43 +1965,43 @@ export class AlbaranService {
 
                         fincaId:
                             produccion.fincaId
-                            ||
+                            ??
                             null,
 
                         fincaNombre:
                             produccion.fincaNombre
-                            ||
+                            ??
                             produccion.finca
-                            ||
+                            ??
                             "",
 
                         parcela:
                             produccion.parcela
-                            ||
+                            ??
                             "",
 
                         producto:
                             produccion.producto
-                            ||
+                            ??
                             produccion.productoNombre
-                            ||
+                            ??
                             "",
 
                         variedad:
                             produccion.variedad
-                            ||
+                            ??
                             produccion.variedadNombre
-                            ||
+                            ??
                             "",
 
                         campaniaId:
                             produccion.campaniaId
-                            ||
+                            ??
                             null,
 
                         campaniaNombre:
                             produccion.campaniaNombre
-                            ||
+                            ??
                             "",
 
                         cantidad:
@@ -1898,26 +2009,42 @@ export class AlbaranService {
 
                         unidad:
                             produccion.unidad
-                            ||
+                            ??
                             "kg",
 
                         precio:
                             precio,
 
                         total:
-                            cantidad *
+                            cantidad
+                            *
                             precio
+
                     }
-                )
-            );
+                );
+
+
+            if (
+                linea
+            ) {
+
+                lineas.push(
+                    linea
+                );
+
+            }
 
         }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             lineas:
                 lineas
+
         };
 
     }
@@ -1936,34 +2063,34 @@ export class AlbaranService {
             new Map();
 
 
-        lineas.forEach(
-            linea => {
+        lineas
+            .forEach(
+                linea => {
 
-                const id =
-                    Number(
-                        linea.produccionId
+                    const id =
+                        String(
+                            linea.produccionId
+                        );
+
+
+                    solicitado.set(
+                        id,
+                        (
+                            solicitado.get(
+                                id
+                            )
+                            ||
+                            0
+                        )
+                        +
+                        numeroSeguro(
+                            linea.cantidad,
+                            0
+                        )
                     );
 
-
-                solicitado.set(
-                    id,
-                    (
-                        solicitado.get(
-                            id
-                        )
-                        ||
-                        0
-                    )
-                    +
-                    Number(
-                        linea.cantidad
-                        ||
-                        0
-                    )
-                );
-
-            }
-        );
+                }
+            );
 
 
         for (
@@ -1986,10 +2113,13 @@ export class AlbaranService {
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
 
                     mensaje:
                         "Una producción seleccionada ya no existe."
+
                 };
 
             }
@@ -2019,7 +2149,9 @@ export class AlbaranService {
 
                         produccion.variedad
                     ]
-                        .filter(Boolean)
+                        .filter(
+                            Boolean
+                        )
                         .join(
                             " · "
                         );
@@ -2027,7 +2159,8 @@ export class AlbaranService {
 
                 return {
 
-                    ok: false,
+                    ok:
+                        false,
 
                     mensaje:
                         `No hay suficiente producción disponible de ${nombre}. `
@@ -2048,7 +2181,10 @@ export class AlbaranService {
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -2070,17 +2206,23 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El estado del albarán no es válido."
+
             };
 
         }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -2090,7 +2232,29 @@ export class AlbaranService {
     // CREAR
     // =====================================================
 
-    crear(datos) {
+    crear(
+        datos
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del albarán no son válidos."
+
+            };
+
+        }
+
 
         const cliente =
             this.obtenerClientePorId(
@@ -2103,10 +2267,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Selecciona un cliente válido."
+
             };
 
         }
@@ -2117,10 +2284,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce una fecha."
+
             };
 
         }
@@ -2153,10 +2323,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "No puedes crear directamente un albarán como facturado."
+
             };
 
         }
@@ -2203,7 +2376,7 @@ export class AlbaranService {
         const nuevoAlbaran = {
 
             id:
-                Date.now(),
+                generarId(),
 
             numero:
                 this.generarNumero(),
@@ -2234,7 +2407,7 @@ export class AlbaranService {
             observaciones:
                 String(
                     datos.observaciones
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -2256,14 +2429,48 @@ export class AlbaranService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            this.albaranes =
+                this.albaranes
+                    .filter(
+                        albaran =>
+                            !mismoId(
+                                albaran.id,
+                                nuevoAlbaran.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el albarán."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             albaran:
                 nuevoAlbaran
+
         };
 
     }
@@ -2289,10 +2496,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El albarán no existe."
+
             };
 
         }
@@ -2307,10 +2517,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "No puedes modificar un albarán facturado."
+
             };
 
         }
@@ -2318,7 +2531,7 @@ export class AlbaranService {
 
         const cliente =
             this.obtenerClientePorId(
-                datos.clienteId
+                datos?.clienteId
             );
 
 
@@ -2327,24 +2540,30 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Selecciona un cliente válido."
+
             };
 
         }
 
 
         if (
-            !datos.fecha
+            !datos?.fecha
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce una fecha."
+
             };
 
         }
@@ -2377,10 +2596,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El estado Facturado solo se asigna al generar una factura."
+
             };
 
         }
@@ -2425,6 +2647,14 @@ export class AlbaranService {
         }
 
 
+        const estadoAnterior =
+            JSON.parse(
+                JSON.stringify(
+                    albaran
+                )
+            );
+
+
         albaran.fecha =
             datos.fecha;
 
@@ -2450,7 +2680,7 @@ export class AlbaranService {
         albaran.observaciones =
             String(
                 datos.observaciones
-                ||
+                ??
                 ""
             )
                 .trim();
@@ -2461,14 +2691,43 @@ export class AlbaranService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            this.restaurarObjeto(
+                albaran,
+                estadoAnterior
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del albarán."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             albaran:
                 albaran
+
         };
 
     }
@@ -2494,10 +2753,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El albarán no existe."
+
             };
 
         }
@@ -2512,10 +2774,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "No puedes cambiar el estado de un albarán facturado."
+
             };
 
         }
@@ -2527,10 +2792,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El estado Facturado se asigna automáticamente desde Facturación."
+
             };
 
         }
@@ -2550,15 +2818,6 @@ export class AlbaranService {
 
         }
 
-
-        /*
-         * Si pasa a un estado que reserva o consume
-         * stock comprobamos la disponibilidad.
-         *
-         * Excluimos el propio albarán para que pueda
-         * pasar de Pendiente a Entregado sin descontarse
-         * dos veces.
-         */
 
         if (
             this.estadoOcupaStock(
@@ -2586,18 +2845,49 @@ export class AlbaranService {
         }
 
 
+        const estadoAnterior =
+            albaran.estado;
+
+
         albaran.estado =
             nuevoEstado;
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            albaran.estado =
+                estadoAnterior;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el nuevo estado del albarán."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             albaran:
                 albaran
+
         };
 
     }
@@ -2623,36 +2913,92 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El albarán no existe."
+
             };
 
         }
 
 
-        /*
-         * Facturación debería seleccionar únicamente
-         * albaranes Entregados.
-         */
+        if (
+            albaran.facturado ===
+            true
+            ||
+            albaran.estado ===
+            "Facturado"
+        ) {
+
+            if (
+                albaran.facturado ===
+                true
+                &&
+                mismoId(
+                    albaran.facturaId,
+                    facturaId
+                )
+            ) {
+
+                return {
+
+                    ok:
+                        true,
+
+                    albaran:
+                        albaran
+
+                };
+
+            }
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El albarán ya está facturado."
+
+            };
+
+        }
+
 
         if (
             albaran.estado !==
             "Entregado"
-            &&
-            albaran.facturado !==
-            true
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Solo puedes facturar albaranes entregados."
+
             };
 
         }
+
+
+        const estadoAnterior = {
+
+            facturado:
+                albaran.facturado,
+
+            estado:
+                albaran.estado,
+
+            facturaId:
+                albaran.facturaId
+
+        };
 
 
         albaran.facturado =
@@ -2667,14 +3013,47 @@ export class AlbaranService {
             facturaId;
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            albaran.facturado =
+                estadoAnterior.facturado;
+
+            albaran.estado =
+                estadoAnterior.estado;
+
+            albaran.facturaId =
+                estadoAnterior.facturaId;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido marcar el albarán como facturado."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             albaran:
                 albaran
+
         };
 
     }
@@ -2684,7 +3063,9 @@ export class AlbaranService {
     // DESMARCAR FACTURADO
     // =====================================================
 
-    desmarcarFacturado(id) {
+    desmarcarFacturado(
+        id
+    ) {
 
         const albaran =
             this.obtenerPorId(
@@ -2697,10 +3078,30 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El albarán no existe."
+
             };
 
         }
+
+
+        const estadoAnterior = {
+
+            facturado:
+                albaran.facturado,
+
+            estado:
+                albaran.estado,
+
+            facturaId:
+                albaran.facturaId
+
+        };
 
 
         albaran.facturado =
@@ -2715,14 +3116,47 @@ export class AlbaranService {
             "Entregado";
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            albaran.facturado =
+                estadoAnterior.facturado;
+
+            albaran.estado =
+                estadoAnterior.estado;
+
+            albaran.facturaId =
+                estadoAnterior.facturaId;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido liberar el albarán de la factura."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             albaran:
                 albaran
+
         };
 
     }
@@ -2732,7 +3166,9 @@ export class AlbaranService {
     // ELIMINAR
     // =====================================================
 
-    eliminar(id) {
+    eliminar(
+        id
+    ) {
 
         const albaran =
             this.obtenerPorId(
@@ -2745,10 +3181,13 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El albarán no existe."
+
             };
 
         }
@@ -2763,33 +3202,67 @@ export class AlbaranService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "No puedes eliminar un albarán facturado."
+
             };
 
         }
 
 
+        const albaranesAnteriores =
+            [
+                ...this.albaranes
+            ];
+
+
         this.albaranes =
-            this.albaranes.filter(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        id
-                    )
-            );
+            this.albaranes
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !this.guardadoCorrecto(
+                guardado
+            )
+        ) {
+
+            this.albaranes =
+                albaranesAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el albarán."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -2806,31 +3279,58 @@ export class AlbaranService {
                 .getFullYear();
 
 
+        const prefijo =
+            `ALB-${year}-`;
+
+
         let maximo =
             0;
 
 
-        this.albaranes.forEach(
-            albaran => {
+        this.albaranes
+            .forEach(
+                albaran => {
 
-                const coincidencia =
-                    String(
-                        albaran.numero
-                        ||
-                        ""
-                    )
-                        .match(
-                            /(\d+)$/
+                    const numeroCompleto =
+                        String(
+                            albaran.numero
+                            ??
+                            ""
                         );
 
 
-                if (
-                    coincidencia
-                ) {
+                    if (
+                        !numeroCompleto
+                            .startsWith(
+                                prefijo
+                            )
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    const coincidencia =
+                        numeroCompleto
+                            .match(
+                                /(\d+)$/
+                            );
+
+
+                    if (
+                        !coincidencia
+                    ) {
+
+                        return;
+
+                    }
+
 
                     const numero =
-                        Number(
-                            coincidencia[1]
+                        numeroSeguro(
+                            coincidencia[1],
+                            0
                         );
 
 
@@ -2845,19 +3345,74 @@ export class AlbaranService {
                     }
 
                 }
-
-            }
-        );
+            );
 
 
         return (
             `ALB-${year}-${String(
-                maximo + 1
+                maximo +
+                1
             ).padStart(
                 4,
                 "0"
             )}`
         );
+
+    }
+
+
+    // =====================================================
+    // RESTAURAR OBJETO
+    // =====================================================
+
+    restaurarObjeto(
+        destino,
+        origen
+    ) {
+
+        Object.keys(
+            destino
+        )
+            .forEach(
+                clave => {
+
+                    if (
+                        !Object.prototype
+                            .hasOwnProperty
+                            .call(
+                                origen,
+                                clave
+                            )
+                    ) {
+
+                        delete destino[
+                            clave
+                        ];
+
+                    }
+
+                }
+            );
+
+
+        Object.assign(
+            destino,
+            origen
+        );
+
+    }
+
+
+    // =====================================================
+    // GUARDADO CORRECTO
+    // =====================================================
+
+    guardadoCorrecto(
+        resultado
+    ) {
+
+        return resultado !==
+            false;
 
     }
 
@@ -2870,16 +3425,17 @@ export class AlbaranService {
         numero
     ) {
 
-        return Number(
-            numero
-            ||
+        return numeroSeguro(
+            numero,
             0
         )
             .toLocaleString(
                 "es-ES",
                 {
+
                     maximumFractionDigits:
                         2
+
                 }
             );
 
@@ -2890,13 +3446,9 @@ export class AlbaranService {
         texto
     ) {
 
-        return String(
+        return normalizarTextoUtil(
             texto
-            ||
-            ""
-        )
-            .trim()
-            .toLowerCase();
+        );
 
     }
 
@@ -2907,7 +3459,7 @@ export class AlbaranService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarAlbaranes(
                 this.albaranes
             );

@@ -8,7 +8,7 @@ const CACHE_PREFIX =
 
 
 const CACHE_NAME =
-    "gestacamps-v9";
+    "gestacamps-v10";
 
 
 // =====================================================
@@ -50,6 +50,10 @@ const ARCHIVOS_INICIALES = [
     "./js/loginView.js",
 
     "./js/seguridadView.js",
+
+    "./js/usuario.js",
+
+    "./js/usuariosView.js",
 
 
     // =================================================
@@ -225,37 +229,38 @@ self.addEventListener(
 
                         return Promise.all(
 
-                            nombresCache.map(
-                                nombre => {
+                            nombresCache
+                                .map(
+                                    nombre => {
 
-                                    const esCacheGestaCamps =
-                                        nombre.startsWith(
-                                            CACHE_PREFIX
-                                        );
-
-
-                                    const esCacheActual =
-                                        nombre ===
-                                        CACHE_NAME;
+                                        const esCacheGestaCamps =
+                                            nombre.startsWith(
+                                                CACHE_PREFIX
+                                            );
 
 
-                                    if (
-                                        esCacheGestaCamps
-                                        &&
-                                        !esCacheActual
-                                    ) {
+                                        const esCacheActual =
+                                            nombre ===
+                                            CACHE_NAME;
 
-                                        return caches.delete(
-                                            nombre
-                                        );
+
+                                        if (
+                                            esCacheGestaCamps
+                                            &&
+                                            !esCacheActual
+                                        ) {
+
+                                            return caches.delete(
+                                                nombre
+                                            );
+
+                                        }
+
+
+                                        return Promise.resolve();
 
                                     }
-
-
-                                    return Promise.resolve();
-
-                                }
-                            )
+                                )
 
                         );
 
@@ -378,8 +383,23 @@ self.addEventListener(
                             }
 
 
+                            const indexCacheado =
+                                await caches.match(
+                                    "./index.html"
+                                );
+
+
+                            if (
+                                indexCacheado
+                            ) {
+
+                                return indexCacheado;
+
+                            }
+
+
                             return caches.match(
-                                "./index.html"
+                                "./"
                             );
 
                         }

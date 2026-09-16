@@ -54,15 +54,19 @@ export class IncidenciaService {
         id
     ) {
 
-        return this.incidencias.find(
-            incidencia =>
-                Number(
-                    incidencia.id
-                )
-                ===
-                Number(
-                    id
-                )
+        return (
+            this.incidencias.find(
+                incidencia =>
+                    Number(
+                        incidencia.id
+                    )
+                    ===
+                    Number(
+                        id
+                    )
+            )
+            ||
+            null
         );
 
     }
@@ -99,115 +103,42 @@ export class IncidenciaService {
         datos
     ) {
 
+        const validacion =
+            this.validarDatos(
+                datos
+            );
+
+
         if (
-            !datos.tipo
+            !validacion.ok
         ) {
 
-            return {
-                ok: false,
-                mensaje:
-                    "Selecciona el tipo de incidencia."
-            };
+            return validacion;
 
         }
 
 
+        const relaciones =
+            this.obtenerRelaciones(
+                datos
+            );
+
+
         if (
-            !datos.descripcion
-            ||
-            !datos.descripcion.trim()
+            !relaciones.ok
         ) {
 
-            return {
-                ok: false,
-                mensaje:
-                    "Describe la incidencia."
-            };
+            return relaciones;
 
         }
 
 
-        let finca =
-            null;
-
-
-        if (
-            datos.fincaId
-        ) {
-
-            finca =
-                this.fincaService
-                    .obtenerPorId(
-                        Number(
-                            datos.fincaId
-                        )
-                    );
-
-
-            if (
-                !finca
-            ) {
-
-                return {
-                    ok: false,
-                    mensaje:
-                        "La finca seleccionada no existe."
-                };
-
-            }
-
-        }
-
-
-        let trabajo =
-            null;
-
-
-        if (
-            datos.trabajoId
-        ) {
-
-            trabajo =
-                this.trabajoService
-                    .obtenerPorId(
-                        Number(
-                            datos.trabajoId
-                        )
-                    );
-
-
-            if (
-                !trabajo
-            ) {
-
-                return {
-                    ok: false,
-                    mensaje:
-                        "La tarea seleccionada no existe."
-                };
-
-            }
-
-        }
-
-
-        let trabajador =
-            null;
-
-
-        if (
-            datos.trabajadorId
-        ) {
-
-            trabajador =
-                this.trabajadorService
-                    .obtenerPorId(
-                        Number(
-                            datos.trabajadorId
-                        )
-                    );
-
-        }
+        const {
+            finca,
+            trabajo,
+            trabajador
+        } =
+            relaciones;
 
 
         const ahora =
@@ -217,7 +148,8 @@ export class IncidenciaService {
         const nuevaIncidencia = {
 
             id:
-                Date.now(),
+                StorageService
+                    .generarId(),
 
             tipo:
                 datos.tipo,
@@ -288,13 +220,290 @@ export class IncidenciaService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.incidencias =
+                this.incidencias
+                    .filter(
+                        incidencia =>
+                            Number(
+                                incidencia.id
+                            )
+                            !==
+                            Number(
+                                nuevaIncidencia.id
+                            )
+                    );
+
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar la incidencia."
+            };
+
+        }
 
 
         return {
-            ok: true,
+            ok:
+                true,
+
             incidencia:
                 nuevaIncidencia
+        };
+
+    }
+
+
+    // =====================================================
+    // VALIDAR DATOS
+    // =====================================================
+
+    validarDatos(
+        datos
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos de la incidencia no son válidos."
+            };
+
+        }
+
+
+        if (
+            !datos.tipo
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "Selecciona el tipo de incidencia."
+            };
+
+        }
+
+
+        if (
+            !datos.descripcion
+            ||
+            !datos.descripcion.trim()
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "Describe la incidencia."
+            };
+
+        }
+
+
+        const prioridadesValidas = [
+            "Baja",
+            "Media",
+            "Alta",
+            "Urgente"
+        ];
+
+
+        if (
+            datos.prioridad
+            &&
+            !prioridadesValidas.includes(
+                datos.prioridad
+            )
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "Prioridad no válida."
+            };
+
+        }
+
+
+        return {
+            ok:
+                true
+        };
+
+    }
+
+
+    // =====================================================
+    // OBTENER RELACIONES
+    // =====================================================
+
+    obtenerRelaciones(
+        datos
+    ) {
+
+        let finca =
+            null;
+
+
+        if (
+            datos.fincaId
+        ) {
+
+            finca =
+                this.fincaService
+                    .obtenerPorId(
+                        Number(
+                            datos.fincaId
+                        )
+                    );
+
+
+            if (
+                !finca
+            ) {
+
+                return {
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La finca seleccionada no existe."
+                };
+
+            }
+
+        }
+
+
+        let trabajo =
+            null;
+
+
+        if (
+            datos.trabajoId
+        ) {
+
+            trabajo =
+                this.trabajoService
+                    .obtenerPorId(
+                        Number(
+                            datos.trabajoId
+                        )
+                    );
+
+
+            if (
+                !trabajo
+            ) {
+
+                return {
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La tarea seleccionada no existe."
+                };
+
+            }
+
+
+            if (
+                finca
+                &&
+                trabajo.fincaId
+                &&
+                Number(
+                    trabajo.fincaId
+                )
+                !==
+                Number(
+                    finca.id
+                )
+            ) {
+
+                return {
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La tarea seleccionada no pertenece a la finca indicada."
+                };
+
+            }
+
+        }
+
+
+        let trabajador =
+            null;
+
+
+        if (
+            datos.trabajadorId
+        ) {
+
+            trabajador =
+                this.trabajadorService
+                    .obtenerPorId(
+                        Number(
+                            datos.trabajadorId
+                        )
+                    );
+
+
+            if (
+                !trabajador
+            ) {
+
+                return {
+                    ok:
+                        false,
+
+                    mensaje:
+                        "El trabajador seleccionado no existe."
+                };
+
+            }
+
+        }
+
+
+        return {
+            ok:
+                true,
+
+            finca:
+                finca,
+
+            trabajo:
+                trabajo,
+
+            trabajador:
+                trabajador
         };
 
     }
@@ -321,7 +530,9 @@ export class IncidenciaService {
         ) {
 
             return {
-                ok: false,
+                ok:
+                    false,
+
                 mensaje:
                     "La incidencia no existe."
             };
@@ -340,12 +551,28 @@ export class IncidenciaService {
         ) {
 
             return {
-                ok: false,
+                ok:
+                    false,
+
                 mensaje:
                     "Estado de incidencia no válido."
             };
 
         }
+
+
+        const estadoAnterior = {
+
+            estado:
+                incidencia.estado,
+
+            fechaResolucion:
+                incidencia.fechaResolucion,
+
+            observacionesResolucion:
+                incidencia.observacionesResolucion
+
+        };
 
 
         incidencia.estado =
@@ -362,7 +589,12 @@ export class IncidenciaService {
                     .toISOString();
 
             incidencia.observacionesResolucion =
-                observaciones.trim();
+                String(
+                    observaciones
+                    ||
+                    ""
+                )
+                    .trim();
 
         }
 
@@ -371,14 +603,45 @@ export class IncidenciaService {
             incidencia.fechaResolucion =
                 "";
 
+            incidencia.observacionesResolucion =
+                "";
+
         }
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            incidencia.estado =
+                estadoAnterior.estado;
+
+            incidencia.fechaResolucion =
+                estadoAnterior.fechaResolucion;
+
+            incidencia.observacionesResolucion =
+                estadoAnterior.observacionesResolucion;
+
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido actualizar el estado de la incidencia."
+            };
+
+        }
 
 
         return {
-            ok: true,
+            ok:
+                true,
+
             incidencia:
                 incidencia
         };
@@ -406,7 +669,9 @@ export class IncidenciaService {
         ) {
 
             return {
-                ok: false,
+                ok:
+                    false,
+
                 mensaje:
                     "La incidencia no existe."
             };
@@ -426,7 +691,9 @@ export class IncidenciaService {
         ) {
 
             return {
-                ok: false,
+                ok:
+                    false,
+
                 mensaje:
                     "Prioridad no válida."
             };
@@ -434,15 +701,40 @@ export class IncidenciaService {
         }
 
 
+        const prioridadAnterior =
+            incidencia.prioridad;
+
+
         incidencia.prioridad =
             prioridad;
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            incidencia.prioridad =
+                prioridadAnterior;
+
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido actualizar la prioridad."
+            };
+
+        }
 
 
         return {
-            ok: true
+            ok:
+                true
         };
 
     }
@@ -518,12 +810,20 @@ export class IncidenciaService {
         ) {
 
             return {
-                ok: false,
+                ok:
+                    false,
+
                 mensaje:
                     "La incidencia no existe."
             };
 
         }
+
+
+        const incidenciasAnteriores =
+            [
+                ...this.incidencias
+            ];
 
 
         this.incidencias =
@@ -539,11 +839,32 @@ export class IncidenciaService {
             );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.incidencias =
+                incidenciasAnteriores;
+
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar la incidencia."
+            };
+
+        }
 
 
         return {
-            ok: true
+            ok:
+                true
         };
 
     }
@@ -555,7 +876,7 @@ export class IncidenciaService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarIncidencias(
                 this.incidencias
             );

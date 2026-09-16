@@ -1,5 +1,12 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId,
+    numeroSeguro
+} from "./utils.js";
+
+
 export class CobroPagoService {
 
     constructor(
@@ -14,7 +21,8 @@ export class CobroPagoService {
             gastoService;
 
         this.movimientos =
-            StorageService.obtenerCobrosPagos();
+            StorageService
+                .obtenerCobrosPagos();
 
 
         if (
@@ -23,14 +31,21 @@ export class CobroPagoService {
             )
         ) {
 
-            this.movimientos = [];
+            this.movimientos =
+                [];
 
         }
 
 
-        this.sincronizarEstadosFacturas();
-
-        this.sincronizarEstadosGastos();
+        /*
+         * IMPORTANTE
+         *
+         * Ya NO sincronizamos automáticamente facturas
+         * y gastos en el constructor.
+         *
+         * Abrir GestaCamps no debe provocar escrituras
+         * ni entradas nuevas en Historial.
+         */
 
     }
 
@@ -53,19 +68,19 @@ export class CobroPagoService {
     }
 
 
-    obtenerPorId(id) {
+    obtenerPorId(
+        id
+    ) {
 
         return (
-            this.movimientos.find(
-                movimiento =>
-                    Number(
-                        movimiento.id
-                    )
-                    ===
-                    Number(
-                        id
-                    )
-            )
+            this.movimientos
+                .find(
+                    movimiento =>
+                        mismoId(
+                            movimiento.id,
+                            id
+                        )
+                )
             ||
             null
         );
@@ -75,22 +90,24 @@ export class CobroPagoService {
 
     obtenerCobros() {
 
-        return this.movimientos.filter(
-            movimiento =>
-                movimiento.tipo ===
-                "Cobro"
-        );
+        return this.movimientos
+            .filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Cobro"
+            );
 
     }
 
 
     obtenerPagos() {
 
-        return this.movimientos.filter(
-            movimiento =>
-                movimiento.tipo ===
-                "Pago"
-        );
+        return this.movimientos
+            .filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Pago"
+            );
 
     }
 
@@ -104,8 +121,7 @@ export class CobroPagoService {
         if (
             this.facturaService
             &&
-            typeof
-            this.facturaService
+            typeof this.facturaService
                 .obtenerTodos ===
             "function"
         ) {
@@ -127,8 +143,7 @@ export class CobroPagoService {
         if (
             this.facturaService
             &&
-            typeof
-            this.facturaService
+            typeof this.facturaService
                 .obtenerTodas ===
             "function"
         ) {
@@ -152,13 +167,14 @@ export class CobroPagoService {
     }
 
 
-    obtenerFacturaPorId(id) {
+    obtenerFacturaPorId(
+        id
+    ) {
 
         if (
             this.facturaService
             &&
-            typeof
-            this.facturaService
+            typeof this.facturaService
                 .obtenerPorId ===
             "function"
         ) {
@@ -166,9 +182,7 @@ export class CobroPagoService {
             return (
                 this.facturaService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     )
                 ||
                 null
@@ -181,11 +195,8 @@ export class CobroPagoService {
             this.obtenerFacturas()
                 .find(
                     factura =>
-                        Number(
-                            factura.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            factura.id,
                             id
                         )
                 )
@@ -214,9 +225,8 @@ export class CobroPagoService {
             undefined
         ) {
 
-            return Number(
-                factura.total
-                ||
+            return numeroSeguro(
+                factura.total,
                 0
             );
 
@@ -228,9 +238,8 @@ export class CobroPagoService {
             undefined
         ) {
 
-            return Number(
-                factura.totalFactura
-                ||
+            return numeroSeguro(
+                factura.totalFactura,
                 0
             );
 
@@ -238,28 +247,32 @@ export class CobroPagoService {
 
 
         const base =
-            Number(
+            numeroSeguro(
                 factura.baseImponible
                 ??
                 factura.subtotal
                 ??
-                factura.base
-                ??
+                factura.base,
                 0
             );
 
 
         const iva =
-            Number(
-                factura.importeIva
-                ??
+            numeroSeguro(
+                factura.importeIva,
                 0
             );
 
 
-        return (
-            base +
-            iva
+        return Number(
+            (
+                base
+                +
+                iva
+            )
+                .toFixed(
+                    2
+                )
         );
 
     }
@@ -274,8 +287,7 @@ export class CobroPagoService {
         if (
             this.gastoService
             &&
-            typeof
-            this.gastoService
+            typeof this.gastoService
                 .obtenerTodos ===
             "function"
         ) {
@@ -297,8 +309,7 @@ export class CobroPagoService {
         if (
             this.gastoService
             &&
-            typeof
-            this.gastoService
+            typeof this.gastoService
                 .obtenerTodas ===
             "function"
         ) {
@@ -322,13 +333,14 @@ export class CobroPagoService {
     }
 
 
-    obtenerGastoPorId(id) {
+    obtenerGastoPorId(
+        id
+    ) {
 
         if (
             this.gastoService
             &&
-            typeof
-            this.gastoService
+            typeof this.gastoService
                 .obtenerPorId ===
             "function"
         ) {
@@ -336,9 +348,7 @@ export class CobroPagoService {
             return (
                 this.gastoService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     )
                 ||
                 null
@@ -351,11 +361,8 @@ export class CobroPagoService {
             this.obtenerGastos()
                 .find(
                     gasto =>
-                        Number(
-                            gasto.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            gasto.id,
                             id
                         )
                 )
@@ -374,19 +381,17 @@ export class CobroPagoService {
         facturaId
     ) {
 
-        return this.movimientos.filter(
-            movimiento =>
-                movimiento.tipo ===
-                "Cobro"
-                &&
-                Number(
-                    movimiento.facturaId
-                )
-                ===
-                Number(
-                    facturaId
-                )
-        );
+        return this.movimientos
+            .filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Cobro"
+                    &&
+                    mismoId(
+                        movimiento.facturaId,
+                        facturaId
+                    )
+            );
 
     }
 
@@ -395,23 +400,27 @@ export class CobroPagoService {
         facturaId
     ) {
 
-        return this.obtenerCobrosDeFactura(
-            facturaId
-        )
-            .reduce(
-                (
-                    total,
-                    movimiento
-                ) =>
-                    total
-                    +
-                    Number(
-                        movimiento.importe
-                        ||
-                        0
-                    ),
-                0
-            );
+        return Number(
+            this.obtenerCobrosDeFactura(
+                facturaId
+            )
+                .reduce(
+                    (
+                        total,
+                        movimiento
+                    ) =>
+                        total
+                        +
+                        numeroSeguro(
+                            movimiento.importe,
+                            0
+                        ),
+                    0
+                )
+                .toFixed(
+                    2
+                )
+        );
 
     }
 
@@ -460,7 +469,8 @@ export class CobroPagoService {
         return Number(
             Math.max(
                 0,
-                total -
+                total
+                -
                 cobrado
             )
                 .toFixed(
@@ -546,19 +556,17 @@ export class CobroPagoService {
         gastoId
     ) {
 
-        return this.movimientos.filter(
-            movimiento =>
-                movimiento.tipo ===
-                "Pago"
-                &&
-                Number(
-                    movimiento.gastoId
-                )
-                ===
-                Number(
-                    gastoId
-                )
-        );
+        return this.movimientos
+            .filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Pago"
+                    &&
+                    mismoId(
+                        movimiento.gastoId,
+                        gastoId
+                    )
+            );
 
     }
 
@@ -578,9 +586,8 @@ export class CobroPagoService {
                     ) =>
                         total
                         +
-                        Number(
-                            movimiento.importe
-                            ||
+                        numeroSeguro(
+                            movimiento.importe,
                             0
                         ),
                     0
@@ -621,9 +628,8 @@ export class CobroPagoService {
         return Number(
             Math.max(
                 0,
-                Number(
-                    gasto.importe
-                    ||
+                numeroSeguro(
+                    gasto.importe,
                     0
                 )
                 -
@@ -657,9 +663,8 @@ export class CobroPagoService {
 
 
         const total =
-            Number(
-                gasto.importe
-                ||
+            numeroSeguro(
+                gasto.importe,
                 0
             );
 
@@ -700,7 +705,29 @@ export class CobroPagoService {
     // REGISTRAR COBRO
     // =====================================================
 
-    registrarCobro(datos) {
+    registrarCobro(
+        datos
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del cobro no son válidos."
+
+            };
+
+        }
+
 
         const factura =
             this.obtenerFacturaPorId(
@@ -713,10 +740,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "La factura seleccionada no existe."
+
             };
 
         }
@@ -728,10 +758,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "No puedes registrar cobros sobre una factura anulada."
+
             };
 
         }
@@ -742,10 +775,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce la fecha del cobro."
+
             };
 
         }
@@ -763,18 +799,22 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Esta factura ya está completamente cobrada."
+
             };
 
         }
 
 
         const importe =
-            Number(
-                datos.importe
+            numeroSeguro(
+                datos.importe,
+                NaN
             );
 
 
@@ -788,10 +828,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce un importe válido."
+
             };
 
         }
@@ -804,7 +847,9 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     `No puedes cobrar ${this.formatearDinero(
@@ -812,6 +857,7 @@ export class CobroPagoService {
                     )}. El importe pendiente es ${this.formatearDinero(
                         pendiente
                     )}.`
+
             };
 
         }
@@ -820,7 +866,7 @@ export class CobroPagoService {
         const movimiento = {
 
             id:
-                Date.now(),
+                generarId(),
 
             tipo:
                 "Cobro",
@@ -832,7 +878,9 @@ export class CobroPagoService {
                 null,
 
             referencia:
-                factura.numero,
+                factura.numero
+                ||
+                "",
 
             tercero:
                 factura.clienteNombre
@@ -852,14 +900,19 @@ export class CobroPagoService {
                 ),
 
             metodo:
-                datos.metodo
+                String(
+                    datos.metodo
+                    ??
+                    "Transferencia"
+                )
+                    .trim()
                 ||
                 "Transferencia",
 
             referenciaPago:
                 String(
                     datos.referenciaPago
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -867,7 +920,7 @@ export class CobroPagoService {
             notas:
                 String(
                     datos.notas
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -884,19 +937,89 @@ export class CobroPagoService {
         );
 
 
-        this.guardar();
+        const guardadoMovimiento =
+            this.guardar();
 
 
-        this.actualizarEstadoFactura(
-            factura.id
-        );
+        if (
+            !guardadoMovimiento
+        ) {
+
+            this.movimientos =
+                this.movimientos
+                    .filter(
+                        item =>
+                            !mismoId(
+                                item.id,
+                                movimiento.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el cobro."
+
+            };
+
+        }
+
+
+        const resultadoFactura =
+            this.actualizarEstadoFactura(
+                factura.id
+            );
+
+
+        if (
+            !resultadoFactura.ok
+        ) {
+
+            /*
+             * Rollback del movimiento.
+             */
+
+            this.movimientos =
+                this.movimientos
+                    .filter(
+                        item =>
+                            !mismoId(
+                                item.id,
+                                movimiento.id
+                            )
+                    );
+
+
+            this.guardar();
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    resultadoFactura.mensaje
+                    ||
+                    "No se ha podido actualizar la factura. El cobro no se ha registrado."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             movimiento:
                 movimiento
+
         };
 
     }
@@ -906,7 +1029,29 @@ export class CobroPagoService {
     // REGISTRAR PAGO
     // =====================================================
 
-    registrarPago(datos) {
+    registrarPago(
+        datos
+    ) {
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Los datos del pago no son válidos."
+
+            };
+
+        }
+
 
         const gasto =
             this.obtenerGastoPorId(
@@ -919,10 +1064,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El gasto seleccionado no existe."
+
             };
 
         }
@@ -933,10 +1081,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce la fecha del pago."
+
             };
 
         }
@@ -954,18 +1105,22 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Este gasto ya está completamente pagado."
+
             };
 
         }
 
 
         const importe =
-            Number(
-                datos.importe
+            numeroSeguro(
+                datos.importe,
+                NaN
             );
 
 
@@ -979,10 +1134,13 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "Introduce un importe válido."
+
             };
 
         }
@@ -995,7 +1153,9 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     `No puedes pagar ${this.formatearDinero(
@@ -1003,6 +1163,7 @@ export class CobroPagoService {
                     )}. El importe pendiente es ${this.formatearDinero(
                         pendiente
                     )}.`
+
             };
 
         }
@@ -1011,7 +1172,7 @@ export class CobroPagoService {
         const movimiento = {
 
             id:
-                Date.now(),
+                generarId(),
 
             tipo:
                 "Pago",
@@ -1045,14 +1206,19 @@ export class CobroPagoService {
                 ),
 
             metodo:
-                datos.metodo
+                String(
+                    datos.metodo
+                    ??
+                    "Transferencia"
+                )
+                    .trim()
                 ||
                 "Transferencia",
 
             referenciaPago:
                 String(
                     datos.referenciaPago
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -1060,7 +1226,7 @@ export class CobroPagoService {
             notas:
                 String(
                     datos.notas
-                    ||
+                    ??
                     ""
                 )
                     .trim(),
@@ -1077,19 +1243,89 @@ export class CobroPagoService {
         );
 
 
-        this.guardar();
+        const guardadoMovimiento =
+            this.guardar();
 
 
-        this.actualizarEstadoGasto(
-            gasto.id
-        );
+        if (
+            !guardadoMovimiento
+        ) {
+
+            this.movimientos =
+                this.movimientos
+                    .filter(
+                        item =>
+                            !mismoId(
+                                item.id,
+                                movimiento.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el pago."
+
+            };
+
+        }
+
+
+        const resultadoGasto =
+            this.actualizarEstadoGasto(
+                gasto.id
+            );
+
+
+        if (
+            !resultadoGasto.ok
+        ) {
+
+            /*
+             * Rollback del movimiento.
+             */
+
+            this.movimientos =
+                this.movimientos
+                    .filter(
+                        item =>
+                            !mismoId(
+                                item.id,
+                                movimiento.id
+                            )
+                    );
+
+
+            this.guardar();
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    resultadoGasto.mensaje
+                    ||
+                    "No se ha podido actualizar el gasto. El pago no se ha registrado."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
 
             movimiento:
                 movimiento
+
         };
 
     }
@@ -1099,7 +1335,9 @@ export class CobroPagoService {
     // ELIMINAR MOVIMIENTO
     // =====================================================
 
-    eliminar(id) {
+    eliminar(
+        id
+    ) {
 
         const movimiento =
             this.obtenerPorId(
@@ -1112,29 +1350,66 @@ export class CobroPagoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
 
                 mensaje:
                     "El movimiento no existe."
+
             };
 
         }
 
 
+        const movimientosAnteriores =
+            [
+                ...this.movimientos
+            ];
+
+
         this.movimientos =
-            this.movimientos.filter(
-                item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
-                        id
-                    )
-            );
+            this.movimientos
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.movimientos =
+                movimientosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el movimiento."
+
+            };
+
+        }
+
+
+        let resultadoRelacionado = {
+
+            ok:
+                true
+
+        };
 
 
         if (
@@ -1142,9 +1417,10 @@ export class CobroPagoService {
             "Cobro"
         ) {
 
-            this.actualizarEstadoFactura(
-                movimiento.facturaId
-            );
+            resultadoRelacionado =
+                this.actualizarEstadoFactura(
+                    movimiento.facturaId
+                );
 
         }
 
@@ -1154,15 +1430,50 @@ export class CobroPagoService {
             "Pago"
         ) {
 
-            this.actualizarEstadoGasto(
-                movimiento.gastoId
-            );
+            resultadoRelacionado =
+                this.actualizarEstadoGasto(
+                    movimiento.gastoId
+                );
+
+        }
+
+
+        if (
+            !resultadoRelacionado.ok
+        ) {
+
+            /*
+             * Si falla la actualización del documento
+             * relacionado, restauramos el movimiento.
+             */
+
+            this.movimientos =
+                movimientosAnteriores;
+
+
+            this.guardar();
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    resultadoRelacionado.mensaje
+                    ||
+                    "No se ha podido eliminar el movimiento porque no se pudo actualizar su documento relacionado."
+
+            };
 
         }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -1186,7 +1497,15 @@ export class CobroPagoService {
             !factura
         ) {
 
-            return;
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La factura relacionada no existe."
+
+            };
 
         }
 
@@ -1196,28 +1515,104 @@ export class CobroPagoService {
             "Anulada"
         ) {
 
-            return;
+            return {
+
+                ok:
+                    true,
+
+                factura:
+                    factura
+
+            };
 
         }
 
 
-        factura.estado =
+        const estadoAnterior =
+            factura.estado;
+
+
+        const nuevoEstado =
             this.obtenerEstadoCobroFactura(
                 facturaId
             );
 
 
+        factura.estado =
+            nuevoEstado;
+
+
         if (
-            typeof
-            this.facturaService
-                ?.guardar ===
+            typeof this.facturaService
+                ?.guardar !==
             "function"
         ) {
+
+            factura.estado =
+                estadoAnterior;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se puede guardar el estado de la factura."
+
+            };
+
+        }
+
+
+        const resultadoGuardado =
+            this.facturaService
+                .guardar();
+
+
+        /*
+         * Compatibilidad temporal:
+         *
+         * El factura.js antiguo no devolvía nada.
+         * Cuando lo refactoricemos devolverá true/false.
+         *
+         * Solo consideramos fallo un false explícito.
+         */
+        if (
+            resultadoGuardado ===
+            false
+        ) {
+
+            factura.estado =
+                estadoAnterior;
+
 
             this.facturaService
                 .guardar();
 
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido actualizar el estado de la factura."
+
+            };
+
         }
+
+
+        return {
+
+            ok:
+                true,
+
+            factura:
+                factura
+
+        };
 
     }
 
@@ -1240,7 +1635,15 @@ export class CobroPagoService {
             !gasto
         ) {
 
-            return;
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El gasto relacionado no existe."
+
+            };
 
         }
 
@@ -1257,35 +1660,65 @@ export class CobroPagoService {
             );
 
 
-        /*
-         * USAMOS LA FUNCIÓN NUEVA DE gasto.js.
-         */
-
         if (
             this.gastoService
             &&
-            typeof
-            this.gastoService
+            typeof this.gastoService
                 .actualizarEstadoFinanciero ===
             "function"
         ) {
 
-            this.gastoService
-                .actualizarEstadoFinanciero(
-                    gastoId,
-                    pagado,
-                    pendiente
-                );
+            const resultado =
+                this.gastoService
+                    .actualizarEstadoFinanciero(
+                        gastoId,
+                        pagado,
+                        pendiente
+                    );
 
 
-            return;
+            if (
+                resultado
+                &&
+                resultado.ok ===
+                false
+            ) {
+
+                return resultado;
+
+            }
+
+
+            return {
+
+                ok:
+                    true,
+
+                gasto:
+                    gasto
+
+            };
 
         }
 
 
         /*
-         * RESPALDO
+         * RESPALDO PARA COMPATIBILIDAD.
          */
+
+        const estadoAnterior = {
+
+            pagadoAcumulado:
+                gasto.pagadoAcumulado,
+
+            pendientePago:
+                gasto.pendientePago,
+
+            estado:
+                gasto.estado
+
+        };
+
 
         gasto.pagadoAcumulado =
             pagado;
@@ -1302,16 +1735,80 @@ export class CobroPagoService {
 
 
         if (
-            typeof
-            this.gastoService
-                ?.guardar ===
+            typeof this.gastoService
+                ?.guardar !==
             "function"
         ) {
+
+            gasto.pagadoAcumulado =
+                estadoAnterior.pagadoAcumulado;
+
+            gasto.pendientePago =
+                estadoAnterior.pendientePago;
+
+            gasto.estado =
+                estadoAnterior.estado;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se puede guardar el estado financiero del gasto."
+
+            };
+
+        }
+
+
+        const resultadoGuardado =
+            this.gastoService
+                .guardar();
+
+
+        if (
+            resultadoGuardado ===
+            false
+        ) {
+
+            gasto.pagadoAcumulado =
+                estadoAnterior.pagadoAcumulado;
+
+            gasto.pendientePago =
+                estadoAnterior.pendientePago;
+
+            gasto.estado =
+                estadoAnterior.estado;
+
 
             this.gastoService
                 .guardar();
 
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido actualizar el estado financiero del gasto."
+
+            };
+
         }
+
+
+        return {
+
+            ok:
+                true,
+
+            gasto:
+                gasto
+
+        };
 
     }
 
@@ -1322,23 +1819,68 @@ export class CobroPagoService {
 
     sincronizarEstadosFacturas() {
 
-        this.obtenerFacturas()
-            .forEach(
-                factura => {
+        let actualizadas =
+            0;
 
-                    if (
-                        factura.estado !==
-                        "Anulada"
-                    ) {
 
-                        this.actualizarEstadoFactura(
-                            factura.id
-                        );
+        for (
+            const factura
+            of
+            this.obtenerFacturas()
+        ) {
 
-                    }
+            if (
+                factura.estado ===
+                "Anulada"
+            ) {
 
-                }
-            );
+                continue;
+
+            }
+
+
+            const estadoCorrecto =
+                this.obtenerEstadoCobroFactura(
+                    factura.id
+                );
+
+
+            if (
+                factura.estado ===
+                estadoCorrecto
+            ) {
+
+                continue;
+
+            }
+
+
+            const resultado =
+                this.actualizarEstadoFactura(
+                    factura.id
+                );
+
+
+            if (
+                resultado.ok
+            ) {
+
+                actualizadas++;
+
+            }
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            actualizadas:
+                actualizadas
+
+        };
 
     }
 
@@ -1349,16 +1891,96 @@ export class CobroPagoService {
 
     sincronizarEstadosGastos() {
 
-        this.obtenerGastos()
-            .forEach(
-                gasto => {
+        let actualizados =
+            0;
 
-                    this.actualizarEstadoGasto(
-                        gasto.id
-                    );
 
-                }
-            );
+        for (
+            const gasto
+            of
+            this.obtenerGastos()
+        ) {
+
+            const pagadoCorrecto =
+                this.obtenerPagadoGasto(
+                    gasto.id
+                );
+
+
+            const pendienteCorrecto =
+                this.obtenerPendienteGasto(
+                    gasto.id
+                );
+
+
+            const estadoCorrecto =
+                this.obtenerEstadoPagoGasto(
+                    gasto.id
+                );
+
+
+            const coincide =
+                Math.abs(
+                    numeroSeguro(
+                        gasto.pagadoAcumulado,
+                        0
+                    )
+                    -
+                    pagadoCorrecto
+                )
+                <=
+                0.001
+                &&
+                Math.abs(
+                    numeroSeguro(
+                        gasto.pendientePago,
+                        0
+                    )
+                    -
+                    pendienteCorrecto
+                )
+                <=
+                0.001
+                &&
+                gasto.estado ===
+                estadoCorrecto;
+
+
+            if (
+                coincide
+            ) {
+
+                continue;
+
+            }
+
+
+            const resultado =
+                this.actualizarEstadoGasto(
+                    gasto.id
+                );
+
+
+            if (
+                resultado.ok
+            ) {
+
+                actualizados++;
+
+            }
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            actualizados:
+                actualizados
+
+        };
 
     }
 
@@ -1369,85 +1991,103 @@ export class CobroPagoService {
 
     obtenerTotalCobrado() {
 
-        return this.obtenerCobros()
-            .reduce(
-                (
-                    total,
-                    movimiento
-                ) =>
-                    total
-                    +
-                    Number(
-                        movimiento.importe
-                        ||
-                        0
-                    ),
-                0
-            );
+        return Number(
+            this.obtenerCobros()
+                .reduce(
+                    (
+                        total,
+                        movimiento
+                    ) =>
+                        total
+                        +
+                        numeroSeguro(
+                            movimiento.importe,
+                            0
+                        ),
+                    0
+                )
+                .toFixed(
+                    2
+                )
+        );
 
     }
 
 
     obtenerTotalPagado() {
 
-        return this.obtenerPagos()
-            .reduce(
-                (
-                    total,
-                    movimiento
-                ) =>
-                    total
-                    +
-                    Number(
-                        movimiento.importe
-                        ||
-                        0
-                    ),
-                0
-            );
+        return Number(
+            this.obtenerPagos()
+                .reduce(
+                    (
+                        total,
+                        movimiento
+                    ) =>
+                        total
+                        +
+                        numeroSeguro(
+                            movimiento.importe,
+                            0
+                        ),
+                    0
+                )
+                .toFixed(
+                    2
+                )
+        );
 
     }
 
 
     obtenerTotalPendienteCobro() {
 
-        return this.obtenerFacturas()
-            .filter(
-                factura =>
-                    factura.estado !==
-                    "Anulada"
-            )
-            .reduce(
-                (
-                    total,
-                    factura
-                ) =>
-                    total
-                    +
-                    this.obtenerPendienteFactura(
-                        factura.id
-                    ),
-                0
-            );
+        return Number(
+            this.obtenerFacturas()
+                .filter(
+                    factura =>
+                        factura.estado !==
+                        "Anulada"
+                )
+                .reduce(
+                    (
+                        total,
+                        factura
+                    ) =>
+                        total
+                        +
+                        this.obtenerPendienteFactura(
+                            factura.id
+                        ),
+                    0
+                )
+                .toFixed(
+                    2
+                )
+        );
 
     }
 
 
     obtenerTotalPendientePago() {
 
-        return this.obtenerGastos()
-            .reduce(
-                (
-                    total,
-                    gasto
-                ) =>
-                    total
-                    +
-                    this.obtenerPendienteGasto(
-                        gasto.id
-                    ),
-                0
-            );
+        return Number(
+            this.obtenerGastos()
+                .reduce(
+                    (
+                        total,
+                        gasto
+                    ) =>
+                        total
+                        +
+                        this.obtenerPendienteGasto(
+                            gasto.id
+                        ),
+                    0
+                )
+                .toFixed(
+                    2
+                )
+        );
 
     }
 
@@ -1458,7 +2098,7 @@ export class CobroPagoService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarCobrosPagos(
                 this.movimientos
             );
@@ -1470,21 +2110,24 @@ export class CobroPagoService {
     // FORMATO
     // =====================================================
 
-    formatearDinero(numero) {
+    formatearDinero(
+        numero
+    ) {
 
-        return Number(
-            numero
-            ||
+        return numeroSeguro(
+            numero,
             0
         )
             .toLocaleString(
                 "es-ES",
                 {
+
                     minimumFractionDigits:
                         2,
 
                     maximumFractionDigits:
                         2
+
                 }
             )
             +

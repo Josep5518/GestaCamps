@@ -1,5 +1,15 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId
+} from "./utils.js";
+
+import {
+    obtenerNombreTrabajador,
+    obtenerNombreMaquinaria
+} from "./entityHelpers.js";
+
 
 export class TrabajoService {
 
@@ -15,6 +25,13 @@ export class TrabajoService {
             campaniaService;
 
 
+        /*
+         * Normalizamos en memoria los trabajos antiguos,
+         * pero NO guardamos automáticamente al iniciar.
+         *
+         * Así evitamos crear auditorías simplemente por
+         * abrir GestaCamps.
+         */
         this.trabajos =
             StorageService
                 .obtenerTrabajos()
@@ -24,9 +41,6 @@ export class TrabajoService {
                             trabajo
                         )
                 );
-
-
-        this.guardar();
 
     }
 
@@ -44,14 +58,21 @@ export class TrabajoService {
                 trabajo.trabajadorIds
             )
                 ? trabajo.trabajadorIds
-                    .map(Number)
-                    .filter(Boolean)
+                    .filter(
+                        id =>
+                            id !==
+                            null
+                            &&
+                            id !==
+                            undefined
+                            &&
+                            id !==
+                            ""
+                    )
 
                 : trabajo.trabajadorId
                     ? [
-                        Number(
-                            trabajo.trabajadorId
-                        )
+                        trabajo.trabajadorId
                     ]
                     : [];
 
@@ -61,7 +82,9 @@ export class TrabajoService {
                 trabajo.trabajadorNombres
             )
                 ? trabajo.trabajadorNombres
-                    .filter(Boolean)
+                    .filter(
+                        Boolean
+                    )
 
                 : trabajo.trabajadorNombre
                     ? [
@@ -82,7 +105,7 @@ export class TrabajoService {
 
             trabajadorId:
                 trabajadorIds[0]
-                ||
+                ??
                 null,
 
             trabajadorNombre:
@@ -124,14 +147,17 @@ export class TrabajoService {
         id
     ) {
 
-        return this.trabajos.find(
-            trabajo =>
-                Number(
-                    trabajo.id
-                ) ===
-                Number(
-                    id
+        return (
+            this.trabajos
+                .find(
+                    trabajo =>
+                        mismoId(
+                            trabajo.id,
+                            id
+                        )
                 )
+            ||
+            null
         );
 
     }
@@ -145,15 +171,14 @@ export class TrabajoService {
         campaniaId
     ) {
 
-        return this.trabajos.filter(
-            trabajo =>
-                Number(
-                    trabajo.campaniaId
-                ) ===
-                Number(
-                    campaniaId
-                )
-        );
+        return this.trabajos
+            .filter(
+                trabajo =>
+                    mismoId(
+                        trabajo.campaniaId,
+                        campaniaId
+                    )
+            );
 
     }
 
@@ -166,21 +191,22 @@ export class TrabajoService {
         trabajadorId
     ) {
 
-        return this.trabajos.filter(
-            trabajo =>
-                Array.isArray(
-                    trabajo.trabajadorIds
-                )
-                &&
-                trabajo.trabajadorIds
-                    .some(
-                        id =>
-                            Number(id) ===
-                            Number(
-                                trabajadorId
-                            )
+        return this.trabajos
+            .filter(
+                trabajo =>
+                    Array.isArray(
+                        trabajo.trabajadorIds
                     )
-        );
+                    &&
+                    trabajo.trabajadorIds
+                        .some(
+                            id =>
+                                mismoId(
+                                    id,
+                                    trabajadorId
+                                )
+                        )
+            );
 
     }
 
@@ -191,11 +217,12 @@ export class TrabajoService {
 
     obtenerPendientes() {
 
-        return this.trabajos.filter(
-            trabajo =>
-                trabajo.estado ===
-                "Pendiente"
-        );
+        return this.trabajos
+            .filter(
+                trabajo =>
+                    trabajo.estado ===
+                    "Pendiente"
+            );
 
     }
 
@@ -206,11 +233,12 @@ export class TrabajoService {
 
     obtenerEnCurso() {
 
-        return this.trabajos.filter(
-            trabajo =>
-                trabajo.estado ===
-                "En curso"
-        );
+        return this.trabajos
+            .filter(
+                trabajo =>
+                    trabajo.estado ===
+                    "En curso"
+            );
 
     }
 
@@ -221,11 +249,12 @@ export class TrabajoService {
 
     obtenerCompletados() {
 
-        return this.trabajos.filter(
-            trabajo =>
-                trabajo.estado ===
-                "Completada"
-        );
+        return this.trabajos
+            .filter(
+                trabajo =>
+                    trabajo.estado ===
+                    "Completada"
+            );
 
     }
 
@@ -239,30 +268,72 @@ export class TrabajoService {
     ) {
 
         if (
-            !datos.titulo
+            !datos
             ||
-            !datos.titulo.trim()
+            typeof datos !==
+            "object"
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
-                    "Introduce el nombre del trabajo."
+                    "Los datos del trabajo no son válidos."
+
             };
 
         }
 
 
+        const titulo =
+            String(
+                datos.titulo
+                ??
+                ""
+            )
+                .trim();
+
+
         if (
-            !datos.tipo
-            ||
-            !datos.tipo.trim()
+            !titulo
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Introduce el nombre del trabajo."
+
+            };
+
+        }
+
+
+        const tipo =
+            String(
+                datos.tipo
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            !tipo
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
                 mensaje:
                     "Selecciona el tipo de trabajo."
+
             };
 
         }
@@ -271,9 +342,7 @@ export class TrabajoService {
         const finca =
             this.fincaService
                 .obtenerPorId(
-                    Number(
-                        datos.fincaId
-                    )
+                    datos.fincaId
                 );
 
 
@@ -282,9 +351,13 @@ export class TrabajoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Selecciona una finca válida."
+
             };
 
         }
@@ -301,9 +374,7 @@ export class TrabajoService {
             campania =
                 this.campaniaService
                     .obtenerPorId(
-                        Number(
-                            datos.campaniaId
-                        )
+                        datos.campaniaId
                     );
 
 
@@ -312,28 +383,33 @@ export class TrabajoService {
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
+
                     mensaje:
                         "La campanya seleccionada no existe."
+
                 };
 
             }
 
 
             if (
-                Number(
-                    campania.fincaId
-                )
-                !==
-                Number(
+                !mismoId(
+                    campania.fincaId,
                     finca.id
                 )
             ) {
 
                 return {
-                    ok: false,
+
+                    ok:
+                        false,
+
                     mensaje:
                         "La campanya no pertenece a la finca seleccionada."
+
                 };
 
             }
@@ -346,20 +422,260 @@ export class TrabajoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Introduce una fecha."
+
             };
 
         }
 
 
+        const prioridad =
+            datos.prioridad
+            ||
+            "Media";
+
+
+        if (
+            ![
+                "Baja",
+                "Media",
+                "Alta",
+                "Urgente"
+            ].includes(
+                prioridad
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La prioridad indicada no es válida."
+
+            };
+
+        }
+
+
+        const estado =
+            datos.estado
+            ||
+            "Pendiente";
+
+
+        if (
+            ![
+                "Pendiente",
+                "En curso",
+                "Completada"
+            ].includes(
+                estado
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El estado indicado no es válido."
+
+            };
+
+        }
+
+
+        const relaciones =
+            this.obtenerRelacionesOperativas(
+                datos
+            );
+
+
+        if (
+            !relaciones.ok
+        ) {
+
+            return relaciones;
+
+        }
+
+
         return {
-            ok: true,
+
+            ok:
+                true,
+
             finca:
                 finca,
+
             campania:
-                campania
+                campania,
+
+            trabajadores:
+                relaciones.trabajadores,
+
+            maquinaria:
+                relaciones.maquinaria,
+
+            titulo:
+                titulo,
+
+            tipo:
+                tipo,
+
+            prioridad:
+                prioridad,
+
+            estado:
+                estado
+
+        };
+
+    }
+
+
+    // =====================================================
+    // RELACIONES OPERATIVAS
+    // =====================================================
+
+    obtenerRelacionesOperativas(
+        datos
+    ) {
+
+        const trabajadores =
+            StorageService
+                .obtenerTrabajadores();
+
+
+        const maquinaria =
+            StorageService
+                .obtenerMaquinaria();
+
+
+        const trabajadorIds =
+            Array.isArray(
+                datos.trabajadorIds
+            )
+                ? [
+                    ...new Set(
+                        datos.trabajadorIds
+                            .filter(
+                                id =>
+                                    id !==
+                                    null
+                                    &&
+                                    id !==
+                                    undefined
+                                    &&
+                                    id !==
+                                    ""
+                            )
+                            .map(
+                                id =>
+                                    String(
+                                        id
+                                    )
+                            )
+                    )
+                ]
+                : [];
+
+
+        const trabajadoresSeleccionados =
+            trabajadorIds
+                .map(
+                    id =>
+                        trabajadores
+                            .find(
+                                trabajador =>
+                                    mismoId(
+                                        trabajador.id,
+                                        id
+                                    )
+                            )
+                )
+                .filter(
+                    Boolean
+                );
+
+
+        if (
+            trabajadoresSeleccionados.length !==
+            trabajadorIds.length
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Uno o varios trabajadores seleccionados ya no existen."
+
+            };
+
+        }
+
+
+        let maquina =
+            null;
+
+
+        if (
+            datos.maquinariaId
+        ) {
+
+            maquina =
+                maquinaria
+                    .find(
+                        item =>
+                            mismoId(
+                                item.id,
+                                datos.maquinariaId
+                            )
+                    )
+                ||
+                null;
+
+
+            if (
+                !maquina
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La maquinaria seleccionada no existe."
+
+                };
+
+            }
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            trabajadores:
+                trabajadoresSeleccionados,
+
+            maquinaria:
+                maquina
+
         };
 
     }
@@ -388,91 +704,80 @@ export class TrabajoService {
         }
 
 
-        const finca =
-            validacion.finca;
-
-
-        const campania =
-            validacion.campania;
-
-
-        const trabajadorIds =
-            Array.isArray(
-                datos.trabajadorIds
-            )
-                ? datos.trabajadorIds
-                    .map(Number)
-                    .filter(Boolean)
-                : [];
-
-
-        const trabajadorNombres =
-            Array.isArray(
-                datos.trabajadorNombres
-            )
-                ? datos.trabajadorNombres
-                    .filter(Boolean)
-                : [];
-
-
         const ahora =
             new Date()
                 .toISOString();
 
 
-        const estado =
-            datos.estado
-            ||
-            "Pendiente";
+        const trabajadorIds =
+            validacion.trabajadores
+                .map(
+                    trabajador =>
+                        trabajador.id
+                );
+
+
+        const trabajadorNombres =
+            validacion.trabajadores
+                .map(
+                    trabajador =>
+                        obtenerNombreTrabajador(
+                            trabajador
+                        )
+                );
 
 
         const nuevoTrabajo = {
 
             id:
-                Date.now(),
+                generarId(),
 
             titulo:
-                datos.titulo.trim(),
+                validacion.titulo,
 
             tipo:
-                datos.tipo.trim(),
+                validacion.tipo,
 
             fincaId:
-                finca.id,
+                validacion.finca.id,
 
             fincaNombre:
-                finca.nombre,
+                validacion.finca.nombre,
 
             parcela:
-                datos.parcela?.trim()
-                ||
-                "",
+                String(
+                    datos.parcela
+                    ??
+                    ""
+                )
+                    .trim(),
 
             cultivo:
-                datos.cultivo?.trim()
-                ||
-                "",
+                String(
+                    datos.cultivo
+                    ??
+                    ""
+                )
+                    .trim(),
 
             campaniaId:
-                campania
-                    ? campania.id
+                validacion.campania
+                    ? validacion.campania.id
                     : null,
 
             campaniaNombre:
-                campania
-                    ? campania.nombre
+                validacion.campania
+                    ? validacion.campania.nombre
                     : "",
 
             fecha:
                 datos.fecha,
 
             prioridad:
-                datos.prioridad
-                ||
-                "Media",
+                validacion.prioridad,
 
             estado:
-                estado,
+                validacion.estado,
 
             trabajadorIds:
                 trabajadorIds,
@@ -484,7 +789,7 @@ export class TrabajoService {
 
             trabajadorId:
                 trabajadorIds[0]
-                ||
+                ??
                 null,
 
             trabajadorNombre:
@@ -493,33 +798,36 @@ export class TrabajoService {
                 "",
 
             maquinariaId:
-                datos.maquinariaId
-                    ? Number(
-                        datos.maquinariaId
-                    )
+                validacion.maquinaria
+                    ? validacion.maquinaria.id
                     : null,
 
             maquinariaNombre:
-                datos.maquinariaNombre
-                ||
-                "",
+                validacion.maquinaria
+                    ? obtenerNombreMaquinaria(
+                        validacion.maquinaria
+                    )
+                    : "",
 
             notas:
-                datos.notas?.trim()
-                ||
-                "",
+                String(
+                    datos.notas
+                    ??
+                    ""
+                )
+                    .trim(),
 
             fechaCreacion:
                 ahora,
 
             fechaInicio:
-                estado ===
+                validacion.estado ===
                 "En curso"
                     ? ahora
                     : "",
 
             fechaCompletada:
-                estado ===
+                validacion.estado ===
                 "Completada"
                     ? ahora
                     : ""
@@ -532,13 +840,46 @@ export class TrabajoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.trabajos =
+                this.trabajos
+                    .filter(
+                        trabajo =>
+                            !mismoId(
+                                trabajo.id,
+                                nuevoTrabajo.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el trabajo."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             trabajo:
                 nuevoTrabajo
+
         };
 
     }
@@ -564,9 +905,13 @@ export class TrabajoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El trabajo no existe."
+
             };
 
         }
@@ -587,84 +932,97 @@ export class TrabajoService {
         }
 
 
-        const finca =
-            validacion.finca;
-
-
-        const campania =
-            validacion.campania;
-
-
-        const trabajadorIds =
-            Array.isArray(
-                datos.trabajadorIds
-            )
-                ? datos.trabajadorIds
-                    .map(Number)
-                    .filter(Boolean)
-                : [];
-
-
-        const trabajadorNombres =
-            Array.isArray(
-                datos.trabajadorNombres
-            )
-                ? datos.trabajadorNombres
-                    .filter(Boolean)
-                : [];
+        const estadoAnteriorCompleto =
+            JSON.parse(
+                JSON.stringify(
+                    trabajo
+                )
+            );
 
 
         const estadoAnterior =
             trabajo.estado;
 
 
+        const trabajadorIds =
+            validacion.trabajadores
+                .map(
+                    trabajador =>
+                        trabajador.id
+                );
+
+
+        const trabajadorNombres =
+            validacion.trabajadores
+                .map(
+                    trabajador =>
+                        obtenerNombreTrabajador(
+                            trabajador
+                        )
+                );
+
+
         trabajo.titulo =
-            datos.titulo.trim();
+            validacion.titulo;
+
 
         trabajo.tipo =
-            datos.tipo.trim();
+            validacion.tipo;
+
 
         trabajo.fincaId =
-            finca.id;
+            validacion.finca.id;
+
 
         trabajo.fincaNombre =
-            finca.nombre;
+            validacion.finca.nombre;
+
 
         trabajo.parcela =
-            datos.parcela?.trim()
-            ||
-            "";
+            String(
+                datos.parcela
+                ??
+                ""
+            )
+                .trim();
+
 
         trabajo.cultivo =
-            datos.cultivo?.trim()
-            ||
-            "";
+            String(
+                datos.cultivo
+                ??
+                ""
+            )
+                .trim();
+
 
         trabajo.campaniaId =
-            campania
-                ? campania.id
+            validacion.campania
+                ? validacion.campania.id
                 : null;
 
+
         trabajo.campaniaNombre =
-            campania
-                ? campania.nombre
+            validacion.campania
+                ? validacion.campania.nombre
                 : "";
+
 
         trabajo.fecha =
             datos.fecha;
 
+
         trabajo.prioridad =
-            datos.prioridad
-            ||
-            "Media";
+            validacion.prioridad;
+
 
         trabajo.estado =
-            datos.estado
-            ||
-            "Pendiente";
+            validacion.estado;
+
 
         trabajo.trabajadorIds =
             trabajadorIds;
+
 
         trabajo.trabajadorNombres =
             trabajadorNombres;
@@ -674,8 +1032,9 @@ export class TrabajoService {
 
         trabajo.trabajadorId =
             trabajadorIds[0]
-            ||
+            ??
             null;
+
 
         trabajo.trabajadorNombre =
             trabajadorNombres[0]
@@ -684,21 +1043,26 @@ export class TrabajoService {
 
 
         trabajo.maquinariaId =
-            datos.maquinariaId
-                ? Number(
-                    datos.maquinariaId
-                )
+            validacion.maquinaria
+                ? validacion.maquinaria.id
                 : null;
 
+
         trabajo.maquinariaNombre =
-            datos.maquinariaNombre
-            ||
-            "";
+            validacion.maquinaria
+                ? obtenerNombreMaquinaria(
+                    validacion.maquinaria
+                )
+                : "";
+
 
         trabajo.notas =
-            datos.notas?.trim()
-            ||
-            "";
+            String(
+                datos.notas
+                ??
+                ""
+            )
+                .trim();
 
 
         this.actualizarFechasEstado(
@@ -708,13 +1072,41 @@ export class TrabajoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            Object.assign(
+                trabajo,
+                estadoAnteriorCompleto
+            );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se han podido guardar los cambios del trabajo."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             trabajo:
                 trabajo
+
         };
 
     }
@@ -740,9 +1132,13 @@ export class TrabajoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El trabajo no existe."
+
             };
 
         }
@@ -759,12 +1155,31 @@ export class TrabajoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El estado indicado no es válido."
+
             };
 
         }
+
+
+        const estadoCompletoAnterior =
+            {
+
+                estado:
+                    trabajo.estado,
+
+                fechaInicio:
+                    trabajo.fechaInicio,
+
+                fechaCompletada:
+                    trabajo.fechaCompletada
+
+            };
 
 
         const estadoAnterior =
@@ -782,13 +1197,45 @@ export class TrabajoService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            trabajo.estado =
+                estadoCompletoAnterior.estado;
+
+            trabajo.fechaInicio =
+                estadoCompletoAnterior.fechaInicio;
+
+            trabajo.fechaCompletada =
+                estadoCompletoAnterior.fechaCompletada;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido cambiar el estado del trabajo."
+
+            };
+
+        }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             trabajo:
                 trabajo
+
         };
 
     }
@@ -923,6 +1370,44 @@ export class TrabajoService {
 
 
     // =====================================================
+    // VÍNCULOS
+    // =====================================================
+
+    obtenerVinculos(
+        trabajoId
+    ) {
+
+        const incidencias =
+            StorageService
+                .obtenerIncidencias();
+
+
+        const incidenciasVinculadas =
+            incidencias
+                .filter(
+                    incidencia =>
+                        mismoId(
+                            incidencia.trabajoId,
+                            trabajoId
+                        )
+                )
+                .length;
+
+
+        return {
+
+            incidencias:
+                incidenciasVinculadas,
+
+            total:
+                incidenciasVinculadas
+
+        };
+
+    }
+
+
+    // =====================================================
     // ELIMINAR
     // =====================================================
 
@@ -941,31 +1426,99 @@ export class TrabajoService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "El trabajo no existe."
+
             };
 
         }
 
 
-        this.trabajos =
-            this.trabajos.filter(
-                item =>
-                    Number(
-                        item.id
-                    ) !==
-                    Number(
-                        id
-                    )
+        const vinculos =
+            this.obtenerVinculos(
+                id
             );
 
 
-        this.guardar();
+        if (
+            vinculos.total >
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    `No puedes eliminar este trabajo porque tiene ${vinculos.incidencias} incidencia${
+                        vinculos.incidencias ===
+                        1
+                            ? ""
+                            : "s"
+                    } vinculada${
+                        vinculos.incidencias ===
+                        1
+                            ? ""
+                            : "s"
+                    }.`
+
+            };
+
+        }
+
+
+        const trabajosAnteriores =
+            [
+                ...this.trabajos
+            ];
+
+
+        this.trabajos =
+            this.trabajos
+                .filter(
+                    item =>
+                        !mismoId(
+                            item.id,
+                            id
+                        )
+                );
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.trabajos =
+                trabajosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar el trabajo."
+
+            };
+
+        }
 
 
         return {
-            ok: true
+
+            ok:
+                true
+
         };
 
     }
@@ -977,7 +1530,7 @@ export class TrabajoService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarTrabajos(
                 this.trabajos
             );

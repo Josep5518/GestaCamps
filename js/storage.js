@@ -71,7 +71,36 @@ const CLAVES = {
         "gestacamps_historial",
 
     SESION_TRABAJADOR:
-        "gestacamps_trabajador_sesion"
+        "gestacamps_trabajador_sesion",
+
+    SESION_ADMIN:
+        "gestacamps_admin_sesion"
+
+};
+
+
+// =====================================================
+// LÍMITES
+// =====================================================
+
+const MAX_REGISTROS_HISTORIAL =
+    5000;
+
+
+// =====================================================
+// NOMBRES DE ROLES
+// =====================================================
+
+const NOMBRES_ROL = {
+
+    administrador:
+        "Administrador",
+
+    encargado:
+        "Encargado",
+
+    trabajador:
+        "Trabajador"
 
 };
 
@@ -352,10 +381,30 @@ export class StorageService {
         }
 
 
-        return this.leer(
-            configuracion.clave,
-            []
-        );
+        const datos =
+            this.leer(
+                configuracion.clave,
+                []
+            );
+
+
+        if (
+            !Array.isArray(
+                datos
+            )
+        ) {
+
+            console.error(
+                `La colección ${nombre} no contiene un array válido.`
+            );
+
+
+            return [];
+
+        }
+
+
+        return datos;
 
     }
 
@@ -389,14 +438,27 @@ export class StorageService {
         }
 
 
-        this.guardarColeccionConAuditoria(
+        if (
+            !Array.isArray(
+                datos
+            )
+        ) {
+
+            console.error(
+                `No se puede guardar ${nombre}: los datos no son un array.`
+            );
+
+
+            return false;
+
+        }
+
+
+        return this.guardarColeccionConAuditoria(
             configuracion.clave,
             datos,
             configuracion.modulo
         );
-
-
-        return true;
 
     }
 
@@ -418,6 +480,22 @@ export class StorageService {
             );
 
 
+        const guardado =
+            this.escribir(
+                clave,
+                datosNuevos
+            );
+
+
+        if (
+            !guardado
+        ) {
+
+            return false;
+
+        }
+
+
         if (
             Array.isArray(
                 datosAnteriores
@@ -428,19 +506,31 @@ export class StorageService {
             )
         ) {
 
-            this.compararColeccion(
-                datosAnteriores,
-                datosNuevos,
-                modulo
-            );
+            try {
+
+                this.compararColeccion(
+                    datosAnteriores,
+                    datosNuevos,
+                    modulo
+                );
+
+            }
+
+            catch (
+                error
+            ) {
+
+                console.error(
+                    `Error generando auditoría de ${modulo}:`,
+                    error
+                );
+
+            }
 
         }
 
 
-        this.escribir(
-            clave,
-            datosNuevos
-        );
+        return true;
 
     }
 
@@ -937,6 +1027,15 @@ export class StorageService {
 
         try {
 
+            /*
+             * El portal trabajador tiene prioridad.
+             *
+             * Puede existir simultáneamente una sesión
+             * administrativa abierta en el navegador.
+             * Si el usuario está actuando desde el portal,
+             * la auditoría debe atribuirse al trabajador.
+             */
+
             const trabajadorId =
                 sessionStorage.getItem(
                     CLAVES.SESION_TRABAJADOR
@@ -951,11 +1050,11 @@ export class StorageService {
                     this.obtenerTrabajadores()
                         .find(
                             item =>
-                                Number(
+                                String(
                                     item.id
                                 )
                                 ===
-                                Number(
+                                String(
                                     trabajadorId
                                 )
                         );
@@ -986,6 +1085,104 @@ export class StorageService {
 
             }
 
+
+            /*
+             * SESIÓN DE ADMINISTRACIÓN / ENCARGADO
+             */
+
+            const sesionAdmin =
+                sessionStorage.getItem(
+                    CLAVES.SESION_ADMIN
+                );
+
+
+            if (
+                sesionAdmin
+            ) {
+
+                try {
+
+                    const sesion =
+                        JSON.parse(
+                            sesionAdmin
+                        );
+
+
+                    if (
+                        sesion
+                        &&
+                        sesion.usuarioId !==
+                        undefined
+                        &&
+                        sesion.usuarioId !==
+                        null
+                    ) {
+
+                        const usuario =
+                            this.obtenerUsuarios()
+                                .find(
+                                    item =>
+                                        String(
+                                            item.id
+                                        )
+                                        ===
+                                        String(
+                                            sesion.usuarioId
+                                        )
+                                );
+
+
+                        if (
+                            usuario
+                            &&
+                            usuario.activo !==
+                            false
+                        ) {
+
+                            return {
+
+                                tipo:
+                                    this.obtenerNombreRol(
+                                        usuario.rol
+                                    ),
+
+                                id:
+                                    usuario.id,
+
+                                nombre:
+                                    this.obtenerNombreCompleto(
+                                        usuario
+                                    )
+                                    ||
+                                    usuario.usuario
+                                    ||
+                                    "Usuario"
+
+                            };
+
+                        }
+
+                    }
+
+                }
+
+                catch (
+                    error
+                ) {
+
+                    console.error(
+                        "Error leyendo sesión administrativa para auditoría:",
+                        error
+                    );
+
+                }
+
+            }
+
+
+            /*
+             * COMPATIBILIDAD CON SISTEMA ANTIGUO
+             */
 
             const explotacion =
                 this.obtenerExplotacion();
@@ -1032,6 +1229,30 @@ export class StorageService {
             };
 
         }
+
+    }
+
+
+    // =================================================
+    // NOMBRE DEL ROL
+    // =================================================
+
+    static obtenerNombreRol(
+        rol
+    ) {
+
+        return (
+            NOMBRES_ROL[
+                String(
+                    rol
+                    ||
+                    ""
+                )
+                    .toLowerCase()
+            ]
+            ||
+            "Usuario"
+        );
 
     }
 
@@ -1152,22 +1373,8 @@ export class StorageService {
         );
 
 
-        const MAX_REGISTROS =
-            5000;
-
-
-        const historialLimitado =
-            historial.length >
-            MAX_REGISTROS
-                ? historial.slice(
-                    -MAX_REGISTROS
-                )
-                : historial;
-
-
-        this.escribir(
-            CLAVES.HISTORIAL,
-            historialLimitado
+        return this.guardarHistorial(
+            historial
         );
 
     }
@@ -1198,10 +1405,18 @@ export class StorageService {
 
     static obtenerHistorial() {
 
-        return this.leer(
-            CLAVES.HISTORIAL,
-            []
-        );
+        const historial =
+            this.leer(
+                CLAVES.HISTORIAL,
+                []
+            );
+
+
+        return Array.isArray(
+            historial
+        )
+            ? historial
+            : [];
 
     }
 
@@ -1210,9 +1425,34 @@ export class StorageService {
         historial
     ) {
 
-        this.escribir(
+        if (
+            !Array.isArray(
+                historial
+            )
+        ) {
+
+            console.error(
+                "No se puede guardar el historial: los datos no son un array."
+            );
+
+
+            return false;
+
+        }
+
+
+        const historialLimitado =
+            historial.length >
+            MAX_REGISTROS_HISTORIAL
+                ? historial.slice(
+                    -MAX_REGISTROS_HISTORIAL
+                )
+                : historial;
+
+
+        return this.escribir(
             CLAVES.HISTORIAL,
-            historial
+            historialLimitado
         );
 
     }
@@ -1759,9 +1999,63 @@ export class StorageService {
 
     static obtenerExplotacion() {
 
-        return this.leer(
-            CLAVES.EXPLOTACION,
-            {
+        const datos =
+            this.leer(
+                CLAVES.EXPLOTACION,
+                {
+
+                    nombreExplotacion:
+                        "",
+
+                    titular:
+                        "",
+
+                    nif:
+                        "",
+
+                    telefono:
+                        "",
+
+                    email:
+                        "",
+
+                    direccion:
+                        "",
+
+                    localidad:
+                        "",
+
+                    provincia:
+                        "",
+
+                    codigoPostal:
+                        "",
+
+                    pais:
+                        "España",
+
+                    nombreUsuario:
+                        "Josep",
+
+                    cargoUsuario:
+                        ""
+
+                }
+            );
+
+
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+            ||
+            Array.isArray(
+                datos
+            )
+        ) {
+
+            return {
 
                 nombreExplotacion:
                     "",
@@ -1799,8 +2093,12 @@ export class StorageService {
                 cargoUsuario:
                     ""
 
-            }
-        );
+            };
+
+        }
+
+
+        return datos;
 
     }
 
@@ -1809,8 +2107,45 @@ export class StorageService {
         datos
     ) {
 
+        if (
+            !datos
+            ||
+            typeof datos !==
+            "object"
+            ||
+            Array.isArray(
+                datos
+            )
+        ) {
+
+            console.error(
+                "No se pueden guardar los datos de explotación."
+            );
+
+
+            return false;
+
+        }
+
+
         const anterior =
             this.obtenerExplotacion();
+
+
+        const guardado =
+            this.escribir(
+                CLAVES.EXPLOTACION,
+                datos
+            );
+
+
+        if (
+            !guardado
+        ) {
+
+            return false;
+
+        }
 
 
         if (
@@ -1820,41 +2155,53 @@ export class StorageService {
             )
         ) {
 
-            this.registrarAuditoria(
-                {
+            try {
 
-                    modulo:
-                        "Perfil y explotación",
+                this.registrarAuditoria(
+                    {
 
-                    accion:
-                        "Modificación",
+                        modulo:
+                            "Perfil y explotación",
 
-                    entidadId:
-                        null,
+                        accion:
+                            "Modificación",
 
-                    referencia:
-                        datos.nombre
-                        ||
-                        datos.nombreExplotacion
-                        ||
-                        "Datos de explotación",
+                        entidadId:
+                            null,
 
-                    cambios:
-                        this.obtenerCamposModificados(
-                            anterior,
-                            datos
-                        )
+                        referencia:
+                            datos.nombre
+                            ||
+                            datos.nombreExplotacion
+                            ||
+                            "Datos de explotación",
 
-                }
-            );
+                        cambios:
+                            this.obtenerCamposModificados(
+                                anterior,
+                                datos
+                            )
+
+                    }
+                );
+
+            }
+
+            catch (
+                error
+            ) {
+
+                console.error(
+                    "Error registrando auditoría de Perfil y explotación:",
+                    error
+                );
+
+            }
 
         }
 
 
-        return this.escribir(
-            CLAVES.EXPLOTACION,
-            datos
-        );
+        return true;
 
     }
 

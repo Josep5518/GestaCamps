@@ -1,5 +1,10 @@
 import { StorageService } from "./storage.js";
 
+import {
+    generarId,
+    mismoId
+} from "./utils.js";
+
 
 export class FichajeService {
 
@@ -15,6 +20,18 @@ export class FichajeService {
             StorageService
                 .obtenerFichajes();
 
+
+        if (
+            !Array.isArray(
+                this.fichajes
+            )
+        ) {
+
+            this.fichajes =
+                [];
+
+        }
+
     }
 
 
@@ -24,12 +41,18 @@ export class FichajeService {
 
     obtenerTodos() {
 
-        return [...this.fichajes]
+        return [
+            ...this.fichajes
+        ]
             .sort(
-                (a, b) =>
+                (
+                    a,
+                    b
+                ) =>
                     new Date(
                         b.fechaHora
-                    ) -
+                    )
+                    -
                     new Date(
                         a.fechaHora
                     )
@@ -49,10 +72,8 @@ export class FichajeService {
         return this.obtenerTodos()
             .filter(
                 fichaje =>
-                    Number(
-                        fichaje.trabajadorId
-                    ) ===
-                    Number(
+                    mismoId(
+                        fichaje.trabajadorId,
                         trabajadorId
                     )
             );
@@ -68,10 +89,13 @@ export class FichajeService {
         trabajadorId
     ) {
 
-        return this
-            .obtenerPorTrabajador(
+        return (
+            this.obtenerPorTrabajador(
                 trabajadorId
-            )[0] || null;
+            )[0]
+            ||
+            null
+        );
 
     }
 
@@ -90,11 +114,11 @@ export class FichajeService {
             );
 
 
-        return (
+        return Boolean(
             ultimo
             &&
             ultimo.tipo ===
-                "Entrada"
+            "Entrada"
         );
 
     }
@@ -110,8 +134,11 @@ export class FichajeService {
 
         const pinLimpio =
             String(
-                pin || ""
-            ).trim();
+                pin
+                ??
+                ""
+            )
+                .trim();
 
 
         if (
@@ -121,9 +148,13 @@ export class FichajeService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Introduce un PIN de 4 números."
+
             };
 
         }
@@ -141,9 +172,13 @@ export class FichajeService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "PIN incorrecto. No existe ningún trabajador con este PIN."
+
             };
 
         }
@@ -155,18 +190,26 @@ export class FichajeService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
                     "Este trabajador está inactivo y no puede fichar."
+
             };
 
         }
 
 
         return {
-            ok: true,
+
+            ok:
+                true,
+
             trabajador:
                 trabajador
+
         };
 
     }
@@ -206,23 +249,44 @@ export class FichajeService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
-                    `${this.trabajadorService.obtenerNombreCompleto(trabajador)} ya tiene una entrada abierta.`
+                    `${this.trabajadorService.obtenerNombreCompleto(
+                        trabajador
+                    )} ya tiene una entrada abierta.`
+
             };
 
         }
 
 
-        const fichaje =
+        const resultadoRegistro =
             this.crearRegistro(
                 trabajador,
                 "Entrada"
             );
 
 
+        if (
+            !resultadoRegistro.ok
+        ) {
+
+            return resultadoRegistro;
+
+        }
+
+
+        const fichaje =
+            resultadoRegistro.fichaje;
+
+
         return {
-            ok: true,
+
+            ok:
+                true,
 
             trabajador:
                 trabajador,
@@ -231,7 +295,10 @@ export class FichajeService {
                 fichaje,
 
             mensaje:
-                `Entrada registrada para ${this.trabajadorService.obtenerNombreCompleto(trabajador)} a las ${fichaje.hora}.`
+                `Entrada registrada para ${this.trabajadorService.obtenerNombreCompleto(
+                    trabajador
+                )} a las ${fichaje.hora}.`
+
         };
 
     }
@@ -271,23 +338,44 @@ export class FichajeService {
         ) {
 
             return {
-                ok: false,
+
+                ok:
+                    false,
+
                 mensaje:
-                    `${this.trabajadorService.obtenerNombreCompleto(trabajador)} no tiene ninguna entrada abierta.`
+                    `${this.trabajadorService.obtenerNombreCompleto(
+                        trabajador
+                    )} no tiene ninguna entrada abierta.`
+
             };
 
         }
 
 
-        const fichaje =
+        const resultadoRegistro =
             this.crearRegistro(
                 trabajador,
                 "Salida"
             );
 
 
+        if (
+            !resultadoRegistro.ok
+        ) {
+
+            return resultadoRegistro;
+
+        }
+
+
+        const fichaje =
+            resultadoRegistro.fichaje;
+
+
         return {
-            ok: true,
+
+            ok:
+                true,
 
             trabajador:
                 trabajador,
@@ -296,7 +384,10 @@ export class FichajeService {
                 fichaje,
 
             mensaje:
-                `Salida registrada para ${this.trabajadorService.obtenerNombreCompleto(trabajador)} a las ${fichaje.hora}.`
+                `Salida registrada para ${this.trabajadorService.obtenerNombreCompleto(
+                    trabajador
+                )} a las ${fichaje.hora}.`
+
         };
 
     }
@@ -311,6 +402,45 @@ export class FichajeService {
         tipo
     ) {
 
+        if (
+            !trabajador
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El trabajador no es válido."
+
+            };
+
+        }
+
+
+        if (
+            ![
+                "Entrada",
+                "Salida"
+            ].includes(
+                tipo
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El tipo de fichaje no es válido."
+
+            };
+
+        }
+
+
         const ahora =
             new Date();
 
@@ -318,7 +448,7 @@ export class FichajeService {
         const registro = {
 
             id:
-                Date.now(),
+                generarId(),
 
             trabajadorId:
                 trabajador.id,
@@ -353,10 +483,48 @@ export class FichajeService {
         );
 
 
-        this.guardar();
+        const guardado =
+            this.guardar();
 
 
-        return registro;
+        if (
+            guardado ===
+            false
+        ) {
+
+            this.fichajes =
+                this.fichajes
+                    .filter(
+                        fichaje =>
+                            !mismoId(
+                                fichaje.id,
+                                registro.id
+                            )
+                    );
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido guardar el fichaje."
+
+            };
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            fichaje:
+                registro
+
+        };
 
     }
 
@@ -373,8 +541,7 @@ export class FichajeService {
             );
 
 
-        return this
-            .obtenerTodos()
+        return this.obtenerTodos()
             .filter(
                 fichaje =>
                     fichaje.fecha ===
@@ -390,8 +557,7 @@ export class FichajeService {
 
     obtenerTrabajandoAhora() {
 
-        return this
-            .trabajadorService
+        return this.trabajadorService
             .obtenerActivos()
             .filter(
                 trabajador =>
@@ -411,13 +577,27 @@ export class FichajeService {
         fecha
     ) {
 
+        if (
+            typeof StorageService.obtenerFechaLocal ===
+            "function"
+        ) {
+
+            return StorageService
+                .obtenerFechaLocal(
+                    fecha
+                );
+
+        }
+
+
         const anio =
             fecha.getFullYear();
 
 
         const mes =
             String(
-                fecha.getMonth() + 1
+                fecha.getMonth() +
+                1
             )
                 .padStart(
                     2,
@@ -454,6 +634,7 @@ export class FichajeService {
             .toLocaleTimeString(
                 "es-ES",
                 {
+
                     hour:
                         "2-digit",
 
@@ -462,6 +643,7 @@ export class FichajeService {
 
                     second:
                         "2-digit"
+
                 }
             );
 
@@ -474,7 +656,7 @@ export class FichajeService {
 
     guardar() {
 
-        StorageService
+        return StorageService
             .guardarFichajes(
                 this.fichajes
             );
