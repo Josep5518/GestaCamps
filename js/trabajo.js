@@ -32,15 +32,24 @@ export class TrabajoService {
          * Así evitamos crear auditorías simplemente por
          * abrir GestaCamps.
          */
-        this.trabajos =
+
+        const trabajosGuardados =
             StorageService
-                .obtenerTrabajos()
-                .map(
-                    trabajo =>
-                        this.normalizarTrabajo(
-                            trabajo
-                        )
-                );
+                .obtenerTrabajos();
+
+
+        this.trabajos =
+            Array.isArray(
+                trabajosGuardados
+            )
+                ? trabajosGuardados
+                    .map(
+                        trabajo =>
+                            this.normalizarTrabajo(
+                                trabajo
+                            )
+                    )
+                : [];
 
     }
 
@@ -55,7 +64,7 @@ export class TrabajoService {
 
         const trabajadorIds =
             Array.isArray(
-                trabajo.trabajadorIds
+                trabajo?.trabajadorIds
             )
                 ? trabajo.trabajadorIds
                     .filter(
@@ -70,7 +79,7 @@ export class TrabajoService {
                             ""
                     )
 
-                : trabajo.trabajadorId
+                : trabajo?.trabajadorId
                     ? [
                         trabajo.trabajadorId
                     ]
@@ -79,18 +88,24 @@ export class TrabajoService {
 
         const trabajadorNombres =
             Array.isArray(
-                trabajo.trabajadorNombres
+                trabajo?.trabajadorNombres
             )
                 ? trabajo.trabajadorNombres
                     .filter(
                         Boolean
                     )
 
-                : trabajo.trabajadorNombre
+                : trabajo?.trabajadorNombre
                     ? [
                         trabajo.trabajadorNombre
                     ]
                     : [];
+
+
+        const recurrencia =
+            this.normalizarRecurrenciaGuardada(
+                trabajo?.recurrencia
+            );
 
 
         return {
@@ -114,14 +129,118 @@ export class TrabajoService {
                 "",
 
             fechaInicio:
-                trabajo.fechaInicio
+                trabajo?.fechaInicio
                 ||
                 "",
 
             fechaCompletada:
-                trabajo.fechaCompletada
+                trabajo?.fechaCompletada
                 ||
-                ""
+                "",
+
+            serieRecurrenciaId:
+                trabajo?.serieRecurrenciaId
+                ??
+                null,
+
+            recurrencia:
+                recurrencia
+
+        };
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR RECURRENCIA GUARDADA
+    // =====================================================
+
+    normalizarRecurrenciaGuardada(
+        recurrencia
+    ) {
+
+        if (
+            !recurrencia
+            ||
+            typeof recurrencia !==
+            "object"
+            ||
+            recurrencia.activa !==
+            true
+        ) {
+
+            return {
+
+                activa:
+                    false,
+
+                tipo:
+                    "Ninguna",
+
+                finTipo:
+                    "repeticiones",
+
+                repeticiones:
+                    1,
+
+                fechaFin:
+                    "",
+
+                indice:
+                    1,
+
+                total:
+                    1
+
+            };
+
+        }
+
+
+        return {
+
+            activa:
+                true,
+
+            tipo:
+                recurrencia.tipo
+                ||
+                "Semanal",
+
+            finTipo:
+                recurrencia.finTipo
+                ||
+                "repeticiones",
+
+            repeticiones:
+                Number(
+                    recurrencia.repeticiones
+                    ??
+                    recurrencia.total
+                    ??
+                    1
+                ),
+
+            fechaFin:
+                recurrencia.fechaFin
+                ||
+                "",
+
+            indice:
+                Number(
+                    recurrencia.indice
+                    ??
+                    1
+                ),
+
+            total:
+                Number(
+                    recurrencia.total
+                    ??
+                    recurrencia.repeticiones
+                    ??
+                    1
+                )
 
         };
 
@@ -205,6 +324,54 @@ export class TrabajoService {
                                     id,
                                     trabajadorId
                                 )
+                        )
+            );
+
+    }
+
+
+    // =====================================================
+    // OBTENER POR SERIE RECURRENTE
+    // =====================================================
+
+    obtenerPorSerie(
+        serieRecurrenciaId
+    ) {
+
+        if (
+            !serieRecurrenciaId
+        ) {
+
+            return [];
+
+        }
+
+
+        return this.trabajos
+            .filter(
+                trabajo =>
+                    mismoId(
+                        trabajo.serieRecurrenciaId,
+                        serieRecurrenciaId
+                    )
+            )
+            .slice()
+            .sort(
+                (
+                    a,
+                    b
+                ) =>
+                    String(
+                        a.fecha
+                        ||
+                        ""
+                    )
+                        .localeCompare(
+                            String(
+                                b.fecha
+                                ||
+                                ""
+                            )
                         )
             );
 
@@ -434,6 +601,25 @@ export class TrabajoService {
         }
 
 
+        if (
+            !this.esFechaISOValida(
+                datos.fecha
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La fecha del trabajo no es válida."
+
+            };
+
+        }
+
+
         const prioridad =
             datos.prioridad
             ||
@@ -446,9 +632,10 @@ export class TrabajoService {
                 "Media",
                 "Alta",
                 "Urgente"
-            ].includes(
-                prioridad
-            )
+            ]
+                .includes(
+                    prioridad
+                )
         ) {
 
             return {
@@ -475,9 +662,10 @@ export class TrabajoService {
                 "Pendiente",
                 "En curso",
                 "Completada"
-            ].includes(
-                estado
-            )
+            ]
+                .includes(
+                    estado
+                )
         ) {
 
             return {
@@ -543,6 +731,235 @@ export class TrabajoService {
 
 
     // =====================================================
+    // VALIDAR RECURRENCIA
+    // =====================================================
+
+    validarRecurrencia(
+        recurrencia,
+        fechaInicial
+    ) {
+
+        if (
+            !recurrencia
+            ||
+            recurrencia.activa !==
+            true
+            ||
+            recurrencia.tipo ===
+            "Ninguna"
+        ) {
+
+            return {
+
+                ok:
+                    true,
+
+                recurrencia: {
+
+                    activa:
+                        false,
+
+                    tipo:
+                        "Ninguna",
+
+                    finTipo:
+                        "repeticiones",
+
+                    repeticiones:
+                        1,
+
+                    fechaFin:
+                        ""
+
+                }
+
+            };
+
+        }
+
+
+        const tipo =
+            String(
+                recurrencia.tipo
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            ![
+                "Diaria",
+                "Semanal",
+                "Quincenal",
+                "Mensual"
+            ]
+                .includes(
+                    tipo
+                )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El tipo de recurrencia no es válido."
+
+            };
+
+        }
+
+
+        const finTipo =
+            recurrencia.finTipo ===
+            "fecha"
+                ? "fecha"
+                : "repeticiones";
+
+
+        if (
+            finTipo ===
+            "repeticiones"
+        ) {
+
+            const repeticiones =
+                Number(
+                    recurrencia.repeticiones
+                );
+
+
+            if (
+                !Number.isInteger(
+                    repeticiones
+                )
+                ||
+                repeticiones <
+                2
+                ||
+                repeticiones >
+                365
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "Las repeticiones deben estar entre 2 y 365."
+
+                };
+
+            }
+
+
+            return {
+
+                ok:
+                    true,
+
+                recurrencia: {
+
+                    activa:
+                        true,
+
+                    tipo:
+                        tipo,
+
+                    finTipo:
+                        "repeticiones",
+
+                    repeticiones:
+                        repeticiones,
+
+                    fechaFin:
+                        ""
+
+                }
+
+            };
+
+        }
+
+
+        const fechaFin =
+            String(
+                recurrencia.fechaFin
+                ??
+                ""
+            )
+                .trim();
+
+
+        if (
+            !this.esFechaISOValida(
+                fechaFin
+            )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Introduce una fecha final válida para la recurrencia."
+
+            };
+
+        }
+
+
+        if (
+            fechaFin <=
+            fechaInicial
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La fecha final de la recurrencia debe ser posterior a la fecha inicial."
+
+            };
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            recurrencia: {
+
+                activa:
+                    true,
+
+                tipo:
+                    tipo,
+
+                finTipo:
+                    "fecha",
+
+                repeticiones:
+                    null,
+
+                fechaFin:
+                    fechaFin
+
+            }
+
+        };
+
+    }
+
+
+    // =====================================================
     // RELACIONES OPERATIVAS
     // =====================================================
 
@@ -558,6 +975,22 @@ export class TrabajoService {
         const maquinaria =
             StorageService
                 .obtenerMaquinaria();
+
+
+        const listaTrabajadores =
+            Array.isArray(
+                trabajadores
+            )
+                ? trabajadores
+                : [];
+
+
+        const listaMaquinaria =
+            Array.isArray(
+                maquinaria
+            )
+                ? maquinaria
+                : [];
 
 
         const trabajadorIds =
@@ -586,6 +1019,7 @@ export class TrabajoService {
                             )
                     )
                 ]
+
                 : [];
 
 
@@ -593,7 +1027,7 @@ export class TrabajoService {
             trabajadorIds
                 .map(
                     id =>
-                        trabajadores
+                        listaTrabajadores
                             .find(
                                 trabajador =>
                                     mismoId(
@@ -634,7 +1068,7 @@ export class TrabajoService {
         ) {
 
             maquina =
-                maquinaria
+                listaMaquinaria
                     .find(
                         item =>
                             mismoId(
@@ -704,6 +1138,76 @@ export class TrabajoService {
         }
 
 
+        const validacionRecurrencia =
+            this.validarRecurrencia(
+                datos.recurrencia,
+                datos.fecha
+            );
+
+
+        if (
+            !validacionRecurrencia.ok
+        ) {
+
+            return validacionRecurrencia;
+
+        }
+
+
+        const recurrencia =
+            validacionRecurrencia
+                .recurrencia;
+
+
+        const fechas =
+            recurrencia.activa
+
+                ? this.generarFechasRecurrencia(
+                    datos.fecha,
+                    recurrencia
+                )
+
+                : [
+                    datos.fecha
+                ];
+
+
+        if (
+            fechas.length ===
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido generar la recurrencia."
+
+            };
+
+        }
+
+
+        if (
+            fechas.length >
+            365
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La recurrencia genera demasiadas tareas. El máximo es 365."
+
+            };
+
+        }
+
+
         const ahora =
             new Date()
                 .toISOString();
@@ -727,116 +1231,176 @@ export class TrabajoService {
                 );
 
 
-        const nuevoTrabajo = {
+        const serieRecurrenciaId =
+            recurrencia.activa
+                ? generarId()
+                : null;
 
-            id:
-                generarId(),
 
-            titulo:
-                validacion.titulo,
+        const trabajosNuevos =
+            fechas
+                .map(
+                    (
+                        fecha,
+                        indice
+                    ) => {
 
-            tipo:
-                validacion.tipo,
+                        const estado =
+                            indice ===
+                            0
+                                ? validacion.estado
+                                : "Pendiente";
 
-            fincaId:
-                validacion.finca.id,
 
-            fincaNombre:
-                validacion.finca.nombre,
+                        return {
 
-            parcela:
-                String(
-                    datos.parcela
-                    ??
-                    ""
-                )
-                    .trim(),
+                            id:
+                                generarId(),
 
-            cultivo:
-                String(
-                    datos.cultivo
-                    ??
-                    ""
-                )
-                    .trim(),
+                            titulo:
+                                validacion.titulo,
 
-            campaniaId:
-                validacion.campania
-                    ? validacion.campania.id
-                    : null,
+                            tipo:
+                                validacion.tipo,
 
-            campaniaNombre:
-                validacion.campania
-                    ? validacion.campania.nombre
-                    : "",
+                            fincaId:
+                                validacion.finca.id,
 
-            fecha:
-                datos.fecha,
+                            fincaNombre:
+                                validacion.finca.nombre,
 
-            prioridad:
-                validacion.prioridad,
+                            parcela:
+                                String(
+                                    datos.parcela
+                                    ??
+                                    ""
+                                )
+                                    .trim(),
 
-            estado:
-                validacion.estado,
+                            cultivo:
+                                String(
+                                    datos.cultivo
+                                    ??
+                                    ""
+                                )
+                                    .trim(),
 
-            trabajadorIds:
-                trabajadorIds,
+                            campaniaId:
+                                validacion.campania
+                                    ? validacion.campania.id
+                                    : null,
 
-            trabajadorNombres:
-                trabajadorNombres,
+                            campaniaNombre:
+                                validacion.campania
+                                    ? validacion.campania.nombre
+                                    : "",
 
-            // Compatibilidad con código antiguo
+                            fecha:
+                                fecha,
 
-            trabajadorId:
-                trabajadorIds[0]
-                ??
-                null,
+                            prioridad:
+                                validacion.prioridad,
 
-            trabajadorNombre:
-                trabajadorNombres[0]
-                ||
-                "",
+                            estado:
+                                estado,
 
-            maquinariaId:
-                validacion.maquinaria
-                    ? validacion.maquinaria.id
-                    : null,
+                            trabajadorIds:
+                                trabajadorIds,
 
-            maquinariaNombre:
-                validacion.maquinaria
-                    ? obtenerNombreMaquinaria(
-                        validacion.maquinaria
-                    )
-                    : "",
+                            trabajadorNombres:
+                                trabajadorNombres,
 
-            notas:
-                String(
-                    datos.notas
-                    ??
-                    ""
-                )
-                    .trim(),
+                            trabajadorId:
+                                trabajadorIds[0]
+                                ??
+                                null,
 
-            fechaCreacion:
-                ahora,
+                            trabajadorNombre:
+                                trabajadorNombres[0]
+                                ||
+                                "",
 
-            fechaInicio:
-                validacion.estado ===
-                "En curso"
-                    ? ahora
-                    : "",
+                            maquinariaId:
+                                validacion.maquinaria
+                                    ? validacion.maquinaria.id
+                                    : null,
 
-            fechaCompletada:
-                validacion.estado ===
-                "Completada"
-                    ? ahora
-                    : ""
+                            maquinariaNombre:
+                                validacion.maquinaria
+                                    ? obtenerNombreMaquinaria(
+                                        validacion.maquinaria
+                                    )
+                                    : "",
 
-        };
+                            notas:
+                                String(
+                                    datos.notas
+                                    ??
+                                    ""
+                                )
+                                    .trim(),
+
+                            fechaCreacion:
+                                ahora,
+
+                            fechaInicio:
+                                estado ===
+                                "En curso"
+                                    ? ahora
+                                    : "",
+
+                            fechaCompletada:
+                                estado ===
+                                "Completada"
+                                    ? ahora
+                                    : "",
+
+                            serieRecurrenciaId:
+                                serieRecurrenciaId,
+
+                            recurrencia: {
+
+                                activa:
+                                    recurrencia.activa,
+
+                                tipo:
+                                    recurrencia.activa
+                                        ? recurrencia.tipo
+                                        : "Ninguna",
+
+                                finTipo:
+                                    recurrencia.finTipo,
+
+                                repeticiones:
+                                    fechas.length,
+
+                                fechaFin:
+                                    recurrencia.fechaFin
+                                    ||
+                                    "",
+
+                                indice:
+                                    indice + 1,
+
+                                total:
+                                    fechas.length
+
+                            }
+
+                        };
+
+                    }
+                );
+
+
+        const trabajosAnteriores =
+            [
+                ...this.trabajos
+            ];
 
 
         this.trabajos.push(
-            nuevoTrabajo
+            ...trabajosNuevos
         );
 
 
@@ -849,14 +1413,7 @@ export class TrabajoService {
         ) {
 
             this.trabajos =
-                this.trabajos
-                    .filter(
-                        trabajo =>
-                            !mismoId(
-                                trabajo.id,
-                                nuevoTrabajo.id
-                            )
-                    );
+                trabajosAnteriores;
 
 
             return {
@@ -865,7 +1422,9 @@ export class TrabajoService {
                     false,
 
                 mensaje:
-                    "No se ha podido guardar el trabajo."
+                    recurrencia.activa
+                        ? "No se ha podido guardar la serie de tareas."
+                        : "No se ha podido guardar el trabajo."
 
             };
 
@@ -878,7 +1437,19 @@ export class TrabajoService {
                 true,
 
             trabajo:
-                nuevoTrabajo
+                trabajosNuevos[0],
+
+            trabajos:
+                trabajosNuevos,
+
+            recurrente:
+                recurrencia.activa,
+
+            serieRecurrenciaId:
+                serieRecurrenciaId,
+
+            totalCreados:
+                trabajosNuevos.length
 
         };
 
@@ -1028,8 +1599,6 @@ export class TrabajoService {
             trabajadorNombres;
 
 
-        // Compatibilidad con código antiguo
-
         trabajo.trabajadorId =
             trabajadorIds[0]
             ??
@@ -1149,9 +1718,10 @@ export class TrabajoService {
                 "Pendiente",
                 "En curso",
                 "Completada"
-            ].includes(
-                estado
-            )
+            ]
+                .includes(
+                    estado
+                )
         ) {
 
             return {
@@ -1167,19 +1737,18 @@ export class TrabajoService {
         }
 
 
-        const estadoCompletoAnterior =
-            {
+        const estadoCompletoAnterior = {
 
-                estado:
-                    trabajo.estado,
+            estado:
+                trabajo.estado,
 
-                fechaInicio:
-                    trabajo.fechaInicio,
+            fechaInicio:
+                trabajo.fechaInicio,
 
-                fechaCompletada:
-                    trabajo.fechaCompletada
+            fechaCompletada:
+                trabajo.fechaCompletada
 
-            };
+        };
 
 
         const estadoAnterior =
@@ -1370,6 +1939,381 @@ export class TrabajoService {
 
 
     // =====================================================
+    // GENERAR FECHAS DE RECURRENCIA
+    // =====================================================
+
+    generarFechasRecurrencia(
+        fechaInicial,
+        recurrencia
+    ) {
+
+        const fechas =
+            [
+                fechaInicial
+            ];
+
+
+        if (
+            recurrencia.finTipo ===
+            "repeticiones"
+        ) {
+
+            let fechaActual =
+                fechaInicial;
+
+
+            while (
+                fechas.length <
+                recurrencia.repeticiones
+                &&
+                fechas.length <
+                365
+            ) {
+
+                fechaActual =
+                    this.obtenerSiguienteFechaRecurrencia(
+                        fechaActual,
+                        recurrencia.tipo
+                    );
+
+
+                fechas.push(
+                    fechaActual
+                );
+
+            }
+
+
+            return fechas;
+
+        }
+
+
+        let fechaActual =
+            fechaInicial;
+
+
+        while (
+            fechas.length <
+            365
+        ) {
+
+            const siguiente =
+                this.obtenerSiguienteFechaRecurrencia(
+                    fechaActual,
+                    recurrencia.tipo
+                );
+
+
+            if (
+                siguiente >
+                recurrencia.fechaFin
+            ) {
+
+                break;
+
+            }
+
+
+            fechas.push(
+                siguiente
+            );
+
+
+            fechaActual =
+                siguiente;
+
+        }
+
+
+        return fechas;
+
+    }
+
+
+    // =====================================================
+    // SIGUIENTE FECHA DE RECURRENCIA
+    // =====================================================
+
+    obtenerSiguienteFechaRecurrencia(
+        fecha,
+        tipo
+    ) {
+
+        if (
+            tipo ===
+            "Diaria"
+        ) {
+
+            return this.sumarDiasISO(
+                fecha,
+                1
+            );
+
+        }
+
+
+        if (
+            tipo ===
+            "Semanal"
+        ) {
+
+            return this.sumarDiasISO(
+                fecha,
+                7
+            );
+
+        }
+
+
+        if (
+            tipo ===
+            "Quincenal"
+        ) {
+
+            return this.sumarDiasISO(
+                fecha,
+                14
+            );
+
+        }
+
+
+        if (
+            tipo ===
+            "Mensual"
+        ) {
+
+            return this.sumarMesesISO(
+                fecha,
+                1
+            );
+
+        }
+
+
+        return fecha;
+
+    }
+
+
+    // =====================================================
+    // SUMAR DÍAS ISO
+    // =====================================================
+
+    sumarDiasISO(
+        fechaISO,
+        dias
+    ) {
+
+        const fecha =
+            this.convertirFechaISOADate(
+                fechaISO
+            );
+
+
+        fecha.setDate(
+            fecha.getDate()
+            +
+            dias
+        );
+
+
+        return this.convertirDateAISO(
+            fecha
+        );
+
+    }
+
+
+    // =====================================================
+    // SUMAR MESES ISO
+    // =====================================================
+
+    sumarMesesISO(
+        fechaISO,
+        meses
+    ) {
+
+        const partes =
+            String(
+                fechaISO
+            )
+                .split(
+                    "-"
+                )
+                .map(
+                    Number
+                );
+
+
+        const anio =
+            partes[0];
+
+
+        const mes =
+            partes[1] -
+            1;
+
+
+        const dia =
+            partes[2];
+
+
+        const primerDiaDestino =
+            new Date(
+                anio,
+                mes + meses,
+                1
+            );
+
+
+        const ultimoDiaDestino =
+            new Date(
+                primerDiaDestino.getFullYear(),
+                primerDiaDestino.getMonth() + 1,
+                0
+            )
+                .getDate();
+
+
+        const diaDestino =
+            Math.min(
+                dia,
+                ultimoDiaDestino
+            );
+
+
+        const resultado =
+            new Date(
+                primerDiaDestino.getFullYear(),
+                primerDiaDestino.getMonth(),
+                diaDestino
+            );
+
+
+        return this.convertirDateAISO(
+            resultado
+        );
+
+    }
+
+
+    // =====================================================
+    // CONVERTIR ISO A DATE LOCAL
+    // =====================================================
+
+    convertirFechaISOADate(
+        fechaISO
+    ) {
+
+        const [
+            anio,
+            mes,
+            dia
+        ] =
+            String(
+                fechaISO
+            )
+                .split(
+                    "-"
+                )
+                .map(
+                    Number
+                );
+
+
+        return new Date(
+            anio,
+            mes - 1,
+            dia
+        );
+
+    }
+
+
+    // =====================================================
+    // CONVERTIR DATE A ISO LOCAL
+    // =====================================================
+
+    convertirDateAISO(
+        fecha
+    ) {
+
+        const anio =
+            fecha.getFullYear();
+
+
+        const mes =
+            String(
+                fecha.getMonth() +
+                1
+            )
+                .padStart(
+                    2,
+                    "0"
+                );
+
+
+        const dia =
+            String(
+                fecha.getDate()
+            )
+                .padStart(
+                    2,
+                    "0"
+                );
+
+
+        return (
+            `${anio}-${mes}-${dia}`
+        );
+
+    }
+
+
+    // =====================================================
+    // VALIDAR FECHA ISO
+    // =====================================================
+
+    esFechaISOValida(
+        valor
+    ) {
+
+        if (
+            !/^\d{4}-\d{2}-\d{2}$/
+                .test(
+                    String(
+                        valor
+                        ??
+                        ""
+                    )
+                )
+        ) {
+
+            return false;
+
+        }
+
+
+        const fecha =
+            this.convertirFechaISOADate(
+                valor
+            );
+
+
+        return (
+            this.convertirDateAISO(
+                fecha
+            )
+            ===
+            valor
+        );
+
+    }
+
+
+    // =====================================================
     // VÍNCULOS
     // =====================================================
 
@@ -1382,8 +2326,16 @@ export class TrabajoService {
                 .obtenerIncidencias();
 
 
+        const listaIncidencias =
+            Array.isArray(
+                incidencias
+            )
+                ? incidencias
+                : [];
+
+
         const incidenciasVinculadas =
-            incidencias
+            listaIncidencias
                 .filter(
                     incidencia =>
                         mismoId(
@@ -1408,7 +2360,7 @@ export class TrabajoService {
 
 
     // =====================================================
-    // ELIMINAR
+    // ELIMINAR TAREA
     // =====================================================
 
     eliminar(
@@ -1518,6 +2470,133 @@ export class TrabajoService {
 
             ok:
                 true
+
+        };
+
+    }
+
+
+    // =====================================================
+    // ELIMINAR SERIE RECURRENTE
+    // =====================================================
+
+    eliminarSerie(
+        serieRecurrenciaId
+    ) {
+
+        const serie =
+            this.obtenerPorSerie(
+                serieRecurrenciaId
+            );
+
+
+        if (
+            serie.length ===
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La serie recurrente no existe."
+
+            };
+
+        }
+
+
+        const tareasConVinculos =
+            serie
+                .filter(
+                    trabajo =>
+                        this.obtenerVinculos(
+                            trabajo.id
+                        )
+                            .total >
+                        0
+                );
+
+
+        if (
+            tareasConVinculos.length >
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    `No puedes eliminar la serie completa porque ${tareasConVinculos.length} tarea${
+                        tareasConVinculos.length ===
+                        1
+                            ? ""
+                            : "s"
+                    } tiene${
+                        tareasConVinculos.length ===
+                        1
+                            ? ""
+                            : "n"
+                    } incidencias vinculadas.`
+
+            };
+
+        }
+
+
+        const trabajosAnteriores =
+            [
+                ...this.trabajos
+            ];
+
+
+        this.trabajos =
+            this.trabajos
+                .filter(
+                    trabajo =>
+                        !mismoId(
+                            trabajo.serieRecurrenciaId,
+                            serieRecurrenciaId
+                        )
+                );
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            this.trabajos =
+                trabajosAnteriores;
+
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido eliminar la serie recurrente."
+
+            };
+
+        }
+
+
+        return {
+
+            ok:
+                true,
+
+            eliminadas:
+                serie.length
 
         };
 
