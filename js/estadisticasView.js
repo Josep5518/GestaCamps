@@ -110,6 +110,11 @@ export class EstadisticasView {
                 .obtenerProduccionPorFinca();
 
 
+        const produccionPasada =
+            this.estadisticasService
+                .obtenerProduccionPorPasada();
+
+
         const facturacionCliente =
             this.estadisticasService
                 .obtenerFacturacionPorCliente();
@@ -375,6 +380,46 @@ export class EstadisticasView {
 
 
             <!-- =========================================
+                 PRODUCCIÓN POR PASADA
+            ========================================== -->
+
+            <div class="estadistica-seccion-titulo">
+
+                <h3>
+                    Producción por pasada
+                </h3>
+
+                <p>
+                    Kilos registrados en cada pasada de recolección
+                </p>
+
+            </div>
+
+
+            <section class="stats">
+
+                ${produccionPasada
+                    .map(
+                        item =>
+                            this.crearTarjetaMini(
+                                "🍑",
+                                item.pasada ===
+                                "R"
+
+                                    ? "R · Repaso"
+
+                                    : `${item.pasada} pasada`,
+                                `${this.formatearNumero(
+                                    item.total
+                                )} kg`
+                            )
+                    )
+                    .join("")}
+
+            </section>
+
+
+            <!-- =========================================
                  GRÁFICOS
             ========================================== -->
 
@@ -416,6 +461,27 @@ export class EstadisticasView {
                     ${this.crearBarras(
                         produccionFinca,
                         "finca",
+                        "total",
+                        "kg"
+                    )}
+
+                </section>
+
+
+                <section class="estadistica-panel">
+
+                    <h3>
+                        Producción por pasada
+                    </h3>
+
+                    <p class="estadistica-subtitulo">
+                        Kilos producidos en 1ª, 2ª, 3ª y repaso
+                    </p>
+
+
+                    ${this.crearBarras(
+                        produccionPasada,
+                        "pasada",
                         "total",
                         "kg"
                     )}

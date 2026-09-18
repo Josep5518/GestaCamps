@@ -52,7 +52,7 @@ export class TrabajosView {
 
 
     // =====================================================
-    // UTILIDADES DE IDS
+    // COMPARAR IDS
     // =====================================================
 
     mismoId(
@@ -61,17 +61,13 @@ export class TrabajosView {
     ) {
 
         if (
-            idA ===
-            null
+            idA === null
             ||
-            idA ===
-            undefined
+            idA === undefined
             ||
-            idB ===
-            null
+            idB === null
             ||
-            idB ===
-            undefined
+            idB === undefined
         ) {
 
             return false;
@@ -204,14 +200,11 @@ export class TrabajosView {
     ) {
 
         if (
-            id ===
-            null
+            id === null
             ||
-            id ===
-            undefined
+            id === undefined
             ||
-            id ===
-            ""
+            id === ""
         ) {
 
             return null;
@@ -264,14 +257,11 @@ export class TrabajosView {
     ) {
 
         if (
-            id ===
-            null
+            id === null
             ||
-            id ===
-            undefined
+            id === undefined
             ||
-            id ===
-            ""
+            id === ""
         ) {
 
             return null;
@@ -389,7 +379,7 @@ export class TrabajosView {
 
 
     // =====================================================
-    // NOMBRES TRABAJADORES DE TAREA
+    // NOMBRES TRABAJADORES
     // =====================================================
 
     obtenerNombresTrabajo(
@@ -425,6 +415,72 @@ export class TrabajosView {
 
 
         return "Sin trabajadores asignados";
+
+    }
+
+
+    // =====================================================
+    // ES RECURRENTE
+    // =====================================================
+
+    esRecurrente(
+        trabajo
+    ) {
+
+        return Boolean(
+            trabajo?.serieRecurrenciaId
+            &&
+            trabajo?.recurrencia?.activa ===
+            true
+        );
+
+    }
+
+
+    // =====================================================
+    // TEXTO RECURRENCIA
+    // =====================================================
+
+    obtenerTextoRecurrencia(
+        trabajo
+    ) {
+
+        if (
+            !this.esRecurrente(
+                trabajo
+            )
+        ) {
+
+            return "";
+
+        }
+
+
+        const tipo =
+            trabajo.recurrencia.tipo
+            ||
+            "Recurrente";
+
+
+        const indice =
+            Number(
+                trabajo.recurrencia.indice
+                ??
+                1
+            );
+
+
+        const total =
+            Number(
+                trabajo.recurrencia.total
+                ??
+                1
+            );
+
+
+        return (
+            `${tipo} · ${indice}/${total}`
+        );
 
     }
 
@@ -585,10 +641,6 @@ export class TrabajosView {
 
             </section>
 
-
-            <!-- ==========================================
-                 CAMBIO LISTA / CALENDARIO
-            =========================================== -->
 
             <div
                 style="
@@ -831,7 +883,7 @@ export class TrabajosView {
 
 
     // =====================================================
-    // TARJETA TRABAJO
+    // TARJETA
     // =====================================================
 
     crearTarjetaTrabajo(
@@ -841,6 +893,12 @@ export class TrabajosView {
         const idSeguro =
             this.escapar(
                 trabajo.id
+            );
+
+
+        const recurrente =
+            this.esRecurrente(
+                trabajo
             );
 
 
@@ -892,6 +950,39 @@ export class TrabajosView {
                         "Trabajo"
                     )}
                 </h3>
+
+
+                ${
+                    recurrente
+
+                        ? `
+
+                            <div
+                                style="
+                                    display:inline-flex;
+                                    align-items:center;
+                                    gap:5px;
+                                    margin:0 0 10px;
+                                    padding:5px 8px;
+                                    background:#edf6f1;
+                                    color:#176044;
+                                    border-radius:999px;
+                                    font-size:11px;
+                                    font-weight:600;
+                                "
+                            >
+                                🔁
+                                ${this.escapar(
+                                    this.obtenerTextoRecurrencia(
+                                        trabajo
+                                    )
+                                )}
+                            </div>
+
+                        `
+
+                        : ""
+                }
 
 
                 <strong class="trabajo-tipo">
@@ -1195,6 +1286,30 @@ export class TrabajosView {
                             : ""
                     }
 
+
+                    ${
+                        recurrente
+
+                            ? `
+
+                                <button
+                                    type="button"
+                                    class="
+                                        secondary-button
+                                        eliminar-serie
+                                    "
+                                    data-serie="${this.escapar(
+                                        trabajo.serieRecurrenciaId
+                                    )}"
+                                >
+                                    🔁 Eliminar serie
+                                </button>
+
+                            `
+
+                            : ""
+                    }
+
                 </div>
 
             </div>
@@ -1322,6 +1437,71 @@ export class TrabajosView {
 
         document
             .querySelectorAll(
+                ".eliminar-serie"
+            )
+            .forEach(
+                boton => {
+
+                    boton.addEventListener(
+                        "click",
+                        event => {
+
+                            event.preventDefault();
+
+                            event.stopPropagation();
+
+
+                            const serie =
+                                boton.dataset.serie;
+
+
+                            if (
+                                !confirm(
+                                    "¿Quieres eliminar toda la serie recurrente? Se eliminarán todas sus tareas."
+                                )
+                            ) {
+
+                                return;
+
+                            }
+
+
+                            const resultado =
+                                this.trabajoService
+                                    .eliminarSerie(
+                                        serie
+                                    );
+
+
+                            if (
+                                !resultado.ok
+                            ) {
+
+                                alert(
+                                    resultado.mensaje
+                                );
+
+                                return;
+
+                            }
+
+
+                            alert(
+                                `Serie eliminada. ${resultado.eliminadas} tareas eliminadas.`
+                            );
+
+
+                            this.mostrar();
+
+                        }
+                    );
+
+                }
+            );
+
+
+        document
+            .querySelectorAll(
                 ".estado-trabajo"
             )
             .forEach(
@@ -1425,18 +1605,9 @@ export class TrabajosView {
                 .getDate();
 
 
-        // JavaScript:
-        // Domingo = 0
-        // Lunes = 1
-        //
-        // Nuestro calendario:
-        // Lunes = 0
-        // Domingo = 6
-
         const desplazamiento =
             (
-                primerDiaMes
-                    .getDay()
+                primerDiaMes.getDay()
                 +
                 6
             )
@@ -1695,7 +1866,6 @@ export class TrabajosView {
                             id="mesAnterior"
                             type="button"
                             class="secondary-button"
-                            title="Mes anterior"
                         >
                             ←
                         </button>
@@ -1714,7 +1884,6 @@ export class TrabajosView {
                             id="mesSiguiente"
                             type="button"
                             class="secondary-button"
-                            title="Mes siguiente"
                         >
                             →
                         </button>
@@ -1791,6 +1960,10 @@ export class TrabajosView {
 
                     <span>
                         🟢 Completada
+                    </span>
+
+                    <span>
+                        🔁 Recurrente
                     </span>
 
                 </div>
@@ -1900,7 +2073,7 @@ export class TrabajosView {
 
 
     // =====================================================
-    // EVENTO DE CALENDARIO
+    // EVENTO CALENDARIO
     // =====================================================
 
     crearEventoCalendario(
@@ -1916,6 +2089,12 @@ export class TrabajosView {
         const estilo =
             this.obtenerEstiloEstadoCalendario(
                 estado
+            );
+
+
+        const recurrente =
+            this.esRecurrente(
+                trabajo
             );
 
 
@@ -1957,6 +2136,12 @@ export class TrabajosView {
                         white-space:nowrap;
                     "
                 >
+                    ${
+                        recurrente
+                            ? "🔁 "
+                            : ""
+                    }
+
                     ${this.escapar(
                         trabajo.titulo
                         ||
@@ -1991,7 +2176,7 @@ export class TrabajosView {
 
 
     // =====================================================
-    // ESTILO ESTADO CALENDARIO
+    // ESTILO CALENDARIO
     // =====================================================
 
     obtenerEstiloEstadoCalendario(
@@ -2182,6 +2367,12 @@ export class TrabajosView {
                     : [];
 
 
+        const recurrente =
+            this.esRecurrente(
+                trabajo
+            );
+
+
         this.mainContent.innerHTML = `
 
             <button
@@ -2224,6 +2415,55 @@ export class TrabajosView {
 
 
             <div class="form-panel">
+
+
+                ${
+                    recurrente
+
+                        ? `
+
+                            <div
+                                style="
+                                    margin-bottom:18px;
+                                    padding:12px 14px;
+                                    background:#edf6f1;
+                                    color:#176044;
+                                    border-radius:10px;
+                                "
+                            >
+
+                                <strong>
+                                    🔁 Tarea recurrente
+                                </strong>
+
+                                <p
+                                    style="
+                                        margin:5px 0 0;
+                                        font-size:13px;
+                                    "
+                                >
+                                    ${this.escapar(
+                                        this.obtenerTextoRecurrencia(
+                                            trabajo
+                                        )
+                                    )}
+                                </p>
+
+                                <p
+                                    style="
+                                        margin:5px 0 0;
+                                        font-size:12px;
+                                    "
+                                >
+                                    Estás editando únicamente esta repetición.
+                                </p>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
 
 
                 <div class="form-group">
@@ -2379,6 +2619,152 @@ export class TrabajosView {
                     >
 
                 </div>
+
+
+                ${
+                    !editando
+
+                        ? `
+
+                            <div
+                                style="
+                                    margin:18px 0;
+                                    padding:14px;
+                                    background:#f7faf8;
+                                    border:1px solid #dfe7e1;
+                                    border-radius:12px;
+                                "
+                            >
+
+                                <h3
+                                    style="
+                                        margin:0 0 12px;
+                                        font-size:15px;
+                                    "
+                                >
+                                    🔁 Tarea recurrente
+                                </h3>
+
+
+                                <div class="form-group">
+
+                                    <label>
+                                        Repetición
+                                    </label>
+
+                                    <select id="recurrenciaTipo">
+
+                                        <option value="Ninguna">
+                                            No repetir
+                                        </option>
+
+                                        <option value="Diaria">
+                                            Cada día
+                                        </option>
+
+                                        <option value="Semanal">
+                                            Cada semana
+                                        </option>
+
+                                        <option value="Quincenal">
+                                            Cada 2 semanas
+                                        </option>
+
+                                        <option value="Mensual">
+                                            Cada mes
+                                        </option>
+
+                                    </select>
+
+                                </div>
+
+
+                                <div
+                                    id="opcionesRecurrencia"
+                                    style="
+                                        display:none;
+                                        margin-top:12px;
+                                    "
+                                >
+
+                                    <div class="form-group">
+
+                                        <label>
+                                            Finalizar
+                                        </label>
+
+                                        <select id="recurrenciaFinTipo">
+
+                                            <option value="repeticiones">
+                                                Después de un número de repeticiones
+                                            </option>
+
+                                            <option value="fecha">
+                                                En una fecha concreta
+                                            </option>
+
+                                        </select>
+
+                                    </div>
+
+
+                                    <div
+                                        id="bloqueRepeticiones"
+                                        class="form-group"
+                                    >
+
+                                        <label>
+                                            Número total de repeticiones
+                                        </label>
+
+                                        <input
+                                            id="recurrenciaRepeticiones"
+                                            type="number"
+                                            min="2"
+                                            max="365"
+                                            value="4"
+                                        >
+
+                                        <small
+                                            style="
+                                                display:block;
+                                                margin-top:5px;
+                                                color:#78837d;
+                                            "
+                                        >
+                                            Incluye la primera tarea.
+                                        </small>
+
+                                    </div>
+
+
+                                    <div
+                                        id="bloqueFechaFin"
+                                        class="form-group"
+                                        style="
+                                            display:none;
+                                        "
+                                    >
+
+                                        <label>
+                                            Repetir hasta
+                                        </label>
+
+                                        <input
+                                            id="recurrenciaFechaFin"
+                                            type="date"
+                                        >
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
 
 
                 <div class="form-group">
@@ -2814,6 +3200,15 @@ export class TrabajosView {
         cargarCampanyas();
 
 
+        if (
+            !editando
+        ) {
+
+            this.configurarRecurrenciaFormulario();
+
+        }
+
+
         document
             .getElementById(
                 "volverTrabajos"
@@ -2862,6 +3257,147 @@ export class TrabajosView {
 
 
     // =====================================================
+    // CONFIGURAR RECURRENCIA
+    // =====================================================
+
+    configurarRecurrenciaFormulario() {
+
+        const tipo =
+            document.getElementById(
+                "recurrenciaTipo"
+            );
+
+
+        const opciones =
+            document.getElementById(
+                "opcionesRecurrencia"
+            );
+
+
+        const finTipo =
+            document.getElementById(
+                "recurrenciaFinTipo"
+            );
+
+
+        const bloqueRepeticiones =
+            document.getElementById(
+                "bloqueRepeticiones"
+            );
+
+
+        const bloqueFechaFin =
+            document.getElementById(
+                "bloqueFechaFin"
+            );
+
+
+        const fechaTrabajo =
+            document.getElementById(
+                "fechaTrabajo"
+            );
+
+
+        const fechaFin =
+            document.getElementById(
+                "recurrenciaFechaFin"
+            );
+
+
+        const actualizarTipo =
+            () => {
+
+                const activa =
+                    tipo.value !==
+                    "Ninguna";
+
+
+                opciones.style.display =
+                    activa
+                        ? "block"
+                        : "none";
+
+            };
+
+
+        const actualizarFin =
+            () => {
+
+                const porFecha =
+                    finTipo.value ===
+                    "fecha";
+
+
+                bloqueRepeticiones.style.display =
+                    porFecha
+                        ? "none"
+                        : "block";
+
+
+                bloqueFechaFin.style.display =
+                    porFecha
+                        ? "block"
+                        : "none";
+
+            };
+
+
+        const actualizarFechaMinima =
+            () => {
+
+                if (
+                    fechaTrabajo.value
+                ) {
+
+                    fechaFin.min =
+                        fechaTrabajo.value;
+
+
+                    if (
+                        fechaFin.value
+                        &&
+                        fechaFin.value <=
+                        fechaTrabajo.value
+                    ) {
+
+                        fechaFin.value =
+                            "";
+
+                    }
+
+                }
+
+            };
+
+
+        tipo.addEventListener(
+            "change",
+            actualizarTipo
+        );
+
+
+        finTipo.addEventListener(
+            "change",
+            actualizarFin
+        );
+
+
+        fechaTrabajo.addEventListener(
+            "change",
+            actualizarFechaMinima
+        );
+
+
+        actualizarTipo();
+
+        actualizarFin();
+
+        actualizarFechaMinima();
+
+    }
+
+
+    // =====================================================
     // GUARDAR FORMULARIO
     // =====================================================
 
@@ -2880,8 +3416,8 @@ export class TrabajosView {
 
         const maquinariaId =
             maquinariaIdTexto
-                ||
-                null;
+            ||
+            null;
 
 
         const maquina =
@@ -3024,6 +3560,79 @@ export class TrabajosView {
         };
 
 
+        if (
+            !editando
+        ) {
+
+            const tipoRecurrencia =
+                document
+                    .getElementById(
+                        "recurrenciaTipo"
+                    )
+                    .value;
+
+
+            if (
+                tipoRecurrencia ===
+                "Ninguna"
+            ) {
+
+                datos.recurrencia = {
+
+                    activa:
+                        false,
+
+                    tipo:
+                        "Ninguna"
+
+                };
+
+            }
+
+            else {
+
+                const finTipo =
+                    document
+                        .getElementById(
+                            "recurrenciaFinTipo"
+                        )
+                        .value;
+
+
+                datos.recurrencia = {
+
+                    activa:
+                        true,
+
+                    tipo:
+                        tipoRecurrencia,
+
+                    finTipo:
+                        finTipo,
+
+                    repeticiones:
+                        Number(
+                            document
+                                .getElementById(
+                                    "recurrenciaRepeticiones"
+                                )
+                                .value
+                        ),
+
+                    fechaFin:
+                        document
+                            .getElementById(
+                                "recurrenciaFechaFin"
+                            )
+                            .value
+
+                };
+
+            }
+
+        }
+
+
         let resultado;
 
 
@@ -3063,6 +3672,19 @@ export class TrabajosView {
             );
 
             return;
+
+        }
+
+
+        if (
+            !editando
+            &&
+            resultado?.recurrente
+        ) {
+
+            alert(
+                `Serie creada correctamente: ${resultado.totalCreados} tareas.`
+            );
 
         }
 

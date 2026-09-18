@@ -1,6 +1,5 @@
 import { InicioView } from "./inicioView.js";
 import { FincasView } from "./fincasView.js";
-import { CampaniasView } from "./campaniasView.js";
 import { CultivosView } from "./cultivosView.js";
 import { CuadernoCampoView } from "./cuadernoCampoView.js";
 import { TratamientosView } from "./tratamientosView.js";
@@ -14,40 +13,66 @@ import { TrabajadorPortalView } from "./trabajadorPortalView.js";
 import { MaquinariaView } from "./maquinariaView.js";
 import { InventarioView } from "./inventarioView.js";
 import { ProduccionView } from "./produccionView.js";
-import { ClientesProveedoresView } from "./clientesProveedoresView.js";
 import { AlbaranesView } from "./albaranesView.js";
 import { FacturacionView } from "./facturacionView.js";
-import { CobrosPagosView } from "./cobrosPagosView.js";
 import { GastosView } from "./gastosView.js";
 import { EstadisticasView } from "./estadisticasView.js";
-import { UsuariosView } from "./usuariosView.js";
+import { ClientesProveedoresView } from "./clientesProveedoresView.js";
 import { PerfilView } from "./perfilView.js";
+import { CobrosPagosView } from "./cobrosPagosView.js";
+import { CampaniasView } from "./campaniasView.js";
+import { UsuariosView } from "./usuariosView.js";
 
 import { UsuarioService } from "./usuario.js";
+import { AuthService } from "./auth.js";
+
 
 import {
+
     fincaService,
+
     parcelaService,
+
     campaniaService,
+
     cultivoService,
+
     trabajoService,
+
     trabajadorService,
+
     fichajeService,
+
     incidenciaService,
+
     historialService,
+
     buscadorGlobalService,
+
     cuadernoCampoService,
+
     maquinariaService,
+
     inventarioService,
+
     tratamientoService,
+
     produccionService,
+
     clienteProveedorService,
+
     explotacionService,
+
     albaranService,
+
     facturaService,
+
     gastoService,
+
     cobroPagoService,
+
     estadisticasService
+
 } from "./services.js";
 
 
@@ -63,6 +88,10 @@ export function crearVistas(
 
     const usuarioService =
         new UsuarioService();
+
+
+    const authService =
+        new AuthService();
 
 
     const inicioView =
@@ -136,7 +165,8 @@ export function crearVistas(
         new FichajesView(
             mainContent,
             fichajeService,
-            trabajadorService
+            trabajadorService,
+            authService
         );
 
 
@@ -178,6 +208,7 @@ export function crearVistas(
             trabajoService,
             incidenciaService,
             fincaService,
+            fichajeService,
             () => {
 
                 salirModoTrabajador();
@@ -242,15 +273,6 @@ export function crearVistas(
         );
 
 
-    const cobrosPagosView =
-        new CobrosPagosView(
-            mainContent,
-            cobroPagoService,
-            facturaService,
-            gastoService
-        );
-
-
     const gastosView =
         new GastosView(
             mainContent,
@@ -259,6 +281,15 @@ export function crearVistas(
             maquinariaService,
             clienteProveedorService,
             campaniaService
+        );
+
+
+    const cobrosPagosView =
+        new CobrosPagosView(
+            mainContent,
+            cobroPagoService,
+            facturaService,
+            gastoService
         );
 
 
@@ -285,30 +316,55 @@ export function crearVistas(
 
 
     return {
+
         inicioView,
+
         fincasView,
+
         campaniasView,
+
         cultivosView,
+
         cuadernoCampoView,
+
         tratamientosView,
+
         trabajosView,
+
         trabajadoresView,
+
         fichajesView,
+
         incidenciasView,
+
         historialView,
+
         buscadorGlobalView,
+
         trabajadorPortalView,
+
         maquinariaView,
+
         inventarioView,
+
         produccionView,
+
         clientesProveedoresView,
+
         albaranesView,
+
         facturacionView,
-        cobrosPagosView,
+
         gastosView,
+
+        cobrosPagosView,
+
         estadisticasView,
+
         usuariosView,
+
         perfilView
+
     };
 
 }

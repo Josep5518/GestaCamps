@@ -31,6 +31,43 @@ export class ProduccionView {
 
 
     // =====================================================
+    // COMPARAR IDS
+    // =====================================================
+
+    mismoId(
+        idA,
+        idB
+    ) {
+
+        if (
+            idA === null
+            ||
+            idA === undefined
+            ||
+            idB === null
+            ||
+            idB === undefined
+        ) {
+
+            return false;
+
+        }
+
+
+        return (
+            String(
+                idA
+            )
+            ===
+            String(
+                idB
+            )
+        );
+
+    }
+
+
+    // =====================================================
     // PRINCIPAL
     // =====================================================
 
@@ -133,7 +170,6 @@ export class ProduccionView {
 
             <section class="stats">
 
-
                 <div class="card">
 
                     <span class="card-icon">
@@ -224,7 +260,6 @@ export class ProduccionView {
                     </div>
 
                 </div>
-
 
             </section>
 
@@ -385,6 +420,34 @@ export class ProduccionView {
             );
 
 
+        const pesoBruto =
+            Number(
+                registro.pesoBruto
+                ??
+                registro.cantidad
+                ??
+                0
+            );
+
+
+        const tara =
+            Number(
+                registro.tara
+                ??
+                0
+            );
+
+
+        const pesoNeto =
+            Number(
+                registro.pesoNeto
+                ??
+                registro.cantidad
+                ??
+                0
+            );
+
+
         const reservado =
             this.obtenerCantidadReservada(
                 registro.id
@@ -425,7 +488,6 @@ export class ProduccionView {
 
             <div class="produccion-card">
 
-
                 <div class="produccion-card-header">
 
                     <span class="produccion-icon">
@@ -440,7 +502,9 @@ export class ProduccionView {
                                 secondary-button
                                 editar-produccion
                             "
-                            data-id="${registro.id}"
+                            data-id="${this.escapar(
+                                registro.id
+                            )}"
                             type="button"
                         >
                             Editar
@@ -452,7 +516,9 @@ export class ProduccionView {
                                 delete-button
                                 eliminar-produccion
                             "
-                            data-id="${registro.id}"
+                            data-id="${this.escapar(
+                                registro.id
+                            )}"
                             type="button"
                         >
                             ×
@@ -512,14 +578,17 @@ export class ProduccionView {
                     registro.campaniaNombre
 
                         ? `
+
                             <p class="produccion-campania">
                                 📅 ${this.escapar(
                                     registro.campaniaNombre
                                 )}
                             </p>
+
                         `
 
                         : `
+
                             <p
                                 class="
                                     produccion-campania
@@ -528,8 +597,71 @@ export class ProduccionView {
                             >
                                 📅 Sin campanya asignada
                             </p>
+
                         `
                 }
+
+
+                <div
+                    style="
+                        display:inline-flex;
+                        align-items:center;
+                        gap:6px;
+                        margin-top:8px;
+                        padding:6px 10px;
+                        border-radius:999px;
+                        background:#edf6f1;
+                        color:#176044;
+                        font-size:12px;
+                        font-weight:700;
+                    "
+                >
+                    🍑 Pasada:
+                    ${this.escapar(
+                        registro.pasada
+                        ||
+                        "1ª"
+                    )}
+                </div>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:
+                            repeat(3,minmax(0,1fr));
+                        gap:8px;
+                        margin-top:12px;
+                    "
+                >
+
+                    ${this.crearMiniDato(
+                        "Peso bruto",
+                        pesoBruto,
+                        registro.unidad,
+                        "#f7f9f6",
+                        "#111"
+                    )}
+
+
+                    ${this.crearMiniDato(
+                        "Tara",
+                        tara,
+                        registro.unidad,
+                        "#f7f9f6",
+                        "#68756f"
+                    )}
+
+
+                    ${this.crearMiniDato(
+                        "Peso neto",
+                        pesoNeto,
+                        registro.unidad,
+                        "#edf6f1",
+                        "#176044"
+                    )}
+
+                </div>
 
 
                 <div
@@ -541,7 +673,6 @@ export class ProduccionView {
                         margin-top:16px;
                     "
                 >
-
 
                     ${this.crearMiniDato(
                         "Producido",
@@ -590,7 +721,6 @@ export class ProduccionView {
                             : "#176044"
                     )}
 
-
                 </div>
 
 
@@ -599,6 +729,7 @@ export class ProduccionView {
                     0
 
                         ? `
+
                             <div
                                 style="
                                     margin-top:12px;
@@ -610,6 +741,7 @@ export class ProduccionView {
                                     font-weight:600;
                                 "
                             >
+
                                 🕒
                                 ${this.formatearNumero(
                                     reservado
@@ -620,7 +752,9 @@ export class ProduccionView {
                                     "kg"
                                 )}
                                 reservados en albaranes pendientes
+
                             </div>
+
                         `
 
                         : ""
@@ -633,6 +767,7 @@ export class ProduccionView {
                     !sobreasignado
 
                         ? `
+
                             <div
                                 style="
                                     margin-top:12px;
@@ -646,6 +781,7 @@ export class ProduccionView {
                             >
                                 📦 Producción agotada
                             </div>
+
                         `
 
                         : ""
@@ -656,6 +792,7 @@ export class ProduccionView {
                     sobreasignado
 
                         ? `
+
                             <div
                                 style="
                                     margin-top:12px;
@@ -667,6 +804,7 @@ export class ProduccionView {
                                     font-weight:600;
                                 "
                             >
+
                                 ⚠️ Producción sobreasignada en
                                 ${this.formatearNumero(
                                     ocupado -
@@ -677,7 +815,9 @@ export class ProduccionView {
                                     ||
                                     "kg"
                                 )}
+
                             </div>
+
                         `
 
                         : ""
@@ -741,16 +881,17 @@ export class ProduccionView {
                     registro.observaciones
 
                         ? `
+
                             <p class="produccion-notas">
                                 ${this.escapar(
                                     registro.observaciones
                                 )}
                             </p>
+
                         `
 
                         : ""
                 }
-
 
             </div>
 
@@ -801,14 +942,17 @@ export class ProduccionView {
                         white-space:nowrap;
                     "
                 >
+
                     ${this.formatearNumero(
                         valor
                     )}
+
                     ${this.escapar(
                         unidad
                         ||
                         "kg"
                     )}
+
                 </strong>
 
             </div>
@@ -1023,11 +1167,8 @@ export class ProduccionView {
                     linea => {
 
                         if (
-                            Number(
-                                linea.produccionId
-                            )
-                            !==
-                            Number(
+                            !this.mismoId(
+                                linea.produccionId,
                                 produccionId
                             )
                         ) {
@@ -1055,6 +1196,10 @@ export class ProduccionView {
 
     }
 
+
+    // =====================================================
+    // OBTENER ALBARANES
+    // =====================================================
 
     obtenerAlbaranes() {
 
@@ -1114,6 +1259,10 @@ export class ProduccionView {
     }
 
 
+    // =====================================================
+    // LÍNEAS ALBARÁN
+    // =====================================================
+
     obtenerLineasAlbaran(
         albaran
     ) {
@@ -1138,6 +1287,7 @@ export class ProduccionView {
 
             return [
                 {
+
                     produccionId:
                         albaran.produccionId,
 
@@ -1146,6 +1296,7 @@ export class ProduccionView {
 
                     unidad:
                         albaran.unidad
+
                 }
             ];
 
@@ -1174,10 +1325,12 @@ export class ProduccionView {
                         "click",
                         () => {
 
+                            const id =
+                                button.dataset.id;
+
+
                             this.mostrarFormulario(
-                                Number(
-                                    button.dataset.id
-                                )
+                                id
                             );
 
                         }
@@ -1199,9 +1352,7 @@ export class ProduccionView {
                         () => {
 
                             const id =
-                                Number(
-                                    button.dataset.id
-                                );
+                                button.dataset.id;
 
 
                             const registro =
@@ -1215,6 +1366,10 @@ export class ProduccionView {
                                 !registro
                             ) {
 
+                                alert(
+                                    "No se ha encontrado el registro de producción."
+                                );
+
                                 return;
 
                             }
@@ -1222,13 +1377,13 @@ export class ProduccionView {
 
                             const reservado =
                                 this.obtenerCantidadReservada(
-                                    id
+                                    registro.id
                                 );
 
 
                             const entregado =
                                 this.obtenerCantidadEntregada(
-                                    id
+                                    registro.id
                                 );
 
 
@@ -1314,7 +1469,7 @@ export class ProduccionView {
                             const resultado =
                                 this.produccionService
                                     .eliminar(
-                                        id
+                                        registro.id
                                     );
 
 
@@ -1402,7 +1557,7 @@ export class ProduccionView {
 
         let cultivoSeleccionadoId =
             registro?.cultivoId
-            ||
+            ??
             null;
 
 
@@ -1449,11 +1604,8 @@ export class ProduccionView {
                         (
                             !registro.fincaId
                             ||
-                            Number(
-                                cultivo.fincaId
-                            )
-                            ===
-                            Number(
+                            this.mismoId(
+                                cultivo.fincaId,
                                 registro.fincaId
                             )
                         )
@@ -1478,11 +1630,8 @@ export class ProduccionView {
                             (
                                 !registro.fincaId
                                 ||
-                                Number(
-                                    cultivo.fincaId
-                                )
-                                ===
-                                Number(
+                                this.mismoId(
+                                    cultivo.fincaId,
                                     registro.fincaId
                                 )
                             )
@@ -1509,11 +1658,8 @@ export class ProduccionView {
                             (
                                 !registro.fincaId
                                 ||
-                                Number(
-                                    cultivo.fincaId
-                                )
-                                ===
-                                Number(
+                                this.mismoId(
+                                    cultivo.fincaId,
                                     registro.fincaId
                                 )
                             )
@@ -1538,7 +1684,7 @@ export class ProduccionView {
             editando
 
                 ? this.obtenerCantidadReservada(
-                    id
+                    registro.id
                 )
 
                 : 0;
@@ -1548,7 +1694,7 @@ export class ProduccionView {
             editando
 
                 ? this.obtenerCantidadEntregada(
-                    id
+                    registro.id
                 )
 
                 : 0;
@@ -1568,9 +1714,7 @@ export class ProduccionView {
         const cultivoOriginalId =
             editando
 
-                ? Number(
-                    cultivoSeleccionadoId
-                )
+                ? cultivoSeleccionadoId
 
                 : null;
 
@@ -1630,6 +1774,7 @@ export class ProduccionView {
                     tieneSalidas
 
                         ? `
+
                             <div
                                 style="
                                     background:#fff7e6;
@@ -1650,6 +1795,7 @@ export class ProduccionView {
                                     cantidadReservada > 0
 
                                         ? `
+
                                             Reservado:
                                             <strong>
                                                 ${this.formatearNumero(
@@ -1662,15 +1808,18 @@ export class ProduccionView {
                                                 )}
                                             </strong>
                                             <br>
+
                                         `
 
                                         : ""
                                 }
 
+
                                 ${
                                     cantidadEntregada > 0
 
                                         ? `
+
                                             Entregado:
                                             <strong>
                                                 ${this.formatearNumero(
@@ -1683,10 +1832,12 @@ export class ProduccionView {
                                                 )}
                                             </strong>
                                             <br>
+
                                         `
 
                                         : ""
                                 }
+
 
                                 Total ocupado:
                                 <strong>
@@ -1703,12 +1854,13 @@ export class ProduccionView {
                                 <br><br>
 
                                 Para mantener la trazabilidad,
-                                no puedes cambiar el cultivo ni la unidad.
+                                no puedes cambiar el cultivo, la pasada ni la unidad.
 
                                 Tampoco puedes reducir la producción
                                 por debajo del total reservado y entregado.
 
                             </div>
+
                         `
 
                         : ""
@@ -1736,14 +1888,13 @@ export class ProduccionView {
                                 cultivo => `
 
                                     <option
-                                        value="${cultivo.id}"
+                                        value="${this.escapar(
+                                            cultivo.id
+                                        )}"
 
                                         ${
-                                            Number(
-                                                cultivoSeleccionadoId
-                                            )
-                                            ===
-                                            Number(
+                                            this.mismoId(
+                                                cultivoSeleccionadoId,
                                                 cultivo.id
                                             )
 
@@ -1791,6 +1942,7 @@ export class ProduccionView {
                         tieneSalidas
 
                             ? `
+
                                 <small
                                     style="
                                         display:block;
@@ -1800,6 +1952,7 @@ export class ProduccionView {
                                 >
                                     🔒 Bloqueado porque esta producción ya tiene movimientos.
                                 </small>
+
                             `
 
                             : ""
@@ -1886,72 +2039,214 @@ export class ProduccionView {
                 <div class="form-group">
 
                     <label>
-                        Cantidad *
+                        Pasada *
                     </label>
 
-                    <input
-                        id="cantidadProduccion"
-                        type="number"
-
-                        min="${
-                            tieneSalidas
-                                ? cantidadUtilizada
-                                : "0.01"
-                        }"
-
-                        step="0.01"
-
-                        value="${
-                            registro?.cantidad
-                            ??
-                            ""
-                        }"
+                    <select
+                        id="pasadaProduccion"
+                        ${tieneSalidas ? "disabled" : ""}
                     >
 
+                        <option
+                            value="1ª"
+
+                            ${
+                                !registro
+                                ||
+                                (
+                                    registro.pasada
+                                    ||
+                                    "1ª"
+                                )
+                                ===
+                                "1ª"
+
+                                    ? "selected"
+                                    : ""
+                            }
+                        >
+                            1ª pasada
+                        </option>
+
+
+                        <option
+                            value="2ª"
+
+                            ${
+                                registro?.pasada ===
+                                "2ª"
+
+                                    ? "selected"
+                                    : ""
+                            }
+                        >
+                            2ª pasada
+                        </option>
+
+
+                        <option
+                            value="3ª"
+
+                            ${
+                                registro?.pasada ===
+                                "3ª"
+
+                                    ? "selected"
+                                    : ""
+                            }
+                        >
+                            3ª pasada
+                        </option>
+
+
+                        <option
+                            value="R"
+
+                            ${
+                                registro?.pasada ===
+                                "R"
+
+                                    ? "selected"
+                                    : ""
+                            }
+                        >
+                            R · Repaso
+                        </option>
+
+                    </select>
+
+
+                    <small
+                        style="
+                            display:block;
+                            margin-top:5px;
+                            color:#68756f;
+                        "
+                    >
+                        Indica a qué pasada de recolección corresponde este registro.
+                    </small>
+
+                </div>
+
+
+                <div
+                    style="
+                        display:grid;
+                        grid-template-columns:
+                            repeat(3,minmax(0,1fr));
+                        gap:12px;
+                        align-items:end;
+                    "
+                >
+
+                    <div class="form-group">
+
+                        <label>
+                            Peso bruto *
+                        </label>
+
+                        <input
+                            id="pesoBrutoProduccion"
+                            type="number"
+                            min="0.01"
+                            step="0.01"
+
+                            value="${
+                                registro?.pesoBruto
+                                ??
+                                registro?.cantidad
+                                ??
+                                ""
+                            }"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Tara *
+                        </label>
+
+                        <input
+                            id="taraProduccion"
+                            type="number"
+                            min="0"
+                            step="0.01"
+
+                            value="${
+                                registro?.tara
+                                ??
+                                0
+                            }"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Peso neto
+                        </label>
+
+                        <input
+                            id="pesoNetoProduccion"
+                            type="number"
+                            disabled
+
+                            value="${
+                                registro?.pesoNeto
+                                ??
+                                registro?.cantidad
+                                ??
+                                ""
+                            }"
+                        >
+
+                    </div>
+
+                </div>
+
+
+                <div
+                    style="
+                        margin-top:-2px;
+                        margin-bottom:14px;
+                        color:#68756f;
+                        font-size:12px;
+                        line-height:1.5;
+                    "
+                >
+                    ⚖️ El peso neto se calcula automáticamente: bruto − tara.
 
                     ${
                         tieneSalidas
 
                             ? `
-                                <small
-                                    style="
-                                        display:block;
-                                        margin-top:5px;
-                                        color:#68756f;
-                                    "
-                                >
-                                    Mínimo permitido:
-
-                                    <strong>
-                                        ${this.formatearNumero(
-                                            cantidadUtilizada
-                                        )}
-                                        ${this.escapar(
-                                            registro.unidad
-                                            ||
-                                            "kg"
-                                        )}
-                                    </strong>
-
-                                    =
-
+                                <br>
+                                Mínimo neto permitido:
+                                <strong>
                                     ${this.formatearNumero(
-                                        cantidadReservada
+                                        cantidadUtilizada
                                     )}
-                                    reservados
-
-                                    +
-
-                                    ${this.formatearNumero(
-                                        cantidadEntregada
+                                    ${this.escapar(
+                                        registro.unidad
+                                        ||
+                                        "kg"
                                     )}
-                                    entregados
-                                </small>
+                                </strong>
+                                (${this.formatearNumero(
+                                    cantidadReservada
+                                )} reservados +
+                                ${this.formatearNumero(
+                                    cantidadEntregada
+                                )} entregados).
                             `
 
                             : ""
                     }
-
                 </div>
 
 
@@ -2019,6 +2314,7 @@ export class ProduccionView {
                         tieneSalidas
 
                             ? `
+
                                 <small
                                     style="
                                         display:block;
@@ -2028,6 +2324,7 @@ export class ProduccionView {
                                 >
                                     🔒 La unidad no puede cambiar cuando existen movimientos.
                                 </small>
+
                             `
 
                             : ""
@@ -2100,7 +2397,6 @@ export class ProduccionView {
 
                 </div>
 
-
             </div>
 
         `;
@@ -2120,9 +2416,7 @@ export class ProduccionView {
             () => {
 
                 const cultivoId =
-                    Number(
-                        cultivoSelect.value
-                    );
+                    cultivoSelect.value;
 
 
                 const cultivo =
@@ -2250,6 +2544,89 @@ export class ProduccionView {
 
 
         // =================================================
+        // CALCULAR PESO NETO
+        // =================================================
+
+        const pesoBrutoInput =
+            document.getElementById(
+                "pesoBrutoProduccion"
+            );
+
+
+        const taraInput =
+            document.getElementById(
+                "taraProduccion"
+            );
+
+
+        const pesoNetoInput =
+            document.getElementById(
+                "pesoNetoProduccion"
+            );
+
+
+        const actualizarPesoNeto =
+            () => {
+
+                const bruto =
+                    Number(
+                        pesoBrutoInput.value
+                        ||
+                        0
+                    );
+
+
+                const tara =
+                    Number(
+                        taraInput.value
+                        ||
+                        0
+                    );
+
+
+                const neto =
+                    Number.isFinite(
+                        bruto
+                    )
+                    &&
+                    Number.isFinite(
+                        tara
+                    )
+
+                        ? Math.max(
+                            0,
+                            bruto - tara
+                        )
+
+                        : 0;
+
+
+                pesoNetoInput.value =
+                    Number(
+                        neto.toFixed(
+                            2
+                        )
+                    );
+
+            };
+
+
+        pesoBrutoInput.addEventListener(
+            "input",
+            actualizarPesoNeto
+        );
+
+
+        taraInput.addEventListener(
+            "input",
+            actualizarPesoNeto
+        );
+
+
+        actualizarPesoNeto();
+
+
+        // =================================================
         // VOLVER
         // =================================================
 
@@ -2297,15 +2674,12 @@ export class ProduccionView {
                 "click",
                 () => {
 
-
                     const cultivoId =
-                        Number(
-                            document
-                                .getElementById(
-                                    "cultivoProduccion"
-                                )
-                                .value
-                        );
+                        document
+                            .getElementById(
+                                "cultivoProduccion"
+                            )
+                            .value;
 
 
                     if (
@@ -2329,11 +2703,21 @@ export class ProduccionView {
                             .value;
 
 
-                    const cantidad =
+                    const pesoBruto =
                         Number(
                             document
                                 .getElementById(
-                                    "cantidadProduccion"
+                                    "pesoBrutoProduccion"
+                                )
+                                .value
+                        );
+
+
+                    const tara =
+                        Number(
+                            document
+                                .getElementById(
+                                    "taraProduccion"
                                 )
                                 .value
                         );
@@ -2341,20 +2725,65 @@ export class ProduccionView {
 
                     if (
                         !Number.isFinite(
-                            cantidad
+                            pesoBruto
                         )
                         ||
-                        cantidad <=
+                        pesoBruto <=
                         0
                     ) {
 
                         alert(
-                            "Introduce una cantidad válida."
+                            "Introduce un peso bruto válido."
                         );
 
                         return;
 
                     }
+
+
+                    if (
+                        !Number.isFinite(
+                            tara
+                        )
+                        ||
+                        tara <
+                        0
+                    ) {
+
+                        alert(
+                            "Introduce una tara válida."
+                        );
+
+                        return;
+
+                    }
+
+
+                    if (
+                        tara >=
+                        pesoBruto
+                    ) {
+
+                        alert(
+                            "La tara debe ser menor que el peso bruto."
+                        );
+
+                        return;
+
+                    }
+
+
+                    const pesoNeto =
+                        Number(
+                            (
+                                pesoBruto
+                                -
+                                tara
+                            )
+                                .toFixed(
+                                    2
+                                )
+                        );
 
 
                     // =====================================
@@ -2368,11 +2797,8 @@ export class ProduccionView {
                     ) {
 
                         if (
-                            Number(
-                                cultivoId
-                            )
-                            !==
-                            Number(
+                            !this.mismoId(
+                                cultivoId,
                                 cultivoOriginalId
                             )
                         ) {
@@ -2406,15 +2832,16 @@ export class ProduccionView {
 
 
                         if (
-                            cantidad <
+                            pesoNeto <
                             cantidadUtilizada
                         ) {
 
                             alert(
+
                                 `No puedes reducir esta producción a `
                                 +
                                 `${this.formatearNumero(
-                                    cantidad
+                                    pesoNeto
                                 )} ${registro.unidad || "kg"} `
                                 +
                                 `porque hay `
@@ -2428,6 +2855,7 @@ export class ProduccionView {
                                 `${this.formatearNumero(
                                     cantidadEntregada
                                 )} ${registro.unidad || "kg"} entregados.`
+
                             );
 
                             return;
@@ -2442,8 +2870,24 @@ export class ProduccionView {
                         cultivoId:
                             cultivoId,
 
+                        pasada:
+                            document
+                                .getElementById(
+                                    "pasadaProduccion"
+                                )
+                                .value,
+
+                        pesoBruto:
+                            pesoBruto,
+
+                        tara:
+                            tara,
+
+                        pesoNeto:
+                            pesoNeto,
+
                         cantidad:
-                            cantidad,
+                            pesoNeto,
 
                         unidad:
                             unidad,
@@ -2465,12 +2909,12 @@ export class ProduccionView {
                     };
 
 
-                    const resultado =
+                    let resultado =
                         editando
 
                             ? this.produccionService
                                 .editar(
-                                    id,
+                                    registro.id,
                                     datos
                                 )
 
@@ -2478,6 +2922,49 @@ export class ProduccionView {
                                 .crear(
                                     datos
                                 );
+
+
+                    if (
+                        !resultado.ok
+                        &&
+                        resultado.duplicado ===
+                        true
+                    ) {
+
+                        const confirmar =
+                            confirm(
+                                `${resultado.mensaje}\n\n¿Quieres guardarlo igualmente?`
+                            );
+
+
+                        if (
+                            !confirmar
+                        ) {
+
+                            return;
+
+                        }
+
+
+                        datos.confirmarDuplicado =
+                            true;
+
+
+                        resultado =
+                            editando
+
+                                ? this.produccionService
+                                    .editar(
+                                        registro.id,
+                                        datos
+                                    )
+
+                                : this.produccionService
+                                    .crear(
+                                        datos
+                                    );
+
+                    }
 
 
                     if (
@@ -2574,7 +3061,9 @@ export class ProduccionView {
             3
         ) {
 
-            return fecha;
+            return String(
+                fecha
+            );
 
         }
 
@@ -2602,8 +3091,10 @@ export class ProduccionView {
             .toLocaleString(
                 "es-ES",
                 {
+
                     maximumFractionDigits:
                         2
+
                 }
             );
 

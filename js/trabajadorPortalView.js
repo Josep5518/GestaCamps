@@ -6,6 +6,7 @@ export class TrabajadorPortalView {
         trabajoService,
         incidenciaService,
         fincaService,
+        fichajeService,
         onSalirPortal = null
     ) {
 
@@ -24,6 +25,9 @@ export class TrabajadorPortalView {
         this.fincaService =
             fincaService;
 
+        this.fichajeService =
+            fichajeService;
+
         this.onSalirPortal =
             onSalirPortal;
 
@@ -37,10 +41,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // MOSTRAR
-    // =====================================================
 
     mostrar() {
 
@@ -80,10 +80,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // ACCESO
-    // =====================================================
 
     mostrarAcceso() {
 
@@ -268,10 +264,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // INICIAR SESIÓN
-    // =====================================================
-
     iniciarSesion() {
 
         const input =
@@ -370,10 +362,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // OBTENER TRABAJADOR DE SESIÓN
-    // =====================================================
-
     obtenerTrabajadorSesion() {
 
         const id =
@@ -394,7 +382,7 @@ export class TrabajadorPortalView {
         const trabajador =
             this.trabajadorService
                 .obtenerPorId(
-                    Number(id)
+                    id
                 );
 
 
@@ -425,10 +413,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // CERRAR SESIÓN
-    // =====================================================
-
     cerrarSesion() {
 
         sessionStorage.removeItem(
@@ -445,10 +429,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // MODO CAMPO
-    // =====================================================
 
     estaModoCampoActivo() {
 
@@ -494,10 +474,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // PANEL NORMAL
-    // =====================================================
 
     mostrarPanel(
         trabajador
@@ -546,6 +522,29 @@ export class TrabajadorPortalView {
                     incidencia.estado !==
                     "Resuelta"
             );
+
+
+        const fichajes =
+            this.fichajeService
+                ? this.fichajeService
+                    .obtenerPorTrabajador(
+                        trabajador.id
+                    )
+                    .slice(
+                        0,
+                        30
+                    )
+                : [];
+
+
+        const correccionesPendientes =
+            fichajes.filter(
+                fichaje =>
+                    fichaje.correccion
+                    &&
+                    fichaje.correccion.estado ===
+                    "Pendiente"
+            ).length;
 
 
         this.mainContent.innerHTML = `
@@ -700,6 +699,27 @@ export class TrabajadorPortalView {
 
                 </div>
 
+
+                <div class="card">
+
+                    <span class="card-icon">
+                        ✏️
+                    </span>
+
+                    <div>
+
+                        <p>
+                            Correcciones pendientes
+                        </p>
+
+                        <h3>
+                            ${correccionesPendientes}
+                        </h3>
+
+                    </div>
+
+                </div>
+
             </section>
 
 
@@ -726,6 +746,13 @@ export class TrabajadorPortalView {
                     "✅ Completadas",
                     completadas,
                     "completadas"
+                )
+            }
+
+
+            ${
+                this.crearSeccionFichajes(
+                    fichajes
                 )
             }
 
@@ -780,12 +807,13 @@ export class TrabajadorPortalView {
             trabajador
         );
 
+
+        this.configurarEventosFichajes(
+            trabajador
+        );
+
     }
 
-
-    // =====================================================
-    // MODO CAMPO
-    // =====================================================
 
     mostrarModoCampo(
         trabajador
@@ -844,11 +872,6 @@ export class TrabajadorPortalView {
                     padding-bottom: 40px;
                 "
             >
-
-
-                <!-- =====================================
-                     CABECERA
-                ====================================== -->
 
                 <div
                     style="
@@ -928,10 +951,6 @@ export class TrabajadorPortalView {
                 </div>
 
 
-                <!-- =====================================
-                     RESUMEN RÁPIDO
-                ====================================== -->
-
                 <div
                     style="
                         display: grid;
@@ -967,10 +986,6 @@ export class TrabajadorPortalView {
 
                 </div>
 
-
-                <!-- =====================================
-                     TAREA ACTUAL
-                ====================================== -->
 
                 <section
                     style="
@@ -1048,10 +1063,6 @@ export class TrabajadorPortalView {
                 </section>
 
 
-                <!-- =====================================
-                     ACCIONES RÁPIDAS
-                ====================================== -->
-
                 <div
                     style="
                         display: grid;
@@ -1105,10 +1116,6 @@ export class TrabajadorPortalView {
                 </div>
 
 
-                <!-- =====================================
-                     PENDIENTES
-                ====================================== -->
-
                 ${
                     pendientes.length >
                     0
@@ -1157,10 +1164,6 @@ export class TrabajadorPortalView {
                         : ""
                 }
 
-
-                <!-- =====================================
-                     INCIDENCIAS ACTIVAS
-                ====================================== -->
 
                 ${
                     incidenciasActivas.length >
@@ -1258,10 +1261,6 @@ export class TrabajadorPortalView {
         `;
 
 
-        // =================================================
-        // EVENTOS MODO CAMPO
-        // =================================================
-
         document
             .getElementById(
                 "salirModoCampo"
@@ -1325,9 +1324,7 @@ export class TrabajadorPortalView {
                         () => {
 
                             this.cambiarEstadoTareaCampo(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "En curso",
                                 trabajador
                             );
@@ -1351,9 +1348,7 @@ export class TrabajadorPortalView {
                         () => {
 
                             this.cambiarEstadoTareaCampo(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "Completada",
                                 trabajador
                             );
@@ -1366,10 +1361,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // RESUMEN MODO CAMPO
-    // =====================================================
 
     crearTarjetaCampoResumen(
         icono,
@@ -1425,10 +1416,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // TAREA ACTUAL MODO CAMPO
-    // =====================================================
 
     crearTareaActualCampo(
         tarea
@@ -1636,10 +1623,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // TARJETA PENDIENTE MODO CAMPO
-    // =====================================================
-
     crearTarjetaPendienteCampo(
         tarea
     ) {
@@ -1730,10 +1713,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // CAMBIAR ESTADO DESDE MODO CAMPO
-    // =====================================================
-
     cambiarEstadoTareaCampo(
         tareaId,
         estado,
@@ -1762,10 +1741,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // OBTENER TAREAS
-    // =====================================================
-
     obtenerTareasTrabajador(
         trabajadorId
     ) {
@@ -1788,10 +1763,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // TAREAS PORTAL NORMAL
-    // =====================================================
 
     crearSeccionTareas(
         titulo,
@@ -1855,10 +1826,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // TARJETA NORMAL
-    // =====================================================
 
     crearTarjetaTarea(
         tarea,
@@ -2083,10 +2050,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // EVENTOS TAREAS
-    // =====================================================
-
     configurarEventosTareas(
         trabajador
     ) {
@@ -2102,9 +2065,7 @@ export class TrabajadorPortalView {
                         "click",
                         () =>
                             this.cambiarEstadoTarea(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "En curso",
                                 trabajador
                             )
@@ -2125,9 +2086,7 @@ export class TrabajadorPortalView {
                         "click",
                         () =>
                             this.cambiarEstadoTarea(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "Completada",
                                 trabajador
                             )
@@ -2138,10 +2097,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // CAMBIAR ESTADO TAREA
-    // =====================================================
 
     cambiarEstadoTarea(
         tareaId,
@@ -2178,8 +2133,8 @@ export class TrabajadorPortalView {
             tarea.trabajadorIds
                 .some(
                     id =>
-                        Number(id) ===
-                        Number(
+                        String(id) ===
+                        String(
                             trabajador.id
                         )
                 );
@@ -2235,9 +2190,651 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // INCIDENCIAS DEL TRABAJADOR
-    // =====================================================
+    crearSeccionFichajes(
+        fichajes
+    ) {
+
+        return `
+
+            <section
+                class="panel"
+                style="
+                    margin-top: 24px;
+                "
+            >
+
+                <div class="panel-header">
+
+                    <h3>
+                        🕒 Mis fichajes
+                    </h3>
+
+                    <p
+                        style="
+                            margin: 5px 0 0;
+                            color: #78837d;
+                        "
+                    >
+                        Consulta tus entradas y salidas y solicita una corrección si detectas una hora incorrecta.
+                    </p>
+
+                </div>
+
+
+                ${
+                    fichajes.length ===
+                    0
+
+                        ? `
+
+                            <div class="empty-state">
+
+                                <div class="empty-icon">
+                                    🕒
+                                </div>
+
+                                <h3>
+                                    Todavía no tienes fichajes
+                                </h3>
+
+                                <p>
+                                    Tus entradas y salidas aparecerán aquí.
+                                </p>
+
+                            </div>
+
+                        `
+
+                        : fichajes
+                            .map(
+                                fichaje =>
+                                    this.crearTarjetaFichaje(
+                                        fichaje
+                                    )
+                            )
+                            .join("")
+                }
+
+            </section>
+
+        `;
+
+    }
+
+
+    crearTarjetaFichaje(
+        fichaje
+    ) {
+
+        const correccion =
+            fichaje.correccion
+            ||
+            null;
+
+
+        const estadoCorreccion =
+            correccion?.estado
+            ||
+            "";
+
+
+        const puedeSolicitar =
+            estadoCorreccion !==
+            "Pendiente";
+
+
+        const estiloEstado =
+            this.obtenerEstiloCorreccion(
+                estadoCorreccion
+            );
+
+
+        return `
+
+            <div
+                style="
+                    padding: 14px 0;
+                    border-bottom: 1px solid #edf0ed;
+                "
+            >
+
+                <div
+                    style="
+                        display: flex;
+                        align-items: flex-start;
+                        justify-content: space-between;
+                        gap: 12px;
+                        flex-wrap: wrap;
+                    "
+                >
+
+                    <div
+                        style="
+                            display: flex;
+                            gap: 10px;
+                            align-items: flex-start;
+                        "
+                    >
+
+                        <span>
+                            ${
+                                fichaje.tipo ===
+                                "Entrada"
+                                    ? "🟢"
+                                    : "🔴"
+                            }
+                        </span>
+
+
+                        <div>
+
+                            <strong>
+                                ${fichaje.tipo}
+                            </strong>
+
+                            <p
+                                style="
+                                    margin: 4px 0 0;
+                                    color: #65736c;
+                                "
+                            >
+                                ${this.formatearFecha(
+                                    fichaje.fecha
+                                )}
+                                ·
+                                ${fichaje.hora}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        estadoCorreccion
+
+                            ? `
+
+                                <span
+                                    style="
+                                        display: inline-flex;
+                                        align-items: center;
+                                        padding: 5px 9px;
+                                        border-radius: 999px;
+                                        background: ${estiloEstado.fondo};
+                                        color: ${estiloEstado.texto};
+                                        font-size: 12px;
+                                        font-weight: 700;
+                                    "
+                                >
+                                    Corrección ${estadoCorreccion}
+                                </span>
+
+                            `
+
+                            : ""
+                    }
+
+                </div>
+
+
+                ${
+                    correccion
+
+                        ? `
+
+                            <div
+                                style="
+                                    margin-top: 10px;
+                                    padding: 11px;
+                                    border-radius: 10px;
+                                    background: #f7f9f7;
+                                "
+                            >
+
+                                <p
+                                    style="
+                                        margin: 0;
+                                    "
+                                >
+                                    <strong>
+                                        Hora solicitada:
+                                    </strong>
+                                    ${correccion.nuevaHora || "—"}
+                                </p>
+
+
+                                <p
+                                    style="
+                                        margin: 5px 0 0;
+                                        color: #65736c;
+                                    "
+                                >
+                                    ${correccion.motivo || "Sin motivo"}
+                                </p>
+
+
+                                ${
+                                    estadoCorreccion ===
+                                    "Aprobada"
+
+                                        ? `
+
+                                            <p
+                                                style="
+                                                    margin: 5px 0 0;
+                                                    color: #65736c;
+                                                    font-size: 12px;
+                                                "
+                                            >
+                                                Hora original:
+                                                ${correccion.horaOriginal || "—"}
+                                            </p>
+
+                                        `
+
+                                        : ""
+                                }
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    puedeSolicitar
+
+                        ? `
+
+                            <button
+                                type="button"
+                                class="secondary-button portal-corregir-fichaje"
+                                data-id="${fichaje.id}"
+                                style="
+                                    margin-top: 10px;
+                                "
+                            >
+                                ✏️ Solicitar corrección
+                            </button>
+
+                        `
+
+                        : `
+
+                            <p
+                                style="
+                                    margin: 10px 0 0;
+                                    color: #8a6b00;
+                                    font-size: 12px;
+                                "
+                            >
+                                ⏳ Esta solicitud está pendiente de revisión.
+                            </p>
+
+                        `
+                }
+
+            </div>
+
+        `;
+
+    }
+
+
+    obtenerEstiloCorreccion(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "Aprobada"
+        ) {
+
+            return {
+
+                fondo:
+                    "#def5e8",
+
+                texto:
+                    "#176044"
+
+            };
+
+        }
+
+
+        if (
+            estado ===
+            "Rechazada"
+        ) {
+
+            return {
+
+                fondo:
+                    "#fde8e8",
+
+                texto:
+                    "#a42b2b"
+
+            };
+
+        }
+
+
+        return {
+
+            fondo:
+                "#fff4d8",
+
+            texto:
+                "#745500"
+
+        };
+
+    }
+
+
+    configurarEventosFichajes(
+        trabajador
+    ) {
+
+        document
+            .querySelectorAll(
+                ".portal-corregir-fichaje"
+            )
+            .forEach(
+                boton => {
+
+                    boton.addEventListener(
+                        "click",
+                        () => {
+
+                            this.mostrarFormularioCorreccion(
+                                trabajador,
+                                boton.dataset.id
+                            );
+
+                        }
+                    );
+
+                }
+            );
+
+    }
+
+
+    mostrarFormularioCorreccion(
+        trabajador,
+        fichajeId
+    ) {
+
+        const fichaje =
+            this.fichajeService
+                .obtenerPorId(
+                    fichajeId
+                );
+
+
+        if (
+            !fichaje
+            ||
+            String(
+                fichaje.trabajadorId
+            ) !==
+            String(
+                trabajador.id
+            )
+        ) {
+
+            alert(
+                "El fichaje seleccionado no existe o no pertenece a este trabajador."
+            );
+
+
+            this.mostrarPanel(
+                trabajador
+            );
+
+
+            return;
+
+        }
+
+
+        if (
+            fichaje.correccion
+            &&
+            fichaje.correccion.estado ===
+            "Pendiente"
+        ) {
+
+            alert(
+                "Este fichaje ya tiene una solicitud de corrección pendiente."
+            );
+
+
+            this.mostrarPanel(
+                trabajador
+            );
+
+
+            return;
+
+        }
+
+
+        this.mainContent.innerHTML = `
+
+            <button
+                id="volverCorreccionFichaje"
+                class="back-button"
+                type="button"
+            >
+                ← Volver
+            </button>
+
+
+            <header class="topbar">
+
+                <div>
+
+                    <h2>
+                        Solicitar corrección
+                    </h2>
+
+                    <p>
+                        Solicita un cambio de hora para este fichaje.
+                    </p>
+
+                </div>
+
+            </header>
+
+
+            <div class="form-panel">
+
+                <div
+                    style="
+                        padding: 14px;
+                        margin-bottom: 18px;
+                        border-radius: 12px;
+                        background: #f5f8f6;
+                    "
+                >
+
+                    <strong>
+                        ${fichaje.tipo}
+                    </strong>
+
+                    <p
+                        style="
+                            margin: 6px 0 0;
+                        "
+                    >
+                        ${this.formatearFecha(
+                            fichaje.fecha
+                        )}
+                        ·
+                        Hora actual:
+                        <strong>
+                            ${fichaje.hora}
+                        </strong>
+                    </p>
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Nueva hora *
+                    </label>
+
+                    <input
+                        id="portalNuevaHoraFichaje"
+                        type="time"
+                        value="${String(
+                            fichaje.hora
+                            ||
+                            ""
+                        ).slice(0, 5)}"
+                    >
+
+                </div>
+
+
+                <div class="form-group">
+
+                    <label>
+                        Motivo de la corrección *
+                    </label>
+
+                    <textarea
+                        id="portalMotivoCorreccionFichaje"
+                        rows="5"
+                        placeholder="Ej. Olvidé fichar a la hora correcta..."
+                    ></textarea>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        id="cancelarCorreccionFichaje"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Cancelar
+                    </button>
+
+
+                    <button
+                        id="enviarCorreccionFichaje"
+                        class="primary-button"
+                        type="button"
+                    >
+                        Enviar solicitud
+                    </button>
+
+                </div>
+
+            </div>
+
+        `;
+
+
+        const volver =
+            () =>
+                this.mostrarPanel(
+                    trabajador
+                );
+
+
+        document
+            .getElementById(
+                "volverCorreccionFichaje"
+            )
+            .addEventListener(
+                "click",
+                volver
+            );
+
+
+        document
+            .getElementById(
+                "cancelarCorreccionFichaje"
+            )
+            .addEventListener(
+                "click",
+                volver
+            );
+
+
+        document
+            .getElementById(
+                "enviarCorreccionFichaje"
+            )
+            .addEventListener(
+                "click",
+                () => {
+
+                    const nuevaHora =
+                        document
+                            .getElementById(
+                                "portalNuevaHoraFichaje"
+                            )
+                            .value;
+
+
+                    const motivo =
+                        document
+                            .getElementById(
+                                "portalMotivoCorreccionFichaje"
+                            )
+                            .value;
+
+
+                    const resultado =
+                        this.fichajeService
+                            .solicitarCorreccion(
+                                trabajador.id,
+                                fichaje.id,
+                                nuevaHora,
+                                motivo
+                            );
+
+
+                    if (
+                        !resultado.ok
+                    ) {
+
+                        alert(
+                            resultado.mensaje
+                        );
+
+                        return;
+
+                    }
+
+
+                    alert(
+                        resultado.mensaje
+                    );
+
+
+                    this.mostrarPanel(
+                        trabajador
+                    );
+
+                }
+            );
+
+    }
+
 
     crearSeccionIncidencias(
         incidencias
@@ -2329,10 +2926,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // FORMULARIO INCIDENCIA
-    // =====================================================
 
     mostrarFormularioIncidencia(
         trabajador,
@@ -2689,10 +3282,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // VOLVER A ADMINISTRACIÓN
-    // =====================================================
-
     volverAdministracion() {
 
         sessionStorage.removeItem(
@@ -2717,10 +3306,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // NOMBRE DEL TRABAJADOR
-    // =====================================================
-
     obtenerNombreTrabajador(
         trabajador
     ) {
@@ -2734,10 +3319,6 @@ export class TrabajadorPortalView {
 
     }
 
-
-    // =====================================================
-    // FORMATEAR FECHA
-    // =====================================================
 
     formatearFecha(
         fecha
@@ -2773,10 +3354,6 @@ export class TrabajadorPortalView {
     }
 
 
-    // =====================================================
-    // FORMATEAR FECHA + HORA
-    // =====================================================
-
     formatearFechaHora(
         valor
     ) {
@@ -2811,6 +3388,7 @@ export class TrabajadorPortalView {
             .toLocaleString(
                 "es-ES",
                 {
+
                     day:
                         "2-digit",
 
@@ -2825,6 +3403,7 @@ export class TrabajadorPortalView {
 
                     minute:
                         "2-digit"
+
                 }
             );
 

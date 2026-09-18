@@ -1374,6 +1374,139 @@ export class EstadisticasService {
 
 
     // =====================================================
+    // PRODUCCIÓN POR PASADA
+    // =====================================================
+
+    obtenerProduccionPorPasada() {
+
+        const orden = [
+            "1ª",
+            "2ª",
+            "3ª",
+            "R"
+        ];
+
+
+        const resultado = {
+
+            "1ª":
+                0,
+
+            "2ª":
+                0,
+
+            "3ª":
+                0,
+
+            "R":
+                0
+
+        };
+
+
+        this.obtenerProduccion()
+            .forEach(
+                registro => {
+
+                    const texto =
+                        String(
+                            registro.pasada
+                            ??
+                            "1ª"
+                        )
+                            .trim()
+                            .toUpperCase();
+
+
+                    const equivalencias = {
+
+                        "1":
+                            "1ª",
+
+                        "1A":
+                            "1ª",
+
+                        "1ª":
+                            "1ª",
+
+                        "PRIMERA":
+                            "1ª",
+
+
+                        "2":
+                            "2ª",
+
+                        "2A":
+                            "2ª",
+
+                        "2ª":
+                            "2ª",
+
+                        "SEGUNDA":
+                            "2ª",
+
+
+                        "3":
+                            "3ª",
+
+                        "3A":
+                            "3ª",
+
+                        "3ª":
+                            "3ª",
+
+                        "TERCERA":
+                            "3ª",
+
+
+                        "R":
+                            "R",
+
+                        "REPASO":
+                            "R"
+
+                    };
+
+
+                    const pasada =
+                        equivalencias[
+                            texto
+                        ]
+                        ||
+                        "1ª";
+
+
+                    resultado[
+                        pasada
+                    ]
+                    +=
+                        this.numero(
+                            registro.cantidad
+                        );
+
+                }
+            );
+
+
+        return orden
+            .map(
+                pasada => ({
+
+                    pasada:
+                        pasada,
+
+                    total:
+                        resultado[
+                            pasada
+                        ]
+
+                })
+            );
+
+    }
+
+
+    // =====================================================
     // FACTURACIÓN POR CLIENTE
     // =====================================================
 

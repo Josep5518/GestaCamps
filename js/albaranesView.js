@@ -788,6 +788,29 @@ export class AlbaranesView {
 
                 <div
                     style="
+                        display:inline-flex;
+                        align-items:center;
+                        gap:6px;
+                        margin-top:6px;
+                        padding:5px 9px;
+                        border-radius:999px;
+                        background:#edf6f1;
+                        color:#176044;
+                        font-size:12px;
+                        font-weight:700;
+                    "
+                >
+                    🍑 Pasada:
+                    ${this.escapar(
+                        linea.pasada
+                        ||
+                        "1ª"
+                    )}
+                </div>
+
+
+                <div
+                    style="
                         display:grid;
                         grid-template-columns:
                             repeat(3,minmax(0,1fr));
@@ -891,9 +914,7 @@ export class AlbaranesView {
                         () => {
 
                             this.mostrarFormulario(
-                                Number(
-                                    boton.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }
@@ -915,9 +936,7 @@ export class AlbaranesView {
                         () => {
 
                             const id =
-                                Number(
-                                    boton.dataset.id
-                                );
+                                boton.dataset.id;
 
 
                             const albaran =
@@ -988,9 +1007,7 @@ export class AlbaranesView {
                         () => {
 
                             const id =
-                                Number(
-                                    boton.dataset.id
-                                );
+                                boton.dataset.id;
 
 
                             const estado =
@@ -1930,12 +1947,16 @@ export class AlbaranesView {
                                             value="${item.id}"
 
                                             ${
-                                                Number(
+                                                String(
                                                     linea.produccionId
+                                                    ??
+                                                    ""
                                                 )
                                                 ===
-                                                Number(
+                                                String(
                                                     item.id
+                                                    ??
+                                                    ""
                                                 )
 
                                                     ? "selected"
@@ -1956,6 +1977,42 @@ export class AlbaranesView {
 
                                                     ? ` · ${this.escapar(
                                                         item.variedad
+                                                    )}`
+
+                                                    : ""
+                                            }
+
+                                            · ${this.escapar(
+                                                item.pasada
+                                                ||
+                                                "1ª"
+                                            )}
+
+                                            ${
+                                                item.fincaNombre
+
+                                                    ? ` · ${this.escapar(
+                                                        item.fincaNombre
+                                                    )}`
+
+                                                    : ""
+                                            }
+
+                                            ${
+                                                item.parcela
+
+                                                    ? ` · ${this.escapar(
+                                                        item.parcela
+                                                    )}`
+
+                                                    : ""
+                                            }
+
+                                            ${
+                                                item.campaniaNombre
+
+                                                    ? ` · ${this.escapar(
+                                                        item.campaniaNombre
                                                     )}`
 
                                                     : ""
@@ -1986,6 +2043,52 @@ export class AlbaranesView {
                     produccion
 
                         ? `
+                            <div
+                                style="
+                                    margin:12px 0;
+                                    padding:11px 13px;
+                                    border-radius:10px;
+                                    background:#edf6f1;
+                                    color:#315f4d;
+                                    font-size:12px;
+                                    line-height:1.6;
+                                "
+                            >
+                                <strong>
+                                    Origen:
+                                </strong>
+
+                                ${this.escapar(
+                                    produccion.fincaNombre
+                                    ||
+                                    "Sin finca"
+                                )}
+
+                                ${produccion.parcela
+                                    ? ` · ${this.escapar(
+                                        produccion.parcela
+                                    )}`
+                                    : ""
+                                }
+
+                                ${produccion.campaniaNombre
+                                    ? ` · ${this.escapar(
+                                        produccion.campaniaNombre
+                                    )}`
+                                    : " · Sin campanya"
+                                }
+
+                                · Pasada
+                                <strong>
+                                    ${this.escapar(
+                                        produccion.pasada
+                                        ||
+                                        "1ª"
+                                    )}
+                                </strong>
+                            </div>
+
+
                             <div
                                 style="
                                     display:grid;
@@ -2513,10 +2616,8 @@ export class AlbaranesView {
                     return {
 
                         id:
-                            Number(
-                                bloque.dataset
-                                    .lineaId
-                            )
+                            bloque.dataset
+                                .lineaId
                             ||
                             Date.now(),
 
@@ -2626,9 +2727,7 @@ export class AlbaranesView {
             return (
                 this.produccionService
                     .obtenerPorId(
-                        Number(
-                            id
-                        )
+                        id
                     )
                 ||
                 null
@@ -2641,12 +2740,16 @@ export class AlbaranesView {
             this.obtenerProducciones()
                 .find(
                     produccion =>
-                        Number(
+                        String(
                             produccion.id
+                            ??
+                            ""
                         )
                         ===
-                        Number(
+                        String(
                             id
+                            ??
+                            ""
                         )
                 )
             ||
@@ -2683,6 +2786,11 @@ export class AlbaranesView {
                     produccionId:
                         albaran.produccionId,
 
+                    cultivoId:
+                        albaran.cultivoId
+                        ??
+                        null,
+
                     fincaId:
                         albaran.fincaId,
 
@@ -2703,6 +2811,11 @@ export class AlbaranesView {
 
                     campaniaNombre:
                         albaran.campaniaNombre,
+
+                    pasada:
+                        albaran.pasada
+                        ||
+                        "1ª",
 
                     cantidad:
                         albaran.cantidad,

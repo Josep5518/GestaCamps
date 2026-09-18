@@ -610,6 +610,11 @@ export class AlbaranService {
                     produccionId:
                         albaran.produccionId,
 
+                    cultivoId:
+                        albaran.cultivoId
+                        ??
+                        null,
+
                     fincaId:
                         albaran.fincaId
                         ??
@@ -644,6 +649,16 @@ export class AlbaranService {
                         albaran.campaniaNombre
                         ||
                         "",
+
+                    pasada:
+                        String(
+                            albaran.pasada
+                            ??
+                            "1ª"
+                        )
+                            .trim()
+                        ||
+                        "1ª",
 
                     cantidad:
                         numeroSeguro(
@@ -1196,6 +1211,15 @@ export class AlbaranService {
                 ??
                 null,
 
+            cultivoId:
+                linea.cultivoId
+                ??
+                produccion?.cultivoId
+                ??
+                albaran?.cultivoId
+                ??
+                null,
+
             fincaId:
                 linea.fincaId
                 ??
@@ -1257,6 +1281,20 @@ export class AlbaranService {
                     ""
                 )
                     .trim(),
+
+            pasada:
+                String(
+                    linea.pasada
+                    ??
+                    produccion?.pasada
+                    ??
+                    albaran?.pasada
+                    ??
+                    "1ª"
+                )
+                    .trim()
+                ||
+                "1ª",
 
             cantidad:
                 Number(
@@ -1330,6 +1368,12 @@ export class AlbaranService {
 
             albaran.unidad =
                 "kg";
+
+            albaran.cultivoId =
+                null;
+
+            albaran.pasada =
+                "";
 
             return;
 
@@ -1438,6 +1482,11 @@ export class AlbaranService {
             albaran.produccionId =
                 linea.produccionId;
 
+            albaran.cultivoId =
+                linea.cultivoId
+                ??
+                null;
+
             albaran.fincaId =
                 linea.fincaId;
 
@@ -1458,6 +1507,11 @@ export class AlbaranService {
 
             albaran.campaniaNombre =
                 linea.campaniaNombre;
+
+            albaran.pasada =
+                linea.pasada
+                ||
+                "1ª";
 
             albaran.precio =
                 numeroSeguro(
@@ -1524,8 +1578,62 @@ export class AlbaranService {
             );
 
 
+        const cultivoIds =
+            new Set(
+                lineas
+                    .map(
+                        linea =>
+                            linea.cultivoId
+                    )
+                    .filter(
+                        id =>
+                            id !==
+                            null
+                            &&
+                            id !==
+                            undefined
+                            &&
+                            id !==
+                            ""
+                    )
+                    .map(
+                        id =>
+                            String(
+                                id
+                            )
+                    )
+            );
+
+
+        const pasadas =
+            new Set(
+                lineas
+                    .map(
+                        linea =>
+                            String(
+                                linea.pasada
+                                ??
+                                "1ª"
+                            )
+                                .trim()
+                            ||
+                            "1ª"
+                    )
+            );
+
+
         albaran.produccionId =
             null;
+
+
+        albaran.cultivoId =
+            cultivoIds.size ===
+            1
+
+                ? lineas[0]
+                    .cultivoId
+
+                : null;
 
 
         albaran.fincaId =
@@ -1570,6 +1678,20 @@ export class AlbaranService {
                     .campaniaNombre
 
                 : "Varias campanyas";
+
+
+        albaran.pasada =
+            pasadas.size ===
+            1
+
+                ? (
+                    lineas[0]
+                        .pasada
+                    ||
+                    "1ª"
+                )
+
+                : "Varias pasadas";
 
 
         albaran.producto =
@@ -1729,6 +1851,9 @@ export class AlbaranService {
                                     produccionId:
                                         albaran.produccionId,
 
+                                    cultivoId:
+                                        albaran.cultivoId,
+
                                     fincaId:
                                         albaran.fincaId,
 
@@ -1749,6 +1874,9 @@ export class AlbaranService {
 
                                     campaniaNombre:
                                         albaran.campaniaNombre,
+
+                                    pasada:
+                                        albaran.pasada,
 
                                     cantidad:
                                         albaran.cantidad,
@@ -1963,6 +2091,11 @@ export class AlbaranService {
                         produccionId:
                             produccion.id,
 
+                        cultivoId:
+                            produccion.cultivoId
+                            ??
+                            null,
+
                         fincaId:
                             produccion.fincaId
                             ??
@@ -2003,6 +2136,11 @@ export class AlbaranService {
                             produccion.campaniaNombre
                             ??
                             "",
+
+                        pasada:
+                            produccion.pasada
+                            ??
+                            "1ª",
 
                         cantidad:
                             cantidad,

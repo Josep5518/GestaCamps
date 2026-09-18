@@ -28,21 +28,249 @@ export class ProduccionService {
         this.cultivoService =
             cultivoService;
 
-        this.registros =
+
+        const registrosGuardados =
             StorageService
                 .obtenerProduccion();
 
 
-        if (
-            !Array.isArray(
-                this.registros
+        this.registros =
+            Array.isArray(
+                registrosGuardados
             )
+                ? registrosGuardados
+                    .map(
+                        registro =>
+                            this.normalizarRegistroExistente(
+                                registro
+                            )
+                    )
+                : [];
+
+    }
+
+
+    // =====================================================
+    // PASADAS PERMITIDAS
+    // =====================================================
+
+    obtenerPasadasPermitidas() {
+
+        return [
+            "1ª",
+            "2ª",
+            "3ª",
+            "R"
+        ];
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR PASADA
+    // =====================================================
+
+    normalizarPasada(
+        pasada
+    ) {
+
+        const texto =
+            String(
+                pasada
+                ??
+                ""
+            )
+                .trim()
+                .toUpperCase();
+
+
+        const equivalencias = {
+
+            "1":
+                "1ª",
+
+            "1A":
+                "1ª",
+
+            "1ª":
+                "1ª",
+
+            "PRIMERA":
+                "1ª",
+
+
+            "2":
+                "2ª",
+
+            "2A":
+                "2ª",
+
+            "2ª":
+                "2ª",
+
+            "SEGUNDA":
+                "2ª",
+
+
+            "3":
+                "3ª",
+
+            "3A":
+                "3ª",
+
+            "3ª":
+                "3ª",
+
+            "TERCERA":
+                "3ª",
+
+
+            "R":
+                "R",
+
+            "REPASO":
+                "R",
+
+            "RECOLECCION":
+                "R",
+
+            "RECOLECCIÓN":
+                "R"
+
+        };
+
+
+        return (
+            equivalencias[
+                texto
+            ]
+            ||
+            ""
+        );
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR REGISTROS ANTIGUOS
+    // =====================================================
+
+    normalizarRegistroExistente(
+        registro
+    ) {
+
+        if (
+            !registro
+            ||
+            typeof registro !==
+            "object"
         ) {
 
-            this.registros =
-                [];
+            return registro;
 
         }
+
+
+        const pasadaNormalizada =
+            this.normalizarPasada(
+                registro.pasada
+            );
+
+
+        const cantidadAnterior =
+            numeroSeguro(
+                registro.cantidad,
+                0
+            );
+
+
+        const pesoBrutoGuardado =
+            numeroSeguro(
+                registro.pesoBruto,
+                NaN
+            );
+
+
+        const taraGuardada =
+            numeroSeguro(
+                registro.tara,
+                NaN
+            );
+
+
+        const pesoNetoGuardado =
+            numeroSeguro(
+                registro.pesoNeto,
+                NaN
+            );
+
+
+        const pesoBruto =
+            Number.isFinite(
+                pesoBrutoGuardado
+            )
+
+                ? pesoBrutoGuardado
+
+                : cantidadAnterior;
+
+
+        const tara =
+            Number.isFinite(
+                taraGuardada
+            )
+
+                ? Math.max(
+                    0,
+                    taraGuardada
+                )
+
+                : 0;
+
+
+        const pesoNetoCalculado =
+            Math.max(
+                0,
+                pesoBruto -
+                tara
+            );
+
+
+        const pesoNeto =
+            Number.isFinite(
+                pesoNetoGuardado
+            )
+
+                ? Math.max(
+                    0,
+                    pesoNetoGuardado
+                )
+
+                : pesoNetoCalculado;
+
+
+        return {
+
+            ...registro,
+
+            pasada:
+                pasadaNormalizada
+                ||
+                "1ª",
+
+            pesoBruto:
+                pesoBruto,
+
+            tara:
+                tara,
+
+            pesoNeto:
+                pesoNeto,
+
+            cantidad:
+                pesoNeto
+
+        };
 
     }
 
@@ -144,6 +372,70 @@ export class ProduccionService {
                         registro.cultivoId,
                         cultivoId
                     )
+            );
+
+    }
+
+
+    // =====================================================
+    // POR PASADA
+    // =====================================================
+
+    obtenerPorPasada(
+        pasada
+    ) {
+
+        const pasadaNormalizada =
+            this.normalizarPasada(
+                pasada
+            );
+
+
+        if (
+            !pasadaNormalizada
+        ) {
+
+            return [];
+
+        }
+
+
+        return this.registros
+            .filter(
+                registro =>
+                    this.normalizarPasada(
+                        registro.pasada
+                    )
+                    ===
+                    pasadaNormalizada
+            );
+
+    }
+
+
+    // =====================================================
+    // TOTAL POR PASADA
+    // =====================================================
+
+    obtenerTotalPorPasada(
+        pasada
+    ) {
+
+        return this.obtenerPorPasada(
+            pasada
+        )
+            .reduce(
+                (
+                    total,
+                    registro
+                ) =>
+                    total
+                    +
+                    numeroSeguro(
+                        registro.cantidad,
+                        0
+                    ),
+                0
             );
 
     }
@@ -334,19 +626,30 @@ export class ProduccionService {
         }
 
 
-        const cantidad =
+        const pesoBruto =
             numeroSeguro(
+                datos.pesoBruto
+                ??
                 datos.cantidad,
+                NaN
+            );
+
+
+        const tara =
+            numeroSeguro(
+                datos.tara
+                ??
+                0,
                 NaN
             );
 
 
         if (
             !Number.isFinite(
-                cantidad
+                pesoBruto
             )
             ||
-            cantidad <=
+            pesoBruto <=
             0
         ) {
 
@@ -356,7 +659,81 @@ export class ProduccionService {
                     false,
 
                 mensaje:
-                    "Introduce una cantidad válida."
+                    "Introduce un peso bruto válido."
+
+            };
+
+        }
+
+
+        if (
+            !Number.isFinite(
+                tara
+            )
+            ||
+            tara <
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Introduce una tara válida."
+
+            };
+
+        }
+
+
+        if (
+            tara >=
+            pesoBruto
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "La tara debe ser menor que el peso bruto."
+
+            };
+
+        }
+
+
+        const pesoNeto =
+            Number(
+                (
+                    pesoBruto -
+                    tara
+                )
+                    .toFixed(
+                        2
+                    )
+            );
+
+
+        if (
+            !Number.isFinite(
+                pesoNeto
+            )
+            ||
+            pesoNeto <=
+            0
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "El peso neto debe ser mayor que 0."
 
             };
 
@@ -391,6 +768,34 @@ export class ProduccionService {
             "kg";
 
 
+        const pasada =
+            this.normalizarPasada(
+                datos.pasada
+            );
+
+
+        if (
+            !pasada
+            ||
+            !this.obtenerPasadasPermitidas()
+                .includes(
+                    pasada
+                )
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Selecciona una pasada válida: 1ª, 2ª, 3ª o R."
+
+            };
+
+        }
+
+
         return {
 
             ok:
@@ -405,11 +810,31 @@ export class ProduccionService {
             campania:
                 campania,
 
+            pesoBruto:
+                Number(
+                    pesoBruto.toFixed(
+                        2
+                    )
+                ),
+
+            tara:
+                Number(
+                    tara.toFixed(
+                        2
+                    )
+                ),
+
+            pesoNeto:
+                pesoNeto,
+
             cantidad:
-                cantidad,
+                pesoNeto,
 
             unidad:
-                unidad
+                unidad,
+
+            pasada:
+                pasada
 
         };
 
@@ -469,8 +894,20 @@ export class ProduccionService {
                 )
                     .trim(),
 
+            pasada:
+                relaciones.pasada,
+
+            pesoBruto:
+                relaciones.pesoBruto,
+
+            tara:
+                relaciones.tara,
+
+            pesoNeto:
+                relaciones.pesoNeto,
+
             cantidad:
-                relaciones.cantidad,
+                relaciones.pesoNeto,
 
             unidad:
                 relaciones.unidad,
@@ -502,6 +939,142 @@ export class ProduccionService {
 
 
     // =====================================================
+    // DUPLICADOS
+    // =====================================================
+
+    buscarDuplicado(
+        preparacion,
+        datos,
+        excluirId = null
+    ) {
+
+        return (
+            this.registros
+                .find(
+                    registro => {
+
+                        if (
+                            excluirId !==
+                            null
+                            &&
+                            mismoId(
+                                registro.id,
+                                excluirId
+                            )
+                        ) {
+
+                            return false;
+
+                        }
+
+
+                        const registroNormalizado =
+                            this.normalizarRegistroExistente(
+                                registro
+                            );
+
+
+                        return (
+                            mismoId(
+                                registroNormalizado.cultivoId,
+                                preparacion.cultivo.id
+                            )
+                            &&
+                            String(
+                                registroNormalizado.fecha
+                                ??
+                                ""
+                            )
+                            ===
+                            String(
+                                datos.fecha
+                                ??
+                                ""
+                            )
+                            &&
+                            this.normalizarPasada(
+                                registroNormalizado.pasada
+                            )
+                            ===
+                            preparacion.pasada
+                            &&
+                            String(
+                                registroNormalizado.unidad
+                                ??
+                                "kg"
+                            )
+                            ===
+                            String(
+                                preparacion.unidad
+                            )
+                            &&
+                            Math.abs(
+                                numeroSeguro(
+                                    registroNormalizado.pesoBruto,
+                                    registroNormalizado.cantidad
+                                )
+                                -
+                                preparacion.pesoBruto
+                            )
+                            <
+                            0.000001
+                            &&
+                            Math.abs(
+                                numeroSeguro(
+                                    registroNormalizado.tara,
+                                    0
+                                )
+                                -
+                                preparacion.tara
+                            )
+                            <
+                            0.000001
+                            &&
+                            Math.abs(
+                                numeroSeguro(
+                                    registroNormalizado.pesoNeto,
+                                    registroNormalizado.cantidad
+                                )
+                                -
+                                preparacion.pesoNeto
+                            )
+                            <
+                            0.000001
+                        );
+
+                    }
+                )
+            ||
+            null
+        );
+
+    }
+
+
+    crearResultadoDuplicado(
+        duplicado
+    ) {
+
+        return {
+
+            ok:
+                false,
+
+            duplicado:
+                true,
+
+            registroDuplicado:
+                duplicado,
+
+            mensaje:
+                "Parece un registro duplicado: coincide la fecha, el cultivo, la campanya, la pasada, el peso bruto, la tara y el peso neto. Confirma si realmente corresponde a otra pesada distinta."
+
+        };
+
+    }
+
+
+    // =====================================================
     // CREAR
     // =====================================================
 
@@ -520,6 +1093,27 @@ export class ProduccionService {
         ) {
 
             return preparacion;
+
+        }
+
+
+        const duplicado =
+            this.buscarDuplicado(
+                preparacion,
+                datos
+            );
+
+
+        if (
+            duplicado
+            &&
+            datos.confirmarDuplicado !==
+            true
+        ) {
+
+            return this.crearResultadoDuplicado(
+                duplicado
+            );
 
         }
 
@@ -645,15 +1239,19 @@ export class ProduccionService {
         }
 
 
-        const cantidadAlbaranada =
-            this.obtenerCantidadAlbaranada(
+        const albaranesVinculados =
+            this.obtenerAlbaranesVinculados(
                 registro.id
             );
 
 
+        const tieneAlbaranesVinculados =
+            albaranesVinculados.length >
+            0;
+
+
         if (
-            cantidadAlbaranada >
-            0
+            tieneAlbaranesVinculados
         ) {
 
             if (
@@ -669,7 +1267,7 @@ export class ProduccionService {
                         false,
 
                     mensaje:
-                        "No puedes cambiar el cultivo de esta producción porque ya está utilizada en uno o varios albaranes."
+                        "No puedes cambiar el cultivo de esta producción porque ya está vinculada a uno o varios albaranes."
 
                 };
 
@@ -677,8 +1275,15 @@ export class ProduccionService {
 
 
             if (
-                preparacion.cantidad <
-                cantidadAlbaranada
+                String(
+                    registro.unidad
+                    ??
+                    "kg"
+                )
+                !==
+                String(
+                    preparacion.unidad
+                )
             ) {
 
                 return {
@@ -687,11 +1292,78 @@ export class ProduccionService {
                         false,
 
                     mensaje:
-                        `No puedes reducir la producción a ${preparacion.cantidad} ${preparacion.unidad} porque ya hay ${cantidadAlbaranada} ${registro.unidad || "kg"} utilizados en albaranes.`
+                        "No puedes cambiar la unidad de esta producción porque ya está vinculada a uno o varios albaranes."
 
                 };
 
             }
+
+
+            if (
+                this.normalizarPasada(
+                    registro.pasada
+                )
+                !==
+                preparacion.pasada
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "No puedes cambiar la pasada de esta producción porque ya está vinculada a uno o varios albaranes."
+
+                };
+
+            }
+
+        }
+
+
+        const cantidadAlbaranada =
+            this.obtenerCantidadAlbaranada(
+                registro.id
+            );
+
+
+        if (
+            preparacion.cantidad <
+            cantidadAlbaranada
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    `No puedes reducir el peso neto a ${preparacion.cantidad} ${preparacion.unidad} porque ya hay ${cantidadAlbaranada} ${registro.unidad || "kg"} reservados o entregados en albaranes.`
+
+            };
+
+        }
+
+
+        const duplicado =
+            this.buscarDuplicado(
+                preparacion,
+                datos,
+                registro.id
+            );
+
+
+        if (
+            duplicado
+            &&
+            datos.confirmarDuplicado !==
+            true
+        ) {
+
+            return this.crearResultadoDuplicado(
+                duplicado
+            );
 
         }
 
@@ -780,6 +1452,29 @@ export class ProduccionService {
         albaranes.forEach(
             albaran => {
 
+                const ocupaStock =
+                    albaran?.facturado ===
+                    true
+                    ||
+                    albaran?.estado ===
+                    "Pendiente"
+                    ||
+                    albaran?.estado ===
+                    "Entregado"
+                    ||
+                    albaran?.estado ===
+                    "Facturado";
+
+
+                if (
+                    !ocupaStock
+                ) {
+
+                    return;
+
+                }
+
+
                 const lineas =
                     Array.isArray(
                         albaran.lineas
@@ -820,7 +1515,11 @@ export class ProduccionService {
         );
 
 
-        return total;
+        return Number(
+            total.toFixed(
+                2
+            )
+        );
 
     }
 
@@ -966,7 +1665,8 @@ export class ProduccionService {
 
                 mensaje:
                     `No puedes eliminar este registro de producción porque está utilizado en ${albaranes.length} albarán${
-                        albaranes.length === 1
+                        albaranes.length ===
+                        1
                             ? ""
                             : "es"
                     }.`
