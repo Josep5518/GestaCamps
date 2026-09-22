@@ -1,3 +1,21 @@
+import {
+    escaparHTML,
+    formatearDinero
+} from "./utils.js";
+
+import {
+    crearFacturacionCardsHelper
+} from "./facturacion/facturacionCards.js";
+
+import {
+    crearFacturacionDetalleHelper
+} from "./facturacion/facturacionDetalle.js";
+
+import {
+    crearFacturacionFormHelper
+} from "./facturacion/facturacionForm.js";
+
+
 export class FacturacionView {
 
     constructor(
@@ -8,20 +26,167 @@ export class FacturacionView {
         clienteProveedorService
     ) {
 
-        this.mainContent =
-            mainContent;
+        this.mainContent = mainContent;
 
-        this.facturaService =
-            facturaService;
+        this.facturaService = facturaService;
+        this.albaranService = albaranService;
+        this.explotacionService = explotacionService;
+        this.clienteProveedorService = clienteProveedorService;
 
-        this.albaranService =
-            albaranService;
 
-        this.explotacionService =
-            explotacionService;
+        // =================================================
+        // TARJETAS
+        // =================================================
 
-        this.clienteProveedorService =
-            clienteProveedorService;
+        this.cardsHelper =
+            crearFacturacionCardsHelper({
+
+                obtenerBaseFactura:
+                    factura =>
+                        this.obtenerBaseFactura(
+                            factura
+                        ),
+
+                obtenerImporteIvaFactura:
+                    factura =>
+                        this.obtenerImporteIvaFactura(
+                            factura
+                        ),
+
+                obtenerPorcentajeIva:
+                    factura =>
+                        this.obtenerPorcentajeIva(
+                            factura
+                        ),
+
+                obtenerTotalFactura:
+                    factura =>
+                        this.obtenerTotalFactura(
+                            factura
+                        ),
+
+                obtenerAlbaranesFactura:
+                    factura =>
+                        this.obtenerAlbaranesFactura(
+                            factura
+                        ),
+
+                obtenerLineasAlbaran:
+                    albaran =>
+                        this.obtenerLineasAlbaran(
+                            albaran
+                        ),
+
+                obtenerCampanyasFactura:
+                    factura =>
+                        this.obtenerCampanyasFactura(
+                            factura
+                        )
+
+            });
+
+
+        // =================================================
+        // DETALLE
+        // =================================================
+
+        this.detalleHelper =
+            crearFacturacionDetalleHelper({
+
+                mainContent,
+
+                facturaService,
+
+                obtenerAlbaranesFactura:
+                    factura =>
+                        this.obtenerAlbaranesFactura(
+                            factura
+                        ),
+
+                obtenerExplotacion:
+                    () =>
+                        this.obtenerExplotacion(),
+
+                obtenerClienteFactura:
+                    factura =>
+                        this.obtenerClienteFactura(
+                            factura
+                        ),
+
+                obtenerNifCliente:
+                    (
+                        factura,
+                        cliente
+                    ) =>
+                        this.obtenerNifCliente(
+                            factura,
+                            cliente
+                        ),
+
+                obtenerBaseFactura:
+                    factura =>
+                        this.obtenerBaseFactura(
+                            factura
+                        ),
+
+                obtenerPorcentajeIva:
+                    factura =>
+                        this.obtenerPorcentajeIva(
+                            factura
+                        ),
+
+                obtenerImporteIvaFactura:
+                    factura =>
+                        this.obtenerImporteIvaFactura(
+                            factura
+                        ),
+
+                obtenerTotalFactura:
+                    factura =>
+                        this.obtenerTotalFactura(
+                            factura
+                        ),
+
+                obtenerLineasAlbaran:
+                    albaran =>
+                        this.obtenerLineasAlbaran(
+                            albaran
+                        ),
+
+                crearEtiquetaEstado:
+                    estado =>
+                        this.cardsHelper
+                            .crearEtiquetaEstado(
+                                estado
+                            ),
+
+                onVolver:
+                    () =>
+                        this.mostrar()
+
+            });
+
+
+        // =================================================
+        // FORMULARIO
+        // =================================================
+
+        this.formHelper =
+            crearFacturacionFormHelper({
+
+                mainContent,
+
+                facturaService,
+
+                obtenerAlbaranes:
+                    () =>
+                        this.obtenerAlbaranes(),
+
+                onVolver:
+                    () =>
+                        this.mostrar()
+
+            });
 
     }
 
@@ -148,15 +313,13 @@ export class FacturacionView {
 
             <section
                 class="stats"
-                style="
-                    margin-top:14px;
-                "
+                style="margin-top:14px;"
             >
 
                 ${this.crearTarjetaResumen(
                     "💰",
                     "Total facturado",
-                    this.formatearDinero(
+                    formatearDinero(
                         totalFacturado
                     )
                 )}
@@ -185,13 +348,10 @@ export class FacturacionView {
             .getElementById(
                 "nuevaFactura"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormulario();
-
-                }
+                () =>
+                    this.mostrarFormulario()
             );
 
 
@@ -221,7 +381,9 @@ export class FacturacionView {
                 <div>
 
                     <p>
-                        ${titulo}
+                        ${escaparHTML(
+                            titulo
+                        )}
                     </p>
 
                     <h3>
@@ -233,63 +395,6 @@ export class FacturacionView {
             </div>
 
         `;
-
-    }
-
-
-    // =====================================================
-    // OBTENER FACTURAS
-    // =====================================================
-
-    obtenerFacturas() {
-
-        if (
-            this.facturaService
-            &&
-            typeof
-            this.facturaService
-                .obtenerTodos ===
-            "function"
-        ) {
-
-            const datos =
-                this.facturaService
-                    .obtenerTodos();
-
-
-            return Array.isArray(
-                datos
-            )
-                ? datos
-                : [];
-
-        }
-
-
-        if (
-            this.facturaService
-            &&
-            typeof
-            this.facturaService
-                .obtenerTodas ===
-            "function"
-        ) {
-
-            const datos =
-                this.facturaService
-                    .obtenerTodas();
-
-
-            return Array.isArray(
-                datos
-            )
-                ? datos
-                : [];
-
-        }
-
-
-        return [];
 
     }
 
@@ -370,9 +475,10 @@ export class FacturacionView {
                 ${facturas
                     .map(
                         factura =>
-                            this.crearTarjetaFactura(
-                                factura
-                            )
+                            this.cardsHelper
+                                .crearTarjetaFactura(
+                                    factura
+                                )
                     )
                     .join("")}
 
@@ -387,399 +493,7 @@ export class FacturacionView {
 
 
     // =====================================================
-    // TARJETA FACTURA
-    // =====================================================
-
-    crearTarjetaFactura(
-        factura
-    ) {
-
-        const base =
-            this.obtenerBaseFactura(
-                factura
-            );
-
-
-        const iva =
-            this.obtenerImporteIvaFactura(
-                factura
-            );
-
-
-        const porcentajeIva =
-            this.obtenerPorcentajeIva(
-                factura
-            );
-
-
-        const total =
-            this.obtenerTotalFactura(
-                factura
-            );
-
-
-        const albaranes =
-            this.obtenerAlbaranesFactura(
-                factura
-            );
-
-
-        const lineas =
-            albaranes.reduce(
-                (
-                    totalLineas,
-                    albaran
-                ) =>
-                    totalLineas
-                    +
-                    this.obtenerLineasAlbaran(
-                        albaran
-                    ).length,
-                0
-            );
-
-
-        const campanyas =
-            this.obtenerCampanyasFactura(
-                factura
-            );
-
-
-        const anulada =
-            factura.estado ===
-            "Anulada";
-
-
-        return `
-
-            <article class="factura-card">
-
-                <div class="factura-card-header">
-
-                    <span class="factura-icon">
-                        💶
-                    </span>
-
-
-                    <button
-                        type="button"
-                        class="
-                            delete-button
-                            eliminar-factura
-                        "
-                        data-id="${factura.id}"
-                    >
-                        ×
-                    </button>
-
-                </div>
-
-
-                <h3>
-                    ${this.escapar(
-                        factura.numero
-                    )}
-                </h3>
-
-
-                <p>
-                    👤
-                    <strong>
-                        ${this.escapar(
-                            factura.clienteNombre
-                            ||
-                            factura.cliente
-                            ||
-                            "Sin cliente"
-                        )}
-                    </strong>
-                </p>
-
-
-                <p>
-                    🗓️
-                    ${this.formatearFecha(
-                        factura.fecha
-                    )}
-                </p>
-
-
-                <div>
-
-                    ${campanyas
-                        .map(
-                            campanya => `
-
-                                <span
-                                    style="
-                                        display:inline-block;
-                                        background:#edf6f1;
-                                        color:#176044;
-                                        border-radius:999px;
-                                        padding:6px 10px;
-                                        margin:3px 4px 8px 0;
-                                        font-size:12px;
-                                        font-weight:600;
-                                    "
-                                >
-                                    📅
-                                    ${this.escapar(
-                                        campanya
-                                    )}
-                                </span>
-
-                            `
-                        )
-                        .join("")}
-
-                </div>
-
-
-                <div
-                    style="
-                        display:grid;
-                        grid-template-columns:
-                            repeat(2,minmax(0,1fr));
-                        gap:8px;
-                        margin:8px 0;
-                    "
-                >
-
-                    <div
-                        style="
-                            background:#f5f7f5;
-                            border-radius:10px;
-                            padding:12px;
-                        "
-                    >
-
-                        <span
-                            style="
-                                display:block;
-                                color:#78837d;
-                                font-size:12px;
-                            "
-                        >
-                            Albaranes incluidos
-                        </span>
-
-                        <strong>
-                            ${albaranes.length}
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            background:#f5f7f5;
-                            border-radius:10px;
-                            padding:12px;
-                        "
-                    >
-
-                        <span
-                            style="
-                                display:block;
-                                color:#78837d;
-                                font-size:12px;
-                            "
-                        >
-                            Líneas
-                        </span>
-
-                        <strong>
-                            ${lineas}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="factura-info-grid">
-
-                    <div>
-
-                        <span>
-                            Base imponible
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                base
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            IVA (${this.formatearNumero(
-                                porcentajeIva
-                            )}%)
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                iva
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="factura-total">
-
-                    <span>
-                        Total factura
-                    </span>
-
-                    <strong>
-                        ${this.formatearDinero(
-                            total
-                        )}
-                    </strong>
-
-                </div>
-
-
-                <div
-                    style="
-                        margin-top:12px;
-                    "
-                >
-
-                    ${this.crearEtiquetaEstado(
-                        factura.estado
-                    )}
-
-                </div>
-
-
-                <div
-                    style="
-                        display:flex;
-                        gap:8px;
-                        flex-wrap:wrap;
-                        margin-top:12px;
-                    "
-                >
-
-                    ${
-                        !anulada
-
-                            ? `
-                                <button
-                                    type="button"
-                                    class="
-                                        task-state-button
-                                        anular-factura
-                                    "
-                                    data-id="${factura.id}"
-                                >
-                                    🚫 Anular
-                                </button>
-                            `
-
-                            : ""
-                    }
-
-
-                    <button
-                        type="button"
-                        class="
-                            secondary-button
-                            ver-factura
-                        "
-                        data-id="${factura.id}"
-                    >
-                        Ver detalle
-                    </button>
-
-                </div>
-
-            </article>
-
-        `;
-
-    }
-
-
-    // =====================================================
-    // ESTADOS
-    // =====================================================
-
-    crearEtiquetaEstado(
-        estado
-    ) {
-
-        const estilos = {
-
-            Pendiente:
-                "background:#fff3d8;color:#855d00;",
-
-            "Parcialmente cobrada":
-                "background:#eaf1fb;color:#3d5d91;",
-
-            Cobrada:
-                "background:#e7f5ed;color:#176044;",
-
-            Anulada:
-                "background:#f7e9e9;color:#994444;"
-
-        };
-
-
-        const iconos = {
-
-            Pendiente:
-                "🕒",
-
-            "Parcialmente cobrada":
-                "◐",
-
-            Cobrada:
-                "✅",
-
-            Anulada:
-                "🚫"
-
-        };
-
-
-        return `
-
-            <span
-                style="
-                    ${estilos[estado] || estilos.Pendiente}
-                    display:inline-block;
-                    padding:6px 10px;
-                    border-radius:20px;
-                    font-size:12px;
-                    font-weight:600;
-                "
-            >
-                ${iconos[estado] || "🕒"}
-
-                ${this.escapar(
-                    estado
-                    ||
-                    "Pendiente"
-                )}
-            </span>
-
-        `;
-
-    }
-
-
-    // =====================================================
-    // EVENTOS LISTA
+    // EVENTOS
     // =====================================================
 
     configurarEventosLista() {
@@ -819,41 +533,11 @@ export class FacturacionView {
                         "click",
                         () => {
 
-                            if (
-                                !confirm(
-                                    "¿Quieres anular esta factura? Sus albaranes volverán a estado Entregado."
+                            this.anularFactura(
+                                Number(
+                                    boton.dataset.id
                                 )
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            const resultado =
-                                this.facturaService
-                                    .anular(
-                                        Number(
-                                            boton.dataset.id
-                                        )
-                                    );
-
-
-                            if (
-                                resultado?.ok ===
-                                false
-                            ) {
-
-                                alert(
-                                    resultado.mensaje
-                                );
-
-                                return;
-
-                            }
-
-
-                            this.mostrar();
+                            );
 
                         }
                     );
@@ -873,47 +557,119 @@ export class FacturacionView {
                         "click",
                         () => {
 
-                            if (
-                                !confirm(
-                                    "¿Quieres eliminar esta factura? Si está activa, sus albaranes volverán a Entregado."
+                            this.eliminarFactura(
+                                Number(
+                                    boton.dataset.id
                                 )
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            const resultado =
-                                this.facturaService
-                                    .eliminar(
-                                        Number(
-                                            boton.dataset.id
-                                        )
-                                    );
-
-
-                            if (
-                                resultado?.ok ===
-                                false
-                            ) {
-
-                                alert(
-                                    resultado.mensaje
-                                );
-
-                                return;
-
-                            }
-
-
-                            this.mostrar();
+                            );
 
                         }
                     );
 
                 }
             );
+
+    }
+
+
+    // =====================================================
+    // ANULAR
+    // =====================================================
+
+    anularFactura(
+        id
+    ) {
+
+        if (
+            !confirm(
+                "¿Quieres anular esta factura? Sus albaranes volverán a estado Entregado."
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.facturaService
+                .anular(
+                    id
+                );
+
+
+        if (
+            resultado?.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+            );
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // ELIMINAR
+    // =====================================================
+
+    eliminarFactura(
+        id
+    ) {
+
+        if (
+            !confirm(
+                "¿Quieres eliminar esta factura? Si está activa, sus albaranes volverán a Entregado."
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.facturaService
+                .eliminar(
+                    id
+                );
+
+
+        if (
+            resultado?.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+            );
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO
+    // =====================================================
+
+    mostrarFormulario() {
+
+        this.formHelper
+            .mostrarFormulario();
 
     }
 
@@ -922,1176 +678,67 @@ export class FacturacionView {
     // DETALLE
     // =====================================================
 
-    mostrarDetalle(id) {
-
-        const factura =
-            this.facturaService
-                .obtenerPorId(
-                    id
-                );
-
-
-        if (
-            !factura
-        ) {
-
-            return;
-
-        }
-
-
-        const albaranes =
-            this.obtenerAlbaranesFactura(
-                factura
-            );
-
-
-        const explotacion =
-            this.obtenerExplotacion();
-
-
-        const cliente =
-            this.obtenerClienteFactura(
-                factura
-            );
-
-
-        const base =
-            this.obtenerBaseFactura(
-                factura
-            );
-
-
-        const porcentajeIva =
-            this.obtenerPorcentajeIva(
-                factura
-            );
-
-
-        const importeIva =
-            this.obtenerImporteIvaFactura(
-                factura
-            );
-
-
-        const total =
-            this.obtenerTotalFactura(
-                factura
-            );
-
-
-        const mostrarMarca =
-            explotacion
-                .mostrarMarcaGestaCamps ===
-            true;
-
-
-        this.mainContent.innerHTML = `
-
-            <div
-                style="
-                    display:flex;
-                    justify-content:space-between;
-                    align-items:center;
-                    margin-bottom:18px;
-                    gap:15px;
-                "
-            >
-
-                <button
-                    id="volverFacturas"
-                    class="back-button"
-                    type="button"
-                >
-                    ← Volver
-                </button>
-
-
-                <div
-                    style="
-                        display:flex;
-                        gap:8px;
-                    "
-                >
-
-                    <button
-                        id="imprimirFactura"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        🖨 Imprimir
-                    </button>
-
-
-                    <button
-                        id="descargarFactura"
-                        class="primary-button"
-                        type="button"
-                    >
-                        📄 Descargar PDF
-                    </button>
-
-                </div>
-
-            </div>
-
-
-            <article
-                id="facturaImprimible"
-                class="factura-documento"
-            >
-
-                <div
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:flex-start;
-                        gap:20px;
-                    "
-                >
-
-                    <div>
-
-                        <span
-                            style="
-                                color:#78837d;
-                            "
-                        >
-                            FACTURA
-                        </span>
-
-                        <h1
-                            style="
-                                margin:3px 0;
-                            "
-                        >
-                            ${this.escapar(
-                                factura.numero
-                            )}
-                        </h1>
-
-                        <p>
-                            Fecha:
-                            ${this.formatearFecha(
-                                factura.fecha
-                            )}
-                        </p>
-
-                    </div>
-
-
-                    ${this.crearEtiquetaEstado(
-                        factura.estado
-                    )}
-
-                </div>
-
-
-                <hr>
-
-
-                <div
-                    style="
-                        display:grid;
-                        grid-template-columns:
-                            repeat(2,minmax(0,1fr));
-                        gap:30px;
-                        margin:24px 0;
-                    "
-                >
-
-                    <div>
-
-                        <span>
-                            EMISOR
-                        </span>
-
-                        <h3>
-                            ${this.escapar(
-                                explotacion.nombre
-                                ||
-                                explotacion.nombreExplotacion
-                                ||
-                                "GestaCamps"
-                            )}
-                        </h3>
-
-                        <p>
-                            ${this.escapar(
-                                explotacion.nifCif
-                                ||
-                                explotacion.nif
-                                ||
-                                "NIF/CIF sin configurar"
-                            )}
-                        </p>
-
-
-                        ${
-                            explotacion.direccion
-
-                                ? `
-                                    <p>
-                                        ${this.escapar(
-                                            explotacion.direccion
-                                        )}
-                                    </p>
-                                `
-
-                                : ""
-                        }
-
-
-                        <p>
-                            ${this.escapar(
-                                [
-                                    explotacion.localidad,
-                                    explotacion.provincia
-                                ]
-                                    .filter(Boolean)
-                                    .join(
-                                        " · "
-                                    )
-                            )}
-                        </p>
-
-
-                        ${
-                            explotacion.pais
-
-                                ? `
-                                    <p>
-                                        ${this.escapar(
-                                            explotacion.pais
-                                        )}
-                                    </p>
-                                `
-
-                                : ""
-                        }
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            CLIENTE
-                        </span>
-
-                        <h3>
-                            ${this.escapar(
-                                factura.clienteNombre
-                                ||
-                                factura.cliente
-                                ||
-                                cliente?.nombre
-                                ||
-                                "Sin cliente"
-                            )}
-                        </h3>
-
-                        <p>
-                            ${this.escapar(
-                                this.obtenerNifCliente(
-                                    factura,
-                                    cliente
-                                )
-                            )}
-                        </p>
-
-
-                        ${
-                            cliente?.direccion
-
-                                ? `
-                                    <p>
-                                        ${this.escapar(
-                                            cliente.direccion
-                                        )}
-                                    </p>
-                                `
-
-                                : ""
-                        }
-
-
-                        <p>
-                            ${this.escapar(
-                                [
-                                    cliente?.localidad,
-                                    cliente?.provincia
-                                ]
-                                    .filter(Boolean)
-                                    .join(
-                                        " · "
-                                    )
-                            )}
-                        </p>
-
-
-                        ${
-                            cliente?.pais
-
-                                ? `
-                                    <p>
-                                        ${this.escapar(
-                                            cliente.pais
-                                        )}
-                                    </p>
-                                `
-
-                                : ""
-                        }
-
-                    </div>
-
-                </div>
-
-
-                <h3>
-                    Albaranes incluidos
-                </h3>
-
-
-                ${albaranes
-                    .map(
-                        albaran =>
-                            this.crearDetalleAlbaran(
-                                albaran
-                            )
-                    )
-                    .join("")}
-
-
-                <div
-                    style="
-                        max-width:420px;
-                        margin-left:auto;
-                        margin-top:24px;
-                    "
-                >
-
-                    <div
-                        style="
-                            display:flex;
-                            justify-content:space-between;
-                            margin-bottom:10px;
-                        "
-                    >
-
-                        <span>
-                            Base imponible
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                base
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            display:flex;
-                            justify-content:space-between;
-                            margin-bottom:10px;
-                        "
-                    >
-
-                        <span>
-                            IVA (${this.formatearNumero(
-                                porcentajeIva
-                            )}%)
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                importeIva
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            display:flex;
-                            justify-content:space-between;
-                            border-top:1px solid #176044;
-                            padding-top:12px;
-                            font-size:18px;
-                        "
-                    >
-
-                        <span>
-                            TOTAL
-                        </span>
-
-                        <strong
-                            style="
-                                color:#176044;
-                            "
-                        >
-                            ${this.formatearDinero(
-                                total
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                ${
-                    mostrarMarca
-
-                        ? `
-                            <div
-                                class="factura-footer"
-                                style="
-                                    margin-top:45px;
-                                    padding-top:16px;
-                                    border-top:1px solid #edf0ed;
-                                    text-align:center;
-                                    color:#8a928e;
-                                    font-size:11px;
-                                "
-                            >
-                                Generado con GestaCamps
-                            </div>
-                        `
-
-                        : ""
-                }
-
-            </article>
-
-        `;
-
-
-        document
-            .getElementById(
-                "volverFacturas"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    this.mostrar();
-
-                }
-            );
-
-
-        document
-            .getElementById(
-                "imprimirFactura"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    window.print();
-
-                }
-            );
-
-
-        document
-            .getElementById(
-                "descargarFactura"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    window.print();
-
-                }
-            );
-
-    }
-
-
-    // =====================================================
-    // DETALLE ALBARÁN
-    // =====================================================
-
-    crearDetalleAlbaran(
-        albaran
+    mostrarDetalle(
+        id
     ) {
 
-        const lineas =
-            this.obtenerLineasAlbaran(
-                albaran
+        this.detalleHelper
+            .mostrarDetalle(
+                id
             );
-
-
-        return `
-
-            <div
-                style="
-                    margin-bottom:18px;
-                    border:1px solid #edf0ed;
-                    border-radius:10px;
-                    overflow:hidden;
-                "
-            >
-
-                <div
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:center;
-                        padding:12px 14px;
-                        background:#f5f7f5;
-                    "
-                >
-
-                    <strong>
-                        ${this.escapar(
-                            albaran.numero
-                        )}
-                    </strong>
-
-                    <span>
-                        ${this.formatearFecha(
-                            albaran.fecha
-                        )}
-                    </span>
-
-                </div>
-
-
-                ${lineas
-                    .map(
-                        linea => `
-
-                            <div
-                                style="
-                                    display:grid;
-                                    grid-template-columns:
-                                        2fr 1fr 1fr 1fr;
-                                    gap:12px;
-                                    align-items:center;
-                                    padding:13px 14px;
-                                    border-top:1px solid #edf0ed;
-                                "
-                            >
-
-                                <div>
-
-                                    <strong>
-                                        ${this.escapar(
-                                            [
-                                                linea.producto,
-                                                linea.variedad
-                                            ]
-                                                .filter(Boolean)
-                                                .join(
-                                                    " · "
-                                                )
-                                        )}
-                                    </strong>
-
-                                    <div
-                                        style="
-                                            color:#78837d;
-                                            font-size:12px;
-                                            margin-top:3px;
-                                        "
-                                    >
-
-                                        ${this.escapar(
-                                            [
-                                                linea.fincaNombre,
-                                                linea.parcela
-                                            ]
-                                                .filter(Boolean)
-                                                .join(
-                                                    " · "
-                                                )
-                                        )}
-
-                                        ${
-                                            linea.campaniaNombre
-
-                                                ? `
-                                                    ·
-                                                    ${this.escapar(
-                                                        linea.campaniaNombre
-                                                    )}
-                                                `
-
-                                                : ""
-                                        }
-
-                                    </div>
-
-                                </div>
-
-
-                                <div>
-
-                                    ${this.formatearNumero(
-                                        linea.cantidad
-                                    )}
-
-                                    ${this.escapar(
-                                        linea.unidad
-                                        ||
-                                        "kg"
-                                    )}
-
-                                </div>
-
-
-                                <div>
-
-                                    ${this.formatearNumero(
-                                        linea.precio
-                                    )}
-
-                                    € /
-
-                                    ${this.escapar(
-                                        linea.unidad
-                                        ||
-                                        "kg"
-                                    )}
-
-                                </div>
-
-
-                                <strong
-                                    style="
-                                        text-align:right;
-                                    "
-                                >
-
-                                    ${this.formatearDinero(
-                                        linea.total
-                                        ??
-                                        (
-                                            Number(
-                                                linea.cantidad
-                                                ||
-                                                0
-                                            )
-                                            *
-                                            Number(
-                                                linea.precio
-                                                ||
-                                                0
-                                            )
-                                        )
-                                    )}
-
-                                </strong>
-
-                            </div>
-
-                        `
-                    )
-                    .join("")}
-
-
-                <div
-                    style="
-                        display:flex;
-                        justify-content:flex-end;
-                        padding:11px 14px;
-                        background:#fafbfa;
-                    "
-                >
-
-                    <strong>
-                        Total albarán:
-                        ${this.formatearDinero(
-                            albaran.total
-                        )}
-                    </strong>
-
-                </div>
-
-            </div>
-
-        `;
 
     }
 
 
     // =====================================================
-    // NUEVA FACTURA
+    // FACTURAS
     // =====================================================
 
-    mostrarFormulario() {
-
-        const albaranes =
-            this.obtenerAlbaranes()
-                .filter(
-                    albaran =>
-                        albaran.estado ===
-                        "Entregado"
-                        &&
-                        albaran.facturado !==
-                        true
-                );
-
+    obtenerFacturas() {
 
         if (
-            albaranes.length ===
-            0
+            typeof
+            this.facturaService
+                ?.obtenerTodos ===
+            "function"
         ) {
 
-            alert(
-                "No hay albaranes Entregados pendientes de facturar."
-            );
+            const datos =
+                this.facturaService
+                    .obtenerTodos();
 
-            return;
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
 
         }
 
 
-        this.mainContent.innerHTML = `
-
-            <button
-                id="volverNuevaFactura"
-                type="button"
-                class="back-button"
-            >
-                ← Volver
-            </button>
-
-
-            <header class="topbar">
-
-                <div>
-
-                    <h2>
-                        Nueva factura
-                    </h2>
-
-                    <p>
-                        Solo aparecen albaranes con estado Entregado
-                    </p>
-
-                </div>
-
-            </header>
-
-
-            <div class="form-panel">
-
-                <div
-                    style="
-                        background:#edf6f1;
-                        color:#315f4d;
-                        padding:12px 14px;
-                        border-radius:10px;
-                        margin-bottom:18px;
-                        font-size:13px;
-                    "
-                >
-                    🚚 Los albaranes Borrador, Pendiente,
-                    Cancelado o ya Facturado no pueden incluirse
-                    en una factura.
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Fecha *
-                    </label>
-
-                    <input
-                        id="fechaFactura"
-                        type="date"
-                        value="${this.obtenerFechaHoy()}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        IVA (%)
-                    </label>
-
-                    <input
-                        id="ivaFactura"
-                        type="number"
-                        min="0"
-                        max="100"
-                        step="0.01"
-                        value="21"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Albaranes entregados *
-                    </label>
-
-
-                    ${albaranes
-                        .map(
-                            albaran => `
-
-                                <label
-                                    style="
-                                        display:flex;
-                                        align-items:center;
-                                        justify-content:space-between;
-                                        gap:15px;
-                                        background:#f5f7f5;
-                                        padding:12px;
-                                        margin-bottom:10px;
-                                        border-radius:10px;
-                                        cursor:pointer;
-                                    "
-                                >
-
-                                    <div>
-
-                                        <input
-                                            type="checkbox"
-                                            class="albaran-factura-check"
-                                            value="${albaran.id}"
-                                        >
-
-                                        <strong>
-                                            ${this.escapar(
-                                                albaran.numero
-                                            )}
-                                        </strong>
-
-                                        ·
-
-                                        ${this.escapar(
-                                            albaran.clienteNombre
-                                            ||
-                                            albaran.cliente
-                                            ||
-                                            "Sin cliente"
-                                        )}
-
-
-                                        ${
-                                            albaran.campaniaNombre
-
-                                                ? `
-                                                    · 📅
-                                                    ${this.escapar(
-                                                        albaran.campaniaNombre
-                                                    )}
-                                                `
-
-                                                : ""
-                                        }
-
-                                    </div>
-
-
-                                    <strong>
-                                        ${this.formatearDinero(
-                                            albaran.total
-                                        )}
-                                    </strong>
-
-                                </label>
-
-                            `
-                        )
-                        .join("")}
-
-                </div>
-
-
-                <div
-                    style="
-                        display:flex;
-                        justify-content:flex-end;
-                        margin:15px 0;
-                    "
-                >
-
-                    <div
-                        style="
-                            background:#edf6f1;
-                            border-radius:10px;
-                            padding:14px;
-                            min-width:280px;
-                        "
-                    >
-
-                        <span
-                            style="
-                                display:block;
-                                font-size:12px;
-                                color:#78837d;
-                            "
-                        >
-                            Base seleccionada
-                        </span>
-
-                        <strong
-                            id="baseSeleccionadaFactura"
-                            style="
-                                font-size:20px;
-                                color:#176044;
-                            "
-                        >
-                            0,00 €
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Observaciones
-                    </label>
-
-                    <textarea
-                        id="observacionesFactura"
-                        rows="4"
-                        placeholder="Observaciones..."
-                    ></textarea>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarFactura"
-                        type="button"
-                        class="secondary-button"
-                    >
-                        Cancelar
-                    </button>
-
-
-                    <button
-                        id="guardarFactura"
-                        type="button"
-                        class="primary-button"
-                    >
-                        Crear factura
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
-
-
-        const actualizarBase =
-            () => {
-
-                const ids =
-                    this.obtenerIdsSeleccionados();
-
-
-                const base =
-                    albaranes
-                        .filter(
-                            albaran =>
-                                ids.includes(
-                                    Number(
-                                        albaran.id
-                                    )
-                                )
-                        )
-                        .reduce(
-                            (
-                                suma,
-                                albaran
-                            ) =>
-                                suma
-                                +
-                                Number(
-                                    albaran.total
-                                    ||
-                                    0
-                                ),
-                            0
-                        );
-
-
-                document
-                    .getElementById(
-                        "baseSeleccionadaFactura"
-                    )
-                    .textContent =
-                    this.formatearDinero(
-                        base
-                    );
-
-            };
-
-
-        document
-            .querySelectorAll(
-                ".albaran-factura-check"
+        if (
+            typeof
+            this.facturaService
+                ?.obtenerTodas ===
+            "function"
+        ) {
+
+            const datos =
+                this.facturaService
+                    .obtenerTodas();
+
+
+            return Array.isArray(
+                datos
             )
-            .forEach(
-                checkbox => {
+                ? datos
+                : [];
 
-                    checkbox.addEventListener(
-                        "change",
-                        actualizarBase
-                    );
-
-                }
-            );
+        }
 
 
-        document
-            .getElementById(
-                "volverNuevaFactura"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    this.mostrar();
-
-                }
-            );
-
-
-        document
-            .getElementById(
-                "cancelarFactura"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    this.mostrar();
-
-                }
-            );
-
-
-        document
-            .getElementById(
-                "guardarFactura"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    const ids =
-                        this.obtenerIdsSeleccionados();
-
-
-                    if (
-                        ids.length ===
-                        0
-                    ) {
-
-                        alert(
-                            "Selecciona al menos un albarán."
-                        );
-
-                        return;
-
-                    }
-
-
-                    const resultado =
-                        this.facturaService
-                            .crear(
-                                {
-
-                                    fecha:
-                                        document
-                                            .getElementById(
-                                                "fechaFactura"
-                                            )
-                                            .value,
-
-                                    albaranesIds:
-                                        ids,
-
-                                    iva:
-                                        Number(
-                                            document
-                                                .getElementById(
-                                                    "ivaFactura"
-                                                )
-                                                .value
-                                        ),
-
-                                    observaciones:
-                                        document
-                                            .getElementById(
-                                                "observacionesFactura"
-                                            )
-                                            .value
-
-                                }
-                            );
-
-
-                    if (
-                        !resultado
-                        ||
-                        resultado.ok ===
-                        false
-                    ) {
-
-                        alert(
-                            resultado?.mensaje
-                            ||
-                            "No se ha podido crear la factura."
-                        );
-
-                        return;
-
-                    }
-
-
-                    this.mostrar();
-
-                }
-            );
-
-    }
-
-
-    // =====================================================
-    // IDS SELECCIONADOS
-    // =====================================================
-
-    obtenerIdsSeleccionados() {
-
-        return Array.from(
-            document.querySelectorAll(
-                ".albaran-factura-check:checked"
-            )
-        )
-            .map(
-                input =>
-                    Number(
-                        input.value
-                    )
-            );
+        return [];
 
     }
 
@@ -2103,11 +750,9 @@ export class FacturacionView {
     obtenerAlbaranes() {
 
         if (
-            this.albaranService
-            &&
             typeof
             this.albaranService
-                .obtenerTodos ===
+                ?.obtenerTodos ===
             "function"
         ) {
 
@@ -2126,11 +771,9 @@ export class FacturacionView {
 
 
         if (
-            this.albaranService
-            &&
             typeof
             this.albaranService
-                .obtenerTodas ===
+                ?.obtenerTodas ===
             "function"
         ) {
 
@@ -2157,38 +800,39 @@ export class FacturacionView {
         factura
     ) {
 
-        const todos =
-            this.obtenerAlbaranes();
-
-
         const ids =
             Array.isArray(
-                factura.albaranesIds
+                factura?.albaranesIds
             )
-
                 ? factura.albaranesIds
-
                 : [];
 
 
         return ids
             .map(
                 id =>
-                    todos.find(
-                        albaran =>
-                            Number(
-                                albaran.id
-                            )
-                            ===
-                            Number(
-                                id
-                            )
-                    )
+                    this.obtenerAlbaranes()
+                        .find(
+                            albaran =>
+                                String(
+                                    albaran.id
+                                )
+                                ===
+                                String(
+                                    id
+                                )
+                        )
             )
-            .filter(Boolean);
+            .filter(
+                Boolean
+            );
 
     }
 
+
+    // =====================================================
+    // LÍNEAS ALBARÁN
+    // =====================================================
 
     obtenerLineasAlbaran(
         albaran
@@ -2209,61 +853,61 @@ export class FacturacionView {
 
 
         if (
-            albaran
+            !albaran
         ) {
 
-            return [
-                {
-
-                    produccionId:
-                        albaran.produccionId,
-
-                    fincaId:
-                        albaran.fincaId,
-
-                    fincaNombre:
-                        albaran.fincaNombre,
-
-                    parcela:
-                        albaran.parcela,
-
-                    producto:
-                        albaran.producto,
-
-                    variedad:
-                        albaran.variedad,
-
-                    campaniaId:
-                        albaran.campaniaId,
-
-                    campaniaNombre:
-                        albaran.campaniaNombre,
-
-                    cantidad:
-                        albaran.cantidad,
-
-                    unidad:
-                        albaran.unidad,
-
-                    precio:
-                        albaran.precio,
-
-                    total:
-                        albaran.total
-
-                }
-            ];
+            return [];
 
         }
 
 
-        return [];
+        return [
+            {
+
+                produccionId:
+                    albaran.produccionId,
+
+                fincaId:
+                    albaran.fincaId,
+
+                fincaNombre:
+                    albaran.fincaNombre,
+
+                parcela:
+                    albaran.parcela,
+
+                producto:
+                    albaran.producto,
+
+                variedad:
+                    albaran.variedad,
+
+                campaniaId:
+                    albaran.campaniaId,
+
+                campaniaNombre:
+                    albaran.campaniaNombre,
+
+                cantidad:
+                    albaran.cantidad,
+
+                unidad:
+                    albaran.unidad,
+
+                precio:
+                    albaran.precio,
+
+                total:
+                    albaran.total
+
+            }
+        ];
 
     }
 
 
     // =====================================================
-    // CAMPANYAS
+    // CAMPANYAS DE FACTURA
     // =====================================================
 
     obtenerCampanyasFactura(
@@ -2319,11 +963,9 @@ export class FacturacionView {
     obtenerExplotacion() {
 
         if (
-            this.explotacionService
-            &&
             typeof
             this.explotacionService
-                .obtener ===
+                ?.obtener ===
             "function"
         ) {
 
@@ -2338,11 +980,9 @@ export class FacturacionView {
 
 
         if (
-            this.explotacionService
-            &&
             typeof
             this.explotacionService
-                .obtenerDatos ===
+                ?.obtenerDatos ===
             "function"
         ) {
 
@@ -2368,11 +1008,9 @@ export class FacturacionView {
     obtenerContactos() {
 
         if (
-            this.clienteProveedorService
-            &&
             typeof
             this.clienteProveedorService
-                .obtenerTodos ===
+                ?.obtenerTodos ===
             "function"
         ) {
 
@@ -2391,11 +1029,9 @@ export class FacturacionView {
 
 
         if (
-            this.clienteProveedorService
-            &&
             typeof
             this.clienteProveedorService
-                .obtenerTodas ===
+                ?.obtenerTodas ===
             "function"
         ) {
 
@@ -2430,43 +1066,47 @@ export class FacturacionView {
             this.obtenerContactos();
 
 
-        // 1. CLIENTE DE LA FACTURA
+        // =================================================
+        // CLIENTE ID DE FACTURA
+        // =================================================
 
         if (
-            factura.clienteId
+            factura?.clienteId
         ) {
 
-            const porId =
+            const contacto =
                 contactos.find(
-                    contacto =>
-                        Number(
-                            contacto.id
+                    item =>
+                        String(
+                            item.id
                         )
                         ===
-                        Number(
+                        String(
                             factura.clienteId
                         )
                 );
 
 
             if (
-                porId
+                contacto
             ) {
 
-                return porId;
+                return contacto;
 
             }
 
         }
 
 
-        // 2. CLIENTE DE LOS ALBARANES
-
         const albaranes =
             this.obtenerAlbaranesFactura(
                 factura
             );
 
+
+        // =================================================
+        // CLIENTE ID DE ALBARÁN
+        // =================================================
 
         for (
             const albaran
@@ -2475,42 +1115,47 @@ export class FacturacionView {
         ) {
 
             if (
-                albaran.clienteId
+                !albaran.clienteId
             ) {
 
-                const porAlbaran =
-                    contactos.find(
-                        contacto =>
-                            Number(
-                                contacto.id
-                            )
-                            ===
-                            Number(
-                                albaran.clienteId
-                            )
-                    );
+                continue;
+
+            }
 
 
-                if (
-                    porAlbaran
-                ) {
+            const contacto =
+                contactos.find(
+                    item =>
+                        String(
+                            item.id
+                        )
+                        ===
+                        String(
+                            albaran.clienteId
+                        )
+                );
 
-                    return porAlbaran;
 
-                }
+            if (
+                contacto
+            ) {
+
+                return contacto;
 
             }
 
         }
 
 
-        // 3. BUSCAR POR NOMBRE FACTURA
+        // =================================================
+        // NOMBRE DE FACTURA
+        // =================================================
 
         const nombreFactura =
             String(
-                factura.clienteNombre
+                factura?.clienteNombre
                 ||
-                factura.cliente
+                factura?.cliente
                 ||
                 ""
             )
@@ -2522,11 +1167,11 @@ export class FacturacionView {
             nombreFactura
         ) {
 
-            const porNombre =
+            const contacto =
                 contactos.find(
-                    contacto =>
+                    item =>
                         String(
-                            contacto.nombre
+                            item.nombre
                             ||
                             ""
                         )
@@ -2538,17 +1183,19 @@ export class FacturacionView {
 
 
             if (
-                porNombre
+                contacto
             ) {
 
-                return porNombre;
+                return contacto;
 
             }
 
         }
 
 
-        // 4. BUSCAR POR NOMBRE ALBARÁN
+        // =================================================
+        // NOMBRE DE ALBARÁN
+        // =================================================
 
         for (
             const albaran
@@ -2603,7 +1250,9 @@ export class FacturacionView {
         }
 
 
-        // 5. RESPALDO SI SOLO HAY UN CLIENTE
+        // =================================================
+        // COMPATIBILIDAD: UN ÚNICO CLIENTE
+        // =================================================
 
         const clientes =
             contactos.filter(
@@ -2619,17 +1268,10 @@ export class FacturacionView {
             );
 
 
-        if (
-            clientes.length ===
+        return clientes.length ===
             1
-        ) {
-
-            return clientes[0];
-
-        }
-
-
-        return null;
+                ? clientes[0]
+                : null;
 
     }
 
@@ -2658,9 +1300,9 @@ export class FacturacionView {
             ||
             contacto?.cif
             ||
-            factura.clienteNif
+            factura?.clienteNif
             ||
-            factura.nifCliente
+            factura?.nifCliente
             ||
             "NIF/CIF no disponible"
         );
@@ -2669,7 +1311,7 @@ export class FacturacionView {
 
 
     // =====================================================
-    // BASE
+    // BASE IMPONIBLE
     // =====================================================
 
     obtenerBaseFactura(
@@ -2677,7 +1319,7 @@ export class FacturacionView {
     ) {
 
         if (
-            factura.baseImponible !==
+            factura?.baseImponible !==
             undefined
         ) {
 
@@ -2691,7 +1333,7 @@ export class FacturacionView {
 
 
         if (
-            factura.subtotal !==
+            factura?.subtotal !==
             undefined
         ) {
 
@@ -2705,7 +1347,7 @@ export class FacturacionView {
 
 
         if (
-            factura.base !==
+            factura?.base !==
             undefined
         ) {
 
@@ -2748,7 +1390,7 @@ export class FacturacionView {
     ) {
 
         if (
-            factura.porcentajeIva !==
+            factura?.porcentajeIva !==
             undefined
         ) {
 
@@ -2763,26 +1405,19 @@ export class FacturacionView {
 
         const iva =
             Number(
-                factura.iva
+                factura?.iva
                 ??
                 21
             );
 
 
-        if (
-            iva >=
-            0
+        return (
+            iva >= 0
             &&
-            iva <=
-            100
-        ) {
-
-            return iva;
-
-        }
-
-
-        return 21;
+            iva <= 100
+        )
+            ? iva
+            : 21;
 
     }
 
@@ -2792,7 +1427,7 @@ export class FacturacionView {
     ) {
 
         if (
-            factura.importeIva !==
+            factura?.importeIva !==
             undefined
         ) {
 
@@ -2831,7 +1466,7 @@ export class FacturacionView {
     ) {
 
         if (
-            factura.total !==
+            factura?.total !==
             undefined
         ) {
 
@@ -2845,7 +1480,7 @@ export class FacturacionView {
 
 
         if (
-            factura.totalFactura !==
+            factura?.totalFactura !==
             undefined
         ) {
 
@@ -2867,177 +1502,6 @@ export class FacturacionView {
                 factura
             )
         );
-
-    }
-
-
-    // =====================================================
-    // FECHA HOY
-    // =====================================================
-
-    obtenerFechaHoy() {
-
-        const fecha =
-            new Date();
-
-
-        return [
-            fecha.getFullYear(),
-
-            String(
-                fecha.getMonth() +
-                1
-            )
-                .padStart(
-                    2,
-                    "0"
-                ),
-
-            String(
-                fecha.getDate()
-            )
-                .padStart(
-                    2,
-                    "0"
-                )
-
-        ]
-            .join(
-                "-"
-            );
-
-    }
-
-
-    // =====================================================
-    // FORMATEAR FECHA
-    // =====================================================
-
-    formatearFecha(
-        fecha
-    ) {
-
-        if (
-            !fecha
-        ) {
-
-            return "—";
-
-        }
-
-
-        const partes =
-            String(
-                fecha
-            )
-                .split(
-                    "-"
-                );
-
-
-        if (
-            partes.length !==
-            3
-        ) {
-
-            return fecha;
-
-        }
-
-
-        return (
-            `${partes[2]}/${partes[1]}/${partes[0]}`
-        );
-
-    }
-
-
-    // =====================================================
-    // NÚMEROS
-    // =====================================================
-
-    formatearNumero(
-        numero
-    ) {
-
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-                    maximumFractionDigits:
-                        2
-                }
-            );
-
-    }
-
-
-    // =====================================================
-    // DINERO
-    // =====================================================
-
-    formatearDinero(
-        numero
-    ) {
-
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-                    minimumFractionDigits:
-                        2,
-
-                    maximumFractionDigits:
-                        2
-                }
-            )
-            +
-            " €";
-
-    }
-
-
-    // =====================================================
-    // ESCAPAR HTML
-    // =====================================================
-
-    escapar(
-        valor
-    ) {
-
-        return String(
-            valor
-            ??
-            ""
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
 
     }
 

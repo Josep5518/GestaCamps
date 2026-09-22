@@ -1,3 +1,20 @@
+import {
+    formatearNumero,
+    formatearDinero
+} from "./utils.js";
+
+import {
+    crearTarjetaEstadistica,
+    crearTarjetaMiniEstadistica,
+    crearBarrasEstadistica,
+    crearFilaResumenEstadistica,
+    crearFilaResumenTextoEstadistica,
+    crearTarjetaCampaniaEstadistica,
+    crearTarjetaFincaEstadistica,
+    formatearPorcentaje
+} from "./estadisticas/estadisticasRender.js";
+
+
 export class EstadisticasView {
 
     constructor(
@@ -154,10 +171,6 @@ export class EstadisticasView {
             </header>
 
 
-            <!-- =========================================
-                 RENTABILIDAD
-            ========================================== -->
-
             <div class="estadistica-seccion-titulo">
 
                 <h3>
@@ -173,47 +186,40 @@ export class EstadisticasView {
 
             <section class="stats">
 
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "💰",
                     "Ingresos sin IVA",
-                    this.formatearDinero(
+                    formatearDinero(
                         ingresos
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "💸",
                     "Gastos",
-                    this.formatearDinero(
+                    formatearDinero(
                         gastos
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "📈",
                     "Beneficio",
-                    this.formatearDinero(
+                    formatearDinero(
                         beneficio
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "📊",
                     "Margen",
-                    this.formatearPorcentaje(
+                    formatearPorcentaje(
                         margen
                     )
                 )}
 
             </section>
 
-
-            <!-- =========================================
-                 FACTURACIÓN Y TESORERÍA
-            ========================================== -->
 
             <div class="estadistica-seccion-titulo">
 
@@ -230,37 +236,34 @@ export class EstadisticasView {
 
             <section class="stats">
 
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "🧾",
                     "Facturado con IVA",
-                    this.formatearDinero(
+                    formatearDinero(
                         facturado
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "📥",
                     "Cobrado",
-                    this.formatearDinero(
+                    formatearDinero(
                         cobrado
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "🕒",
                     "Pendiente de cobro",
-                    this.formatearDinero(
+                    formatearDinero(
                         pendienteCobro
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "🏦",
                     "Caja real",
-                    this.formatearDinero(
+                    formatearDinero(
                         cajaReal
                     )
                 )}
@@ -275,29 +278,24 @@ export class EstadisticasView {
                 "
             >
 
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "📤",
                     "Pagado",
-                    this.formatearDinero(
+                    formatearDinero(
                         pagado
                     )
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "⏳",
                     "Pendiente de pago",
-                    this.formatearDinero(
+                    formatearDinero(
                         pendientePago
                     )
                 )}
 
             </section>
 
-
-            <!-- =========================================
-                 PRODUCCIÓN
-            ========================================== -->
 
             <div class="estadistica-seccion-titulo">
 
@@ -314,37 +312,34 @@ export class EstadisticasView {
 
             <section class="stats">
 
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "🍎",
                     "Producido",
-                    `${this.formatearNumero(
+                    `${formatearNumero(
                         producido
                     )} kg`
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "🕒",
                     "Reservado",
-                    `${this.formatearNumero(
+                    `${formatearNumero(
                         reservado
                     )} kg`
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "🚚",
                     "Entregado",
-                    `${this.formatearNumero(
+                    `${formatearNumero(
                         entregado
                     )} kg`
                 )}
 
-
-                ${this.crearTarjeta(
+                ${crearTarjetaEstadistica(
                     "📦",
                     "Disponible",
-                    `${this.formatearNumero(
+                    `${formatearNumero(
                         disponible
                     )} kg`
                 )}
@@ -359,29 +354,24 @@ export class EstadisticasView {
                 "
             >
 
-                ${this.crearTarjetaMini(
+                ${crearTarjetaMiniEstadistica(
                     "💶",
                     "Precio medio vendido",
-                    `${this.formatearNumero(
+                    `${formatearNumero(
                         precioMedio
                     )} € / kg`
                 )}
 
-
-                ${this.crearTarjetaMini(
+                ${crearTarjetaMiniEstadistica(
                     "📦",
                     "Coste por kg producido",
-                    `${this.formatearNumero(
+                    `${formatearNumero(
                         costeKg
                     )} € / kg`
                 )}
 
             </section>
 
-
-            <!-- =========================================
-                 PRODUCCIÓN POR PASADA
-            ========================================== -->
 
             <div class="estadistica-seccion-titulo">
 
@@ -401,7 +391,7 @@ export class EstadisticasView {
                 ${produccionPasada
                     .map(
                         item =>
-                            this.crearTarjetaMini(
+                            crearTarjetaMiniEstadistica(
                                 "🍑",
                                 item.pasada ===
                                 "R"
@@ -409,7 +399,8 @@ export class EstadisticasView {
                                     ? "R · Repaso"
 
                                     : `${item.pasada} pasada`,
-                                `${this.formatearNumero(
+
+                                `${formatearNumero(
                                     item.total
                                 )} kg`
                             )
@@ -419,12 +410,7 @@ export class EstadisticasView {
             </section>
 
 
-            <!-- =========================================
-                 GRÁFICOS
-            ========================================== -->
-
             <div class="estadisticas-grid">
-
 
                 <section class="estadistica-panel">
 
@@ -436,8 +422,7 @@ export class EstadisticasView {
                         Distribución de costes registrados
                     </p>
 
-
-                    ${this.crearBarras(
+                    ${crearBarrasEstadistica(
                         gastosCategoria,
                         "categoria",
                         "total",
@@ -457,8 +442,7 @@ export class EstadisticasView {
                         Kilos producidos
                     </p>
 
-
-                    ${this.crearBarras(
+                    ${crearBarrasEstadistica(
                         produccionFinca,
                         "finca",
                         "total",
@@ -478,8 +462,7 @@ export class EstadisticasView {
                         Kilos producidos en 1ª, 2ª, 3ª y repaso
                     </p>
 
-
-                    ${this.crearBarras(
+                    ${crearBarrasEstadistica(
                         produccionPasada,
                         "pasada",
                         "total",
@@ -499,8 +482,7 @@ export class EstadisticasView {
                         Base imponible de facturas activas
                     </p>
 
-
-                    ${this.crearBarras(
+                    ${crearBarrasEstadistica(
                         facturacionCliente,
                         "cliente",
                         "total",
@@ -520,8 +502,7 @@ export class EstadisticasView {
                         Dinero realmente recibido
                     </p>
 
-
-                    ${this.crearBarras(
+                    ${crearBarrasEstadistica(
                         cobradoCliente,
                         "cliente",
                         "total",
@@ -541,32 +522,27 @@ export class EstadisticasView {
                         Rentabilidad de la explotación
                     </p>
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Ingresos sin IVA",
                         ingresos
                     )}
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Gastos registrados",
                         -gastos
                     )}
 
-
                     <div class="estadistica-separador"></div>
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Beneficio",
                         beneficio,
                         true
                     )}
 
-
-                    ${this.crearFilaResumenTexto(
+                    ${crearFilaResumenTextoEstadistica(
                         "Margen",
-                        this.formatearPorcentaje(
+                        formatearPorcentaje(
                             margen
                         )
                     )}
@@ -584,36 +560,30 @@ export class EstadisticasView {
                         Dinero realmente movido
                     </p>
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Cobrado",
                         cobrado
                     )}
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Pagado",
                         -pagado
                     )}
 
-
                     <div class="estadistica-separador"></div>
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Caja real",
                         cajaReal,
                         true
                     )}
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Pendiente de cobro",
                         pendienteCobro
                     )}
 
-
-                    ${this.crearFilaResumen(
+                    ${crearFilaResumenEstadistica(
                         "Pendiente de pago",
                         pendientePago
                     )}
@@ -622,10 +592,6 @@ export class EstadisticasView {
 
             </div>
 
-
-            <!-- =========================================
-                 RENTABILIDAD CAMPANYA
-            ========================================== -->
 
             <div class="rentabilidad-bloque">
 
@@ -651,7 +617,7 @@ export class EstadisticasView {
                             ? rentabilidadCampania
                                 .map(
                                     campania =>
-                                        this.crearTarjetaCampania(
+                                        crearTarjetaCampaniaEstadistica(
                                             campania
                                         )
                                 )
@@ -668,10 +634,6 @@ export class EstadisticasView {
 
             </div>
 
-
-            <!-- =========================================
-                 RENTABILIDAD FINCA
-            ========================================== -->
 
             <div class="rentabilidad-bloque">
 
@@ -697,7 +659,7 @@ export class EstadisticasView {
                             ? rentabilidadFinca
                                 .map(
                                     finca =>
-                                        this.crearTarjetaFinca(
+                                        crearTarjetaFincaEstadistica(
                                             finca
                                         )
                                 )
@@ -715,646 +677,6 @@ export class EstadisticasView {
             </div>
 
         `;
-
-    }
-
-
-    // =====================================================
-    // TARJETAS
-    // =====================================================
-
-    crearTarjeta(
-        icono,
-        titulo,
-        valor
-    ) {
-
-        return `
-
-            <div class="card">
-
-                <span class="card-icon">
-                    ${icono}
-                </span>
-
-                <div>
-
-                    <p>
-                        ${titulo}
-                    </p>
-
-                    <h3>
-                        ${valor}
-                    </h3>
-
-                </div>
-
-            </div>
-
-        `;
-
-    }
-
-
-    crearTarjetaMini(
-        icono,
-        titulo,
-        valor
-    ) {
-
-        return this.crearTarjeta(
-            icono,
-            titulo,
-            valor
-        );
-
-    }
-
-
-    // =====================================================
-    // BARRAS
-    // =====================================================
-
-    crearBarras(
-        datos,
-        propiedadNombre,
-        propiedadValor,
-        tipo
-    ) {
-
-        if (
-            !datos
-            ||
-            datos.length ===
-            0
-        ) {
-
-            return `
-
-                <p class="estadistica-vacio">
-                    Sin datos.
-                </p>
-
-            `;
-
-        }
-
-
-        const maximo =
-            Math.max(
-                ...datos.map(
-                    item =>
-                        Math.abs(
-                            Number(
-                                item[
-                                    propiedadValor
-                                ]
-                                ||
-                                0
-                            )
-                        )
-                ),
-                1
-            );
-
-
-        return datos
-            .map(
-                item => {
-
-                    const valor =
-                        Number(
-                            item[
-                                propiedadValor
-                            ]
-                            ||
-                            0
-                        );
-
-
-                    const porcentaje =
-                        Math.max(
-                            2,
-                            (
-                                Math.abs(
-                                    valor
-                                )
-                                /
-                                maximo
-                            )
-                            *
-                            100
-                        );
-
-
-                    const textoValor =
-                        tipo ===
-                        "kg"
-
-                            ? `${this.formatearNumero(
-                                valor
-                            )} kg`
-
-                            : this.formatearDinero(
-                                valor
-                            );
-
-
-                    return `
-
-                        <div class="estadistica-barra-item">
-
-                            <div class="estadistica-barra-cabecera">
-
-                                <strong>
-                                    ${this.escapar(
-                                        item[
-                                            propiedadNombre
-                                        ]
-                                    )}
-                                </strong>
-
-                                <span>
-                                    ${textoValor}
-                                </span>
-
-                            </div>
-
-
-                            <div class="estadistica-barra-fondo">
-
-                                <div
-                                    class="estadistica-barra"
-                                    style="
-                                        width:${porcentaje}%;
-                                    "
-                                ></div>
-
-                            </div>
-
-                        </div>
-
-                    `;
-
-                }
-            )
-            .join("");
-
-    }
-
-
-    // =====================================================
-    // FILAS RESUMEN
-    // =====================================================
-
-    crearFilaResumen(
-        titulo,
-        valor,
-        destacado = false
-    ) {
-
-        return `
-
-            <div
-                class="
-                    estadistica-resumen-fila
-                    ${
-                        destacado
-                            ? "estadistica-resumen-destacado"
-                            : ""
-                    }
-                "
-            >
-
-                <span>
-                    ${titulo}
-                </span>
-
-                <strong>
-                    ${this.formatearDinero(
-                        valor
-                    )}
-                </strong>
-
-            </div>
-
-        `;
-
-    }
-
-
-    crearFilaResumenTexto(
-        titulo,
-        valor
-    ) {
-
-        return `
-
-            <div class="estadistica-resumen-fila">
-
-                <span>
-                    ${titulo}
-                </span>
-
-                <strong>
-                    ${valor}
-                </strong>
-
-            </div>
-
-        `;
-
-    }
-
-
-    // =====================================================
-    // CAMPANYA
-    // =====================================================
-
-    crearTarjetaCampania(
-        campania
-    ) {
-
-        return `
-
-            <article class="rentabilidad-card">
-
-                <div class="rentabilidad-card-header">
-
-                    <span class="card-icon">
-                        📅
-                    </span>
-
-
-                    <div>
-
-                        <h3>
-                            ${this.escapar(
-                                campania.nombre
-                            )}
-                        </h3>
-
-                        <p>
-                            ${this.escapar(
-                                campania.fincaNombre
-                                ||
-                                "Sin finca"
-                            )}
-                        </p>
-
-                    </div>
-
-
-                    <span
-                        class="
-                            campania-status
-                            ${
-                                campania.estado ===
-                                "Activa"
-
-                                    ? "campania-activa"
-
-                                    : "campania-cerrada"
-                            }
-                        "
-                    >
-                        ${this.escapar(
-                            campania.estado
-                            ||
-                            "Sin estado"
-                        )}
-                    </span>
-
-                </div>
-
-
-                <div class="rentabilidad-card-grid">
-
-                    <div>
-
-                        <span>
-                            Producción
-                        </span>
-
-                        <strong>
-                            ${this.formatearNumero(
-                                campania.produccion
-                            )}
-                            kg
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Ingresos
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                campania.ingresos
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Gastos
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                campania.gastos
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Beneficio
-                        </span>
-
-                        <strong
-                            class="${
-                                campania.beneficio >=
-                                0
-
-                                    ? "valor-positivo"
-
-                                    : "valor-negativo"
-                            }"
-                        >
-                            ${this.formatearDinero(
-                                campania.beneficio
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="rentabilidad-footer">
-
-                    <span>
-                        Margen
-                    </span>
-
-                    <strong>
-                        ${this.formatearPorcentaje(
-                            campania.margen
-                        )}
-                    </strong>
-
-                </div>
-
-            </article>
-
-        `;
-
-    }
-
-
-    // =====================================================
-    // FINCA
-    // =====================================================
-
-    crearTarjetaFinca(
-        finca
-    ) {
-
-        return `
-
-            <article class="rentabilidad-card">
-
-                <div class="rentabilidad-card-header">
-
-                    <span class="card-icon">
-                        🌾
-                    </span>
-
-                    <div>
-
-                        <h3>
-                            ${this.escapar(
-                                finca.fincaNombre
-                            )}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="rentabilidad-card-grid">
-
-                    <div>
-
-                        <span>
-                            Producción
-                        </span>
-
-                        <strong>
-                            ${this.formatearNumero(
-                                finca.produccion
-                            )}
-                            kg
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Ventas
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                finca.ventas
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Gastos
-                        </span>
-
-                        <strong>
-                            ${this.formatearDinero(
-                                finca.gastos
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Resultado
-                        </span>
-
-                        <strong
-                            class="${
-                                finca.resultado >=
-                                0
-
-                                    ? "valor-positivo"
-
-                                    : "valor-negativo"
-                            }"
-                        >
-                            ${this.formatearDinero(
-                                finca.resultado
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="rentabilidad-footer">
-
-                    <span>
-                        Margen
-                    </span>
-
-                    <strong>
-                        ${this.formatearPorcentaje(
-                            finca.margen
-                        )}
-                    </strong>
-
-                </div>
-
-            </article>
-
-        `;
-
-    }
-
-
-    // =====================================================
-    // FORMATOS
-    // =====================================================
-
-    formatearDinero(
-        numero
-    ) {
-
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-                    minimumFractionDigits:
-                        2,
-
-                    maximumFractionDigits:
-                        2
-                }
-            )
-            +
-            " €";
-
-    }
-
-
-    formatearNumero(
-        numero
-    ) {
-
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-                    minimumFractionDigits:
-                        0,
-
-                    maximumFractionDigits:
-                        2
-                }
-            );
-
-    }
-
-
-    formatearPorcentaje(
-        numero
-    ) {
-
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-                    minimumFractionDigits:
-                        1,
-
-                    maximumFractionDigits:
-                        1
-                }
-            )
-            +
-            " %";
-
-    }
-
-
-    escapar(
-        valor
-    ) {
-
-        return String(
-            valor
-            ??
-            ""
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
 
     }
 

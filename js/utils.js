@@ -68,6 +68,162 @@ export function normalizarTexto(
 
 
 // =====================================================
+// COMPARAR IDS
+// =====================================================
+
+export function mismoId(
+    idA,
+    idB
+) {
+
+    if (
+        idA === null
+        ||
+        idA === undefined
+        ||
+        idB === null
+        ||
+        idB === undefined
+    ) {
+
+        return false;
+
+    }
+
+
+    return (
+        String(
+            idA
+        )
+        ===
+        String(
+            idB
+        )
+    );
+
+}
+
+
+// =====================================================
+// NÚMERO SEGURO
+// =====================================================
+
+export function numeroSeguro(
+    valor,
+    valorDefecto = 0
+) {
+
+    const numero =
+        Number(
+            valor
+        );
+
+
+    return Number.isFinite(
+        numero
+    )
+        ? numero
+        : valorDefecto;
+
+}
+
+
+// =====================================================
+// FORMATEAR NÚMERO
+// =====================================================
+
+export function formatearNumero(
+    numero,
+    decimales = 2
+) {
+
+    return numeroSeguro(
+        numero
+    )
+        .toLocaleString(
+            "es-ES",
+            {
+                maximumFractionDigits:
+                    decimales
+            }
+        );
+
+}
+
+
+// =====================================================
+// FORMATEAR DINERO
+// =====================================================
+
+export function formatearDinero(
+    numero
+) {
+
+    return (
+        numeroSeguro(
+            numero
+        )
+            .toLocaleString(
+                "es-ES",
+                {
+                    minimumFractionDigits:
+                        2,
+
+                    maximumFractionDigits:
+                        2
+                }
+            )
+        +
+        " €"
+    );
+
+}
+
+
+// =====================================================
+// FECHA HOY YYYY-MM-DD
+// =====================================================
+
+export function obtenerFechaHoy() {
+
+    const fecha =
+        new Date();
+
+
+    const year =
+        fecha.getFullYear();
+
+
+    const month =
+        String(
+            fecha.getMonth()
+            +
+            1
+        )
+            .padStart(
+                2,
+                "0"
+            );
+
+
+    const day =
+        String(
+            fecha.getDate()
+        )
+            .padStart(
+                2,
+                "0"
+            );
+
+
+    return (
+        `${year}-${month}-${day}`
+    );
+
+}
+
+
+// =====================================================
 // FORMATEAR FECHA YYYY-MM-DD -> DD/MM/YYYY
 // =====================================================
 
@@ -154,7 +310,6 @@ export function formatearFechaHora(
         .toLocaleString(
             "es-ES",
             {
-
                 day:
                     "2-digit",
 
@@ -169,7 +324,6 @@ export function formatearFechaHora(
 
                 minute:
                     "2-digit"
-
             }
         );
 
@@ -177,7 +331,7 @@ export function formatearFechaHora(
 
 
 // =====================================================
-// HORA HH:MM
+// HORA ACTUAL HH:MM
 // =====================================================
 
 export function obtenerHoraActual() {
@@ -186,80 +340,13 @@ export function obtenerHoraActual() {
         .toLocaleTimeString(
             "es-ES",
             {
-
                 hour:
                     "2-digit",
 
                 minute:
                     "2-digit"
-
             }
         );
-
-}
-
-
-// =====================================================
-// COMPARAR IDS
-// =====================================================
-
-export function mismoId(
-    idA,
-    idB
-) {
-
-    if (
-        idA ===
-        null
-        ||
-        idA ===
-        undefined
-        ||
-        idB ===
-        null
-        ||
-        idB ===
-        undefined
-    ) {
-
-        return false;
-
-    }
-
-
-    return (
-        String(
-            idA
-        )
-        ===
-        String(
-            idB
-        )
-    );
-
-}
-
-
-// =====================================================
-// CONVERTIR A NÚMERO SEGURO
-// =====================================================
-
-export function numeroSeguro(
-    valor,
-    valorDefecto = 0
-) {
-
-    const numero =
-        Number(
-            valor
-        );
-
-
-    return Number.isFinite(
-        numero
-    )
-        ? numero
-        : valorDefecto;
 
 }
 

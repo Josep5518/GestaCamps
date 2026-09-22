@@ -1,4 +1,12 @@
 import {
+    escaparHTML,
+    formatearFecha,
+    formatearNumero,
+    obtenerFechaHoy,
+    mismoId
+} from "./utils.js";
+
+import {
     crearProduccionStockHelper
 } from "./produccion/produccionStock.js";
 
@@ -25,20 +33,8 @@ export class ProduccionView {
         this.mainContent =
             mainContent;
 
-        this.fincaService =
-            fincaService;
-
         this.produccionService =
             produccionService;
-
-        this.campaniaService =
-            campaniaService;
-
-        this.cultivoService =
-            cultivoService;
-
-        this.albaranService =
-            albaranService;
 
 
         // =================================================
@@ -48,15 +44,9 @@ export class ProduccionView {
         this.stockHelper =
             crearProduccionStockHelper({
 
-                albaranService:
-                    this.albaranService,
+                albaranService,
 
-                mismoId:
-                    (idA, idB) =>
-                        this.mismoId(
-                            idA,
-                            idB
-                        )
+                mismoId
 
             });
 
@@ -72,22 +62,11 @@ export class ProduccionView {
                     this.stockHelper,
 
                 escapar:
-                    valor =>
-                        this.escapar(
-                            valor
-                        ),
+                    escaparHTML,
 
-                formatearNumero:
-                    numero =>
-                        this.formatearNumero(
-                            numero
-                        ),
+                formatearNumero,
 
-                formatearFecha:
-                    fecha =>
-                        this.formatearFecha(
-                            fecha
-                        )
+                formatearFecha
 
             });
 
@@ -99,83 +78,29 @@ export class ProduccionView {
         this.formHelper =
             crearProduccionFormHelper({
 
-                mainContent:
-                    this.mainContent,
+                mainContent,
 
-                produccionService:
-                    this.produccionService,
+                produccionService,
 
-                cultivoService:
-                    this.cultivoService,
+                cultivoService,
 
                 stockHelper:
                     this.stockHelper,
 
-                mismoId:
-                    (idA, idB) =>
-                        this.mismoId(
-                            idA,
-                            idB
-                        ),
+                mismoId,
 
                 escapar:
-                    valor =>
-                        this.escapar(
-                            valor
-                        ),
+                    escaparHTML,
 
-                formatearNumero:
-                    numero =>
-                        this.formatearNumero(
-                            numero
-                        ),
+                formatearNumero,
 
-                obtenerFechaHoy:
-                    () =>
-                        this.obtenerFechaHoy(),
+                obtenerFechaHoy,
 
                 onVolver:
                     () =>
                         this.mostrar()
 
             });
-
-    }
-
-
-    // =====================================================
-    // COMPARAR IDS
-    // =====================================================
-
-    mismoId(
-        idA,
-        idB
-    ) {
-
-        if (
-            idA === null
-            ||
-            idA === undefined
-            ||
-            idB === null
-            ||
-            idB === undefined
-        ) {
-
-            return false;
-
-        }
-
-
-        return (
-            String(
-                idA
-            )
-            ===
-            String(
-                idB
-            )
-        );
 
     }
 
@@ -216,9 +141,10 @@ export class ProduccionView {
                 ) =>
                     suma
                     +
-                    this.obtenerCantidadReservada(
-                        registro.id
-                    ),
+                    this.stockHelper
+                        .obtenerCantidadReservada(
+                            registro.id
+                        ),
                 0
             );
 
@@ -231,9 +157,10 @@ export class ProduccionView {
                 ) =>
                     suma
                     +
-                    this.obtenerCantidadEntregada(
-                        registro.id
-                    ),
+                    this.stockHelper
+                        .obtenerCantidadEntregada(
+                            registro.id
+                        ),
                 0
             );
 
@@ -246,9 +173,10 @@ export class ProduccionView {
                 ) =>
                     suma
                     +
-                    this.obtenerCantidadDisponible(
-                        registro
-                    ),
+                    this.stockHelper
+                        .obtenerCantidadDisponible(
+                            registro
+                        ),
                 0
             );
 
@@ -378,13 +306,13 @@ export class ProduccionView {
                 <div>
 
                     <p>
-                        ${this.escapar(
+                        ${escaparHTML(
                             titulo
                         )}
                     </p>
 
                     <h3>
-                        ${this.formatearNumero(
+                        ${formatearNumero(
                             valor
                         )} kg
                     </h3>
@@ -493,59 +421,7 @@ export class ProduccionView {
 
 
     // =====================================================
-    // STOCK
-    // =====================================================
-
-    obtenerCantidadReservada(
-        produccionId
-    ) {
-
-        return this.stockHelper
-            .obtenerCantidadReservada(
-                produccionId
-            );
-
-    }
-
-
-    obtenerCantidadEntregada(
-        produccionId
-    ) {
-
-        return this.stockHelper
-            .obtenerCantidadEntregada(
-                produccionId
-            );
-
-    }
-
-
-    obtenerCantidadUtilizada(
-        produccionId
-    ) {
-
-        return this.stockHelper
-            .obtenerCantidadUtilizada(
-                produccionId
-            );
-
-    }
-
-
-    obtenerCantidadDisponible(
-        registro
-    ) {
-
-        return this.stockHelper
-            .obtenerCantidadDisponible(
-                registro
-            );
-
-    }
-
-
-    // =====================================================
-    // EVENTOS LISTADO
+    // EVENTOS
     // =====================================================
 
     configurarEventos() {
@@ -555,23 +431,18 @@ export class ProduccionView {
                 ".editar-produccion"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button
-                        .addEventListener(
-                            "click",
-                            () => {
+                    boton.addEventListener(
+                        "click",
+                        () => {
 
-                                const id =
-                                    button.dataset.id;
+                            this.mostrarFormulario(
+                                boton.dataset.id
+                            );
 
-
-                                this.mostrarFormulario(
-                                    id
-                                );
-
-                            }
-                        );
+                        }
+                    );
 
                 }
             );
@@ -582,23 +453,18 @@ export class ProduccionView {
                 ".eliminar-produccion"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button
-                        .addEventListener(
-                            "click",
-                            () => {
+                    boton.addEventListener(
+                        "click",
+                        () => {
 
-                                const id =
-                                    button.dataset.id;
+                            this.eliminarProduccion(
+                                boton.dataset.id
+                            );
 
-
-                                this.eliminarProduccion(
-                                    id
-                                );
-
-                            }
-                        );
+                        }
+                    );
 
                 }
             );
@@ -607,7 +473,7 @@ export class ProduccionView {
 
 
     // =====================================================
-    // ELIMINAR PRODUCCIÓN
+    // ELIMINAR
     // =====================================================
 
     eliminarProduccion(
@@ -635,15 +501,17 @@ export class ProduccionView {
 
 
         const reservado =
-            this.obtenerCantidadReservada(
-                registro.id
-            );
+            this.stockHelper
+                .obtenerCantidadReservada(
+                    registro.id
+                );
 
 
         const entregado =
-            this.obtenerCantidadEntregada(
-                registro.id
-            );
+            this.stockHelper
+                .obtenerCantidadEntregada(
+                    registro.id
+                );
 
 
         const utilizado =
@@ -667,7 +535,7 @@ export class ProduccionView {
             ) {
 
                 mensaje +=
-                    ` ${this.formatearNumero(
+                    ` ${formatearNumero(
                         reservado
                     )} ${registro.unidad || "kg"} reservados`;
 
@@ -694,7 +562,7 @@ export class ProduccionView {
             ) {
 
                 mensaje +=
-                    ` ${this.formatearNumero(
+                    ` ${formatearNumero(
                         entregado
                     )} ${registro.unidad || "kg"} entregados`;
 
@@ -761,157 +629,6 @@ export class ProduccionView {
         this.formHelper
             .mostrarFormulario(
                 id
-            );
-
-    }
-
-
-    // =====================================================
-    // FECHA HOY
-    // =====================================================
-
-    obtenerFechaHoy() {
-
-        const fecha =
-            new Date();
-
-
-        const year =
-            fecha.getFullYear();
-
-
-        const month =
-            String(
-                fecha.getMonth()
-                +
-                1
-            )
-                .padStart(
-                    2,
-                    "0"
-                );
-
-
-        const day =
-            String(
-                fecha.getDate()
-            )
-                .padStart(
-                    2,
-                    "0"
-                );
-
-
-        return (
-            `${year}-${month}-${day}`
-        );
-
-    }
-
-
-    // =====================================================
-    // FORMATEAR FECHA
-    // =====================================================
-
-    formatearFecha(
-        fecha
-    ) {
-
-        if (
-            !fecha
-        ) {
-
-            return "—";
-
-        }
-
-
-        const partes =
-            String(
-                fecha
-            )
-                .split(
-                    "-"
-                );
-
-
-        if (
-            partes.length !==
-            3
-        ) {
-
-            return String(
-                fecha
-            );
-
-        }
-
-
-        return (
-            `${partes[2]}/${partes[1]}/${partes[0]}`
-        );
-
-    }
-
-
-    // =====================================================
-    // NÚMERO
-    // =====================================================
-
-    formatearNumero(
-        numero
-    ) {
-
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-
-                    maximumFractionDigits:
-                        2
-
-                }
-            );
-
-    }
-
-
-    // =====================================================
-    // ESCAPAR HTML
-    // =====================================================
-
-    escapar(
-        valor
-    ) {
-
-        return String(
-            valor
-            ??
-            ""
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
             );
 
     }

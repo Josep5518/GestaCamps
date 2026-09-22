@@ -1,72 +1,137 @@
-import { FincaService } from "./finca.js";
-import { ParcelaService } from "./parcela.js";
-import { CultivoService } from "./cultivo.js";
-import { TrabajoService } from "./trabajo.js";
-import { TrabajadorService } from "./trabajador.js";
-import { FichajeService } from "./fichaje.js";
-import { IncidenciaService } from "./incidencia.js";
-import { HistorialService } from "./historial.js";
-import { BuscadorGlobalService } from "./buscadorGlobal.js";
-import { CuadernoCampoService } from "./cuadernoCampo.js";
-import { TratamientoService } from "./tratamiento.js";
-import { MaquinariaService } from "./maquinaria.js";
-import { InventarioService } from "./inventario.js";
-import { ProduccionService } from "./produccion.js";
-import { AlbaranService } from "./albaran.js";
-import { FacturaService } from "./factura.js";
-import { GastoService } from "./gasto.js";
-import { EstadisticasService } from "./estadisticas.js";
-import { ClienteProveedorService } from "./clienteProveedor.js";
-import { ExplotacionService } from "./explotacion.js";
-import { CobroPagoService } from "./cobroPago.js";
-import { CampaniaService } from "./campania.js";
+import {
+    FincaService
+} from "./finca.js";
+
+import {
+    ParcelaService
+} from "./parcela.js";
+
+import {
+    CampaniaService
+} from "./campania.js";
+
+import {
+    CultivoService
+} from "./cultivo.js";
+
+import {
+    TrabajoService
+} from "./trabajo.js";
+
+import {
+    TrabajadorService
+} from "./trabajador.js";
+
+import {
+    FichajeService
+} from "./fichaje.js";
+
+import {
+    IncidenciaService
+} from "./incidencia.js";
+
+import {
+    HistorialService
+} from "./historial.js";
+
+import {
+    BuscadorGlobalService
+} from "./buscadorGlobal.js";
+
+import {
+    CuadernoCampoService
+} from "./cuadernoCampo.js";
+
+import {
+    TratamientoService
+} from "./tratamiento.js";
+
+import {
+    MaquinariaService
+} from "./maquinaria.js";
+
+import {
+    InventarioService
+} from "./inventario.js";
+
+import {
+    ProduccionService
+} from "./produccion.js";
+
+import {
+    ClienteProveedorService
+} from "./clienteProveedor.js";
+
+import {
+    ExplotacionService
+} from "./explotacion.js";
+
+import {
+    AlbaranService
+} from "./albaran.js";
+
+import {
+    FacturaService
+} from "./factura.js";
+
+import {
+    GastoService
+} from "./gasto.js";
+
+import {
+    CobroPagoService
+} from "./cobroPago.js";
+
+import {
+    EstadisticasService
+} from "./estadisticas.js";
 
 
 // =====================================================
-// SERVICIOS BASE
+// SERVICIOS
 // =====================================================
 
-const fincaService =
+export const fincaService =
     new FincaService();
 
 
-const parcelaService =
+export const parcelaService =
     new ParcelaService(
         fincaService
     );
 
 
-const campaniaService =
+export const campaniaService =
     new CampaniaService(
         fincaService
     );
 
 
-const cultivoService =
+export const cultivoService =
     new CultivoService(
         fincaService,
         campaniaService
     );
 
 
-const trabajoService =
+export const trabajoService =
     new TrabajoService(
         fincaService,
         campaniaService
     );
 
 
-const trabajadorService =
+export const trabajadorService =
     new TrabajadorService();
 
 
-const fichajeService =
+export const fichajeService =
     new FichajeService(
         trabajadorService
     );
 
 
-const incidenciaService =
+export const incidenciaService =
     new IncidenciaService(
         fincaService,
         trabajoService,
@@ -74,34 +139,34 @@ const incidenciaService =
     );
 
 
-const historialService =
+export const historialService =
     new HistorialService();
 
 
-const buscadorGlobalService =
+export const buscadorGlobalService =
     new BuscadorGlobalService();
 
 
-const cuadernoCampoService =
+export const cuadernoCampoService =
     new CuadernoCampoService();
 
 
-const maquinariaService =
+export const maquinariaService =
     new MaquinariaService();
 
 
-const inventarioService =
+export const inventarioService =
     new InventarioService();
 
 
-const tratamientoService =
+export const tratamientoService =
     new TratamientoService(
         inventarioService,
         cuadernoCampoService
     );
 
 
-const produccionService =
+export const produccionService =
     new ProduccionService(
         fincaService,
         campaniaService,
@@ -109,15 +174,15 @@ const produccionService =
     );
 
 
-const clienteProveedorService =
+export const clienteProveedorService =
     new ClienteProveedorService();
 
 
-const explotacionService =
+export const explotacionService =
     new ExplotacionService();
 
 
-const albaranService =
+export const albaranService =
     new AlbaranService(
         fincaService,
         produccionService,
@@ -125,13 +190,13 @@ const albaranService =
     );
 
 
-const facturaService =
+export const facturaService =
     new FacturaService(
         albaranService
     );
 
 
-const gastoService =
+export const gastoService =
     new GastoService(
         fincaService,
         maquinariaService,
@@ -140,14 +205,14 @@ const gastoService =
     );
 
 
-const cobroPagoService =
+export const cobroPagoService =
     new CobroPagoService(
         facturaService,
         gastoService
     );
 
 
-const estadisticasService =
+export const estadisticasService =
     new EstadisticasService(
         facturaService,
         gastoService,
@@ -160,30 +225,75 @@ const estadisticasService =
 
 
 // =====================================================
-// EXPORTS
+// OBJETO GLOBAL DE SERVICIOS
 // =====================================================
 
-export {
-    fincaService,
-    parcelaService,
-    campaniaService,
-    cultivoService,
-    trabajoService,
-    trabajadorService,
-    fichajeService,
-    incidenciaService,
-    historialService,
-    buscadorGlobalService,
-    cuadernoCampoService,
-    maquinariaService,
-    inventarioService,
-    tratamientoService,
-    produccionService,
-    clienteProveedorService,
-    explotacionService,
-    albaranService,
-    facturaService,
-    gastoService,
-    cobroPagoService,
-    estadisticasService
+export const services = {
+
+    finca:
+        fincaService,
+
+    parcela:
+        parcelaService,
+
+    campania:
+        campaniaService,
+
+    cultivo:
+        cultivoService,
+
+    trabajo:
+        trabajoService,
+
+    trabajador:
+        trabajadorService,
+
+    fichaje:
+        fichajeService,
+
+    incidencia:
+        incidenciaService,
+
+    historial:
+        historialService,
+
+    buscadorGlobal:
+        buscadorGlobalService,
+
+    cuadernoCampo:
+        cuadernoCampoService,
+
+    maquinaria:
+        maquinariaService,
+
+    inventario:
+        inventarioService,
+
+    tratamiento:
+        tratamientoService,
+
+    produccion:
+        produccionService,
+
+    clienteProveedor:
+        clienteProveedorService,
+
+    explotacion:
+        explotacionService,
+
+    albaran:
+        albaranService,
+
+    factura:
+        facturaService,
+
+    gasto:
+        gastoService,
+
+    cobroPago:
+        cobroPagoService,
+
+    estadisticas:
+        estadisticasService
+
 };
