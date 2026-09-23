@@ -1,3 +1,9 @@
+import {
+    escaparHTML,
+    formatearNumero
+} from "./utils.js";
+
+
 export class FincasView {
 
     constructor(
@@ -18,25 +24,74 @@ export class FincasView {
     }
 
 
+    // =====================================================
+    // VOLVER A FINCAS
+    // =====================================================
+
+    volverAFincas() {
+
+        const enlaceFincas =
+            document.querySelector(
+                'a[data-page="fincas"]'
+            );
+
+
+        if (
+            enlaceFincas
+        ) {
+
+            enlaceFincas.click();
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // LISTADO PRINCIPAL
+    // =====================================================
+
     mostrar() {
 
         const fincas =
-            this.fincaService.obtenerTodas();
+            this.obtenerFincas();
 
 
-        let superficieTotal = 0;
-        let parcelasTotales = 0;
+        const superficieTotal =
+            fincas.reduce(
+                (
+                    total,
+                    finca
+                ) =>
+                    total
+                    +
+                    Number(
+                        finca.superficie
+                        ||
+                        0
+                    ),
+                0
+            );
 
 
-        fincas.forEach(finca => {
-
-            superficieTotal +=
-                Number(finca.superficie);
-
-            parcelasTotales +=
-                finca.parcelas.length;
-
-        });
+        const parcelasTotales =
+            fincas.reduce(
+                (
+                    total,
+                    finca
+                ) =>
+                    total
+                    +
+                    this.obtenerParcelas(
+                        finca
+                    ).length,
+                0
+            );
 
 
         this.mainContent.innerHTML = `
@@ -59,6 +114,7 @@ export class FincasView {
                 <button
                     id="nuevaFinca"
                     class="primary-button"
+                    type="button"
                 >
                     + Nueva finca
                 </button>
@@ -68,63 +124,25 @@ export class FincasView {
 
             <section class="stats finca-stats">
 
-                <div class="card">
+                ${this.crearStat(
+                    "🌾",
+                    "Fincas",
+                    fincas.length
+                )}
 
-                    <span class="card-icon">
-                        🌾
-                    </span>
+                ${this.crearStat(
+                    "🗺️",
+                    "Parcelas",
+                    parcelasTotales
+                )}
 
-                    <div>
-
-                        <p>Fincas</p>
-
-                        <h3>
-                            ${fincas.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        🗺️
-                    </span>
-
-                    <div>
-
-                        <p>Parcelas</p>
-
-                        <h3>
-                            ${parcelasTotales}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        📐
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Superficie total
-                        </p>
-
-                        <h3>
-                            ${superficieTotal.toFixed(2)} ha
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "📐",
+                    "Superficie total",
+                    `${formatearNumero(
+                        superficieTotal
+                    )} ha`
+                )}
 
             </section>
 
@@ -135,10 +153,13 @@ export class FincasView {
 
 
         document
-            .getElementById("nuevaFinca")
-            .addEventListener(
+            .getElementById(
+                "nuevaFinca"
+            )
+            ?.addEventListener(
                 "click",
-                () => this.mostrarFormulario()
+                () =>
+                    this.mostrarFormulario()
             );
 
 
@@ -146,6 +167,49 @@ export class FincasView {
 
     }
 
+
+    // =====================================================
+    // TARJETA STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <div class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // LISTA DE FINCAS
+    // =====================================================
 
     mostrarLista() {
 
@@ -155,11 +219,23 @@ export class FincasView {
             );
 
 
+        if (
+            !contenedor
+        ) {
+
+            return;
+
+        }
+
+
         const fincas =
-            this.fincaService.obtenerTodas();
+            this.obtenerFincas();
 
 
-        if (fincas.length === 0) {
+        if (
+            fincas.length ===
+            0
+        ) {
 
             contenedor.innerHTML = `
 
@@ -181,7 +257,9 @@ export class FincasView {
 
             `;
 
+
             return;
+
         }
 
 
@@ -189,157 +267,251 @@ export class FincasView {
 
             <div class="fincas-grid">
 
-                ${fincas.map(finca => `
-
-                    <div class="finca-card">
-
-                        <div class="finca-card-top">
-
-                            <span class="finca-icon">
-                                🌾
-                            </span>
-
-
-                            <button
-                                class="delete-button eliminar-finca"
-                                data-id="${finca.id}"
-                            >
-                                ×
-                            </button>
-
-                        </div>
-
-
-                        <h3>
-                            ${finca.nombre}
-                        </h3>
-
-
-                        <p class="finca-location">
-
-                            📍 ${finca.ubicacion || "Sin ubicación"}
-
-                        </p>
-
-
-                        <div class="finca-info">
-
-                            <div>
-
-                                <span>
-                                    Superficie
-                                </span>
-
-                                <strong>
-                                    ${finca.superficie} ha
-                                </strong>
-
-                            </div>
-
-
-                            <div>
-
-                                <span>
-                                    Parcelas
-                                </span>
-
-                                <strong>
-                                    ${finca.parcelas.length}
-                                </strong>
-
-                            </div>
-
-                        </div>
-
-
-                        <button
-                            class="secondary-button ver-finca"
-                            data-id="${finca.id}"
-                        >
-                            Ver finca
-                        </button>
-
-                    </div>
-
-                `).join("")}
+                ${fincas
+                    .map(
+                        finca =>
+                            this.crearTarjetaFinca(
+                                finca
+                            )
+                    )
+                    .join("")}
 
             </div>
 
         `;
 
 
-        document
-            .querySelectorAll(".ver-finca")
-            .forEach(button => {
+        contenedor
+            .querySelectorAll(
+                ".ver-finca"
+            )
+            .forEach(
+                boton => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+                    boton.addEventListener(
+                        "click",
+                        () => {
 
-                        this.mostrarDetalle(
-                            Number(button.dataset.id)
-                        );
-
-                    }
-                );
-
-            });
-
-
-        document
-            .querySelectorAll(".eliminar-finca")
-            .forEach(button => {
-
-                button.addEventListener(
-                    "click",
-                    () => {
-
-                        const id =
-                            Number(button.dataset.id);
-
-
-                        if (
-                            !confirm(
-                                "¿Quieres eliminar esta finca?"
-                            )
-                        ) {
-
-                            return;
-
-                        }
-
-
-                        const resultado =
-                            this.fincaService
-                                .eliminar(id);
-
-
-                        if (
-                            resultado
-                            &&
-                            resultado.ok === false
-                        ) {
-
-                            alert(
-                                resultado.mensaje
-                                ||
-                                "No se ha podido eliminar la finca."
+                            this.mostrarDetalle(
+                                boton.dataset.id
                             );
 
-                            return;
+                        }
+                    );
+
+                }
+            );
+
+
+        contenedor
+            .querySelectorAll(
+                ".eliminar-finca"
+            )
+            .forEach(
+                boton => {
+
+                    boton.addEventListener(
+                        "click",
+                        () => {
+
+                            this.eliminarFinca(
+                                boton.dataset.id
+                            );
 
                         }
+                    );
 
-
-                        this.mostrar();
-
-                    }
-                );
-
-            });
+                }
+            );
 
     }
 
+
+    // =====================================================
+    // TARJETA FINCA
+    // =====================================================
+
+    crearTarjetaFinca(
+        finca
+    ) {
+
+        const parcelas =
+            this.obtenerParcelas(
+                finca
+            );
+
+
+        return `
+
+            <article class="finca-card finca-card-premium">
+
+                <div class="finca-card-top">
+
+                    <span class="finca-icon">
+                        🌾
+                    </span>
+
+
+                    <button
+                        class="delete-button eliminar-finca"
+                        data-id="${escaparHTML(
+                            finca.id
+                        )}"
+                        type="button"
+                        aria-label="Eliminar finca"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="finca-card-main">
+
+                    <h3>
+                        ${escaparHTML(
+                            finca.nombre
+                        )}
+                    </h3>
+
+
+                    <p class="finca-location">
+
+                        📍
+
+                        ${escaparHTML(
+                            finca.ubicacion
+                            ||
+                            "Sin ubicación"
+                        )}
+
+                    </p>
+
+                </div>
+
+
+                <div class="finca-info">
+
+                    <div>
+
+                        <span>
+                            Superficie
+                        </span>
+
+                        <strong>
+                            ${formatearNumero(
+                                finca.superficie
+                            )} ha
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Parcelas
+                        </span>
+
+                        <strong>
+                            ${parcelas.length}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                ${
+                    finca.notas
+
+                        ? `
+
+                            <p class="finca-card-note">
+
+                                ${escaparHTML(
+                                    finca.notas
+                                )}
+
+                            </p>
+
+                        `
+
+                        : ""
+                }
+
+
+                <button
+                    class="secondary-button ver-finca finca-view-button"
+                    data-id="${escaparHTML(
+                        finca.id
+                    )}"
+                    type="button"
+                >
+                    Ver finca
+                    <span>→</span>
+                </button>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ELIMINAR FINCA
+    // =====================================================
+
+    eliminarFinca(
+        fincaId
+    ) {
+
+        if (
+            !confirm(
+                "¿Quieres eliminar esta finca?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.fincaService
+                .eliminar(
+                    fincaId
+                );
+
+
+        if (
+            resultado
+            &&
+            resultado.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+                ||
+                "No se ha podido eliminar la finca."
+            );
+
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO NUEVA FINCA
+    // =====================================================
 
     mostrarFormulario() {
 
@@ -348,8 +520,23 @@ export class FincasView {
             <header class="topbar">
 
                 <div>
-                    <h2>Nueva finca</h2>
-                    <p>Añade una finca a GestaCamps</p>
+
+                    <button
+                        id="cancelarFincaSuperior"
+                        class="back-button"
+                        type="button"
+                    >
+                        ← Volver
+                    </button>
+
+                    <h2>
+                        Nueva finca
+                    </h2>
+
+                    <p>
+                        Añade una finca a GestaCamps
+                    </p>
+
                 </div>
 
             </header>
@@ -366,6 +553,8 @@ export class FincasView {
                     <input
                         id="nombreFinca"
                         type="text"
+                        autocomplete="off"
+                        placeholder="Ej. Can Rovira"
                     >
 
                 </div>
@@ -380,6 +569,8 @@ export class FincasView {
                     <input
                         id="ubicacionFinca"
                         type="text"
+                        autocomplete="off"
+                        placeholder="Municipio o zona"
                     >
 
                 </div>
@@ -396,6 +587,8 @@ export class FincasView {
                         type="number"
                         min="0"
                         step="0.01"
+                        inputmode="decimal"
+                        placeholder="0,00"
                     >
 
                 </div>
@@ -410,6 +603,7 @@ export class FincasView {
                     <textarea
                         id="notasFinca"
                         rows="5"
+                        placeholder="Información adicional..."
                     ></textarea>
 
                 </div>
@@ -420,6 +614,7 @@ export class FincasView {
                     <button
                         id="cancelarFinca"
                         class="secondary-button"
+                        type="button"
                     >
                         Cancelar
                     </button>
@@ -428,6 +623,7 @@ export class FincasView {
                     <button
                         id="guardarFinca"
                         class="primary-button"
+                        type="button"
                     >
                         Guardar finca
                     </button>
@@ -440,117 +636,267 @@ export class FincasView {
 
 
         document
-            .getElementById("cancelarFinca")
-            .addEventListener(
+            .getElementById(
+                "cancelarFincaSuperior"
+            )
+            ?.addEventListener(
                 "click",
-                () => this.mostrar()
+                () =>
+                    this.volverAFincas()
             );
 
 
         document
-            .getElementById("guardarFinca")
-            .addEventListener(
+            .getElementById(
+                "cancelarFinca"
+            )
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    const nombre =
-                        document
-                            .getElementById("nombreFinca")
-                            .value
-                            .trim();
-
-                    const ubicacion =
-                        document
-                            .getElementById("ubicacionFinca")
-                            .value
-                            .trim();
-
-                    const superficie =
-                        Number(
-                            document
-                                .getElementById("superficieFinca")
-                                .value
-                        );
-
-                    const notas =
-                        document
-                            .getElementById("notasFinca")
-                            .value
-                            .trim();
+                () =>
+                    this.volverAFincas()
+            );
 
 
-                    if (!nombre) {
-
-                        alert(
-                            "Introduce el nombre de la finca."
-                        );
-
-                        return;
-                    }
-
-
-                    if (superficie <= 0) {
-
-                        alert(
-                            "Introduce una superficie válida."
-                        );
-
-                        return;
-                    }
-
-
-                    this.fincaService.crear(
-                        nombre,
-                        ubicacion,
-                        superficie,
-                        notas
-                    );
-
-
-                    this.mostrar();
-
-                }
+        document
+            .getElementById(
+                "guardarFinca"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.guardarFinca()
             );
 
     }
 
 
-    mostrarDetalle(fincaId) {
+    // =====================================================
+    // GUARDAR FINCA
+    // =====================================================
 
-        const finca =
-            this.fincaService.obtenerPorId(
-                fincaId
+    guardarFinca() {
+
+        const nombre =
+            document
+                .getElementById(
+                    "nombreFinca"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        const ubicacion =
+            document
+                .getElementById(
+                    "ubicacionFinca"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        const superficie =
+            Number(
+                document
+                    .getElementById(
+                        "superficieFinca"
+                    )
+                    ?.value
+                ||
+                0
             );
 
 
-        if (!finca) {
+        const notas =
+            document
+                .getElementById(
+                    "notasFinca"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        if (
+            !nombre
+        ) {
+
+            alert(
+                "Introduce el nombre de la finca."
+            );
+
             return;
+
         }
+
+
+        if (
+            superficie <=
+            0
+        ) {
+
+            alert(
+                "Introduce una superficie válida."
+            );
+
+            return;
+
+        }
+
+
+        this.fincaService
+            .crear(
+                nombre,
+                ubicacion,
+                superficie,
+                notas
+            );
+
+
+        this.volverAFincas();
+
+    }
+
+
+    // =====================================================
+    // DETALLE DE FINCA
+    // =====================================================
+
+    mostrarDetalle(
+        fincaId
+    ) {
+
+        const finca =
+            this.fincaService
+                .obtenerPorId(
+                    fincaId
+                );
+
+
+        if (
+            !finca
+        ) {
+
+            return;
+
+        }
+
+
+        const parcelas =
+            this.obtenerParcelas(
+                finca
+            );
+
+
+        const superficieParcelas =
+            parcelas.reduce(
+                (
+                    total,
+                    parcela
+                ) =>
+                    total
+                    +
+                    Number(
+                        parcela.superficie
+                        ||
+                        0
+                    ),
+                0
+            );
+
+
+        const superficieLibre =
+            Math.max(
+                0,
+                Number(
+                    finca.superficie
+                    ||
+                    0
+                )
+                -
+                superficieParcelas
+            );
+
+
+        const superficieTotal =
+            Number(
+                finca.superficie
+                ||
+                0
+            );
+
+
+        const porcentajeUtilizado =
+            superficieTotal >
+            0
+
+                ? Math.min(
+                    100,
+                    (
+                        superficieParcelas
+                        /
+                        superficieTotal
+                    )
+                    *
+                    100
+                )
+
+                : 0;
 
 
         this.mainContent.innerHTML = `
 
-            <div class="detail-header">
-
-                <button
-                    id="volverFincas"
-                    class="back-button"
-                >
-                    ← Volver
-                </button>
+            <div class="finca-detail">
 
 
-                <div class="detail-title">
+                <div class="detail-header">
 
-                    <div>
+                    <button
+                        id="volverFincas"
+                        class="back-button"
+                        type="button"
+                    >
+                        ← Volver
+                    </button>
 
-                        <h2>
-                            ${finca.nombre}
-                        </h2>
+                </div>
 
-                        <p>
-                            📍 ${finca.ubicacion || "Sin ubicación"}
-                        </p>
+
+                <section class="finca-detail-hero">
+
+                    <div class="finca-detail-hero-main">
+
+                        <span class="finca-detail-icon">
+                            🌾
+                        </span>
+
+
+                        <div>
+
+                            <span class="finca-detail-kicker">
+                                Finca
+                            </span>
+
+                            <h2>
+                                ${escaparHTML(
+                                    finca.nombre
+                                )}
+                            </h2>
+
+                            <p>
+                                📍
+                                ${escaparHTML(
+                                    finca.ubicacion
+                                    ||
+                                    "Sin ubicación"
+                                )}
+                            </p>
+
+                        </div>
 
                     </div>
 
@@ -558,95 +904,229 @@ export class FincasView {
                     <button
                         id="nuevaParcela"
                         class="primary-button"
+                        type="button"
                     >
                         + Nueva parcela
                     </button>
 
-                </div>
-
-            </div>
+                </section>
 
 
-            <section class="stats finca-stats">
+                <section class="finca-detail-summary">
 
-                <div class="card">
+                    ${this.crearMiniDato(
+                        "📐",
+                        "Superficie total",
+                        `${formatearNumero(
+                            superficieTotal
+                        )} ha`
+                    )}
 
-                    <span class="card-icon">
-                        📐
-                    </span>
+                    ${this.crearMiniDato(
+                        "🗺️",
+                        "Parcelas",
+                        parcelas.length
+                    )}
 
-                    <div>
+                    ${this.crearMiniDato(
+                        "🌱",
+                        "Superficie parcelada",
+                        `${formatearNumero(
+                            superficieParcelas
+                        )} ha`
+                    )}
 
-                        <p>Superficie</p>
+                    ${this.crearMiniDato(
+                        "📦",
+                        "Superficie libre",
+                        `${formatearNumero(
+                            superficieLibre
+                        )} ha`
+                    )}
 
-                        <h3>
-                            ${finca.superficie} ha
-                        </h3>
+                </section>
+
+
+                <section class="finca-usage-card">
+
+                    <div class="finca-usage-header">
+
+                        <div>
+
+                            <span>
+                                Uso de superficie
+                            </span>
+
+                            <strong>
+                                ${formatearNumero(
+                                    superficieParcelas
+                                )}
+                                /
+                                ${formatearNumero(
+                                    superficieTotal
+                                )}
+                                ha
+                            </strong>
+
+                        </div>
+
+
+                        <strong class="finca-usage-percentage">
+
+                            ${Math.round(
+                                porcentajeUtilizado
+                            )}%
+
+                        </strong>
 
                     </div>
 
-                </div>
 
+                    <div class="finca-usage-track">
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🗺️
-                    </span>
-
-                    <div>
-
-                        <p>Parcelas</p>
-
-                        <h3>
-                            ${finca.parcelas.length}
-                        </h3>
+                        <div
+                            class="finca-usage-bar"
+                            style="
+                                width:${porcentajeUtilizado}%;
+                            "
+                        ></div>
 
                     </div>
 
+                </section>
+
+
+                ${
+                    finca.notas
+
+                        ? `
+
+                            <section class="finca-detail-notes">
+
+                                <span>
+                                    Notas
+                                </span>
+
+                                <p>
+                                    ${escaparHTML(
+                                        finca.notas
+                                    )}
+                                </p>
+
+                            </section>
+
+                        `
+
+                        : ""
+                }
+
+
+                <div class="section-header finca-parcelas-header">
+
+                    <div>
+
+                        <h2>
+                            Parcelas
+                        </h2>
+
+                        <p>
+                            Parcelas pertenecientes a esta finca.
+                        </p>
+
+                    </div>
+
+
+                    <span class="finca-parcelas-count">
+                        ${parcelas.length}
+                    </span>
+
                 </div>
 
-            </section>
 
-
-            <div class="section-header">
-
-                <h2>Parcelas</h2>
-
-                <p>
-                    Parcelas pertenecientes a esta finca.
-                </p>
+                <div id="listaParcelas"></div>
 
             </div>
-
-
-            <div id="listaParcelas"></div>
 
         `;
 
 
         document
-            .getElementById("volverFincas")
-            .addEventListener(
+            .getElementById(
+                "volverFincas"
+            )
+            ?.addEventListener(
                 "click",
-                () => this.mostrar()
+                () =>
+                    this.volverAFincas()
             );
 
 
         document
-            .getElementById("nuevaParcela")
-            .addEventListener(
+            .getElementById(
+                "nuevaParcela"
+            )
+            ?.addEventListener(
                 "click",
-                () => this.mostrarFormularioParcela(fincaId)
+                () =>
+                    this.mostrarFormularioParcela(
+                        finca.id
+                    )
             );
 
 
-        this.mostrarParcelas(finca);
+        this.mostrarParcelas(
+            finca
+        );
 
     }
 
 
-    mostrarParcelas(finca) {
+    // =====================================================
+    // MINI DATO
+    // =====================================================
+
+    crearMiniDato(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="finca-detail-stat">
+
+                <span>
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <small>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </small>
+
+                    <strong>
+                        ${valor}
+                    </strong>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // LISTADO DE PARCELAS
+    // =====================================================
+
+    mostrarParcelas(
+        finca
+    ) {
 
         const contenedor =
             document.getElementById(
@@ -654,27 +1134,49 @@ export class FincasView {
             );
 
 
-        if (finca.parcelas.length === 0) {
+        if (
+            !contenedor
+        ) {
+
+            return;
+
+        }
+
+
+        const parcelas =
+            this.obtenerParcelas(
+                finca
+            );
+
+
+        if (
+            parcelas.length ===
+            0
+        ) {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="empty-state finca-empty-parcelas">
 
                     <div class="empty-icon">
                         🗺️
                     </div>
 
-                    <h3>No hay parcelas</h3>
+                    <h3>
+                        No hay parcelas
+                    </h3>
 
                     <p>
-                        Añade la primera parcela.
+                        Añade la primera parcela de esta finca.
                     </p>
 
                 </div>
 
             `;
 
+
             return;
+
         }
 
 
@@ -682,95 +1184,239 @@ export class FincasView {
 
             <div class="parcelas-grid">
 
-                ${finca.parcelas.map(parcela => `
-
-                    <div class="parcela-card">
-
-                        <div class="parcela-header">
-
-                            <div>
-
-                                <h3>
-                                    🗺️ ${parcela.nombre}
-                                </h3>
-
-                                <p>
-                                    ${parcela.superficie} ha
-                                </p>
-
-                            </div>
-
-
-                            <button
-                                class="delete-button eliminar-parcela"
-                                data-id="${parcela.id}"
-                            >
-                                ×
-                            </button>
-
-                        </div>
-
-
-                        <div class="parcela-data">
-
-                            <span>
-                                Cultivo
-                            </span>
-
-                            <strong>
-                                ${parcela.cultivo || "Sin cultivo asignado"}
-                            </strong>
-
-                        </div>
-
-                    </div>
-
-                `).join("")}
+                ${parcelas
+                    .map(
+                        parcela =>
+                            this.crearTarjetaParcela(
+                                parcela
+                            )
+                    )
+                    .join("")}
 
             </div>
 
         `;
 
 
-        document
-            .querySelectorAll(".eliminar-parcela")
-            .forEach(button => {
+        contenedor
+            .querySelectorAll(
+                ".eliminar-parcela"
+            )
+            .forEach(
+                boton => {
 
-                button.addEventListener(
-                    "click",
-                    () => {
+                    boton.addEventListener(
+                        "click",
+                        () => {
 
-                        if (
-                            confirm(
-                                "¿Quieres eliminar esta parcela?"
-                            )
-                        ) {
-
-                            this.parcelaService.eliminar(
-                                finca.id,
-                                Number(button.dataset.id)
-                            );
-
-                            this.mostrarDetalle(
-                                finca.id
+                            this.eliminarParcela(
+                                finca,
+                                boton.dataset.id
                             );
 
                         }
+                    );
 
-                    }
-                );
-
-            });
+                }
+            );
 
     }
 
 
-    mostrarFormularioParcela(fincaId) {
+    // =====================================================
+    // TARJETA PARCELA
+    // =====================================================
+
+    crearTarjetaParcela(
+        parcela
+    ) {
+
+        return `
+
+            <article class="parcela-card parcela-card-premium">
+
+                <div class="parcela-header">
+
+                    <div class="parcela-title-group">
+
+                        <span class="parcela-icon">
+                            🗺️
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                ${escaparHTML(
+                                    parcela.nombre
+                                )}
+                            </h3>
+
+                            <p>
+                                ${formatearNumero(
+                                    parcela.superficie
+                                )} ha
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <button
+                        class="delete-button eliminar-parcela"
+                        data-id="${escaparHTML(
+                            parcela.id
+                        )}"
+                        type="button"
+                        aria-label="Eliminar parcela"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <div class="parcela-info-grid">
+
+                    <div>
+
+                        <span>
+                            Cultivo
+                        </span>
+
+                        <strong>
+                            ${escaparHTML(
+                                parcela.cultivo
+                                ||
+                                "Sin cultivo asignado"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            SIGPAC
+                        </span>
+
+                        <strong>
+                            ${escaparHTML(
+                                parcela.sigpac
+                                ||
+                                parcela.referenciaSigpac
+                                ||
+                                "Sin referencia"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                ${
+                    parcela.notas
+
+                        ? `
+
+                            <p class="parcela-note">
+
+                                ${escaparHTML(
+                                    parcela.notas
+                                )}
+
+                            </p>
+
+                        `
+
+                        : ""
+                }
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ELIMINAR PARCELA
+    // =====================================================
+
+    eliminarParcela(
+        finca,
+        parcelaId
+    ) {
+
+        if (
+            !confirm(
+                "¿Quieres eliminar esta parcela?"
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.parcelaService
+                .eliminar(
+                    finca.id,
+                    parcelaId
+                );
+
+
+        if (
+            resultado
+            &&
+            resultado.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+                ||
+                "No se ha podido eliminar la parcela."
+            );
+
+
+            return;
+
+        }
+
+
+        this.mostrarDetalle(
+            finca.id
+        );
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO NUEVA PARCELA
+    // =====================================================
+
+    mostrarFormularioParcela(
+        fincaId
+    ) {
 
         const finca =
-            this.fincaService.obtenerPorId(
-                fincaId
-            );
+            this.fincaService
+                .obtenerPorId(
+                    fincaId
+                );
+
+
+        if (
+            !finca
+        ) {
+
+            return;
+
+        }
 
 
         this.mainContent.innerHTML = `
@@ -779,10 +1425,22 @@ export class FincasView {
 
                 <div>
 
-                    <h2>Nueva parcela</h2>
+                    <button
+                        id="cancelarParcelaSuperior"
+                        class="back-button"
+                        type="button"
+                    >
+                        ← Volver
+                    </button>
+
+                    <h2>
+                        Nueva parcela
+                    </h2>
 
                     <p>
-                        ${finca.nombre}
+                        ${escaparHTML(
+                            finca.nombre
+                        )}
                     </p>
 
                 </div>
@@ -801,6 +1459,8 @@ export class FincasView {
                     <input
                         id="nombreParcela"
                         type="text"
+                        autocomplete="off"
+                        placeholder="Ej. Parcela 1A"
                     >
 
                 </div>
@@ -817,6 +1477,8 @@ export class FincasView {
                         type="number"
                         min="0"
                         step="0.01"
+                        inputmode="decimal"
+                        placeholder="0,00"
                     >
 
                 </div>
@@ -831,6 +1493,8 @@ export class FincasView {
                     <input
                         id="sigpacParcela"
                         type="text"
+                        autocomplete="off"
+                        placeholder="Referencia SIGPAC"
                     >
 
                 </div>
@@ -845,6 +1509,7 @@ export class FincasView {
                     <textarea
                         id="notasParcela"
                         rows="5"
+                        placeholder="Información adicional..."
                     ></textarea>
 
                 </div>
@@ -855,6 +1520,7 @@ export class FincasView {
                     <button
                         id="cancelarParcela"
                         class="secondary-button"
+                        type="button"
                     >
                         Cancelar
                     </button>
@@ -863,6 +1529,7 @@ export class FincasView {
                     <button
                         id="guardarParcela"
                         class="primary-button"
+                        type="button"
                     >
                         Guardar parcela
                     </button>
@@ -874,82 +1541,183 @@ export class FincasView {
         `;
 
 
+        const volver =
+            () =>
+                this.mostrarDetalle(
+                    finca.id
+                );
+
+
         document
-            .getElementById("cancelarParcela")
-            .addEventListener(
+            .getElementById(
+                "cancelarParcelaSuperior"
+            )
+            ?.addEventListener(
                 "click",
-                () => this.mostrarDetalle(fincaId)
+                volver
             );
 
 
         document
-            .getElementById("guardarParcela")
-            .addEventListener(
+            .getElementById(
+                "cancelarParcela"
+            )
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    const nombre =
-                        document
-                            .getElementById("nombreParcela")
-                            .value
-                            .trim();
-
-                    const superficie =
-                        Number(
-                            document
-                                .getElementById("superficieParcela")
-                                .value
-                        );
-
-                    const sigpac =
-                        document
-                            .getElementById("sigpacParcela")
-                            .value
-                            .trim();
-
-                    const notas =
-                        document
-                            .getElementById("notasParcela")
-                            .value
-                            .trim();
-
-
-                    if (!nombre || superficie <= 0) {
-
-                        alert(
-                            "Introduce nombre y superficie válidos."
-                        );
-
-                        return;
-                    }
-
-
-                    const resultado =
-                        this.parcelaService.crear(
-                            fincaId,
-                            nombre,
-                            superficie,
-                            sigpac,
-                            notas
-                        );
-
-
-                    if (!resultado.ok) {
-
-                        alert(
-                            resultado.mensaje
-                        );
-
-                        return;
-                    }
-
-
-                    this.mostrarDetalle(
-                        fincaId
-                    );
-
-                }
+                volver
             );
+
+
+        document
+            .getElementById(
+                "guardarParcela"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.guardarParcela(
+                        finca.id
+                    )
+            );
+
+    }
+
+
+    // =====================================================
+    // GUARDAR PARCELA
+    // =====================================================
+
+    guardarParcela(
+        fincaId
+    ) {
+
+        const nombre =
+            document
+                .getElementById(
+                    "nombreParcela"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        const superficie =
+            Number(
+                document
+                    .getElementById(
+                        "superficieParcela"
+                    )
+                    ?.value
+                ||
+                0
+            );
+
+
+        const sigpac =
+            document
+                .getElementById(
+                    "sigpacParcela"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        const notas =
+            document
+                .getElementById(
+                    "notasParcela"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        if (
+            !nombre
+            ||
+            superficie <=
+            0
+        ) {
+
+            alert(
+                "Introduce nombre y superficie válidos."
+            );
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.parcelaService
+                .crear(
+                    fincaId,
+                    nombre,
+                    superficie,
+                    sigpac,
+                    notas
+                );
+
+
+        if (
+            resultado
+            &&
+            resultado.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+                ||
+                "No se ha podido crear la parcela."
+            );
+
+
+            return;
+
+        }
+
+
+        this.mostrarDetalle(
+            fincaId
+        );
+
+    }
+
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    obtenerFincas() {
+
+        const fincas =
+            this.fincaService
+                .obtenerTodas();
+
+
+        return Array.isArray(
+            fincas
+        )
+            ? fincas
+            : [];
+
+    }
+
+
+    obtenerParcelas(
+        finca
+    ) {
+
+        return Array.isArray(
+            finca?.parcelas
+        )
+            ? finca.parcelas
+            : [];
 
     }
 

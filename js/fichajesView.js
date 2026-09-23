@@ -1,3 +1,10 @@
+import {
+    escaparHTML,
+    formatearFecha,
+    formatearFechaHora
+} from "./utils.js";
+
+
 export class FichajesView {
 
     constructor(
@@ -23,90 +30,39 @@ export class FichajesView {
 
 
     // =====================================================
-    // ESCAPAR HTML
-    // =====================================================
-
-    escapar(
-        valor
-    ) {
-
-        return String(
-            valor
-            ??
-            ""
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
-
-    }
-
-
-    // =====================================================
     // PERMISOS
     // =====================================================
 
     puedeCrearFichajes() {
 
-        if (
-            !this.authService
-            ||
-            typeof this.authService
-                .tienePermiso !==
-                "function"
-        ) {
-
-            return false;
-
-        }
-
-
-        return this.authService
-            .tienePermiso(
+        return Boolean(
+            this.authService
+            &&
+            typeof this.authService.tienePermiso ===
+            "function"
+            &&
+            this.authService.tienePermiso(
                 "fichajes",
                 "crear"
-            );
+            )
+        );
 
     }
 
 
     puedeEditarFichajes() {
 
-        if (
-            !this.authService
-            ||
-            typeof this.authService
-                .tienePermiso !==
-                "function"
-        ) {
-
-            return false;
-
-        }
-
-
-        return this.authService
-            .tienePermiso(
+        return Boolean(
+            this.authService
+            &&
+            typeof this.authService.tienePermiso ===
+            "function"
+            &&
+            this.authService.tienePermiso(
                 "fichajes",
                 "editar"
-            );
+            )
+        );
 
     }
 
@@ -118,23 +74,35 @@ export class FichajesView {
     mostrar() {
 
         const trabajadoresActivos =
-            this.trabajadorService
-                .obtenerActivos();
+            this.obtenerListaSegura(
+                () =>
+                    this.trabajadorService
+                        .obtenerActivos()
+            );
 
 
         const trabajando =
-            this.fichajeService
-                .obtenerTrabajandoAhora();
+            this.obtenerListaSegura(
+                () =>
+                    this.fichajeService
+                        .obtenerTrabajandoAhora()
+            );
 
 
         const fichajesHoy =
-            this.fichajeService
-                .obtenerFichajesHoy();
+            this.obtenerListaSegura(
+                () =>
+                    this.fichajeService
+                        .obtenerFichajesHoy()
+            );
 
 
         const historial =
-            this.fichajeService
-                .obtenerTodos()
+            this.obtenerListaSegura(
+                () =>
+                    this.fichajeService
+                        .obtenerTodos()
+            )
                 .slice(
                     0,
                     30
@@ -142,19 +110,21 @@ export class FichajesView {
 
 
         const solicitudes =
-            this.fichajeService
-                .obtenerSolicitudesCorreccion();
+            this.obtenerListaSegura(
+                () =>
+                    this.fichajeService
+                        .obtenerSolicitudesCorreccion()
+            );
 
 
         const solicitudesPendientes =
-            solicitudes
-                .filter(
-                    fichaje =>
-                        fichaje.correccion
-                        &&
-                        fichaje.correccion.estado ===
-                        "Pendiente"
-                );
+            solicitudes.filter(
+                fichaje =>
+                    fichaje.correccion
+                    &&
+                    fichaje.correccion.estado ===
+                    "Pendiente"
+            );
 
 
         const puedeCrear =
@@ -176,7 +146,7 @@ export class FichajesView {
                     </h2>
 
                     <p>
-                        Control de entrada y salida del personal
+                        Control de entrada, salida y correcciones del personal
                     </p>
 
                 </div>
@@ -184,287 +154,63 @@ export class FichajesView {
             </header>
 
 
-            <section class="stats">
+            <!-- ==========================================
+                 RESUMEN
+            =========================================== -->
 
-                <div class="card">
+            <section class="stats fichajes-stats">
 
-                    <span class="card-icon">
-                        👷
-                    </span>
+                ${this.crearStat(
+                    "👷",
+                    "Trabajadores activos",
+                    trabajadoresActivos.length
+                )}
 
-                    <div>
+                ${this.crearStat(
+                    "🟢",
+                    "Trabajando ahora",
+                    trabajando.length
+                )}
 
-                        <p>
-                            Trabajadores activos
-                        </p>
+                ${this.crearStat(
+                    "🕒",
+                    "Fichajes hoy",
+                    fichajesHoy.length
+                )}
 
-                        <h3>
-                            ${trabajadoresActivos.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        🟢
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Trabajando ahora
-                        </p>
-
-                        <h3>
-                            ${trabajando.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        🕒
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Fichajes hoy
-                        </p>
-
-                        <h3>
-                            ${fichajesHoy.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        ✏️
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Correcciones pendientes
-                        </p>
-
-                        <h3>
-                            ${solicitudesPendientes.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "✏️",
+                    "Correcciones pendientes",
+                    solicitudesPendientes.length
+                )}
 
             </section>
 
 
-            <div class="dashboard-grid">
+            <!-- ==========================================
+                 ZONA PRINCIPAL
+            =========================================== -->
 
+            <section class="fichajes-main-grid">
 
-                ${
-
+                ${this.crearPanelRegistro(
                     puedeCrear
+                )}
 
-                        ? `
+                ${this.crearPanelTrabajando(
+                    trabajando
+                )}
 
-                            <section class="panel">
-
-                                <div class="panel-header">
-
-                                    <h3>
-                                        Registrar fichaje
-                                    </h3>
-
-                                </div>
+            </section>
 
 
-                                <div class="form-group">
+            <!-- ==========================================
+                 CORRECCIONES
+            =========================================== -->
 
-                                    <label>
-                                        PIN del trabajador
-                                    </label>
+            <section class="panel fichajes-section">
 
-                                    <input
-                                        id="pinFichaje"
-                                        type="password"
-                                        inputmode="numeric"
-                                        pattern="[0-9]*"
-                                        maxlength="4"
-                                        autocomplete="off"
-                                        placeholder="••••"
-                                    >
-
-                                    <small class="form-help">
-                                        Introduce el PIN personal de 4 números.
-                                    </small>
-
-                                </div>
-
-
-                                <div
-                                    class="form-actions"
-                                    style="
-                                        justify-content:flex-start;
-                                        flex-wrap:wrap;
-                                    "
-                                >
-
-                                    <button
-                                        id="ficharEntrada"
-                                        class="primary-button"
-                                        type="button"
-                                    >
-                                        ▶️ Fichar entrada
-                                    </button>
-
-
-                                    <button
-                                        id="ficharSalida"
-                                        class="secondary-button"
-                                        type="button"
-                                    >
-                                        ⏹️ Fichar salida
-                                    </button>
-
-                                </div>
-
-                            </section>
-
-                        `
-
-                        : `
-
-                            <section class="panel">
-
-                                <div class="panel-header">
-
-                                    <h3>
-                                        Registrar fichaje
-                                    </h3>
-
-                                </div>
-
-
-                                <p
-                                    style="
-                                        color:#78837d;
-                                        margin:0;
-                                    "
-                                >
-                                    No tienes permiso para registrar fichajes.
-                                </p>
-
-                            </section>
-
-                        `
-
-                }
-
-
-                <section class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            Trabajando ahora
-                        </h3>
-
-                    </div>
-
-
-                    ${
-                        trabajando.length ===
-                        0
-
-                            ? `
-
-                                <p
-                                    style="
-                                        color:#78837d;
-                                        margin:0;
-                                    "
-                                >
-                                    No hay ningún trabajador con una entrada abierta.
-                                </p>
-
-                            `
-
-                            : trabajando
-                                .map(
-                                    trabajador => `
-
-                                        <div class="activity">
-
-                                            <span>
-                                                🟢
-                                            </span>
-
-                                            <div>
-
-                                                <strong>
-                                                    ${this.escapar(
-                                                        this.trabajadorService
-                                                            .obtenerNombreCompleto(
-                                                                trabajador
-                                                            )
-                                                    )}
-                                                </strong>
-
-                                                <p>
-                                                    ${this.escapar(
-                                                        trabajador.puesto
-                                                        ||
-                                                        "Trabajador"
-                                                    )}
-                                                </p>
-
-                                            </div>
-
-                                        </div>
-
-                                    `
-                                )
-                                .join(
-                                    ""
-                                )
-                    }
-
-                </section>
-
-            </div>
-
-
-            <section
-                class="panel"
-                style="
-                    margin-top:25px;
-                "
-            >
-
-                <div
-                    class="panel-header"
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:center;
-                        gap:12px;
-                        flex-wrap:wrap;
-                    "
-                >
+                <div class="panel-header fichajes-panel-header">
 
                     <div>
 
@@ -472,17 +218,16 @@ export class FichajesView {
                             ✏️ Solicitudes de corrección
                         </h3>
 
-                        <p
-                            style="
-                                margin:4px 0 0;
-                                color:#78837d;
-                            "
-                        >
+                        <p>
+
                             ${
                                 puedeEditar
+
                                     ? "Revisa las solicitudes enviadas por los trabajadores."
+
                                     : "Consulta el estado de las solicitudes de corrección."
                             }
+
                         </p>
 
                     </div>
@@ -494,21 +239,10 @@ export class FichajesView {
 
                             ? `
 
-                                <span
-                                    style="
-                                        display:inline-flex;
-                                        align-items:center;
-                                        justify-content:center;
-                                        min-width:30px;
-                                        height:30px;
-                                        padding:0 10px;
-                                        border-radius:999px;
-                                        background:#fff3cd;
-                                        color:#755700;
-                                        font-weight:700;
-                                    "
-                                >
+                                <span class="fichajes-counter fichajes-counter-warning">
+
                                     ${solicitudesPendientes.length}
+
                                 </span>
 
                             `
@@ -519,65 +253,74 @@ export class FichajesView {
                 </div>
 
 
-                ${this.crearSolicitudesCorreccion(
-                    solicitudes,
-                    puedeEditar
-                )}
+                <div class="fichajes-section-body">
+
+                    ${this.crearSolicitudesCorreccion(
+                        solicitudes,
+                        puedeEditar
+                    )}
+
+                </div>
 
             </section>
 
 
-            <section
-                class="panel"
-                style="
-                    margin-top:25px;
-                "
-            >
+            <!-- ==========================================
+                 HISTORIAL
+            =========================================== -->
 
-                <div class="panel-header">
+            <section class="panel fichajes-section">
 
-                    <h3>
-                        Historial reciente
-                    </h3>
+                <div class="panel-header fichajes-panel-header">
+
+                    <div>
+
+                        <h3>
+                            Historial reciente
+                        </h3>
+
+                        <p>
+                            Últimas entradas y salidas registradas
+                        </p>
+
+                    </div>
+
+
+                    <span class="fichajes-counter">
+
+                        ${Math.min(
+                            historial.length,
+                            30
+                        )}
+
+                    </span>
 
                 </div>
 
 
-                ${
-                    historial.length ===
-                    0
+                <div class="fichajes-history">
 
-                        ? `
+                    ${
+                        historial.length ===
+                        0
 
-                            <div class="empty-state">
-
-                                <div class="empty-icon">
-                                    🕒
-                                </div>
-
-                                <h3>
-                                    Todavía no hay fichajes
-                                </h3>
-
-                                <p>
-                                    Las entradas y salidas aparecerán aquí.
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : historial
-                            .map(
-                                fichaje =>
-                                    this.crearFilaHistorial(
-                                        fichaje
-                                    )
+                            ? this.crearEstadoVacio(
+                                "🕒",
+                                "Todavía no hay fichajes",
+                                "Las entradas y salidas aparecerán aquí."
                             )
-                            .join(
-                                ""
-                            )
-                }
+
+                            : historial
+                                .map(
+                                    fichaje =>
+                                        this.crearFilaHistorial(
+                                            fichaje
+                                        )
+                                )
+                                .join("")
+                    }
+
+                </div>
 
             </section>
 
@@ -590,7 +333,304 @@ export class FichajesView {
 
 
     // =====================================================
-    // CREAR SOLICITUDES
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // PANEL REGISTRO
+    // =====================================================
+
+    crearPanelRegistro(
+        puedeCrear
+    ) {
+
+        if (
+            !puedeCrear
+        ) {
+
+            return `
+
+                <article class="panel fichajes-register-card">
+
+                    <div class="panel-header">
+
+                        <div>
+
+                            <h3>
+                                Registrar fichaje
+                            </h3>
+
+                            <p>
+                                Entrada y salida mediante PIN personal
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="fichajes-permission-warning">
+
+                        <span>
+                            🔒
+                        </span>
+
+                        <div>
+
+                            <strong>
+                                Sin permiso
+                            </strong>
+
+                            <p>
+                                No tienes permiso para registrar fichajes.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            `;
+
+        }
+
+
+        return `
+
+            <article class="panel fichajes-register-card">
+
+                <div class="panel-header">
+
+                    <div>
+
+                        <h3>
+                            Registrar fichaje
+                        </h3>
+
+                        <p>
+                            Entrada y salida mediante PIN personal
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="fichajes-pin-area">
+
+                    <div class="fichajes-pin-icon">
+                        🔢
+                    </div>
+
+
+                    <div>
+
+                        <label for="pinFichaje">
+                            PIN del trabajador
+                        </label>
+
+                        <p>
+                            Introduce el PIN personal de 4 números.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <input
+                    id="pinFichaje"
+                    class="fichajes-pin-input"
+                    type="password"
+                    inputmode="numeric"
+                    pattern="[0-9]*"
+                    maxlength="4"
+                    autocomplete="off"
+                    placeholder="••••"
+                >
+
+
+                <div class="fichajes-register-actions">
+
+                    <button
+                        id="ficharEntrada"
+                        class="primary-button"
+                        type="button"
+                    >
+                        ▶️ Fichar entrada
+                    </button>
+
+
+                    <button
+                        id="ficharSalida"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        ⏹️ Fichar salida
+                    </button>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // TRABAJANDO AHORA
+    // =====================================================
+
+    crearPanelTrabajando(
+        trabajando
+    ) {
+
+        return `
+
+            <article class="panel fichajes-working-card">
+
+                <div class="panel-header fichajes-panel-header">
+
+                    <div>
+
+                        <h3>
+                            Trabajando ahora
+                        </h3>
+
+                        <p>
+                            Personal con una entrada abierta
+                        </p>
+
+                    </div>
+
+
+                    <span class="fichajes-counter fichajes-counter-success">
+
+                        ${trabajando.length}
+
+                    </span>
+
+                </div>
+
+
+                <div class="fichajes-working-list">
+
+                    ${
+                        trabajando.length ===
+                        0
+
+                            ? this.crearEstadoVacio(
+                                "✅",
+                                "Sin fichajes abiertos",
+                                "No hay ningún trabajador con una entrada abierta."
+                            )
+
+                            : trabajando
+                                .map(
+                                    trabajador =>
+                                        this.crearTrabajadorActivo(
+                                            trabajador
+                                        )
+                                )
+                                .join("")
+                    }
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // TRABAJADOR ACTIVO
+    // =====================================================
+
+    crearTrabajadorActivo(
+        trabajador
+    ) {
+
+        return `
+
+            <div class="fichajes-worker">
+
+                <span class="fichajes-worker-status">
+                    🟢
+                </span>
+
+
+                <div>
+
+                    <strong>
+
+                        ${escaparHTML(
+                            this.obtenerNombreTrabajador(
+                                trabajador
+                            )
+                        )}
+
+                    </strong>
+
+                    <p>
+
+                        ${escaparHTML(
+                            trabajador.puesto
+                            ||
+                            "Trabajador"
+                        )}
+
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // SOLICITUDES
     // =====================================================
 
     crearSolicitudesCorreccion(
@@ -603,27 +643,27 @@ export class FichajesView {
             0
         ) {
 
-            return `
-
-                <div class="empty-state">
-
-                    <div class="empty-icon">
-                        ✏️
-                    </div>
-
-                    <h3>
-                        No hay solicitudes
-                    </h3>
-
-                    <p>
-                        Las solicitudes de corrección aparecerán aquí.
-                    </p>
-
-                </div>
-
-            `;
+            return this.crearEstadoVacio(
+                "✏️",
+                "No hay solicitudes",
+                "Las solicitudes de corrección aparecerán aquí."
+            );
 
         }
+
+
+        const prioridad = {
+
+            Pendiente:
+                0,
+
+            Aprobada:
+                1,
+
+            Rechazada:
+                2
+
+        };
 
 
         const ordenadas =
@@ -635,20 +675,6 @@ export class FichajesView {
                         a,
                         b
                     ) => {
-
-                        const prioridad = {
-
-                            Pendiente:
-                                0,
-
-                            Aprobada:
-                                1,
-
-                            Rechazada:
-                                2
-
-                        };
-
 
                         const estadoA =
                             a.correccion?.estado
@@ -662,7 +688,7 @@ export class FichajesView {
                             "";
 
 
-                        const diferenciaEstado =
+                        const diferencia =
                             (
                                 prioridad[
                                     estadoA
@@ -681,26 +707,22 @@ export class FichajesView {
 
 
                         if (
-                            diferenciaEstado !==
+                            diferencia !==
                             0
                         ) {
 
-                            return diferenciaEstado;
+                            return diferencia;
 
                         }
 
 
                         return (
-                            new Date(
+                            this.obtenerTimestamp(
                                 b.correccion?.fechaSolicitud
-                                ||
-                                0
                             )
                             -
-                            new Date(
+                            this.obtenerTimestamp(
                                 a.correccion?.fechaSolicitud
-                                ||
-                                0
                             )
                         );
 
@@ -708,17 +730,23 @@ export class FichajesView {
                 );
 
 
-        return ordenadas
-            .map(
-                fichaje =>
-                    this.crearTarjetaSolicitud(
-                        fichaje,
-                        puedeEditar
+        return `
+
+            <div class="fichajes-corrections-list">
+
+                ${ordenadas
+                    .map(
+                        fichaje =>
+                            this.crearTarjetaSolicitud(
+                                fichaje,
+                                puedeEditar
+                            )
                     )
-            )
-            .join(
-                ""
-            );
+                    .join("")}
+
+            </div>
+
+        `;
 
     }
 
@@ -756,229 +784,104 @@ export class FichajesView {
             "Pendiente";
 
 
-        const estiloEstado =
-            this.obtenerEstiloEstadoCorreccion(
-                estado
-            );
-
-
         return `
 
-            <div
-                style="
-                    border:1px solid #e0e8e2;
-                    border-radius:12px;
-                    padding:15px;
-                    margin-top:12px;
-                    background:#ffffff;
-                "
-            >
+            <article class="fichajes-correction-card">
 
-                <div
-                    style="
-                        display:flex;
-                        justify-content:space-between;
-                        align-items:flex-start;
-                        gap:12px;
-                        flex-wrap:wrap;
-                    "
-                >
+                <div class="fichajes-correction-header">
 
                     <div>
 
-                        <strong
-                            style="
-                                display:block;
-                                font-size:15px;
-                            "
-                        >
-                            ${this.escapar(
+                        <strong>
+
+                            ${escaparHTML(
                                 fichaje.trabajadorNombre
                                 ||
                                 "Trabajador"
                             )}
+
                         </strong>
 
-                        <span
-                            style="
-                                display:block;
-                                margin-top:4px;
-                                color:#78837d;
-                                font-size:12px;
-                            "
-                        >
-                            ${this.escapar(
+
+                        <p>
+
+                            ${escaparHTML(
                                 fichaje.tipo
+                                ||
+                                "Fichaje"
                             )}
 
                             ·
 
-                            ${this.formatearFecha(
+                            ${formatearFecha(
                                 fichaje.fecha
                             )}
-                        </span>
+
+                        </p>
 
                     </div>
 
 
                     <span
-                        style="
-                            display:inline-flex;
-                            align-items:center;
-                            border-radius:999px;
-                            padding:5px 10px;
-                            font-size:12px;
-                            font-weight:700;
-                            background:${estiloEstado.fondo};
-                            color:${estiloEstado.texto};
+                        class="
+                            fichajes-correction-status
+                            ${this.obtenerClaseCorreccion(
+                                estado
+                            )}
                         "
                     >
-                        ${this.escapar(
+
+                        ${escaparHTML(
                             estado
                         )}
+
                     </span>
 
                 </div>
 
 
-                <div
-                    style="
-                        display:grid;
-                        grid-template-columns:
-                            repeat(
-                                auto-fit,
-                                minmax(170px, 1fr)
-                            );
-                        gap:10px;
-                        margin-top:14px;
-                    "
-                >
+                <div class="fichajes-correction-data">
 
-                    <div
-                        style="
-                            padding:10px;
-                            background:#f7f9f7;
-                            border-radius:9px;
-                        "
-                    >
+                    ${this.crearDatoCorreccion(
+                        "Hora original",
+                        correccion.horaOriginal
+                        ||
+                        fichaje.hora
+                        ||
+                        "—"
+                    )}
 
-                        <small
-                            style="
-                                color:#78837d;
-                            "
-                        >
-                            Hora original
-                        </small>
+                    ${this.crearDatoCorreccion(
+                        "Nueva hora",
+                        correccion.nuevaHora
+                        ||
+                        "—"
+                    )}
 
-                        <strong
-                            style="
-                                display:block;
-                                margin-top:3px;
-                            "
-                        >
-                            ${this.escapar(
-                                correccion.horaOriginal
-                                ||
-                                fichaje.hora
-                                ||
-                                "—"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            padding:10px;
-                            background:#f7f9f7;
-                            border-radius:9px;
-                        "
-                    >
-
-                        <small
-                            style="
-                                color:#78837d;
-                            "
-                        >
-                            Nueva hora solicitada
-                        </small>
-
-                        <strong
-                            style="
-                                display:block;
-                                margin-top:3px;
-                            "
-                        >
-                            ${this.escapar(
-                                correccion.nuevaHora
-                                ||
-                                "—"
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            padding:10px;
-                            background:#f7f9f7;
-                            border-radius:9px;
-                        "
-                    >
-
-                        <small
-                            style="
-                                color:#78837d;
-                            "
-                        >
-                            Solicitud
-                        </small>
-
-                        <strong
-                            style="
-                                display:block;
-                                margin-top:3px;
-                            "
-                        >
-                            ${this.formatearFechaHora(
-                                correccion.fechaSolicitud
-                            )}
-                        </strong>
-
-                    </div>
+                    ${this.crearDatoCorreccion(
+                        "Solicitud",
+                        formatearFechaHora(
+                            correccion.fechaSolicitud
+                        )
+                    )}
 
                 </div>
 
 
-                <div
-                    style="
-                        margin-top:12px;
-                        padding:11px;
-                        background:#f7f9f7;
-                        border-radius:9px;
-                    "
-                >
+                <div class="fichajes-correction-reason">
 
-                    <small
-                        style="
-                            color:#78837d;
-                        "
-                    >
+                    <span>
                         Motivo
-                    </small>
+                    </span>
 
-                    <p
-                        style="
-                            margin:5px 0 0;
-                        "
-                    >
-                        ${this.escapar(
+                    <p>
+
+                        ${escaparHTML(
                             correccion.motivo
                             ||
                             "Sin motivo"
                         )}
+
                     </p>
 
                 </div>
@@ -991,17 +894,14 @@ export class FichajesView {
 
                         ? `
 
-                            <p
-                                style="
-                                    margin:10px 0 0;
-                                    color:#78837d;
-                                    font-size:12px;
-                                "
-                            >
+                            <p class="fichajes-correction-resolved">
+
                                 Resuelta:
-                                ${this.formatearFechaHora(
+
+                                ${formatearFechaHora(
                                     correccion.fechaResolucion
                                 )}
+
                             </p>
 
                         `
@@ -1017,14 +917,7 @@ export class FichajesView {
 
                         ? `
 
-                            <div
-                                style="
-                                    display:flex;
-                                    gap:8px;
-                                    flex-wrap:wrap;
-                                    margin-top:14px;
-                                "
-                            >
+                            <div class="fichajes-correction-actions">
 
                                 <button
                                     type="button"
@@ -1032,7 +925,7 @@ export class FichajesView {
                                         primary-button
                                         aprobar-correccion
                                     "
-                                    data-solicitud-id="${this.escapar(
+                                    data-solicitud-id="${escaparHTML(
                                         correccion.id
                                     )}"
                                 >
@@ -1046,7 +939,7 @@ export class FichajesView {
                                         secondary-button
                                         rechazar-correccion
                                     "
-                                    data-solicitud-id="${this.escapar(
+                                    data-solicitud-id="${escaparHTML(
                                         correccion.id
                                     )}"
                                 >
@@ -1068,22 +961,18 @@ export class FichajesView {
 
                         ? `
 
-                            <p
-                                style="
-                                    margin:12px 0 0;
-                                    color:#8a6b00;
-                                    font-size:12px;
-                                "
-                            >
+                            <div class="fichajes-permission-inline">
+
                                 🔒 No tienes permiso para aprobar o rechazar esta solicitud.
-                            </p>
+
+                            </div>
 
                         `
 
                         : ""
                 }
 
-            </div>
+            </article>
 
         `;
 
@@ -1091,58 +980,33 @@ export class FichajesView {
 
 
     // =====================================================
-    // ESTILO ESTADO
+    // DATO CORRECCIÓN
     // =====================================================
 
-    obtenerEstiloEstadoCorreccion(
-        estado
+    crearDatoCorreccion(
+        titulo,
+        valor
     ) {
 
-        if (
-            estado ===
-            "Aprobada"
-        ) {
+        return `
 
-            return {
+            <div>
 
-                fondo:
-                    "#def5e8",
+                <span>
+                    ${escaparHTML(
+                        titulo
+                    )}
+                </span>
 
-                texto:
-                    "#176044"
+                <strong>
+                    ${escaparHTML(
+                        valor
+                    )}
+                </strong>
 
-            };
+            </div>
 
-        }
-
-
-        if (
-            estado ===
-            "Rechazada"
-        ) {
-
-            return {
-
-                fondo:
-                    "#fde8e8",
-
-                texto:
-                    "#a42b2b"
-
-            };
-
-        }
-
-
-        return {
-
-            fondo:
-                "#fff4d8",
-
-            texto:
-                "#745500"
-
-        };
+        `;
 
     }
 
@@ -1165,54 +1029,67 @@ export class FichajesView {
             null;
 
 
+        const esEntrada =
+            fichaje.tipo ===
+            "Entrada";
+
+
         return `
 
-            <div class="activity">
+            <div class="fichajes-history-row">
 
-                <span>
+                <span
+                    class="
+                        fichajes-history-icon
+                        ${
+                            esEntrada
+                                ? "entrada"
+                                : "salida"
+                        }
+                    "
+                >
 
                     ${
-                        fichaje.tipo ===
-                        "Entrada"
-
-                            ? "🟢"
-
-                            : "🔴"
+                        esEntrada
+                            ? "↗"
+                            : "↘"
                     }
 
                 </span>
 
 
-                <div
-                    style="
-                        flex:1;
-                    "
-                >
+                <div class="fichajes-history-main">
 
                     <strong>
-                        ${this.escapar(
+
+                        ${escaparHTML(
                             fichaje.trabajadorNombre
                             ||
                             "Trabajador"
                         )}
+
                     </strong>
 
                     <p>
 
-                        ${this.escapar(
+                        ${escaparHTML(
                             fichaje.tipo
+                            ||
+                            ""
                         )}
 
                         ·
 
-                        ${this.formatearFecha(
+                        ${formatearFecha(
                             fichaje.fecha
                         )}
 
                         ·
 
-                        ${this.escapar(
+                        ${escaparHTML(
                             fichaje.hora
+                            ||
+                            "—"
                         )}
 
                     </p>
@@ -1223,29 +1100,27 @@ export class FichajesView {
 
                             ? `
 
-                                <p
-                                    style="
-                                        margin-top:3px;
-                                    "
-                                >
+                                <small>
+
                                     ✏️ Corrección:
-                                    ${this.escapar(
+                                    ${escaparHTML(
                                         estadoCorreccion
                                     )}
 
                                     ${
                                         estadoCorreccion ===
                                         "Aprobada"
+                                        &&
+                                        correccion?.horaOriginal
 
-                                            ? ` · hora original ${this.escapar(
+                                            ? ` · original ${escaparHTML(
                                                 correccion.horaOriginal
-                                                ||
-                                                ""
                                             )}`
 
                                             : ""
                                     }
-                                </p>
+
+                                </small>
 
                             `
 
@@ -1256,23 +1131,99 @@ export class FichajesView {
 
 
                 <span
-                    class="status ${
-                        fichaje.tipo ===
-                        "Entrada"
-
-                            ? "progress"
-
-                            : "completed"
-                    }"
+                    class="
+                        status
+                        ${
+                            esEntrada
+                                ? "progress"
+                                : "completed"
+                        }
+                    "
                 >
-                    ${this.escapar(
+
+                    ${escaparHTML(
                         fichaje.tipo
                     )}
+
                 </span>
 
             </div>
 
         `;
+
+    }
+
+
+    // =====================================================
+    // ESTADO VACÍO
+    // =====================================================
+
+    crearEstadoVacio(
+        icono,
+        titulo,
+        descripcion
+    ) {
+
+        return `
+
+            <div class="fichajes-empty">
+
+                <span>
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <strong>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </strong>
+
+                    <p>
+                        ${escaparHTML(
+                            descripcion
+                        )}
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // CLASE CORRECCIÓN
+    // =====================================================
+
+    obtenerClaseCorreccion(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "Aprobada"
+        ) {
+
+            return "aprobada";
+
+        }
+
+
+        if (
+            estado ===
+            "Rechazada"
+        ) {
+
+            return "rechazada";
+
+        }
+
+
+        return "pendiente";
 
     }
 
@@ -1346,42 +1297,26 @@ export class FichajesView {
             }
 
 
-            const botonEntrada =
-                document.getElementById(
+            document
+                .getElementById(
                     "ficharEntrada"
-                );
-
-
-            if (
-                botonEntrada
-            ) {
-
-                botonEntrada.addEventListener(
+                )
+                ?.addEventListener(
                     "click",
                     () =>
                         this.registrarEntrada()
                 );
 
-            }
 
-
-            const botonSalida =
-                document.getElementById(
+            document
+                .getElementById(
                     "ficharSalida"
-                );
-
-
-            if (
-                botonSalida
-            ) {
-
-                botonSalida.addEventListener(
+                )
+                ?.addEventListener(
                     "click",
                     () =>
                         this.registrarSalida()
                 );
-
-            }
 
         }
 
@@ -1478,11 +1413,13 @@ export class FichajesView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido aprobar la corrección."
             );
 
             return;
@@ -1540,11 +1477,13 @@ export class FichajesView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido rechazar la corrección."
             );
 
             return;
@@ -1581,14 +1520,13 @@ export class FichajesView {
         }
 
 
-        const input =
-            document.getElementById(
-                "pinFichaje"
-            );
+        const pin =
+            this.obtenerPin();
 
 
         if (
-            !input
+            pin ===
+            null
         ) {
 
             return;
@@ -1599,7 +1537,7 @@ export class FichajesView {
         const resultado =
             this.fichajeService
                 .ficharEntrada(
-                    input.value
+                    pin
                 );
 
 
@@ -1629,14 +1567,13 @@ export class FichajesView {
         }
 
 
-        const input =
-            document.getElementById(
-                "pinFichaje"
-            );
+        const pin =
+            this.obtenerPin();
 
 
         if (
-            !input
+            pin ===
+            null
         ) {
 
             return;
@@ -1647,13 +1584,39 @@ export class FichajesView {
         const resultado =
             this.fichajeService
                 .ficharSalida(
-                    input.value
+                    pin
                 );
 
 
         this.procesarResultado(
             resultado
         );
+
+    }
+
+
+    // =====================================================
+    // OBTENER PIN
+    // =====================================================
+
+    obtenerPin() {
+
+        const input =
+            document.getElementById(
+                "pinFichaje"
+            );
+
+
+        if (
+            !input
+        ) {
+
+            return null;
+
+        }
+
+
+        return input.value;
 
     }
 
@@ -1667,11 +1630,13 @@ export class FichajesView {
     ) {
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido registrar el fichaje."
             );
 
             return;
@@ -1690,55 +1655,85 @@ export class FichajesView {
 
 
     // =====================================================
-    // FORMATEAR FECHA
+    // NOMBRE TRABAJADOR
     // =====================================================
 
-    formatearFecha(
-        fecha
+    obtenerNombreTrabajador(
+        trabajador
     ) {
 
         if (
-            !fecha
+            this.trabajadorService
+            &&
+            typeof
+            this.trabajadorService
+                .obtenerNombreCompleto ===
+            "function"
         ) {
 
-            return "";
-
-        }
-
-
-        const partes =
-            String(
-                fecha
-            )
-                .split(
-                    "-"
+            return this.trabajadorService
+                .obtenerNombreCompleto(
+                    trabajador
                 );
-
-
-        if (
-            partes.length !==
-            3
-        ) {
-
-            return String(
-                fecha
-            );
 
         }
 
 
         return (
-            `${partes[2]}/${partes[1]}/${partes[0]}`
+            [
+                trabajador?.nombre,
+                trabajador?.apellidos
+            ]
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " "
+                )
+                .trim()
+            ||
+            "Trabajador"
         );
 
     }
 
 
     // =====================================================
-    // FORMATEAR FECHA/HORA
+    // LISTA SEGURA
     // =====================================================
 
-    formatearFechaHora(
+    obtenerListaSegura(
+        callback
+    ) {
+
+        try {
+
+            const resultado =
+                callback();
+
+
+            return Array.isArray(
+                resultado
+            )
+                ? resultado
+                : [];
+
+        }
+
+        catch {
+
+            return [];
+
+        }
+
+    }
+
+
+    // =====================================================
+    // TIMESTAMP
+    // =====================================================
+
+    obtenerTimestamp(
         valor
     ) {
 
@@ -1746,7 +1741,7 @@ export class FichajesView {
             !valor
         ) {
 
-            return "—";
+            return 0;
 
         }
 
@@ -1757,41 +1752,11 @@ export class FichajesView {
             );
 
 
-        if (
-            Number.isNaN(
-                fecha.getTime()
-            )
-        ) {
-
-            return String(
-                valor
-            );
-
-        }
-
-
-        return fecha
-            .toLocaleString(
-                "es-ES",
-                {
-
-                    day:
-                        "2-digit",
-
-                    month:
-                        "2-digit",
-
-                    year:
-                        "numeric",
-
-                    hour:
-                        "2-digit",
-
-                    minute:
-                        "2-digit"
-
-                }
-            );
+        return Number.isNaN(
+            fecha.getTime()
+        )
+            ? 0
+            : fecha.getTime();
 
     }
 

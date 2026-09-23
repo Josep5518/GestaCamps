@@ -1,8 +1,14 @@
-import { crearVistas } from "./views.js";
+import {
+    crearVistas
+} from "./views.js";
 
-import { AuthService } from "./auth.js";
+import {
+    AuthService
+} from "./auth.js";
 
-import { LoginView } from "./loginView.js";
+import {
+    LoginView
+} from "./loginView.js";
 
 
 // =====================================================
@@ -77,7 +83,19 @@ const sidebarBackdrop =
 
 const menuLinks =
     document.querySelectorAll(
-        "nav a"
+        "nav a[data-page]"
+    );
+
+
+const navGroups =
+    document.querySelectorAll(
+        ".sidebar-group"
+    );
+
+
+const navGroupToggles =
+    document.querySelectorAll(
+        ".sidebar-group-toggle"
     );
 
 
@@ -91,11 +109,37 @@ const authService =
 
 const loginView =
     new LoginView(
+
         mainContent,
+
         authService,
+
         () =>
             iniciarAdministracion()
+
     );
+
+
+// =====================================================
+// NORMALIZAR PÁGINA
+// =====================================================
+
+function normalizarPagina(
+    pagina
+) {
+
+    return (
+        String(
+            pagina
+            ??
+            ""
+        )
+            .trim()
+        ||
+        PAGINA_INICIO
+    );
+
+}
 
 
 // =====================================================
@@ -132,7 +176,6 @@ function navegarA(
 
         mostrarPortalTrabajador();
 
-
         return;
 
     }
@@ -144,7 +187,6 @@ function navegarA(
     ) {
 
         mostrarAccesoAdministracion();
-
 
         return;
 
@@ -171,67 +213,6 @@ function navegarA(
 
     mostrarPaginaAdministracion(
         paginaPermitida
-    );
-
-}
-
-
-// =====================================================
-// NORMALIZAR PÁGINA
-// =====================================================
-
-function normalizarPagina(
-    pagina
-) {
-
-    const valor =
-        String(
-            pagina
-            ??
-            ""
-        )
-            .trim();
-
-
-    return (
-        valor
-        ||
-        PAGINA_INICIO
-    );
-
-}
-
-
-// =====================================================
-// ACCESO GENERAL
-// =====================================================
-
-function puedeAccederPagina(
-    pagina
-) {
-
-    if (
-        pagina ===
-        PAGINA_PORTAL_TRABAJADOR
-    ) {
-
-        return true;
-
-    }
-
-
-    if (
-        !authService
-            .haySesionActiva()
-    ) {
-
-        return false;
-
-    }
-
-
-    return puedeVerPaginaAdministracion(
-        pagina
     );
 
 }
@@ -282,14 +263,11 @@ function obtenerPrimeraPaginaPermitida() {
     }
 
 
-    const paginasDisponibles =
-        Object.keys(
-            paginas
-        );
-
-
     const primera =
-        paginasDisponibles
+        Object
+            .keys(
+                paginas
+            )
             .find(
                 pagina =>
                     puedeVerPaginaAdministracion(
@@ -308,7 +286,7 @@ function obtenerPrimeraPaginaPermitida() {
 
 
 // =====================================================
-// RESOLVER PÁGINA ADMIN
+// RESOLVER PÁGINA
 // =====================================================
 
 function resolverPaginaAdministracion(
@@ -336,6 +314,232 @@ function resolverPaginaAdministracion(
 
 
 // =====================================================
+// ESTADO DE GRUPO
+// =====================================================
+
+function establecerEstadoGrupo(
+    grupo,
+    abierto
+) {
+
+    if (
+        !grupo
+    ) {
+
+        return;
+
+    }
+
+
+    grupo.classList.toggle(
+        "is-open",
+        abierto
+    );
+
+
+    const boton =
+        grupo.querySelector(
+            ".sidebar-group-toggle"
+        );
+
+
+    boton?.setAttribute(
+        "aria-expanded",
+        String(
+            abierto
+        )
+    );
+
+}
+
+
+// =====================================================
+// CERRAR TODOS LOS GRUPOS
+// =====================================================
+
+function cerrarTodosLosGrupos(
+    excepto = null
+) {
+
+    navGroups.forEach(
+        grupo => {
+
+            if (
+                grupo ===
+                excepto
+            ) {
+
+                return;
+
+            }
+
+
+            establecerEstadoGrupo(
+                grupo,
+                false
+            );
+
+        }
+    );
+
+}
+
+
+// =====================================================
+// ABRIR GRUPO
+// =====================================================
+
+function abrirGrupo(
+    grupo
+) {
+
+    if (
+        !grupo
+        ||
+        grupo.hidden
+    ) {
+
+        return;
+
+    }
+
+
+    cerrarTodosLosGrupos(
+        grupo
+    );
+
+
+    establecerEstadoGrupo(
+        grupo,
+        true
+    );
+
+}
+
+
+// =====================================================
+// OBTENER GRUPO DE UNA PÁGINA
+// =====================================================
+
+function obtenerGrupoDePagina(
+    pagina
+) {
+
+    const enlace =
+        Array
+            .from(
+                menuLinks
+            )
+            .find(
+                link =>
+                    link.dataset.page ===
+                    pagina
+            );
+
+
+    return (
+        enlace?.closest(
+            ".sidebar-group"
+        )
+        ||
+        null
+    );
+
+}
+
+
+// =====================================================
+// ABRIR GRUPO DE PÁGINA ACTIVA
+// =====================================================
+
+function abrirGrupoDePagina(
+    pagina
+) {
+
+    const grupo =
+        obtenerGrupoDePagina(
+            pagina
+        );
+
+
+    /*
+     * Inicio y Buscar global están fuera
+     * de los desplegables.
+     */
+
+    if (
+        !grupo
+    ) {
+
+        cerrarTodosLosGrupos();
+
+        return;
+
+    }
+
+
+    abrirGrupo(
+        grupo
+    );
+
+}
+
+
+// =====================================================
+// EVENTOS DE LOS 5 DESPLEGABLES
+// =====================================================
+
+navGroupToggles.forEach(
+    boton => {
+
+        boton.addEventListener(
+            "click",
+            () => {
+
+                const grupo =
+                    boton.closest(
+                        ".sidebar-group"
+                    );
+
+
+                if (
+                    !grupo
+                ) {
+
+                    return;
+
+                }
+
+
+                const estabaAbierto =
+                    boton.getAttribute(
+                        "aria-expanded"
+                    ) ===
+                    "true";
+
+
+                cerrarTodosLosGrupos();
+
+
+                if (
+                    !estabaAbierto
+                ) {
+
+                    establecerEstadoGrupo(
+                        grupo,
+                        true
+                    );
+
+                }
+
+            }
+        );
+
+    }
+);
+
+
+// =====================================================
 // ACTIVAR MENÚ
 // =====================================================
 
@@ -346,11 +550,97 @@ function activarMenu(
     menuLinks.forEach(
         link => {
 
+            const activo =
+                link.dataset.page ===
+                pagina;
+
+
             link.classList.toggle(
                 "active",
-                link.dataset.page ===
-                pagina
+                activo
             );
+
+
+            if (
+                activo
+            ) {
+
+                link.setAttribute(
+                    "aria-current",
+                    "page"
+                );
+
+            }
+
+            else {
+
+                link.removeAttribute(
+                    "aria-current"
+                );
+
+            }
+
+        }
+    );
+
+
+    if (
+        pagina
+    ) {
+
+        abrirGrupoDePagina(
+            pagina
+        );
+
+    }
+
+    else {
+
+        cerrarTodosLosGrupos();
+
+    }
+
+}
+
+
+// =====================================================
+// VISIBILIDAD DE GRUPOS
+// =====================================================
+
+function actualizarVisibilidadGrupos() {
+
+    navGroups.forEach(
+        grupo => {
+
+            const enlaces =
+                Array.from(
+                    grupo.querySelectorAll(
+                        "a[data-page]"
+                    )
+                );
+
+
+            const tieneEnlacesVisibles =
+                enlaces.some(
+                    enlace =>
+                        !enlace.hidden
+                );
+
+
+            grupo.hidden =
+                !tieneEnlacesVisibles;
+
+
+            if (
+                grupo.hidden
+            ) {
+
+                establecerEstadoGrupo(
+                    grupo,
+                    false
+                );
+
+            }
 
         }
     );
@@ -359,7 +649,7 @@ function activarMenu(
 
 
 // =====================================================
-// APLICAR PERMISOS AL SIDEBAR
+// PERMISOS SIDEBAR
 // =====================================================
 
 function aplicarPermisosSidebar() {
@@ -386,7 +676,6 @@ function aplicarPermisosSidebar() {
                 link.hidden =
                     false;
 
-
                 return;
 
             }
@@ -398,7 +687,6 @@ function aplicarPermisosSidebar() {
 
                 link.hidden =
                     false;
-
 
                 return;
 
@@ -415,11 +703,14 @@ function aplicarPermisosSidebar() {
         }
     );
 
+
+    actualizarVisibilidadGrupos();
+
 }
 
 
 // =====================================================
-// URL
+// OBTENER PÁGINA DE URL
 // =====================================================
 
 function obtenerPaginaDeURL() {
@@ -441,7 +732,7 @@ function obtenerPaginaDeURL() {
 
 
 // =====================================================
-// HISTORIAL DEL NAVEGADOR
+// HISTORIAL
 // =====================================================
 
 function guardarPaginaEnHistorial(
@@ -459,8 +750,7 @@ function guardarPaginaEnHistorial(
         metodo
     ](
         {
-            pagina:
-                pagina
+            pagina
         },
         "",
         `#${pagina}`
@@ -470,7 +760,7 @@ function guardarPaginaEnHistorial(
 
 
 // =====================================================
-// MODO DE INTERFAZ
+// MODO INTERFAZ
 // =====================================================
 
 function aplicarModoInterfaz(
@@ -565,7 +855,7 @@ function entrarModoTrabajador() {
 
 
 // =====================================================
-// SALIR MODO TRABAJADOR
+// SALIR DEL PORTAL TRABAJADOR
 // =====================================================
 
 function salirModoTrabajador() {
@@ -669,7 +959,7 @@ const {
 
 
 // =====================================================
-// MAPA DE PÁGINAS
+// PÁGINAS
 // =====================================================
 
 const paginas = {
@@ -770,7 +1060,7 @@ const paginas = {
 
 
 // =====================================================
-// SABER SI EXISTE PÁGINA ADMIN
+// EXISTE PÁGINA
 // =====================================================
 
 function existePaginaAdministracion(
@@ -801,7 +1091,6 @@ function mostrarPagina(
 
         mostrarPortalTrabajador();
 
-
         return;
 
     }
@@ -814,27 +1103,22 @@ function mostrarPagina(
 
         mostrarAccesoAdministracion();
 
-
         return;
 
     }
 
 
-    const paginaPermitida =
+    mostrarPaginaAdministracion(
         resolverPaginaAdministracion(
             pagina
-        );
-
-
-    mostrarPaginaAdministracion(
-        paginaPermitida
+        )
     );
 
 }
 
 
 // =====================================================
-// PÁGINA ADMINISTRACIÓN
+// MOSTRAR ADMINISTRACIÓN
 // =====================================================
 
 function mostrarPaginaAdministracion(
@@ -847,7 +1131,6 @@ function mostrarPaginaAdministracion(
     ) {
 
         mostrarAccesoAdministracion();
-
 
         return;
 
@@ -869,7 +1152,6 @@ function mostrarPaginaAdministracion(
     ) {
 
         mostrarSinPermisos();
-
 
         return;
 
@@ -1034,7 +1316,6 @@ function iniciarAdministracion() {
 
         mostrarSinPermisos();
 
-
         return;
 
     }
@@ -1068,14 +1349,106 @@ function asegurarBotonCerrarSesion() {
     }
 
 
-    const existente =
+    /*
+     * Primero utilizamos el botón que ya existe
+     * en index.html.
+     */
+
+    let boton =
         document.getElementById(
-            "cerrarSesionAdmin"
+            "cerrarSesion"
         );
 
 
+    /*
+     * Compatibilidad por si algún HTML antiguo
+     * todavía utiliza cerrarSesionAdmin.
+     */
+
     if (
-        existente
+        !boton
+    ) {
+
+        boton =
+            document.getElementById(
+                "cerrarSesionAdmin"
+            );
+
+    }
+
+
+    /*
+     * Si no existe ninguno, lo creamos.
+     */
+
+    if (
+        !boton
+    ) {
+
+        let footer =
+            sidebar.querySelector(
+                ".sidebar-footer"
+            );
+
+
+        if (
+            !footer
+        ) {
+
+            footer =
+                document.createElement(
+                    "div"
+                );
+
+
+            footer.className =
+                "sidebar-footer";
+
+
+            sidebar.appendChild(
+                footer
+            );
+
+        }
+
+
+        boton =
+            document.createElement(
+                "button"
+            );
+
+
+        boton.id =
+            "cerrarSesion";
+
+
+        boton.type =
+            "button";
+
+
+        boton.className =
+            "sidebar-logout-button";
+
+
+        boton.textContent =
+            "🔒 Cerrar sesión";
+
+
+        footer.appendChild(
+            boton
+        );
+
+    }
+
+
+    /*
+     * Evitamos añadir el mismo listener
+     * varias veces.
+     */
+
+    if (
+        boton.dataset.logoutReady ===
+        "1"
     ) {
 
         return;
@@ -1083,36 +1456,13 @@ function asegurarBotonCerrarSesion() {
     }
 
 
-    const boton =
-        document.createElement(
-            "button"
-        );
-
-
-    boton.id =
-        "cerrarSesionAdmin";
-
-
-    boton.type =
-        "button";
-
-
-    boton.className =
-        "sidebar-logout-button";
-
-
-    boton.textContent =
-        "🔒 Cerrar sesión";
+    boton.dataset.logoutReady =
+        "1";
 
 
     boton.addEventListener(
         "click",
         cerrarSesionAdministracion
-    );
-
-
-    sidebar.appendChild(
-        boton
     );
 
 }
@@ -1146,6 +1496,9 @@ function cerrarSesionAdministracion() {
     aplicarPermisosSidebar();
 
 
+    cerrarTodosLosGrupos();
+
+
     guardarPaginaEnHistorial(
         PAGINA_INICIO,
         true
@@ -1158,7 +1511,7 @@ function cerrarSesionAdministracion() {
 
 
 // =====================================================
-// NAVEGACIÓN DESDE NAVEGADOR
+// NAVEGACIÓN NAVEGADOR
 // =====================================================
 
 function procesarNavegacionNavegador(
@@ -1181,7 +1534,6 @@ function procesarNavegacionNavegador(
 
         cerrarMenuMovil();
 
-
         return;
 
     }
@@ -1196,7 +1548,6 @@ function procesarNavegacionNavegador(
 
 
         cerrarMenuMovil();
-
 
         return;
 
@@ -1233,7 +1584,7 @@ function procesarNavegacionNavegador(
 
 
 // =====================================================
-// EVENTOS DEL MENÚ
+// EVENTOS LINKS MENÚ
 // =====================================================
 
 menuLinks.forEach(
@@ -1266,8 +1617,7 @@ window.addEventListener(
     event => {
 
         const pagina =
-            event.state
-            ?.pagina
+            event.state?.pagina
             ||
             obtenerPaginaDeURL();
 
@@ -1281,7 +1631,7 @@ window.addEventListener(
 
 
 // =====================================================
-// CAMBIO MANUAL HASH
+// CAMBIO MANUAL DE HASH
 // =====================================================
 
 window.addEventListener(
@@ -1297,7 +1647,7 @@ window.addEventListener(
 
 
 // =====================================================
-// MENÚ MÓVIL
+// ABRIR MENÚ MÓVIL
 // =====================================================
 
 function abrirMenuMovil() {
@@ -1331,17 +1681,15 @@ function abrirMenuMovil() {
 }
 
 
+// =====================================================
+// CERRAR MENÚ MÓVIL
+// =====================================================
+
 function cerrarMenuMovil() {
 
-    if (
-        sidebar
-    ) {
-
-        sidebar.classList.remove(
-            "sidebar-open"
-        );
-
-    }
+    sidebar?.classList.remove(
+        "sidebar-open"
+    );
 
 
     document.body.classList.remove(
@@ -1357,23 +1705,14 @@ function cerrarMenuMovil() {
 
 
 // =====================================================
-// ARIA MENÚ MÓVIL
+// ESTADO ARIA DEL MENÚ
 // =====================================================
 
 function actualizarEstadoBotonMenu(
     abierto
 ) {
 
-    if (
-        !mobileMenuButton
-    ) {
-
-        return;
-
-    }
-
-
-    mobileMenuButton.setAttribute(
+    mobileMenuButton?.setAttribute(
         "aria-expanded",
         String(
             abierto
@@ -1384,44 +1723,41 @@ function actualizarEstadoBotonMenu(
 
 
 // =====================================================
-// EVENTOS MENÚ MÓVIL
+// BOTÓN ☰
 // =====================================================
 
-if (
-    mobileMenuButton
-) {
-
-    mobileMenuButton.addEventListener(
+mobileMenuButton
+    ?.addEventListener(
         "click",
         abrirMenuMovil
     );
 
-}
 
+// =====================================================
+// BOTÓN X
+// =====================================================
 
-if (
-    mobileMenuClose
-) {
-
-    mobileMenuClose.addEventListener(
+mobileMenuClose
+    ?.addEventListener(
         "click",
         cerrarMenuMovil
     );
 
-}
 
+// =====================================================
+// BACKDROP
+// =====================================================
 
-if (
-    sidebarBackdrop
-) {
-
-    sidebarBackdrop.addEventListener(
+sidebarBackdrop
+    ?.addEventListener(
         "click",
         cerrarMenuMovil
     );
 
-}
 
+// =====================================================
+// ESCAPE
+// =====================================================
 
 window.addEventListener(
     "keydown",
@@ -1439,6 +1775,10 @@ window.addEventListener(
     }
 );
 
+
+// =====================================================
+// RESIZE
+// =====================================================
 
 window.addEventListener(
     "resize",
@@ -1463,6 +1803,18 @@ window.addEventListener(
 
 function arrancar() {
 
+    asegurarBotonCerrarSesion();
+
+
+    /*
+     * Los cinco bloques empiezan cerrados.
+     * Después activarMenu abrirá únicamente
+     * el correspondiente a la página actual.
+     */
+
+    cerrarTodosLosGrupos();
+
+
     const paginaInicial =
         obtenerPaginaDeURL();
 
@@ -1479,7 +1831,6 @@ function arrancar() {
 
 
         mostrarPortalTrabajador();
-
 
         return;
 
@@ -1498,7 +1849,6 @@ function arrancar() {
 
 
         mostrarAccesoAdministracion();
-
 
         return;
 
@@ -1524,7 +1874,6 @@ function arrancar() {
 
         mostrarSinPermisos();
 
-
         return;
 
     }
@@ -1542,6 +1891,10 @@ function arrancar() {
 
 }
 
+
+// =====================================================
+// INICIAR
+// =====================================================
 
 arrancar();
 
@@ -1591,6 +1944,10 @@ function registrarServiceWorker() {
 
 }
 
+
+// =====================================================
+// REGISTRAR SERVICE WORKER
+// =====================================================
 
 window.addEventListener(
     "load",

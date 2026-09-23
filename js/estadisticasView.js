@@ -7,6 +7,9 @@ import {
     crearTarjetaEstadistica,
     crearTarjetaMiniEstadistica,
     crearBarrasEstadistica,
+    crearGraficoColumnasEstadistica,
+    crearGraficoDonutEstadistica,
+    crearGraficoComparacionEstadistica,
     crearFilaResumenEstadistica,
     crearFilaResumenTextoEstadistica,
     crearTarjetaCampaniaEstadistica,
@@ -171,6 +174,10 @@ export class EstadisticasView {
             </header>
 
 
+            <!-- ==========================================
+                 RENTABILIDAD
+            =========================================== -->
+
             <div class="estadistica-seccion-titulo">
 
                 <h3>
@@ -220,6 +227,10 @@ export class EstadisticasView {
 
             </section>
 
+
+            <!-- ==========================================
+                 FACTURACIÓN Y TESORERÍA
+            =========================================== -->
 
             <div class="estadistica-seccion-titulo">
 
@@ -272,7 +283,7 @@ export class EstadisticasView {
 
 
             <section
-                class="stats"
+                class="stats estadisticas-mini-stats"
                 style="
                     margin-top:14px;
                 "
@@ -296,6 +307,10 @@ export class EstadisticasView {
 
             </section>
 
+
+            <!-- ==========================================
+                 PRODUCCIÓN
+            =========================================== -->
 
             <div class="estadistica-seccion-titulo">
 
@@ -373,6 +388,10 @@ export class EstadisticasView {
             </section>
 
 
+            <!-- ==========================================
+                 PRODUCCIÓN POR PASADA
+            =========================================== -->
+
             <div class="estadistica-seccion-titulo">
 
                 <h3>
@@ -410,19 +429,52 @@ export class EstadisticasView {
             </section>
 
 
-            <div class="estadisticas-grid">
+            <!-- ==========================================
+                 GRÁFICOS PRINCIPALES
+            =========================================== -->
 
-                <section class="estadistica-panel">
+            <div class="estadistica-seccion-titulo">
 
-                    <h3>
-                        Gastos por categoría
-                    </h3>
+                <h3>
+                    Análisis visual
+                </h3>
 
-                    <p class="estadistica-subtitulo">
-                        Distribución de costes registrados
-                    </p>
+                <p>
+                    Comparativa gráfica de producción, costes e ingresos
+                </p>
 
-                    ${crearBarrasEstadistica(
+            </div>
+
+
+            <div class="estadisticas-grid estadisticas-graficos-grid">
+
+
+                <!-- GASTOS -->
+
+                <section class="estadistica-panel gc-chart-panel">
+
+                    <div class="gc-chart-panel-header">
+
+                        <div>
+
+                            <h3>
+                                Gastos por categoría
+                            </h3>
+
+                            <p class="estadistica-subtitulo">
+                                Distribución de costes registrados
+                            </p>
+
+                        </div>
+
+                        <span class="gc-chart-badge">
+                            Gastos
+                        </span>
+
+                    </div>
+
+
+                    ${crearGraficoDonutEstadistica(
                         gastosCategoria,
                         "categoria",
                         "total",
@@ -430,6 +482,157 @@ export class EstadisticasView {
                     )}
 
                 </section>
+
+
+                <!-- PRODUCCIÓN POR PASADA -->
+
+                <section class="estadistica-panel gc-chart-panel">
+
+                    <div class="gc-chart-panel-header">
+
+                        <div>
+
+                            <h3>
+                                Producción por pasada
+                            </h3>
+
+                            <p class="estadistica-subtitulo">
+                                Comparativa entre recolecciones
+                            </p>
+
+                        </div>
+
+                        <span class="gc-chart-badge">
+                            kg
+                        </span>
+
+                    </div>
+
+
+                    ${crearGraficoColumnasEstadistica(
+                        produccionPasada,
+                        "pasada",
+                        "total",
+                        "kg"
+                    )}
+
+                </section>
+
+
+                <!-- INGRESOS VS GASTOS -->
+
+                <section class="estadistica-panel gc-chart-panel">
+
+                    <div class="gc-chart-panel-header">
+
+                        <div>
+
+                            <h3>
+                                Ingresos y gastos
+                            </h3>
+
+                            <p class="estadistica-subtitulo">
+                                Comparativa de rentabilidad
+                            </p>
+
+                        </div>
+
+                        <span class="gc-chart-badge">
+                            €
+                        </span>
+
+                    </div>
+
+
+                    ${crearGraficoComparacionEstadistica({
+
+                        tituloA:
+                            "Ingresos sin IVA",
+
+                        valorA:
+                            ingresos,
+
+                        tituloB:
+                            "Gastos",
+
+                        valorB:
+                            gastos,
+
+                        tipo:
+                            "dinero"
+
+                    })}
+
+                </section>
+
+
+                <!-- COBROS VS PAGOS -->
+
+                <section class="estadistica-panel gc-chart-panel">
+
+                    <div class="gc-chart-panel-header">
+
+                        <div>
+
+                            <h3>
+                                Cobros y pagos
+                            </h3>
+
+                            <p class="estadistica-subtitulo">
+                                Dinero realmente movido
+                            </p>
+
+                        </div>
+
+                        <span class="gc-chart-badge">
+                            Caja
+                        </span>
+
+                    </div>
+
+
+                    ${crearGraficoComparacionEstadistica({
+
+                        tituloA:
+                            "Cobrado",
+
+                        valorA:
+                            cobrado,
+
+                        tituloB:
+                            "Pagado",
+
+                        valorB:
+                            pagado,
+
+                        tipo:
+                            "dinero"
+
+                    })}
+
+                </section>
+
+            </div>
+
+
+            <!-- ==========================================
+                 DETALLE POR FINCA / CLIENTE
+            =========================================== -->
+
+            <div class="estadistica-seccion-titulo">
+
+                <h3>
+                    Distribución
+                </h3>
+
+                <p>
+                    Producción y facturación por finca y cliente
+                </p>
+
+            </div>
+
+
+            <div class="estadisticas-grid">
 
 
                 <section class="estadistica-panel">
@@ -445,26 +648,6 @@ export class EstadisticasView {
                     ${crearBarrasEstadistica(
                         produccionFinca,
                         "finca",
-                        "total",
-                        "kg"
-                    )}
-
-                </section>
-
-
-                <section class="estadistica-panel">
-
-                    <h3>
-                        Producción por pasada
-                    </h3>
-
-                    <p class="estadistica-subtitulo">
-                        Kilos producidos en 1ª, 2ª, 3ª y repaso
-                    </p>
-
-                    ${crearBarrasEstadistica(
-                        produccionPasada,
-                        "pasada",
                         "total",
                         "kg"
                     )}
@@ -512,6 +695,10 @@ export class EstadisticasView {
                 </section>
 
 
+                <!-- ======================================
+                     RESUMEN ECONÓMICO
+                ======================================= -->
+
                 <section class="estadistica-panel">
 
                     <h3>
@@ -549,6 +736,10 @@ export class EstadisticasView {
 
                 </section>
 
+
+                <!-- ======================================
+                     RESUMEN TESORERÍA
+                ======================================= -->
 
                 <section class="estadistica-panel">
 
@@ -593,6 +784,10 @@ export class EstadisticasView {
             </div>
 
 
+            <!-- ==========================================
+                 RENTABILIDAD POR CAMPANYA
+            =========================================== -->
+
             <div class="rentabilidad-bloque">
 
                 <div class="estadistica-seccion-titulo">
@@ -634,6 +829,10 @@ export class EstadisticasView {
 
             </div>
 
+
+            <!-- ==========================================
+                 RENTABILIDAD POR FINCA
+            =========================================== -->
 
             <div class="rentabilidad-bloque">
 

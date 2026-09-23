@@ -1,3 +1,9 @@
+import {
+    escaparHTML,
+    formatearFecha
+} from "./utils.js";
+
+
 export class TrabajadoresView {
 
     constructor(
@@ -21,8 +27,7 @@ export class TrabajadoresView {
     mostrar() {
 
         const trabajadores =
-            this.trabajadorService
-                .obtenerTodos();
+            this.obtenerTrabajadores();
 
 
         const activos =
@@ -61,6 +66,7 @@ export class TrabajadoresView {
                 <button
                     id="nuevoTrabajador"
                     class="primary-button"
+                    type="button"
                 >
                     + Nuevo trabajador
                 </button>
@@ -68,69 +74,25 @@ export class TrabajadoresView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats trabajadores-stats">
 
-                <div class="card">
+                ${this.crearStat(
+                    "👷",
+                    "Trabajadores",
+                    trabajadores.length
+                )}
 
-                    <span class="card-icon">
-                        👷
-                    </span>
+                ${this.crearStat(
+                    "✅",
+                    "Activos",
+                    activos
+                )}
 
-                    <div>
-
-                        <p>
-                            Trabajadores
-                        </p>
-
-                        <h3>
-                            ${trabajadores.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        ✅
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Activos
-                        </p>
-
-                        <h3>
-                            ${activos}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        ⛔
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Inactivos
-                        </p>
-
-                        <h3>
-                            ${inactivos}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "⛔",
+                    "Inactivos",
+                    inactivos
+                )}
 
             </section>
 
@@ -144,7 +106,7 @@ export class TrabajadoresView {
             .getElementById(
                 "nuevoTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrarFormularioCrear()
@@ -157,20 +119,67 @@ export class TrabajadoresView {
 
 
     // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
     // LISTA
     // =====================================================
 
     mostrarLista() {
 
         const trabajadores =
-            this.trabajadorService
-                .obtenerTodos();
+            this.obtenerTrabajadores();
 
 
         const contenedor =
             document.getElementById(
                 "listaTrabajadores"
             );
+
+
+        if (
+            !contenedor
+        ) {
+
+            return;
+
+        }
 
 
         if (
@@ -206,198 +215,35 @@ export class TrabajadoresView {
 
         contenedor.innerHTML = `
 
-            <div class="trabajadores-grid">
+            <div class="trabajadores-grid trabajadores-grid-premium">
 
-                ${trabajadores.map(
-                    trabajador => `
-
-                        <div class="trabajador-card">
-
-                            <div class="trabajador-card-header">
-
-                                <span class="trabajador-icon">
-                                    👷
-                                </span>
-
-
-                                <div class="trabajador-actions">
-
-                                    <button
-                                        class="secondary-button editar-trabajador"
-                                        data-id="${trabajador.id}"
-                                    >
-                                        Editar
-                                    </button>
-
-
-                                    <button
-                                        class="delete-button eliminar-trabajador"
-                                        data-id="${trabajador.id}"
-                                    >
-                                        ×
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-
-                            <h3>
-                                ${this.trabajadorService.obtenerNombreCompleto(trabajador)}
-                            </h3>
-
-
-                            ${
-                                trabajador.puesto
-
-                                    ? `
-
-                                        <p class="trabajador-puesto">
-                                            ${trabajador.puesto}
-                                        </p>
-
-                                    `
-
-                                    : ""
-                            }
-
-
-                            <div class="trabajador-info">
-
-                                <div>
-
-                                    <span>
-                                        Estado
-                                    </span>
-
-                                    <strong>
-                                        ${trabajador.estado}
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Alta
-                                    </span>
-
-                                    <strong>
-
-                                        ${
-                                            trabajador.fechaAlta
-                                                ? this.formatearFecha(
-                                                    trabajador.fechaAlta
-                                                )
-                                                : "Sin fecha"
-                                        }
-
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        PIN de fichaje
-                                    </span>
-
-                                    <strong>
-                                        ${
-                                            trabajador.pin
-                                                ? "Configurado"
-                                                : "Sin PIN"
-                                        }
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            ${
-                                trabajador.telefono
-
-                                    ? `
-
-                                        <p>
-                                            📞 ${trabajador.telefono}
-                                        </p>
-
-                                    `
-
-                                    : ""
-                            }
-
-
-                            ${
-                                trabajador.email
-
-                                    ? `
-
-                                        <p>
-                                            ✉️ ${trabajador.email}
-                                        </p>
-
-                                    `
-
-                                    : ""
-                            }
-
-
-                            ${
-                                trabajador.notas
-
-                                    ? `
-
-                                        <div class="trabajador-notas">
-
-                                            <span>
-                                                Notas
-                                            </span>
-
-                                            <p>
-                                                ${trabajador.notas}
-                                            </p>
-
-                                        </div>
-
-                                    `
-
-                                    : ""
-                            }
-
-                        </div>
-
-                    `
-                ).join("")}
+                ${trabajadores
+                    .map(
+                        trabajador =>
+                            this.crearTarjetaTrabajador(
+                                trabajador
+                            )
+                    )
+                    .join("")}
 
             </div>
 
         `;
 
 
-        // =================================================
-        // EDITAR
-        // =================================================
-
-        document
+        contenedor
             .querySelectorAll(
                 ".editar-trabajador"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
                             this.mostrarFormularioEditar(
-                                Number(
-                                    button.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }
@@ -407,84 +253,358 @@ export class TrabajadoresView {
             );
 
 
-        // =================================================
-        // ELIMINAR
-        // =================================================
-
-        document
+        contenedor
             .querySelectorAll(
                 ".eliminar-trabajador"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
-                            const id =
-                                Number(
-                                    button.dataset.id
-                                );
-
-
-                            const trabajador =
-                                this.trabajadorService
-                                    .obtenerPorId(
-                                        id
-                                    );
-
-
-                            if (
-                                !trabajador
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            if (
-                                !confirm(
-                                    `¿Quieres eliminar a "${this.trabajadorService.obtenerNombreCompleto(trabajador)}"?`
-                                )
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            const resultado =
-                                this.trabajadorService
-                                    .eliminar(
-                                        id
-                                    );
-
-
-                            if (
-                                resultado
-                                &&
-                                resultado.ok ===
-                                false
-                            ) {
-
-                                alert(
-                                    resultado.mensaje
-                                );
-
-                                return;
-
-                            }
-
-
-                            this.mostrar();
+                            this.eliminarTrabajador(
+                                boton.dataset.id
+                            );
 
                         }
                     );
 
                 }
             );
+
+    }
+
+
+    // =====================================================
+    // TARJETA TRABAJADOR
+    // =====================================================
+
+    crearTarjetaTrabajador(
+        trabajador
+    ) {
+
+        const nombreCompleto =
+            this.obtenerNombreCompleto(
+                trabajador
+            );
+
+
+        const estado =
+            trabajador.estado
+            ||
+            "Activo";
+
+
+        const iniciales =
+            this.obtenerIniciales(
+                trabajador
+            );
+
+
+        return `
+
+            <article class="trabajador-card trabajador-card-premium">
+
+                <div class="trabajador-card-header">
+
+                    <div class="trabajador-identity">
+
+                        <div class="trabajador-avatar">
+                            ${escaparHTML(
+                                iniciales
+                            )}
+                        </div>
+
+
+                        <div>
+
+                            <h3>
+                                ${escaparHTML(
+                                    nombreCompleto
+                                )}
+                            </h3>
+
+
+                            <p class="trabajador-puesto">
+
+                                ${escaparHTML(
+                                    trabajador.puesto
+                                    ||
+                                    "Trabajador"
+                                )}
+
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trabajador-actions">
+
+                        <button
+                            class="secondary-button editar-trabajador"
+                            data-id="${escaparHTML(
+                                trabajador.id
+                            )}"
+                            type="button"
+                        >
+                            Editar
+                        </button>
+
+
+                        <button
+                            class="delete-button eliminar-trabajador"
+                            data-id="${escaparHTML(
+                                trabajador.id
+                            )}"
+                            type="button"
+                            aria-label="Eliminar trabajador"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <div class="trabajador-state-row">
+
+                    <span
+                        class="
+                            trabajador-status
+                            ${
+                                estado ===
+                                "Activo"
+                                    ? "activo"
+                                    : "inactivo"
+                            }
+                        "
+                    >
+
+                        ${
+                            estado ===
+                            "Activo"
+                                ? "● Activo"
+                                : "● Inactivo"
+                        }
+
+                    </span>
+
+
+                    <span class="trabajador-pin-status">
+
+                        ${
+                            trabajador.pin
+                                ? "🔐 PIN configurado"
+                                : "🔓 Sin PIN"
+                        }
+
+                    </span>
+
+                </div>
+
+
+                <div class="trabajador-info trabajador-info-premium">
+
+                    <div>
+
+                        <span>
+                            Alta
+                        </span>
+
+                        <strong>
+
+                            ${
+                                trabajador.fechaAlta
+
+                                    ? formatearFecha(
+                                        trabajador.fechaAlta
+                                    )
+
+                                    : "Sin fecha"
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Estado
+                        </span>
+
+                        <strong>
+                            ${escaparHTML(
+                                estado
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                ${
+                    trabajador.telefono
+                    ||
+                    trabajador.email
+
+                        ? `
+
+                            <div class="trabajador-contact">
+
+                                ${
+                                    trabajador.telefono
+
+                                        ? `
+
+                                            <span>
+
+                                                📞
+                                                ${escaparHTML(
+                                                    trabajador.telefono
+                                                )}
+
+                                            </span>
+
+                                        `
+
+                                        : ""
+                                }
+
+
+                                ${
+                                    trabajador.email
+
+                                        ? `
+
+                                            <span>
+
+                                                ✉️
+                                                ${escaparHTML(
+                                                    trabajador.email
+                                                )}
+
+                                            </span>
+
+                                        `
+
+                                        : ""
+                                }
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    trabajador.notas
+
+                        ? `
+
+                            <div class="trabajador-notas">
+
+                                <span>
+                                    Notas
+                                </span>
+
+                                <p>
+                                    ${escaparHTML(
+                                        trabajador.notas
+                                    )}
+                                </p>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ELIMINAR
+    // =====================================================
+
+    eliminarTrabajador(
+        id
+    ) {
+
+        const trabajador =
+            this.trabajadorService
+                .obtenerPorId(
+                    id
+                );
+
+
+        if (
+            !trabajador
+        ) {
+
+            return;
+
+        }
+
+
+        const nombre =
+            this.obtenerNombreCompleto(
+                trabajador
+            );
+
+
+        if (
+            !confirm(
+                `¿Quieres eliminar a "${nombre}"?`
+            )
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.trabajadorService
+                .eliminar(
+                    id
+                );
+
+
+        if (
+            resultado
+            &&
+            resultado.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+                ||
+                "No se ha podido eliminar el trabajador."
+            );
+
+
+            return;
+
+        }
+
+
+        this.mostrar();
 
     }
 
@@ -501,6 +621,14 @@ export class TrabajadoresView {
 
                 <div>
 
+                    <button
+                        id="volverTrabajadores"
+                        class="back-button"
+                        type="button"
+                    >
+                        ← Volver
+                    </button>
+
                     <h2>
                         Nuevo trabajador
                     </h2>
@@ -514,16 +642,29 @@ export class TrabajadoresView {
             </header>
 
 
-            ${this.crearFormulario(null)}
+            ${this.crearFormulario(
+                null
+            )}
 
         `;
 
 
         document
             .getElementById(
+                "volverTrabajadores"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrar()
+            );
+
+
+        document
+            .getElementById(
                 "cancelarTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -534,7 +675,7 @@ export class TrabajadoresView {
             .getElementById(
                 "guardarTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.guardarNuevo()
@@ -542,6 +683,10 @@ export class TrabajadoresView {
 
     }
 
+
+    // =====================================================
+    // GUARDAR NUEVO
+    // =====================================================
 
     guardarNuevo() {
 
@@ -566,12 +711,15 @@ export class TrabajadoresView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido crear el trabajador."
             );
+
 
             return;
 
@@ -613,6 +761,14 @@ export class TrabajadoresView {
 
                 <div>
 
+                    <button
+                        id="volverTrabajadores"
+                        class="back-button"
+                        type="button"
+                    >
+                        ← Volver
+                    </button>
+
                     <h2>
                         Editar trabajador
                     </h2>
@@ -626,16 +782,29 @@ export class TrabajadoresView {
             </header>
 
 
-            ${this.crearFormulario(trabajador)}
+            ${this.crearFormulario(
+                trabajador
+            )}
 
         `;
 
 
         document
             .getElementById(
+                "volverTrabajadores"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrar()
+            );
+
+
+        document
+            .getElementById(
                 "cancelarTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -646,48 +815,63 @@ export class TrabajadoresView {
             .getElementById(
                 "guardarTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    const datos =
-                        this.obtenerDatosFormulario();
-
-
-                    if (
-                        !datos
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const resultado =
-                        this.trabajadorService
-                            .actualizar(
-                                id,
-                                datos
-                            );
-
-
-                    if (
-                        !resultado.ok
-                    ) {
-
-                        alert(
-                            resultado.mensaje
-                        );
-
-                        return;
-
-                    }
-
-
-                    this.mostrar();
-
-                }
+                () =>
+                    this.guardarCambios(
+                        id
+                    )
             );
+
+    }
+
+
+    // =====================================================
+    // GUARDAR CAMBIOS
+    // =====================================================
+
+    guardarCambios(
+        id
+    ) {
+
+        const datos =
+            this.obtenerDatosFormulario();
+
+
+        if (
+            !datos
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.trabajadorService
+                .actualizar(
+                    id,
+                    datos
+                );
+
+
+        if (
+            !resultado?.ok
+        ) {
+
+            alert(
+                resultado?.mensaje
+                ||
+                "No se ha podido actualizar el trabajador."
+            );
+
+
+            return;
+
+        }
+
+
+        this.mostrar();
 
     }
 
@@ -702,163 +886,200 @@ export class TrabajadoresView {
 
         return `
 
-            <div class="form-panel">
+            <div class="form-panel trabajador-form-panel">
 
-                <div class="form-group">
+                <div class="trabajador-form-grid">
 
-                    <label>
-                        Nombre *
-                    </label>
+                    <div class="form-group">
 
-                    <input
-                        id="nombreTrabajador"
-                        type="text"
-                        value="${trabajador?.nombre || ""}"
-                    >
+                        <label>
+                            Nombre *
+                        </label>
 
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Apellidos
-                    </label>
-
-                    <input
-                        id="apellidosTrabajador"
-                        type="text"
-                        value="${trabajador?.apellidos || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Teléfono
-                    </label>
-
-                    <input
-                        id="telefonoTrabajador"
-                        type="text"
-                        value="${trabajador?.telefono || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Email
-                    </label>
-
-                    <input
-                        id="emailTrabajador"
-                        type="email"
-                        value="${trabajador?.email || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Puesto / función
-                    </label>
-
-                    <input
-                        id="puestoTrabajador"
-                        type="text"
-                        placeholder="Ej. Tractorista"
-                        value="${trabajador?.puesto || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        PIN de fichaje *
-                    </label>
-
-                    <input
-                        id="pinTrabajador"
-                        type="password"
-                        inputmode="numeric"
-                        pattern="[0-9]*"
-                        maxlength="4"
-                        autocomplete="off"
-                        placeholder="4 números"
-                        value="${trabajador?.pin || ""}"
-                    >
-
-                    <small class="form-help">
-                        El trabajador utilizará este PIN para registrar sus entradas y salidas.
-                    </small>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Estado
-                    </label>
-
-                    <select
-                        id="estadoTrabajador"
-                    >
-
-                        <option
-                            value="Activo"
-                            ${
-                                !trabajador
+                        <input
+                            id="nombreTrabajador"
+                            type="text"
+                            autocomplete="off"
+                            value="${escaparHTML(
+                                trabajador?.nombre
                                 ||
-                                trabajador.estado ===
-                                "Activo"
-
-                                    ? "selected"
-                                    : ""
-                            }
+                                ""
+                            )}"
                         >
-                            Activo
-                        </option>
+
+                    </div>
 
 
-                        <option
-                            value="Inactivo"
-                            ${
-                                trabajador?.estado ===
-                                "Inactivo"
+                    <div class="form-group">
 
-                                    ? "selected"
-                                    : ""
-                            }
+                        <label>
+                            Apellidos
+                        </label>
+
+                        <input
+                            id="apellidosTrabajador"
+                            type="text"
+                            autocomplete="off"
+                            value="${escaparHTML(
+                                trabajador?.apellidos
+                                ||
+                                ""
+                            )}"
                         >
-                            Inactivo
-                        </option>
 
-                    </select>
-
-                </div>
+                    </div>
 
 
-                <div class="form-group">
+                    <div class="form-group">
 
-                    <label>
-                        Fecha de alta
-                    </label>
+                        <label>
+                            Teléfono
+                        </label>
 
-                    <input
-                        id="fechaAltaTrabajador"
-                        type="date"
-                        value="${trabajador?.fechaAlta || ""}"
-                    >
+                        <input
+                            id="telefonoTrabajador"
+                            type="tel"
+                            autocomplete="tel"
+                            value="${escaparHTML(
+                                trabajador?.telefono
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Email
+                        </label>
+
+                        <input
+                            id="emailTrabajador"
+                            type="email"
+                            autocomplete="email"
+                            value="${escaparHTML(
+                                trabajador?.email
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Puesto / función
+                        </label>
+
+                        <input
+                            id="puestoTrabajador"
+                            type="text"
+                            autocomplete="off"
+                            placeholder="Ej. Tractorista"
+                            value="${escaparHTML(
+                                trabajador?.puesto
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            PIN de fichaje *
+                        </label>
+
+                        <input
+                            id="pinTrabajador"
+                            type="password"
+                            inputmode="numeric"
+                            pattern="[0-9]*"
+                            maxlength="4"
+                            autocomplete="off"
+                            placeholder="4 números"
+                            value="${escaparHTML(
+                                trabajador?.pin
+                                ||
+                                ""
+                            )}"
+                        >
+
+                        <small class="form-help">
+                            El trabajador utilizará este PIN para registrar sus entradas y salidas.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Estado
+                        </label>
+
+                        <select
+                            id="estadoTrabajador"
+                        >
+
+                            <option
+                                value="Activo"
+                                ${
+                                    !trabajador
+                                    ||
+                                    trabajador.estado ===
+                                    "Activo"
+
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                Activo
+                            </option>
+
+
+                            <option
+                                value="Inactivo"
+                                ${
+                                    trabajador?.estado ===
+                                    "Inactivo"
+
+                                        ? "selected"
+                                        : ""
+                                }
+                            >
+                                Inactivo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Fecha de alta
+                        </label>
+
+                        <input
+                            id="fechaAltaTrabajador"
+                            type="date"
+                            value="${escaparHTML(
+                                trabajador?.fechaAlta
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
 
                 </div>
 
@@ -872,7 +1093,11 @@ export class TrabajadoresView {
                     <textarea
                         id="notasTrabajador"
                         rows="5"
-                    >${trabajador?.notas || ""}</textarea>
+                    >${escaparHTML(
+                        trabajador?.notas
+                        ||
+                        ""
+                    )}</textarea>
 
                 </div>
 
@@ -882,6 +1107,7 @@ export class TrabajadoresView {
                     <button
                         id="cancelarTrabajador"
                         class="secondary-button"
+                        type="button"
                     >
                         Cancelar
                     </button>
@@ -890,6 +1116,7 @@ export class TrabajadoresView {
                     <button
                         id="guardarTrabajador"
                         class="primary-button"
+                        type="button"
                     >
 
                         ${
@@ -920,8 +1147,10 @@ export class TrabajadoresView {
                 .getElementById(
                     "nombreTrabajador"
                 )
-                .value
-                .trim();
+                ?.value
+                .trim()
+            ||
+            "";
 
 
         const pin =
@@ -929,8 +1158,10 @@ export class TrabajadoresView {
                 .getElementById(
                     "pinTrabajador"
                 )
-                .value
-                .trim();
+                ?.value
+                .trim()
+            ||
+            "";
 
 
         if (
@@ -940,6 +1171,7 @@ export class TrabajadoresView {
             alert(
                 "Introduce el nombre del trabajador."
             );
+
 
             return null;
 
@@ -956,6 +1188,7 @@ export class TrabajadoresView {
                 "El PIN debe tener exactamente 4 números."
             );
 
+
             return null;
 
         }
@@ -963,65 +1196,46 @@ export class TrabajadoresView {
 
         return {
 
-            nombre:
-                nombre,
+            nombre,
 
             apellidos:
-                document
-                    .getElementById(
-                        "apellidosTrabajador"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "apellidosTrabajador"
+                ),
 
             telefono:
-                document
-                    .getElementById(
-                        "telefonoTrabajador"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "telefonoTrabajador"
+                ),
 
             email:
-                document
-                    .getElementById(
-                        "emailTrabajador"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "emailTrabajador"
+                ),
 
             puesto:
-                document
-                    .getElementById(
-                        "puestoTrabajador"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "puestoTrabajador"
+                ),
 
-            pin:
-                pin,
+            pin,
 
             estado:
-                document
-                    .getElementById(
-                        "estadoTrabajador"
-                    )
-                    .value,
+                this.obtenerValor(
+                    "estadoTrabajador"
+                )
+                ||
+                "Activo",
 
             fechaAlta:
-                document
-                    .getElementById(
-                        "fechaAltaTrabajador"
-                    )
-                    .value,
+                this.obtenerValor(
+                    "fechaAltaTrabajador"
+                ),
 
             notas:
-                document
-                    .getElementById(
-                        "notasTrabajador"
-                    )
-                    .value
-                    .trim()
+                this.obtenerValor(
+                    "notasTrabajador"
+                )
 
         };
 
@@ -1029,39 +1243,134 @@ export class TrabajadoresView {
 
 
     // =====================================================
-    // FECHA
+    // VALOR INPUT
     // =====================================================
 
-    formatearFecha(
-        fecha
+    obtenerValor(
+        id
+    ) {
+
+        return (
+            document
+                .getElementById(
+                    id
+                )
+                ?.value
+                ?.trim()
+            ||
+            ""
+        );
+
+    }
+
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    obtenerTrabajadores() {
+
+        const trabajadores =
+            this.trabajadorService
+                .obtenerTodos();
+
+
+        return Array.isArray(
+            trabajadores
+        )
+            ? trabajadores
+            : [];
+
+    }
+
+
+    // =====================================================
+    // NOMBRE
+    // =====================================================
+
+    obtenerNombreCompleto(
+        trabajador
     ) {
 
         if (
-            !fecha
+            typeof
+            this.trabajadorService
+                .obtenerNombreCompleto ===
+            "function"
         ) {
 
-            return "";
+            return this.trabajadorService
+                .obtenerNombreCompleto(
+                    trabajador
+                );
 
         }
 
 
-        const partes =
-            fecha.split(
-                "-"
-            );
-
-
         return (
-            partes[2]
-            +
-            "/"
-            +
-            partes[1]
-            +
-            "/"
-            +
-            partes[0]
+            [
+                trabajador?.nombre,
+                trabajador?.apellidos
+            ]
+                .filter(
+                    Boolean
+                )
+                .join(
+                    " "
+                )
+                .trim()
+            ||
+            "Trabajador"
         );
+
+    }
+
+
+    // =====================================================
+    // INICIALES
+    // =====================================================
+
+    obtenerIniciales(
+        trabajador
+    ) {
+
+        const partes =
+            [
+                trabajador?.nombre,
+                trabajador?.apellidos
+            ]
+                .filter(
+                    Boolean
+                );
+
+
+        if (
+            partes.length ===
+            0
+        ) {
+
+            return "👷";
+
+        }
+
+
+        return partes
+            .map(
+                parte =>
+                    String(
+                        parte
+                    )
+                        .trim()
+                        .charAt(
+                            0
+                        )
+                        .toUpperCase()
+            )
+            .slice(
+                0,
+                2
+            )
+            .join("");
 
     }
 

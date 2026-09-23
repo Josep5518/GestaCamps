@@ -22,15 +22,40 @@ function formatearPorcentaje(
             .toLocaleString(
                 "es-ES",
                 {
-                    minimumFractionDigits:
-                        1,
-
-                    maximumFractionDigits:
-                        1
+                    minimumFractionDigits: 1,
+                    maximumFractionDigits: 1
                 }
             )
         +
         " %"
+    );
+
+}
+
+
+// =====================================================
+// FORMATEAR VALOR DE GRÁFICO
+// =====================================================
+
+function formatearValorGrafico(
+    valor,
+    tipo
+) {
+
+    if (
+        tipo ===
+        "kg"
+    ) {
+
+        return `${formatearNumero(
+            valor
+        )} kg`;
+
+    }
+
+
+    return formatearDinero(
+        valor
     );
 
 }
@@ -95,7 +120,7 @@ export function crearTarjetaMiniEstadistica(
 
 
 // =====================================================
-// BARRAS
+// BARRAS HORIZONTALES
 // =====================================================
 
 export function crearBarrasEstadistica(
@@ -114,13 +139,7 @@ export function crearBarrasEstadistica(
         0
     ) {
 
-        return `
-
-            <p class="estadistica-vacio">
-                Sin datos.
-            </p>
-
-        `;
+        return crearEstadoVacioGrafico();
 
     }
 
@@ -143,87 +162,697 @@ export function crearBarrasEstadistica(
         );
 
 
-    return datos
-        .map(
-            item => {
+    return `
 
-                const valor =
-                    Number(
-                        item[
-                            propiedadValor
-                        ]
-                        ||
-                        0
-                    );
+        <div class="gc-chart-bars">
+
+            ${datos
+                .map(
+                    item => {
+
+                        const valor =
+                            Number(
+                                item[
+                                    propiedadValor
+                                ]
+                                ||
+                                0
+                            );
 
 
-                const porcentaje =
-                    Math.max(
-                        2,
-                        (
-                            Math.abs(
-                                valor
+                        const porcentaje =
+                            Math.max(
+                                2,
+                                (
+                                    Math.abs(
+                                        valor
+                                    )
+                                    /
+                                    maximo
+                                )
+                                *
+                                100
+                            );
+
+
+                        return `
+
+                            <div class="estadistica-barra-item">
+
+                                <div class="estadistica-barra-cabecera">
+
+                                    <strong>
+
+                                        ${escaparHTML(
+                                            item[
+                                                propiedadNombre
+                                            ]
+                                        )}
+
+                                    </strong>
+
+
+                                    <span>
+
+                                        ${formatearValorGrafico(
+                                            valor,
+                                            tipo
+                                        )}
+
+                                    </span>
+
+                                </div>
+
+
+                                <div class="estadistica-barra-fondo">
+
+                                    <div
+                                        class="estadistica-barra"
+                                        style="
+                                            width:${porcentaje}%;
+                                        "
+                                    ></div>
+
+                                </div>
+
+                            </div>
+
+                        `;
+
+                    }
+                )
+                .join("")}
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// GRÁFICO DE COLUMNAS
+// =====================================================
+
+export function crearGraficoColumnasEstadistica(
+    datos,
+    propiedadNombre,
+    propiedadValor,
+    tipo
+) {
+
+    if (
+        !Array.isArray(
+            datos
+        )
+        ||
+        datos.length ===
+        0
+    ) {
+
+        return crearEstadoVacioGrafico();
+
+    }
+
+
+    const maximo =
+        Math.max(
+            ...datos.map(
+                item =>
+                    Math.abs(
+                        Number(
+                            item[
+                                propiedadValor
+                            ]
+                            ||
+                            0
+                        )
+                    )
+            ),
+            1
+        );
+
+
+    return `
+
+        <div class="gc-column-chart">
+
+            <div class="gc-column-chart-grid">
+
+                <span></span>
+                <span></span>
+                <span></span>
+                <span></span>
+
+            </div>
+
+
+            <div class="gc-column-chart-columns">
+
+                ${datos
+                    .map(
+                        item => {
+
+                            const valor =
+                                Number(
+                                    item[
+                                        propiedadValor
+                                    ]
+                                    ||
+                                    0
+                                );
+
+
+                            const altura =
+                                Math.max(
+                                    4,
+                                    (
+                                        Math.abs(
+                                            valor
+                                        )
+                                        /
+                                        maximo
+                                    )
+                                    *
+                                    100
+                                );
+
+
+                            return `
+
+                                <div class="gc-column-item">
+
+                                    <div class="gc-column-value">
+
+                                        ${formatearValorGrafico(
+                                            valor,
+                                            tipo
+                                        )}
+
+                                    </div>
+
+
+                                    <div class="gc-column-track">
+
+                                        <div
+                                            class="gc-column-bar"
+                                            style="
+                                                height:${altura}%;
+                                            "
+                                        ></div>
+
+                                    </div>
+
+
+                                    <div
+                                        class="gc-column-label"
+                                        title="${escaparHTML(
+                                            item[
+                                                propiedadNombre
+                                            ]
+                                        )}"
+                                    >
+
+                                        ${escaparHTML(
+                                            item[
+                                                propiedadNombre
+                                            ]
+                                        )}
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("")}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// GRÁFICO DONUT
+// =====================================================
+
+export function crearGraficoDonutEstadistica(
+    datos,
+    propiedadNombre,
+    propiedadValor,
+    tipo
+) {
+
+    if (
+        !Array.isArray(
+            datos
+        )
+        ||
+        datos.length ===
+        0
+    ) {
+
+        return crearEstadoVacioGrafico();
+
+    }
+
+
+    const datosValidos =
+        datos
+            .map(
+                item => ({
+
+                    nombre:
+                        String(
+                            item[
+                                propiedadNombre
+                            ]
+                            ??
+                            "Sin nombre"
+                        ),
+
+                    valor:
+                        Math.max(
+                            0,
+                            Number(
+                                item[
+                                    propiedadValor
+                                ]
+                                ||
+                                0
                             )
+                        )
+
+                })
+            )
+            .filter(
+                item =>
+                    item.valor >
+                    0
+            );
+
+
+    if (
+        datosValidos.length ===
+        0
+    ) {
+
+        return crearEstadoVacioGrafico();
+
+    }
+
+
+    const total =
+        datosValidos.reduce(
+            (
+                suma,
+                item
+            ) =>
+                suma
+                +
+                item.valor,
+            0
+        );
+
+
+    let acumulado =
+        0;
+
+
+    const segmentos =
+        datosValidos
+            .map(
+                (
+                    item,
+                    indice
+                ) => {
+
+                    const inicio =
+                        (
+                            acumulado
                             /
-                            maximo
+                            total
                         )
                         *
-                        100
-                    );
+                        100;
 
 
-                const textoValor =
-                    tipo ===
-                    "kg"
+                    acumulado +=
+                        item.valor;
 
-                        ? `${formatearNumero(
-                            valor
-                        )} kg`
 
-                        : formatearDinero(
-                            valor
+                    const fin =
+                        (
+                            acumulado
+                            /
+                            total
+                        )
+                        *
+                        100;
+
+
+                    const tono =
+                        obtenerColorGrafico(
+                            indice
                         );
 
 
-                return `
+                    return `${tono} ${inicio}% ${fin}%`;
 
-                    <div class="estadistica-barra-item">
-
-                        <div class="estadistica-barra-cabecera">
-
-                            <strong>
-                                ${escaparHTML(
-                                    item[
-                                        propiedadNombre
-                                    ]
-                                )}
-                            </strong>
-
-                            <span>
-                                ${textoValor}
-                            </span>
-
-                        </div>
+                }
+            )
+            .join(", ");
 
 
-                        <div class="estadistica-barra-fondo">
+    return `
 
-                            <div
-                                class="estadistica-barra"
-                                style="
-                                    width:${porcentaje}%;
-                                "
-                            ></div>
+        <div class="gc-donut-layout">
 
-                        </div>
+            <div class="gc-donut-wrapper">
+
+                <div
+                    class="gc-donut"
+                    style="
+                        background:
+                            conic-gradient(
+                                ${segmentos}
+                            );
+                    "
+                >
+
+                    <div class="gc-donut-center">
+
+                        <span>
+                            Total
+                        </span>
+
+                        <strong>
+                            ${formatearValorGrafico(
+                                total,
+                                tipo
+                            )}
+                        </strong>
 
                     </div>
 
-                `;
+                </div>
 
-            }
-        )
-        .join("");
+            </div>
+
+
+            <div class="gc-donut-legend">
+
+                ${datosValidos
+                    .map(
+                        (
+                            item,
+                            indice
+                        ) => {
+
+                            const porcentaje =
+                                total >
+                                0
+
+                                    ? (
+                                        item.valor
+                                        /
+                                        total
+                                    )
+                                    *
+                                    100
+
+                                    : 0;
+
+
+                            return `
+
+                                <div class="gc-donut-legend-item">
+
+                                    <span
+                                        class="gc-donut-dot"
+                                        style="
+                                            background:
+                                                ${obtenerColorGrafico(
+                                                    indice
+                                                )};
+                                        "
+                                    ></span>
+
+
+                                    <div>
+
+                                        <strong>
+
+                                            ${escaparHTML(
+                                                item.nombre
+                                            )}
+
+                                        </strong>
+
+                                        <small>
+
+                                            ${formatearValorGrafico(
+                                                item.valor,
+                                                tipo
+                                            )}
+
+                                            ·
+
+                                            ${formatearPorcentaje(
+                                                porcentaje
+                                            )}
+
+                                        </small>
+
+                                    </div>
+
+                                </div>
+
+                            `;
+
+                        }
+                    )
+                    .join("")}
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// COMPARACIÓN DE DOS VALORES
+// =====================================================
+
+export function crearGraficoComparacionEstadistica({
+    tituloA,
+    valorA,
+    tituloB,
+    valorB,
+    tipo = "dinero"
+}) {
+
+    const numeroA =
+        Number(
+            valorA
+            ||
+            0
+        );
+
+
+    const numeroB =
+        Number(
+            valorB
+            ||
+            0
+        );
+
+
+    const maximo =
+        Math.max(
+            Math.abs(
+                numeroA
+            ),
+            Math.abs(
+                numeroB
+            ),
+            1
+        );
+
+
+    const porcentajeA =
+        Math.max(
+            2,
+            (
+                Math.abs(
+                    numeroA
+                )
+                /
+                maximo
+            )
+            *
+            100
+        );
+
+
+    const porcentajeB =
+        Math.max(
+            2,
+            (
+                Math.abs(
+                    numeroB
+                )
+                /
+                maximo
+            )
+            *
+            100
+        );
+
+
+    return `
+
+        <div class="gc-comparison-chart">
+
+            ${crearFilaComparacion(
+                tituloA,
+                numeroA,
+                porcentajeA,
+                tipo,
+                "principal"
+            )}
+
+            ${crearFilaComparacion(
+                tituloB,
+                numeroB,
+                porcentajeB,
+                tipo,
+                "secundario"
+            )}
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// FILA COMPARACIÓN
+// =====================================================
+
+function crearFilaComparacion(
+    titulo,
+    valor,
+    porcentaje,
+    tipo,
+    clase
+) {
+
+    return `
+
+        <div class="gc-comparison-item">
+
+            <div class="gc-comparison-header">
+
+                <span>
+                    ${escaparHTML(
+                        titulo
+                    )}
+                </span>
+
+                <strong>
+                    ${formatearValorGrafico(
+                        valor,
+                        tipo
+                    )}
+                </strong>
+
+            </div>
+
+
+            <div class="gc-comparison-track">
+
+                <div
+                    class="
+                        gc-comparison-bar
+                        gc-comparison-${clase}
+                    "
+                    style="
+                        width:${porcentaje}%;
+                    "
+                ></div>
+
+            </div>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// ESTADO VACÍO GRÁFICO
+// =====================================================
+
+function crearEstadoVacioGrafico() {
+
+    return `
+
+        <div class="gc-chart-empty">
+
+            <span>
+                📊
+            </span>
+
+            <p>
+                Todavía no hay datos suficientes.
+            </p>
+
+        </div>
+
+    `;
+
+}
+
+
+// =====================================================
+// COLORES DEL DONUT
+// =====================================================
+
+function obtenerColorGrafico(
+    indice
+) {
+
+    const colores = [
+
+        "#1f7a55",
+        "#55a874",
+        "#94bd62",
+        "#d2b452",
+        "#ca7854",
+        "#8562a8",
+        "#4d8f9b",
+        "#93a1a1"
+
+    ];
+
+
+    return colores[
+        indice
+        %
+        colores.length
+    ];
 
 }
 
@@ -245,7 +874,6 @@ export function crearFilaResumenEstadistica(
                 estadistica-resumen-fila
                 ${
                     destacado
-
                         ? "estadistica-resumen-destacado"
                         : ""
                 }

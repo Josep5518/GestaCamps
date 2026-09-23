@@ -80,6 +80,10 @@
     <div class="app">
 
 
+        <!-- =================================================
+             CABECERA MÓVIL
+        ================================================== -->
+
         <header class="mobile-header">
 
             <button
@@ -109,10 +113,19 @@
         </header>
 
 
+        <!-- =================================================
+             SIDEBAR
+        ================================================== -->
+
         <aside
             id="sidebar"
             class="sidebar"
         >
+
+
+            <!-- =============================================
+                 CABECERA MÓVIL SIDEBAR
+            ============================================== -->
 
             <div class="sidebar-mobile-top">
 
@@ -141,6 +154,10 @@
             </div>
 
 
+            <!-- =============================================
+                 MARCA ESCRITORIO
+            ============================================== -->
+
             <div class="sidebar-desktop-brand">
 
                 <h1>
@@ -154,204 +171,434 @@
             </div>
 
 
-            <nav>
+            <!-- =============================================
+                 NAVEGACIÓN
+            ============================================== -->
 
-                <a
-                    href="#inicio"
-                    data-page="inicio"
-                    class="active"
+            <nav class="sidebar-nav">
+
+
+                <!-- =========================================
+                     ACCESOS FIJOS
+                ========================================== -->
+
+                <div class="sidebar-fixed-links">
+
+                    <a
+                        href="#inicio"
+                        data-page="inicio"
+                        class="active"
+                    >
+                        🏠 Inicio
+                    </a>
+
+
+                    <a
+                        href="#buscador"
+                        data-page="buscador"
+                    >
+                        🔎 Buscar global
+                    </a>
+
+                </div>
+
+
+                <!-- =========================================
+                     1. GESTIÓN AGRÍCOLA
+                ========================================== -->
+
+                <div
+                    class="sidebar-group"
+                    data-menu-group="gestion-agricola"
                 >
-                    🏠 Inicio
-                </a>
+
+                    <button
+                        class="sidebar-group-toggle"
+                        type="button"
+                        aria-expanded="false"
+                    >
+
+                        <span class="sidebar-group-title">
+
+                            <span>
+                                🌾
+                            </span>
+
+                            GESTIÓN AGRÍCOLA
+
+                        </span>
 
 
-                <a
-                    href="#buscador"
-                    data-page="buscador"
+                        <span class="sidebar-group-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <div class="sidebar-group-content">
+
+                        <a
+                            href="#campanias"
+                            data-page="campanias"
+                        >
+                            🗓️ Campanya
+                        </a>
+
+
+                        <a
+                            href="#fincas"
+                            data-page="fincas"
+                        >
+                            🌾 Fincas y parcelas
+                        </a>
+
+
+                        <a
+                            href="#cultivos"
+                            data-page="cultivos"
+                        >
+                            🌱 Cultivos
+                        </a>
+
+
+                        <a
+                            href="#cuadernoCampo"
+                            data-page="cuadernoCampo"
+                        >
+                            📖 Cuaderno de campo
+                        </a>
+
+
+                        <a
+                            href="#tratamientos"
+                            data-page="tratamientos"
+                        >
+                            🧪 Tratamientos
+                        </a>
+
+
+                        <a
+                            href="#trabajos"
+                            data-page="trabajos"
+                        >
+                            👨‍🌾 Trabajos y tareas
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     2. PERSONAL
+                ========================================== -->
+
+                <div
+                    class="sidebar-group"
+                    data-menu-group="personal"
                 >
-                    🔎 Buscar global
-                </a>
+
+                    <button
+                        class="sidebar-group-toggle"
+                        type="button"
+                        aria-expanded="false"
+                    >
+
+                        <span class="sidebar-group-title">
+
+                            <span>
+                                👤
+                            </span>
+
+                            PERSONAL
+
+                        </span>
 
 
-                <a
-                    href="#fincas"
-                    data-page="fincas"
+                        <span class="sidebar-group-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <div class="sidebar-group-content">
+
+                        <a
+                            href="#trabajadores"
+                            data-page="trabajadores"
+                        >
+                            👷 Trabajadores
+                        </a>
+
+
+                        <a
+                            href="#fichajes"
+                            data-page="fichajes"
+                        >
+                            ⏱️ Fichajes
+                        </a>
+
+
+                        <a
+                            href="#trabajadorPortal"
+                            data-page="trabajadorPortal"
+                        >
+                            👤 Portal trabajador
+                        </a>
+
+
+                        <a
+                            href="#incidencias"
+                            data-page="incidencias"
+                        >
+                            ⚠️ Incidencias
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     3. RECURSOS Y PRODUCCIÓN
+                ========================================== -->
+
+                <div
+                    class="sidebar-group"
+                    data-menu-group="recursos-produccion"
                 >
-                    🌾 Fincas y parcelas
-                </a>
+
+                    <button
+                        class="sidebar-group-toggle"
+                        type="button"
+                        aria-expanded="false"
+                    >
+
+                        <span class="sidebar-group-title">
+
+                            <span>
+                                📦
+                            </span>
+
+                            RECURSOS Y PRODUCCIÓN
+
+                        </span>
 
 
-                <a
-                    href="#campanias"
-                    data-page="campanias"
+                        <span class="sidebar-group-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <div class="sidebar-group-content">
+
+                        <a
+                            href="#maquinaria"
+                            data-page="maquinaria"
+                        >
+                            🚜 Maquinaria
+                        </a>
+
+
+                        <a
+                            href="#inventario"
+                            data-page="inventario"
+                        >
+                            📦 Inventario
+                        </a>
+
+
+                        <a
+                            href="#produccion"
+                            data-page="produccion"
+                        >
+                            🍎 Producción
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     4. COMERCIAL Y FINANZAS
+                ========================================== -->
+
+                <div
+                    class="sidebar-group"
+                    data-menu-group="comercial-finanzas"
                 >
-                    🗓️ Campanya
-                </a>
+
+                    <button
+                        class="sidebar-group-toggle"
+                        type="button"
+                        aria-expanded="false"
+                    >
+
+                        <span class="sidebar-group-title">
+
+                            <span>
+                                💶
+                            </span>
+
+                            COMERCIAL Y FINANZAS
+
+                        </span>
 
 
-                <a
-                    href="#cultivos"
-                    data-page="cultivos"
+                        <span class="sidebar-group-arrow">
+                            ›
+                        </span>
+
+                    </button>
+
+
+                    <div class="sidebar-group-content">
+
+                        <a
+                            href="#clientesProveedores"
+                            data-page="clientesProveedores"
+                        >
+                            👥 Clientes y Proveedores
+                        </a>
+
+
+                        <a
+                            href="#albaranes"
+                            data-page="albaranes"
+                        >
+                            🧾 Albaranes
+                        </a>
+
+
+                        <a
+                            href="#facturacion"
+                            data-page="facturacion"
+                        >
+                            💶 Facturación
+                        </a>
+
+
+                        <a
+                            href="#cobrosPagos"
+                            data-page="cobrosPagos"
+                        >
+                            💳 Cobros y pagos
+                        </a>
+
+
+                        <a
+                            href="#gastos"
+                            data-page="gastos"
+                        >
+                            💰 Gastos
+                        </a>
+
+
+                        <a
+                            href="#estadisticas"
+                            data-page="estadisticas"
+                        >
+                            📊 Estadísticas
+                        </a>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================================
+                     5. SISTEMA
+                ========================================== -->
+
+                <div
+                    class="sidebar-group"
+                    data-menu-group="sistema"
                 >
-                    🌱 Cultivos
-                </a>
+
+                    <button
+                        class="sidebar-group-toggle"
+                        type="button"
+                        aria-expanded="false"
+                    >
+
+                        <span class="sidebar-group-title">
+
+                            <span>
+                                ⚙️
+                            </span>
+
+                            SISTEMA
+
+                        </span>
 
 
-                <a
-                    href="#cuadernoCampo"
-                    data-page="cuadernoCampo"
-                >
-                    📖 Cuaderno de campo
-                </a>
+                        <span class="sidebar-group-arrow">
+                            ›
+                        </span>
+
+                    </button>
 
 
-                <a
-                    href="#tratamientos"
-                    data-page="tratamientos"
-                >
-                    🧪 Tratamientos
-                </a>
+                    <div class="sidebar-group-content">
+
+                        <a
+                            href="#historial"
+                            data-page="historial"
+                        >
+                            🕒 Historial
+                        </a>
 
 
-                <a
-                    href="#trabajos"
-                    data-page="trabajos"
-                >
-                    👨‍🌾 Trabajos y tareas
-                </a>
+                        <a
+                            href="#usuarios"
+                            data-page="usuarios"
+                        >
+                            🔐 Usuarios y permisos
+                        </a>
 
 
-                <a
-                    href="#trabajadores"
-                    data-page="trabajadores"
-                >
-                    👷 Trabajadores
-                </a>
+                        <a
+                            href="#perfil"
+                            data-page="perfil"
+                        >
+                            ⚙️ Perfil y explotación
+                        </a>
 
+                    </div>
 
-                <a
-                    href="#fichajes"
-                    data-page="fichajes"
-                >
-                    ⏱️ Fichajes
-                </a>
+                </div>
 
-
-                <a
-                    href="#trabajadorPortal"
-                    data-page="trabajadorPortal"
-                >
-                    👤 Portal trabajador
-                </a>
-
-
-                <a
-                    href="#incidencias"
-                    data-page="incidencias"
-                >
-                    ⚠️ Incidencias
-                </a>
-
-
-                <a
-                    href="#maquinaria"
-                    data-page="maquinaria"
-                >
-                    🚜 Maquinaria
-                </a>
-
-
-                <a
-                    href="#inventario"
-                    data-page="inventario"
-                >
-                    📦 Inventario
-                </a>
-
-
-                <a
-                    href="#produccion"
-                    data-page="produccion"
-                >
-                    🍎 Producción
-                </a>
-
-
-                <a
-                    href="#clientesProveedores"
-                    data-page="clientesProveedores"
-                >
-                    👥 Clientes y Proveedores
-                </a>
-
-
-                <a
-                    href="#albaranes"
-                    data-page="albaranes"
-                >
-                    🧾 Albaranes
-                </a>
-
-
-                <a
-                    href="#facturacion"
-                    data-page="facturacion"
-                >
-                    💶 Facturación
-                </a>
-
-
-                <a
-                    href="#cobrosPagos"
-                    data-page="cobrosPagos"
-                >
-                    💳 Cobros y pagos
-                </a>
-
-
-                <a
-                    href="#gastos"
-                    data-page="gastos"
-                >
-                    💰 Gastos
-                </a>
-
-
-                <a
-                    href="#estadisticas"
-                    data-page="estadisticas"
-                >
-                    📊 Estadísticas
-                </a>
-
-
-                <a
-                    href="#historial"
-                    data-page="historial"
-                >
-                    🕒 Historial
-                </a>
-
-
-                <a
-                    href="#usuarios"
-                    data-page="usuarios"
-                >
-                    🔐 Usuarios y permisos
-                </a>
-
-
-                <a
-                    href="#perfil"
-                    data-page="perfil"
-                >
-                    ⚙️ Perfil y explotación
-                </a>
 
             </nav>
 
+
+            <!-- =============================================
+                 CERRAR SESIÓN
+            ============================================== -->
+
+            <div class="sidebar-footer">
+
+                <button
+                    id="cerrarSesion"
+                    class="sidebar-logout-button"
+                    type="button"
+                >
+                    🔒 Cerrar sesión
+                </button>
+
+            </div>
+
         </aside>
 
+
+        <!-- =================================================
+             FONDO MENÚ MÓVIL
+        ================================================== -->
 
         <button
             id="sidebarBackdrop"
@@ -360,6 +607,10 @@
             aria-label="Cerrar menú"
         ></button>
 
+
+        <!-- =================================================
+             CONTENIDO
+        ================================================== -->
 
         <main
             id="main-content"
