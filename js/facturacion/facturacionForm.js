@@ -1,7 +1,8 @@
 import {
     escaparHTML,
     formatearDinero,
-    obtenerFechaHoy
+    obtenerFechaHoy,
+    mismoId
 } from "../utils.js";
 
 
@@ -315,10 +316,12 @@ export function crearFacturacionFormHelper({
                     albaranes
                         .filter(
                             albaran =>
-                                ids.includes(
-                                    Number(
-                                        albaran.id
-                                    )
+                                ids.some(
+                                    id =>
+                                        mismoId(
+                                            id,
+                                            albaran.id
+                                        )
                                 )
                         )
                         .reduce(
@@ -437,36 +440,104 @@ export function crearFacturacionFormHelper({
         }
 
 
+        const fecha =
+            document
+                .getElementById(
+                    "fechaFactura"
+                )
+                ?.value
+            ||
+            "";
+
+
+        if (
+            !fecha
+        ) {
+
+            alert(
+                "Introduce la fecha de la factura."
+            );
+
+            return;
+
+        }
+
+
+        const iva =
+            Number(
+                document
+                    .getElementById(
+                        "ivaFactura"
+                    )
+                    ?.value
+                ??
+                21
+            );
+
+
+        if (
+            !Number.isFinite(
+                iva
+            )
+            ||
+            iva <
+            0
+            ||
+            iva >
+            100
+        ) {
+
+            alert(
+                "Introduce un IVA válido."
+            );
+
+            return;
+
+        }
+
+
+        const observaciones =
+            document
+                .getElementById(
+                    "observacionesFactura"
+                )
+                ?.value
+            ||
+            "";
+
+
+        const botonGuardar =
+            document.getElementById(
+                "guardarFactura"
+            );
+
+
+        if (
+            botonGuardar
+        ) {
+
+            botonGuardar.disabled =
+                true;
+
+        }
+
+
         const resultado =
             facturaService
                 .crear(
                     {
 
                         fecha:
-                            document
-                                .getElementById(
-                                    "fechaFactura"
-                                )
-                                .value,
+                            fecha,
 
                         albaranesIds:
                             ids,
 
                         iva:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "ivaFactura"
-                                    )
-                                    .value
-                            ),
+                            iva,
 
                         observaciones:
-                            document
-                                .getElementById(
-                                    "observacionesFactura"
-                                )
-                                .value
+                            observaciones
 
                     }
                 );
@@ -478,6 +549,16 @@ export function crearFacturacionFormHelper({
             resultado.ok ===
             false
         ) {
+
+            if (
+                botonGuardar
+            ) {
+
+                botonGuardar.disabled =
+                    false;
+
+            }
+
 
             alert(
                 resultado?.mensaje
@@ -501,17 +582,61 @@ export function crearFacturacionFormHelper({
 
     function obtenerIdsSeleccionados() {
 
-        return Array.from(
-            document.querySelectorAll(
-                ".albaran-factura-check:checked"
+        const ids =
+            Array.from(
+                document.querySelectorAll(
+                    ".albaran-factura-check:checked"
+                )
             )
-        )
-            .map(
-                input =>
-                    Number(
+                .map(
+                    input =>
                         input.value
-                    )
-            );
+                )
+                .filter(
+                    id =>
+                        id !==
+                        undefined
+                        &&
+                        id !==
+                        null
+                        &&
+                        id !==
+                        ""
+                );
+
+
+        const unicos =
+            [];
+
+
+        ids.forEach(
+            id => {
+
+                const existe =
+                    unicos.some(
+                        existente =>
+                            mismoId(
+                                existente,
+                                id
+                            )
+                    );
+
+
+                if (
+                    !existe
+                ) {
+
+                    unicos.push(
+                        id
+                    );
+
+                }
+
+            }
+        );
+
+
+        return unicos;
 
     }
 

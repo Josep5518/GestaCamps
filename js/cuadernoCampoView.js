@@ -208,19 +208,24 @@ export class CuadernoCampoView {
 
 
             <section
-                class="panel"
+                class="panel cuaderno-filtros-panel"
                 style="
                     margin-bottom: 22px;
                 "
             >
 
                 <div
+                    class="cuaderno-filtros-grid"
                     style="
                         display: grid;
                         grid-template-columns:
-                            minmax(220px, 1fr)
-                            minmax(180px, 260px)
-                            minmax(180px, 260px);
+                            repeat(
+                                auto-fit,
+                                minmax(
+                                    min(100%, 220px),
+                                    1fr
+                                )
+                            );
                         gap: 12px;
                     "
                 >
@@ -328,12 +333,16 @@ export class CuadernoCampoView {
 
                 <div
                     id="listaCuadernoCampo"
+                    class="cuaderno-grid"
                     style="
                         display: grid;
                         grid-template-columns:
                             repeat(
                                 auto-fit,
-                                minmax(320px, 1fr)
+                                minmax(
+                                    min(100%, 320px),
+                                    1fr
+                                )
                             );
                         gap: 18px;
                     "
@@ -442,7 +451,7 @@ export class CuadernoCampoView {
         return `
 
             <article
-                class="panel"
+                class="panel cuaderno-card"
                 style="
                     margin: 0;
                 "

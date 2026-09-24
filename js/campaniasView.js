@@ -21,6 +21,78 @@ export class CampaniasView {
 
 
     // =====================================================
+    // COMPARAR IDS
+    // =====================================================
+
+    mismoId(
+        idA,
+        idB
+    ) {
+
+        if (
+            idA === null
+            ||
+            idA === undefined
+            ||
+            idB === null
+            ||
+            idB === undefined
+        ) {
+
+            return false;
+
+        }
+
+
+        return (
+            String(
+                idA
+            )
+            ===
+            String(
+                idB
+            )
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER CAMPANYA POR ID
+    // =====================================================
+
+    obtenerCampaniaPorId(
+        id
+    ) {
+
+        const campanias =
+            typeof
+            this.campaniaService
+                .obtenerTodas ===
+            "function"
+
+                ? this.campaniaService
+                    .obtenerTodas()
+
+                : [];
+
+
+        return (
+            campanias.find(
+                campania =>
+                    this.mismoId(
+                        campania.id,
+                        id
+                    )
+            )
+            ||
+            null
+        );
+
+    }
+
+
+    // =====================================================
     // PRINCIPAL
     // =====================================================
 
@@ -551,9 +623,7 @@ export class CampaniasView {
                         () => {
 
                             this.mostrarDetalle(
-                                Number(
-                                    button.dataset.id
-                                )
+                                button.dataset.id
                             );
 
                         }
@@ -575,9 +645,7 @@ export class CampaniasView {
                         () => {
 
                             this.mostrarFormulario(
-                                Number(
-                                    button.dataset.id
-                                )
+                                button.dataset.id
                             );
 
                         }
@@ -598,12 +666,29 @@ export class CampaniasView {
                         "click",
                         () => {
 
+                            const campania =
+                                this.obtenerCampaniaPorId(
+                                    button.dataset.id
+                                );
+
+
+                            if (
+                                !campania
+                            ) {
+
+                                alert(
+                                    "No se ha podido encontrar la campanya."
+                                );
+
+                                return;
+
+                            }
+
+
                             const resultado =
                                 this.campaniaService
                                     .cambiarEstado(
-                                        Number(
-                                            button.dataset.id
-                                        ),
+                                        campania.id,
                                         "Cerrada"
                                     );
 
@@ -641,12 +726,29 @@ export class CampaniasView {
                         "click",
                         () => {
 
+                            const campania =
+                                this.obtenerCampaniaPorId(
+                                    button.dataset.id
+                                );
+
+
+                            if (
+                                !campania
+                            ) {
+
+                                alert(
+                                    "No se ha podido encontrar la campanya."
+                                );
+
+                                return;
+
+                            }
+
+
                             const resultado =
                                 this.campaniaService
                                     .cambiarEstado(
-                                        Number(
-                                            button.dataset.id
-                                        ),
+                                        campania.id,
                                         "Activa"
                                     );
 
@@ -685,16 +787,13 @@ export class CampaniasView {
                         () => {
 
                             const id =
-                                Number(
-                                    button.dataset.id
-                                );
+                                button.dataset.id;
 
 
                             const campania =
-                                this.campaniaService
-                                    .obtenerPorId(
-                                        id
-                                    );
+                                this.obtenerCampaniaPorId(
+                                    id
+                                );
 
 
                             if (
@@ -720,7 +819,7 @@ export class CampaniasView {
                             const resultado =
                                 this.campaniaService
                                     .eliminar(
-                                        id
+                                        campania.id
                                     );
 
 
@@ -757,10 +856,9 @@ export class CampaniasView {
     ) {
 
         const campania =
-            this.campaniaService
-                .obtenerPorId(
-                    id
-                );
+            this.obtenerCampaniaPorId(
+                id
+            );
 
 
         if (
@@ -1378,7 +1476,7 @@ export class CampaniasView {
             new Set(
                 albaranesCampania.map(
                     albaran =>
-                        Number(
+                        String(
                             albaran.id
                         )
                 )
@@ -1413,7 +1511,7 @@ export class CampaniasView {
                         id =>
                             idsAlbaranesCampania
                                 .has(
-                                    Number(
+                                    String(
                                         id
                                     )
                                 )
@@ -1442,11 +1540,8 @@ export class CampaniasView {
                             id =>
                                 todosAlbaranes.find(
                                     albaran =>
-                                        Number(
-                                            albaran.id
-                                        )
-                                        ===
-                                        Number(
+                                        this.mismoId(
+                                            albaran.id,
                                             id
                                         )
                                 )
@@ -1919,14 +2014,9 @@ export class CampaniasView {
             ""
         ) {
 
-            return (
-                Number(
-                    registro.campaniaId
-                )
-                ===
-                Number(
-                    campania.id
-                )
+            return this.mismoId(
+                registro.campaniaId,
+                campania.id
             );
 
         }
@@ -2090,12 +2180,28 @@ export class CampaniasView {
         const campania =
             editando
 
-                ? this.campaniaService
-                    .obtenerPorId(
-                        id
-                    )
+                ? this.obtenerCampaniaPorId(
+                    id
+                )
 
                 : null;
+
+
+        if (
+            editando
+            &&
+            !campania
+        ) {
+
+            alert(
+                "No se ha podido encontrar la campanya que quieres editar."
+            );
+
+            this.mostrar();
+
+            return;
+
+        }
 
 
         const fincas =
@@ -2190,11 +2296,8 @@ export class CampaniasView {
                                         value="${finca.id}"
 
                                         ${
-                                            Number(
-                                                campania?.fincaId
-                                            )
-                                            ===
-                                            Number(
+                                            this.mismoId(
+                                                campania?.fincaId,
                                                 finca.id
                                             )
 
@@ -2394,13 +2497,11 @@ export class CampaniasView {
                                 .value,
 
                         fincaId:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "fincaCampania"
-                                    )
-                                    .value
-                            ),
+                            document
+                                .getElementById(
+                                    "fincaCampania"
+                                )
+                                .value,
 
                         fechaInicio:
                             document
@@ -2438,7 +2539,7 @@ export class CampaniasView {
 
                             ? this.campaniaService
                                 .editar(
-                                    id,
+                                    campania.id,
                                     datos
                                 )
 

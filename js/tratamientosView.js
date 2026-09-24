@@ -208,18 +208,24 @@ export class TratamientosView {
 
 
             <section
-                class="panel"
+                class="panel tratamientos-filtros-panel"
                 style="
                     margin-bottom: 22px;
                 "
             >
 
                 <div
+                    class="tratamientos-filtros-grid"
                     style="
                         display: grid;
                         grid-template-columns:
-                            minmax(220px, 1fr)
-                            minmax(190px, 300px);
+                            repeat(
+                                auto-fit,
+                                minmax(
+                                    min(100%, 220px),
+                                    1fr
+                                )
+                            );
                         gap: 12px;
                     "
                 >
@@ -289,12 +295,17 @@ export class TratamientosView {
             <section>
 
                 <div
+                    id="listaTratamientos"
+                    class="tratamientos-grid"
                     style="
                         display: grid;
                         grid-template-columns:
                             repeat(
                                 auto-fit,
-                                minmax(340px, 1fr)
+                                minmax(
+                                    min(100%, 340px),
+                                    1fr
+                                )
                             );
                         gap: 18px;
                     "
@@ -384,12 +395,14 @@ export class TratamientosView {
 
         return `
 
-            <article class="panel">
+            <article class="panel tratamiento-card">
 
                 <div
+                    class="tratamiento-card-header"
                     style="
                         display: flex;
                         justify-content: space-between;
+                        align-items: flex-start;
                         gap: 12px;
                     "
                 >
@@ -421,8 +434,10 @@ export class TratamientosView {
 
 
                     <div
+                        class="tratamiento-actions"
                         style="
                             display: flex;
+                            align-items: flex-start;
                             gap: 7px;
                         "
                     >
@@ -449,6 +464,7 @@ export class TratamientosView {
 
 
                 <div
+                    class="tratamiento-detalles"
                     style="
                         margin-top: 16px;
                         display: grid;

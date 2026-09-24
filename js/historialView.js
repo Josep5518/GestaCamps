@@ -11,7 +11,6 @@ export class HistorialView {
         this.historialService =
             historialService;
 
-
         this.filtroModulo =
             "";
 
@@ -49,11 +48,8 @@ export class HistorialView {
                         registro =>
                             registro.usuarioNombre
                     )
-                    .filter(
-                        Boolean
-                    )
-            )
-                .size;
+                    .filter(Boolean)
+            ).size;
 
 
         this.mainContent.innerHTML = `
@@ -164,20 +160,11 @@ export class HistorialView {
 
 
             <section
-                class="panel"
-                style="
-                    margin-bottom: 22px;
-                "
+                class="panel historial-filtros-panel"
             >
 
                 <div
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            minmax(200px, 1fr)
-                            minmax(180px, 280px);
-                        gap: 12px;
-                    "
+                    class="historial-filtros-grid"
                 >
 
                     <div class="form-group">
@@ -190,7 +177,7 @@ export class HistorialView {
                             id="buscarHistorial"
                             type="search"
                             placeholder="Acción, usuario, elemento..."
-                            value="${this.busqueda}"
+                            value="${this.escaparHTML(this.busqueda)}"
                         >
 
                     </div>
@@ -202,7 +189,9 @@ export class HistorialView {
                             Módulo
                         </label>
 
-                        <select id="filtroModuloHistorial">
+                        <select
+                            id="filtroModuloHistorial"
+                        >
 
                             <option value="">
                                 Todos los módulos
@@ -213,8 +202,7 @@ export class HistorialView {
                                 modulo => `
 
                                     <option
-                                        value="${modulo}"
-
+                                        value="${this.escaparHTML(modulo)}"
                                         ${
                                             this.filtroModulo ===
                                             modulo
@@ -222,7 +210,7 @@ export class HistorialView {
                                                 : ""
                                         }
                                     >
-                                        ${modulo}
+                                        ${this.escaparHTML(modulo)}
                                     </option>
 
                                 `
@@ -237,18 +225,28 @@ export class HistorialView {
             </section>
 
 
-            <section class="panel">
+            <section class="panel historial-actividad-panel">
 
-                <div class="panel-header">
+                <div class="panel-header historial-actividad-header">
 
                     <h3>
                         Actividad
                     </h3>
 
+                    <span
+                        id="contadorHistorial"
+                        class="historial-contador"
+                    >
+                        0 registros
+                    </span>
+
                 </div>
 
 
-                <div id="contenidoHistorial"></div>
+                <div
+                    id="contenidoHistorial"
+                    class="historial-lista"
+                ></div>
 
             </section>
 
@@ -267,7 +265,7 @@ export class HistorialView {
             );
 
 
-        buscador.addEventListener(
+        buscador?.addEventListener(
             "input",
             () => {
 
@@ -281,7 +279,7 @@ export class HistorialView {
         );
 
 
-        filtro.addEventListener(
+        filtro?.addEventListener(
             "change",
             () => {
 
@@ -312,8 +310,16 @@ export class HistorialView {
             );
 
 
+        const contador =
+            document.getElementById(
+                "contadorHistorial"
+            );
+
+
         if (
             !contenedor
+            ||
+            !contador
         ) {
 
             return;
@@ -360,11 +366,11 @@ export class HistorialView {
                                 registro.accion,
                                 registro.referencia,
                                 registro.usuarioNombre,
+                                registro.usuarioTipo,
                                 ...(registro.cambios || [])
                             ]
-                                .join(
-                                    " "
-                                )
+                                .filter(Boolean)
+                                .join(" ")
                                 .toLowerCase();
 
 
@@ -376,6 +382,15 @@ export class HistorialView {
                 );
 
         }
+
+
+        contador.textContent =
+            `${registros.length} ${
+                registros.length ===
+                1
+                    ? "registro"
+                    : "registros"
+            }`;
 
 
         if (
@@ -440,70 +455,61 @@ export class HistorialView {
             );
 
 
+        const cambios =
+            Array.isArray(
+                registro.cambios
+            )
+                ? registro.cambios
+                : [];
+
+
         return `
 
-            <div
-                class="activity"
-                style="
-                    align-items: flex-start;
-                    padding-top: 14px;
-                    padding-bottom: 14px;
-                "
-            >
+            <article class="historial-item">
 
-                <span
-                    style="
-                        font-size: 20px;
-                        margin-top: 2px;
-                    "
-                >
+                <div class="historial-item-icono">
+
                     ${icono}
-                </span>
+
+                </div>
 
 
-                <div
-                    style="
-                        flex: 1;
-                        min-width: 0;
-                    "
-                >
+                <div class="historial-item-contenido">
 
-                    <div
-                        style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: flex-start;
-                            gap: 12px;
-                            flex-wrap: wrap;
-                        "
-                    >
+                    <div class="historial-item-cabecera">
 
-                        <div>
+                        <div class="historial-item-titulo">
 
                             <strong>
-                                ${registro.accion}
+                                ${this.escaparHTML(
+                                    registro.accion
+                                    ||
+                                    "Actividad"
+                                )}
                             </strong>
 
-                            <span
-                                style="
-                                    color: #78837d;
-                                "
-                            >
-                                · ${registro.modulo}
+
+                            <span>
+                                ·
+                                ${this.escaparHTML(
+                                    registro.modulo
+                                    ||
+                                    "GestaCamps"
+                                )}
                             </span>
 
                         </div>
 
 
-                        <small
-                            style="
-                                color: #78837d;
-                            "
-                        >
-                            ${this.formatearFechaHora(
-                                registro.fechaHora
+                        <time class="historial-item-fecha">
+
+                            ${this.escaparHTML(
+                                this.formatearFechaHora(
+                                    registro.fechaHora
+                                )
                             )}
-                        </small>
+
+                        </time>
 
                     </div>
 
@@ -513,13 +519,12 @@ export class HistorialView {
 
                             ? `
 
-                                <p
-                                    style="
-                                        margin:
-                                            5px 0 0;
-                                    "
-                                >
-                                    ${registro.referencia}
+                                <p class="historial-item-referencia">
+
+                                    ${this.escaparHTML(
+                                        registro.referencia
+                                    )}
+
                                 </p>
 
                             `
@@ -528,20 +533,21 @@ export class HistorialView {
                     }
 
 
-                    <p
-                        style="
-                            margin:
-                                5px 0 0;
-                            color: #78837d;
-                            font-size: 13px;
-                        "
-                    >
-                        👤 ${registro.usuarioNombre || "Administración"}
+                    <p class="historial-item-usuario">
+
+                        👤
+                        ${this.escaparHTML(
+                            registro.usuarioNombre
+                            ||
+                            "Administración"
+                        )}
 
                         ${
                             registro.usuarioTipo
 
-                                ? ` · ${registro.usuarioTipo}`
+                                ? ` · ${this.escaparHTML(
+                                    registro.usuarioTipo
+                                )}`
 
                                 : ""
                         }
@@ -550,25 +556,23 @@ export class HistorialView {
 
 
                     ${
-                        Array.isArray(
-                            registro.cambios
-                        )
-                        &&
-                        registro.cambios.length >
+                        cambios.length >
                         0
 
                             ? `
 
-                                <p
-                                    style="
-                                        margin:
-                                            5px 0 0;
-                                        color: #78837d;
-                                        font-size: 12px;
-                                    "
-                                >
+                                <p class="historial-item-cambios">
+
                                     Campos modificados:
-                                    ${registro.cambios.join(", ")}
+                                    ${cambios
+                                        .map(
+                                            cambio =>
+                                                this.escaparHTML(
+                                                    cambio
+                                                )
+                                        )
+                                        .join(", ")}
+
                                 </p>
 
                             `
@@ -578,7 +582,7 @@ export class HistorialView {
 
                 </div>
 
-            </div>
+            </article>
 
         `;
 
@@ -666,28 +670,64 @@ export class HistorialView {
         }
 
 
-        return fecha
-            .toLocaleString(
-                "es-ES",
-                {
-                    day:
-                        "2-digit",
+        return fecha.toLocaleString(
+            "es-ES",
+            {
+                day:
+                    "2-digit",
 
-                    month:
-                        "2-digit",
+                month:
+                    "2-digit",
 
-                    year:
-                        "numeric",
+                year:
+                    "numeric",
 
-                    hour:
-                        "2-digit",
+                hour:
+                    "2-digit",
 
-                    minute:
-                        "2-digit",
+                minute:
+                    "2-digit",
 
-                    second:
-                        "2-digit"
-                }
+                second:
+                    "2-digit"
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // ESCAPAR HTML
+    // =====================================================
+
+    escaparHTML(
+        valor
+    ) {
+
+        return String(
+            valor
+            ??
+            ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
             );
 
     }

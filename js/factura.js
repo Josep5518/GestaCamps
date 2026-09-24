@@ -1,9 +1,7 @@
 import { StorageService } from "./storage.js";
 
 import {
-    generarId,
-    mismoId,
-    numeroSeguro
+    mismoId
 } from "./utils.js";
 
 
@@ -27,8 +25,7 @@ export class FacturaService {
             )
         ) {
 
-            this.facturas =
-                [];
+            this.facturas = [];
 
         }
 
@@ -56,23 +53,18 @@ export class FacturaService {
     }
 
 
-    // =====================================================
-    // OBTENER POR ID
-    // =====================================================
-
     obtenerPorId(
         id
     ) {
 
         return (
-            this.facturas
-                .find(
-                    factura =>
-                        mismoId(
-                            factura.id,
-                            id
-                        )
-                )
+            this.facturas.find(
+                factura =>
+                    mismoId(
+                        factura.id,
+                        id
+                    )
+            )
             ||
             null
         );
@@ -80,42 +72,102 @@ export class FacturaService {
     }
 
 
-    // =====================================================
-    // ESTADOS
-    // =====================================================
-
     obtenerPendientes() {
 
-        return this.facturas
-            .filter(
-                factura =>
-                    factura.estado ===
-                    "Pendiente"
-            );
+        return this.facturas.filter(
+            factura =>
+                factura.estado ===
+                "Pendiente"
+        );
 
     }
 
 
     obtenerCobradas() {
 
-        return this.facturas
-            .filter(
-                factura =>
-                    factura.estado ===
-                    "Cobrada"
-            );
+        return this.facturas.filter(
+            factura =>
+                factura.estado ===
+                "Cobrada"
+        );
 
     }
 
 
     obtenerAnuladas() {
 
-        return this.facturas
-            .filter(
-                factura =>
-                    factura.estado ===
-                    "Anulada"
-            );
+        return this.facturas.filter(
+            factura =>
+                factura.estado ===
+                "Anulada"
+        );
+
+    }
+
+
+    // =====================================================
+    // LIMPIAR / NORMALIZAR IDS
+    // =====================================================
+
+    limpiarIds(
+        ids
+    ) {
+
+        if (
+            !Array.isArray(
+                ids
+            )
+        ) {
+
+            return [];
+
+        }
+
+
+        const resultado = [];
+
+
+        ids.forEach(
+            id => {
+
+                if (
+                    id === undefined
+                    ||
+                    id === null
+                    ||
+                    id === ""
+                ) {
+
+                    return;
+
+                }
+
+
+                const existe =
+                    resultado.some(
+                        existente =>
+                            mismoId(
+                                existente,
+                                id
+                            )
+                    );
+
+
+                if (
+                    !existe
+                ) {
+
+                    resultado.push(
+                        id
+                    );
+
+                }
+
+            }
+        );
+
+
+        return resultado;
 
     }
 
@@ -130,193 +182,73 @@ export class FacturaService {
             false;
 
 
-        this.facturas
-            .forEach(
-                factura => {
+        this.facturas.forEach(
+            factura => {
+
+                // -----------------------------------------
+                // ALBARANES IDS
+                // -----------------------------------------
+
+                if (
+                    !Array.isArray(
+                        factura.albaranesIds
+                    )
+                ) {
 
                     if (
-                        !Array.isArray(
-                            factura.albaranesIds
+                        Array.isArray(
+                            factura.albaranIds
                         )
                     ) {
 
-                        if (
-                            Array.isArray(
+                        factura.albaranesIds =
+                            this.limpiarIds(
                                 factura.albaranIds
-                            )
-                        ) {
+                            );
 
-                            factura.albaranesIds =
-                                factura.albaranIds
-                                    .filter(
-                                        id =>
-                                            id !==
-                                            null
-                                            &&
-                                            id !==
-                                            undefined
-                                            &&
-                                            id !==
-                                            ""
-                                    );
+                    }
 
-                        }
+                    else if (
+                        Array.isArray(
+                            factura.idsAlbaranes
+                        )
+                    ) {
 
-                        else if (
-                            Array.isArray(
+                        factura.albaranesIds =
+                            this.limpiarIds(
                                 factura.idsAlbaranes
-                            )
-                        ) {
-
-                            factura.albaranesIds =
-                                factura.idsAlbaranes
-                                    .filter(
-                                        id =>
-                                            id !==
-                                            null
-                                            &&
-                                            id !==
-                                            undefined
-                                            &&
-                                            id !==
-                                            ""
-                                    );
-
-                        }
-
-                        else {
-
-                            factura.albaranesIds =
-                                [];
-
-                        }
-
-
-                        cambios =
-                            true;
-
-                    }
-
-
-                    if (
-                        !factura.estado
-                    ) {
-
-                        factura.estado =
-                            "Pendiente";
-
-                        cambios =
-                            true;
-
-                    }
-
-
-                    if (
-                        factura.baseImponible ===
-                        undefined
-                    ) {
-
-                        factura.baseImponible =
-                            numeroSeguro(
-                                factura.subtotal
-                                ??
-                                factura.base,
-                                0
                             );
 
-                        cambios =
-                            true;
+                    }
+
+                    else {
+
+                        factura.albaranesIds =
+                            [];
 
                     }
 
 
-                    if (
-                        factura.porcentajeIva ===
-                        undefined
-                    ) {
+                    cambios =
+                        true;
 
-                        const posiblePorcentaje =
-                            numeroSeguro(
-                                factura.iva,
-                                21
-                            );
+                }
 
+                else {
 
-                        factura.porcentajeIva =
-                            posiblePorcentaje >=
-                            0
-                            &&
-                            posiblePorcentaje <=
-                            100
-
-                                ? posiblePorcentaje
-
-                                : 21;
-
-
-                        cambios =
-                            true;
-
-                    }
+                    const idsLimpios =
+                        this.limpiarIds(
+                            factura.albaranesIds
+                        );
 
 
                     if (
-                        factura.importeIva ===
-                        undefined
+                        idsLimpios.length !==
+                        factura.albaranesIds.length
                     ) {
 
-                        factura.importeIva =
-                            Number(
-                                (
-                                    numeroSeguro(
-                                        factura.baseImponible,
-                                        0
-                                    )
-                                    *
-                                    (
-                                        numeroSeguro(
-                                            factura.porcentajeIva,
-                                            0
-                                        )
-                                        /
-                                        100
-                                    )
-                                )
-                                    .toFixed(
-                                        2
-                                    )
-                            );
-
-
-                        cambios =
-                            true;
-
-                    }
-
-
-                    if (
-                        factura.total ===
-                        undefined
-                    ) {
-
-                        factura.total =
-                            Number(
-                                (
-                                    numeroSeguro(
-                                        factura.baseImponible,
-                                        0
-                                    )
-                                    +
-                                    numeroSeguro(
-                                        factura.importeIva,
-                                        0
-                                    )
-                                )
-                                    .toFixed(
-                                        2
-                                    )
-                            );
-
+                        factura.albaranesIds =
+                            idsLimpios;
 
                         cambios =
                             true;
@@ -324,13 +256,153 @@ export class FacturaService {
                     }
 
                 }
-            );
 
 
-        /*
-         * Solo escribimos cuando realmente existen
-         * datos antiguos que requieren migración.
-         */
+                // -----------------------------------------
+                // ESTADO
+                // -----------------------------------------
+
+                if (
+                    !factura.estado
+                ) {
+
+                    factura.estado =
+                        "Pendiente";
+
+                    cambios =
+                        true;
+
+                }
+
+
+                // -----------------------------------------
+                // BASE IMPONIBLE
+                // -----------------------------------------
+
+                if (
+                    factura.baseImponible ===
+                    undefined
+                ) {
+
+                    factura.baseImponible =
+                        Number(
+                            factura.subtotal
+                            ??
+                            factura.base
+                            ??
+                            0
+                        );
+
+                    cambios =
+                        true;
+
+                }
+
+
+                // -----------------------------------------
+                // PORCENTAJE IVA
+                // -----------------------------------------
+
+                if (
+                    factura.porcentajeIva ===
+                    undefined
+                ) {
+
+                    const posiblePorcentaje =
+                        Number(
+                            factura.iva
+                            ??
+                            21
+                        );
+
+
+                    factura.porcentajeIva =
+                        Number.isFinite(
+                            posiblePorcentaje
+                        )
+                        &&
+                        posiblePorcentaje >=
+                        0
+                        &&
+                        posiblePorcentaje <=
+                        100
+
+                            ? posiblePorcentaje
+
+                            : 21;
+
+
+                    cambios =
+                        true;
+
+                }
+
+
+                // -----------------------------------------
+                // IMPORTE IVA
+                // -----------------------------------------
+
+                if (
+                    factura.importeIva ===
+                    undefined
+                ) {
+
+                    factura.importeIva =
+                        Number(
+                            factura.baseImponible
+                            ||
+                            0
+                        )
+                        *
+                        (
+                            Number(
+                                factura.porcentajeIva
+                                ||
+                                0
+                            )
+                            /
+                            100
+                        );
+
+
+                    cambios =
+                        true;
+
+                }
+
+
+                // -----------------------------------------
+                // TOTAL
+                // -----------------------------------------
+
+                if (
+                    factura.total ===
+                    undefined
+                ) {
+
+                    factura.total =
+                        Number(
+                            factura.baseImponible
+                            ||
+                            0
+                        )
+                        +
+                        Number(
+                            factura.importeIva
+                            ||
+                            0
+                        );
+
+
+                    cambios =
+                        true;
+
+                }
+
+            }
+        );
+
+
         if (
             cambios
         ) {
@@ -357,66 +429,64 @@ export class FacturaService {
             0;
 
 
-        this.facturas
-            .forEach(
-                factura => {
+        this.facturas.forEach(
+            factura => {
 
-                    const numero =
-                        String(
-                            factura.numero
-                            ??
-                            ""
-                        );
-
-
-                    if (
-                        !numero.startsWith(
-                            `FAC-${year}-`
-                        )
-                    ) {
-
-                        return;
-
-                    }
+                const numero =
+                    String(
+                        factura.numero
+                        ||
+                        ""
+                    );
 
 
-                    const partes =
-                        numero.split(
-                            "-"
-                        );
+                if (
+                    !numero.startsWith(
+                        `FAC-${year}-`
+                    )
+                ) {
 
-
-                    const correlativo =
-                        Number(
-                            partes[
-                                partes.length -
-                                1
-                            ]
-                        );
-
-
-                    if (
-                        Number.isFinite(
-                            correlativo
-                        )
-                        &&
-                        correlativo >
-                        maximo
-                    ) {
-
-                        maximo =
-                            correlativo;
-
-                    }
+                    return;
 
                 }
-            );
+
+
+                const partes =
+                    numero.split(
+                        "-"
+                    );
+
+
+                const correlativo =
+                    Number(
+                        partes[
+                            partes.length -
+                            1
+                        ]
+                    );
+
+
+                if (
+                    Number.isFinite(
+                        correlativo
+                    )
+                    &&
+                    correlativo >
+                    maximo
+                ) {
+
+                    maximo =
+                        correlativo;
+
+                }
+
+            }
+        );
 
 
         return (
             `FAC-${year}-${String(
-                maximo +
-                1
+                maximo + 1
             ).padStart(
                 4,
                 "0"
@@ -427,7 +497,7 @@ export class FacturaService {
 
 
     // =====================================================
-    // COMPROBAR ALBARÁN EN FACTURA
+    // COMPROBAR SI UN ALBARÁN YA ESTÁ FACTURADO
     // =====================================================
 
     albaranYaEstaEnFactura(
@@ -435,57 +505,57 @@ export class FacturaService {
         excluirFacturaId = null
     ) {
 
-        return this.facturas
-            .some(
-                factura => {
+        return this.facturas.some(
+            factura => {
 
-                    if (
-                        excluirFacturaId !==
-                        null
-                        &&
-                        mismoId(
-                            factura.id,
-                            excluirFacturaId
-                        )
-                    ) {
+                if (
+                    excluirFacturaId !==
+                    null
+                    &&
+                    mismoId(
+                        factura.id,
+                        excluirFacturaId
+                    )
+                ) {
 
-                        return false;
-
-                    }
-
-
-                    if (
-                        factura.estado ===
-                        "Anulada"
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    if (
-                        !Array.isArray(
-                            factura.albaranesIds
-                        )
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    return factura.albaranesIds
-                        .some(
-                            id =>
-                                mismoId(
-                                    id,
-                                    albaranId
-                                )
-                        );
+                    return false;
 
                 }
-            );
+
+
+                if (
+                    factura.estado ===
+                    "Anulada"
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    !Array.isArray(
+                        factura.albaranesIds
+                    )
+                ) {
+
+                    return false;
+
+                }
+
+
+                return factura
+                    .albaranesIds
+                    .some(
+                        id =>
+                            mismoId(
+                                id,
+                                albaranId
+                            )
+                    );
+
+            }
+        );
 
     }
 
@@ -498,70 +568,9 @@ export class FacturaService {
         albaranesIds
     ) {
 
-        if (
-            !Array.isArray(
-                albaranesIds
-            )
-        ) {
-
-            return {
-
-                ok:
-                    false,
-
-                mensaje:
-                    "Selecciona al menos un albarán."
-
-            };
-
-        }
-
-
         const ids =
-            [];
-
-
-        albaranesIds
-            .forEach(
-                id => {
-
-                    if (
-                        id ===
-                        null
-                        ||
-                        id ===
-                        undefined
-                        ||
-                        id ===
-                        ""
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    const existe =
-                        ids.some(
-                            existente =>
-                                mismoId(
-                                    existente,
-                                    id
-                                )
-                        );
-
-
-                    if (
-                        !existe
-                    ) {
-
-                        ids.push(
-                            id
-                        );
-
-                    }
-
-                }
+            this.limpiarIds(
+                albaranesIds
             );
 
 
@@ -571,26 +580,26 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Selecciona al menos un albarán."
-
             };
 
         }
 
 
+        // -----------------------------------------
+        // YA ESTÁN EN OTRA FACTURA
+        // -----------------------------------------
+
         const repetidos =
-            ids
-                .filter(
-                    id =>
-                        this.albaranYaEstaEnFactura(
-                            id
-                        )
-                );
+            ids.filter(
+                id =>
+                    this.albaranYaEstaEnFactura(
+                        id
+                    )
+            );
 
 
         if (
@@ -599,17 +608,18 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Uno de los albaranes seleccionados ya pertenece a una factura activa."
-
             };
 
         }
 
+
+        // -----------------------------------------
+        // RECUPERAR ALBARANES
+        // -----------------------------------------
 
         const albaranes =
             ids
@@ -631,25 +641,25 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Alguno de los albaranes seleccionados ya no existe."
-
             };
 
         }
 
 
+        // -----------------------------------------
+        // DEBEN ESTAR ENTREGADOS
+        // -----------------------------------------
+
         const noEntregados =
-            albaranes
-                .filter(
-                    albaran =>
-                        albaran.estado !==
-                        "Entregado"
-                );
+            albaranes.filter(
+                albaran =>
+                    albaran.estado !==
+                    "Entregado"
+            );
 
 
         if (
@@ -658,25 +668,25 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Solo puedes facturar albaranes con estado Entregado."
-
             };
 
         }
 
 
+        // -----------------------------------------
+        // NO DEBEN ESTAR FACTURADOS
+        // -----------------------------------------
+
         const yaFacturados =
-            albaranes
-                .filter(
-                    albaran =>
-                        albaran.facturado ===
-                        true
-                );
+            albaranes.filter(
+                albaran =>
+                    albaran.facturado ===
+                    true
+            );
 
 
         if (
@@ -685,83 +695,83 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Uno de los albaranes seleccionados ya está facturado."
-
             };
 
         }
 
 
-        const clienteReferencia =
-            albaranes[0]
-                ?.clienteId
-            ??
-            albaranes[0]
-                ?.clienteNombre
-            ??
-            albaranes[0]
-                ?.cliente
-            ??
-            "";
+        // -----------------------------------------
+        // MISMO CLIENTE
+        // -----------------------------------------
+
+        const clientes =
+            [];
 
 
-        const clientesDistintos =
-            albaranes
-                .some(
-                    albaran => {
+        albaranes.forEach(
+            albaran => {
 
-                        const clienteActual =
-                            albaran.clienteId
-                            ??
-                            albaran.clienteNombre
-                            ??
-                            albaran.cliente
-                            ??
-                            "";
+                const cliente =
+                    albaran.clienteId
+                    ??
+                    albaran.clienteNombre
+                    ??
+                    albaran.cliente
+                    ??
+                    "";
 
 
-                        return !mismoId(
-                            clienteActual,
-                            clienteReferencia
-                        );
+                const existe =
+                    clientes.some(
+                        actual =>
+                            mismoId(
+                                actual,
+                                cliente
+                            )
+                    );
 
-                    }
-                );
+
+                if (
+                    !existe
+                ) {
+
+                    clientes.push(
+                        cliente
+                    );
+
+                }
+
+            }
+        );
 
 
         if (
-            clientesDistintos
+            clientes.length >
+            1
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "No puedes agrupar albaranes de clientes distintos en una misma factura."
-
             };
 
         }
 
 
         return {
-
-            ok:
-                true,
+            ok: true,
 
             ids:
                 ids,
 
             albaranes:
                 albaranes
-
         };
 
     }
@@ -783,13 +793,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Los datos de la factura no son válidos."
-
             };
 
         }
@@ -805,13 +812,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Selecciona al menos un albarán."
-
             };
 
         }
@@ -822,13 +826,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Introduce la fecha de la factura."
-
             };
 
         }
@@ -857,33 +858,63 @@ export class FacturaService {
             validacion.ids;
 
 
+        // -----------------------------------------
+        // BASE IMPONIBLE
+        // -----------------------------------------
+
         const baseImponible =
-            albaranes
-                .reduce(
-                    (
-                        suma,
-                        albaran
-                    ) =>
+            albaranes.reduce(
+                (
+                    suma,
+                    albaran
+                ) => {
+
+                    const importe =
+                        Number(
+                            albaran.total
+                            ??
+                            albaran.subtotal
+                            ??
+                            0
+                        );
+
+
+                    return (
                         suma
                         +
-                        numeroSeguro(
-                            albaran.total,
-                            0
-                        ),
-                    0
-                );
+                        (
+                            Number.isFinite(
+                                importe
+                            )
+                                ? importe
+                                : 0
+                        )
+                    );
 
+                },
+                0
+            );
+
+
+        // -----------------------------------------
+        // IVA
+        // -----------------------------------------
 
         const porcentajeIva =
-            numeroSeguro(
+            Number(
                 datos.iva
                 ??
-                datos.porcentajeIva,
+                datos.porcentajeIva
+                ??
                 21
             );
 
 
         if (
+            !Number.isFinite(
+                porcentajeIva
+            )
+            ||
             porcentajeIva <
             0
             ||
@@ -892,13 +923,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Introduce un IVA válido."
-
             };
 
         }
@@ -908,8 +936,7 @@ export class FacturaService {
             baseImponible
             *
             (
-                porcentajeIva
-                /
+                porcentajeIva /
                 100
             );
 
@@ -924,10 +951,14 @@ export class FacturaService {
             albaranes[0];
 
 
+        // -----------------------------------------
+        // NUEVA FACTURA
+        // -----------------------------------------
+
         const nuevaFactura = {
 
             id:
-                generarId(),
+                Date.now(),
 
             numero:
                 this.generarNumero(),
@@ -955,7 +986,9 @@ export class FacturaService {
                 "",
 
             albaranesIds:
-                ids,
+                [
+                    ...ids
+                ],
 
             baseImponible:
                 Number(
@@ -1001,7 +1034,7 @@ export class FacturaService {
             observaciones:
                 String(
                     datos.observaciones
-                    ??
+                    ||
                     ""
                 )
                     .trim(),
@@ -1013,10 +1046,12 @@ export class FacturaService {
         };
 
 
-        const estadosAlbaranes =
-            this.capturarEstadoAlbaranes(
-                albaranes
-            );
+        // =================================================
+        // MARCAR ALBARANES COMO FACTURADOS
+        // =================================================
+
+        const marcados =
+            [];
 
 
         for (
@@ -1034,85 +1069,60 @@ export class FacturaService {
 
 
             if (
-                !this.operacionCorrecta(
-                    resultado
-                )
+                !resultado
+                ||
+                resultado.ok ===
+                false
             ) {
 
-                this.restaurarEstadoAlbaranes(
-                    estadosAlbaranes
+                marcados.forEach(
+                    albaranId => {
+
+                        this.albaranService
+                            .desmarcarFacturado(
+                                albaranId
+                            );
+
+                    }
                 );
 
 
                 return {
-
-                    ok:
-                        false,
+                    ok: false,
 
                     mensaje:
                         resultado?.mensaje
                         ||
                         "No se han podido bloquear los albaranes de la factura."
-
                 };
 
             }
 
+
+            marcados.push(
+                albaran.id
+            );
+
         }
 
+
+        // -----------------------------------------
+        // GUARDAR FACTURA
+        // -----------------------------------------
 
         this.facturas.push(
             nuevaFactura
         );
 
 
-        const guardado =
-            this.guardar();
-
-
-        if (
-            !this.guardadoCorrecto(
-                guardado
-            )
-        ) {
-
-            this.facturas =
-                this.facturas
-                    .filter(
-                        factura =>
-                            !mismoId(
-                                factura.id,
-                                nuevaFactura.id
-                            )
-                    );
-
-
-            this.restaurarEstadoAlbaranes(
-                estadosAlbaranes
-            );
-
-
-            return {
-
-                ok:
-                    false,
-
-                mensaje:
-                    "No se ha podido guardar la factura."
-
-            };
-
-        }
+        this.guardar();
 
 
         return {
-
-            ok:
-                true,
+            ok: true,
 
             factura:
                 nuevaFactura
-
         };
 
     }
@@ -1138,13 +1148,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "La factura no existe."
-
             };
 
         }
@@ -1156,13 +1163,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "Una factura anulada no puede modificarse."
-
             };
 
         }
@@ -1183,7 +1187,6 @@ export class FacturaService {
         if (
             ![
                 "Pendiente",
-                "Parcialmente cobrada",
                 "Cobrada"
             ].includes(
                 nuevoEstado
@@ -1191,153 +1194,34 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "El estado de la factura no es válido."
-
             };
 
         }
-
-
-        const estadoAnterior =
-            factura.estado;
 
 
         factura.estado =
             nuevoEstado;
 
 
-        const guardado =
-            this.guardar();
-
-
-        if (
-            !this.guardadoCorrecto(
-                guardado
-            )
-        ) {
-
-            factura.estado =
-                estadoAnterior;
-
-
-            return {
-
-                ok:
-                    false,
-
-                mensaje:
-                    "No se ha podido guardar el estado de la factura."
-
-            };
-
-        }
+        this.guardar();
 
 
         return {
-
-            ok:
-                true,
+            ok: true,
 
             factura:
                 factura
-
         };
 
     }
 
 
     // =====================================================
-    // CAPTURAR ESTADO DE ALBARANES
-    // =====================================================
-
-    capturarEstadoAlbaranes(
-        albaranes
-    ) {
-
-        return albaranes
-            .map(
-                albaran => ({
-
-                    id:
-                        albaran.id,
-
-                    estado:
-                        albaran.estado,
-
-                    facturado:
-                        albaran.facturado,
-
-                    facturaId:
-                        albaran.facturaId
-
-                })
-            );
-
-    }
-
-
-    // =====================================================
-    // RESTAURAR ESTADO DE ALBARANES
-    // =====================================================
-
-    restaurarEstadoAlbaranes(
-        estados
-    ) {
-
-        estados
-            .forEach(
-                estadoAnterior => {
-
-                    const albaran =
-                        this.albaranService
-                            .obtenerPorId(
-                                estadoAnterior.id
-                            );
-
-
-                    if (
-                        !albaran
-                    ) {
-
-                        return;
-
-                    }
-
-
-                    albaran.estado =
-                        estadoAnterior.estado;
-
-                    albaran.facturado =
-                        estadoAnterior.facturado;
-
-                    albaran.facturaId =
-                        estadoAnterior.facturaId;
-
-                }
-            );
-
-
-        if (
-            typeof this.albaranService
-                ?.guardar ===
-            "function"
-        ) {
-
-            this.albaranService
-                .guardar();
-
-        }
-
-    }
-
-
-    // =====================================================
-    // LIBERAR ALBARANES
+    // DEVOLVER ALBARANES A ENTREGADO
     // =====================================================
 
     liberarAlbaranesFactura(
@@ -1345,232 +1229,144 @@ export class FacturaService {
     ) {
 
         if (
+            !factura
+            ||
             !Array.isArray(
                 factura.albaranesIds
             )
         ) {
 
-            return {
-
-                ok:
-                    true
-
-            };
+            return;
 
         }
 
 
-        const albaranes =
-            factura.albaranesIds
-                .map(
-                    albaranId =>
+        factura.albaranesIds
+            .forEach(
+                albaranId => {
+
+                    const usadoEnOtraFactura =
+                        this.facturas.some(
+                            otraFactura => {
+
+                                if (
+                                    mismoId(
+                                        otraFactura.id,
+                                        factura.id
+                                    )
+                                ) {
+
+                                    return false;
+
+                                }
+
+
+                                if (
+                                    otraFactura.estado ===
+                                    "Anulada"
+                                ) {
+
+                                    return false;
+
+                                }
+
+
+                                if (
+                                    !Array.isArray(
+                                        otraFactura.albaranesIds
+                                    )
+                                ) {
+
+                                    return false;
+
+                                }
+
+
+                                return otraFactura
+                                    .albaranesIds
+                                    .some(
+                                        id =>
+                                            mismoId(
+                                                id,
+                                                albaranId
+                                            )
+                                    );
+
+                            }
+                        );
+
+
+                    if (
+                        usadoEnOtraFactura
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    // -------------------------------------
+                    // MÉTODO PRINCIPAL
+                    // -------------------------------------
+
+                    if (
+                        typeof
+                        this.albaranService
+                            .desmarcarFacturado ===
+                        "function"
+                    ) {
+
+                        this.albaranService
+                            .desmarcarFacturado(
+                                albaranId
+                            );
+
+                        return;
+
+                    }
+
+
+                    // -------------------------------------
+                    // RESPALDO
+                    // -------------------------------------
+
+                    const albaran =
                         this.albaranService
                             .obtenerPorId(
                                 albaranId
-                            )
-                )
-                .filter(
-                    Boolean
-                );
+                            );
 
 
-        const estadosAnteriores =
-            this.capturarEstadoAlbaranes(
-                albaranes
+                    if (
+                        albaran
+                    ) {
+
+                        albaran.facturado =
+                            false;
+
+                        albaran.facturaId =
+                            null;
+
+                        albaran.estado =
+                            "Entregado";
+
+                    }
+
+                }
             );
 
 
-        for (
-            const albaranId
-            of
-            factura.albaranesIds
-        ) {
-
-            const usadoEnOtraFactura =
-                this.facturas
-                    .some(
-                        otraFactura => {
-
-                            if (
-                                mismoId(
-                                    otraFactura.id,
-                                    factura.id
-                                )
-                            ) {
-
-                                return false;
-
-                            }
-
-
-                            if (
-                                otraFactura.estado ===
-                                "Anulada"
-                            ) {
-
-                                return false;
-
-                            }
-
-
-                            if (
-                                !Array.isArray(
-                                    otraFactura.albaranesIds
-                                )
-                            ) {
-
-                                return false;
-
-                            }
-
-
-                            return otraFactura.albaranesIds
-                                .some(
-                                    id =>
-                                        mismoId(
-                                            id,
-                                            albaranId
-                                        )
-                                );
-
-                        }
-                    );
-
-
-            if (
-                usadoEnOtraFactura
-            ) {
-
-                continue;
-
-            }
-
-
-            let resultado;
-
-
-            if (
-                typeof this.albaranService
-                    ?.desmarcarFacturado ===
-                "function"
-            ) {
-
-                resultado =
-                    this.albaranService
-                        .desmarcarFacturado(
-                            albaranId
-                        );
-
-            }
-
-            else {
-
-                const albaran =
-                    this.albaranService
-                        .obtenerPorId(
-                            albaranId
-                        );
-
-
-                if (
-                    albaran
-                ) {
-
-                    albaran.facturado =
-                        false;
-
-                    albaran.facturaId =
-                        null;
-
-                    albaran.estado =
-                        "Entregado";
-
-                }
-
-
-                resultado = {
-
-                    ok:
-                        true
-
-                };
-
-            }
-
-
-            if (
-                !this.operacionCorrecta(
-                    resultado
-                )
-            ) {
-
-                this.restaurarEstadoAlbaranes(
-                    estadosAnteriores
-                );
-
-
-                return {
-
-                    ok:
-                        false,
-
-                    mensaje:
-                        resultado?.mensaje
-                        ||
-                        "No se han podido liberar los albaranes de la factura."
-
-                };
-
-            }
-
-        }
-
-
         if (
-            typeof this.albaranService
-                ?.guardar ===
+            typeof
+            this.albaranService
+                .guardar ===
             "function"
         ) {
 
-            const guardado =
-                this.albaranService
-                    .guardar();
-
-
-            if (
-                guardado ===
-                false
-            ) {
-
-                this.restaurarEstadoAlbaranes(
-                    estadosAnteriores
-                );
-
-
-                return {
-
-                    ok:
-                        false,
-
-                    mensaje:
-                        "No se han podido guardar los cambios de los albaranes."
-
-                };
-
-            }
+            this.albaranService
+                .guardar();
 
         }
-
-
-        return {
-
-            ok:
-                true,
-
-            estadosAnteriores:
-                estadosAnteriores
-
-        };
 
     }
 
@@ -1586,7 +1382,8 @@ export class FacturaService {
         try {
 
             if (
-                typeof StorageService
+                typeof
+                StorageService
                     .obtenerCobrosPagos !==
                 "function"
             ) {
@@ -1612,29 +1409,20 @@ export class FacturaService {
             }
 
 
-            return movimientos
-                .filter(
-                    movimiento =>
-                        movimiento.tipo ===
-                        "Cobro"
-                        &&
-                        mismoId(
-                            movimiento.facturaId,
-                            facturaId
-                        )
-                );
+            return movimientos.filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Cobro"
+                    &&
+                    mismoId(
+                        movimiento.facturaId,
+                        facturaId
+                    )
+            );
 
         }
 
-        catch (
-            error
-        ) {
-
-            console.error(
-                "Error obteniendo cobros vinculados a la factura:",
-                error
-            );
-
+        catch {
 
             return [];
 
@@ -1643,42 +1431,45 @@ export class FacturaService {
     }
 
 
-    // =====================================================
-    // TOTAL COBRADO
-    // =====================================================
-
     obtenerTotalCobrado(
         facturaId
     ) {
 
-        return Number(
-            this.obtenerCobrosVinculados(
-                facturaId
-            )
-                .reduce(
-                    (
-                        total,
-                        movimiento
-                    ) =>
+        return this.obtenerCobrosVinculados(
+            facturaId
+        )
+            .reduce(
+                (
+                    total,
+                    movimiento
+                ) => {
+
+                    const importe =
+                        Number(
+                            movimiento.importe
+                            ||
+                            0
+                        );
+
+
+                    return (
                         total
                         +
-                        numeroSeguro(
-                            movimiento.importe,
-                            0
-                        ),
-                    0
-                )
-                .toFixed(
-                    2
-                )
-        );
+                        (
+                            Number.isFinite(
+                                importe
+                            )
+                                ? importe
+                                : 0
+                        )
+                    );
+
+                },
+                0
+            );
 
     }
 
-
-    // =====================================================
-    // TIENE COBROS
-    // =====================================================
 
     tieneCobros(
         facturaId
@@ -1713,13 +1504,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "La factura no existe."
-
             };
 
         }
@@ -1731,13 +1519,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "La factura ya está anulada."
-
             };
 
         }
@@ -1750,9 +1535,7 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     `No puedes anular esta factura porque tiene ${this.formatearDinero(
@@ -1760,33 +1543,18 @@ export class FacturaService {
                             factura.id
                         )
                     )} cobrados. Elimina primero sus cobros desde Cobros y pagos.`
-
             };
 
         }
 
 
-        const facturaAnterior =
-            JSON.parse(
-                JSON.stringify(
-                    factura
-                )
-            );
+        // -----------------------------------------
+        // LIBERAR ALBARANES
+        // -----------------------------------------
 
-
-        const resultadoLiberacion =
-            this.liberarAlbaranesFactura(
-                factura
-            );
-
-
-        if (
-            !resultadoLiberacion.ok
-        ) {
-
-            return resultadoLiberacion;
-
-        }
+        this.liberarAlbaranesFactura(
+            factura
+        );
 
 
         factura.estado =
@@ -1798,51 +1566,14 @@ export class FacturaService {
                 .toISOString();
 
 
-        const guardado =
-            this.guardar();
-
-
-        if (
-            !this.guardadoCorrecto(
-                guardado
-            )
-        ) {
-
-            Object.assign(
-                factura,
-                facturaAnterior
-            );
-
-
-            this.restaurarEstadoAlbaranes(
-                resultadoLiberacion
-                    .estadosAnteriores
-                ||
-                []
-            );
-
-
-            return {
-
-                ok:
-                    false,
-
-                mensaje:
-                    "No se ha podido anular la factura."
-
-            };
-
-        }
+        this.guardar();
 
 
         return {
-
-            ok:
-                true,
+            ok: true,
 
             factura:
                 factura
-
         };
 
     }
@@ -1867,13 +1598,10 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     "La factura no existe."
-
             };
 
         }
@@ -1886,9 +1614,7 @@ export class FacturaService {
         ) {
 
             return {
-
-                ok:
-                    false,
+                ok: false,
 
                 mensaje:
                     `No puedes eliminar esta factura porque tiene ${this.formatearDinero(
@@ -1896,201 +1622,106 @@ export class FacturaService {
                             factura.id
                         )
                     )} cobrados. Elimina primero sus cobros desde Cobros y pagos.`
-
             };
 
         }
 
 
-        const facturasAnteriores =
-            [
-                ...this.facturas
-            ];
+        // -----------------------------------------
+        // LIBERAR ALBARANES
+        // -----------------------------------------
 
-
-        const resultadoLiberacion =
-            this.liberarAlbaranesFactura(
-                factura
-            );
-
-
-        if (
-            !resultadoLiberacion.ok
-        ) {
-
-            return resultadoLiberacion;
-
-        }
+        this.liberarAlbaranesFactura(
+            factura
+        );
 
 
         this.facturas =
-            this.facturas
-                .filter(
-                    item =>
-                        !mismoId(
-                            item.id,
-                            id
-                        )
-                );
-
-
-        const guardado =
-            this.guardar();
-
-
-        if (
-            !this.guardadoCorrecto(
-                guardado
-            )
-        ) {
-
-            this.facturas =
-                facturasAnteriores;
-
-
-            this.restaurarEstadoAlbaranes(
-                resultadoLiberacion
-                    .estadosAnteriores
-                ||
-                []
+            this.facturas.filter(
+                item =>
+                    !mismoId(
+                        item.id,
+                        id
+                    )
             );
 
 
-            return {
-
-                ok:
-                    false,
-
-                mensaje:
-                    "No se ha podido eliminar la factura."
-
-            };
-
-        }
+        this.guardar();
 
 
         return {
-
-            ok:
-                true
-
+            ok: true
         };
 
     }
 
 
     // =====================================================
-    // TOTAL FACTURADO
+    // TOTALES
     // =====================================================
 
     obtenerTotalFacturado() {
 
-        return Number(
-            this.facturas
-                .filter(
-                    factura =>
-                        factura.estado !==
-                        "Anulada"
-                )
-                .reduce(
-                    (
-                        total,
-                        factura
-                    ) =>
+        return this.facturas
+            .filter(
+                factura =>
+                    factura.estado !==
+                    "Anulada"
+            )
+            .reduce(
+                (
+                    total,
+                    factura
+                ) => {
+
+                    const importe =
+                        Number(
+                            factura.total
+                            ||
+                            0
+                        );
+
+
+                    return (
                         total
                         +
-                        numeroSeguro(
-                            factura.total,
-                            0
-                        ),
-                    0
-                )
-                .toFixed(
-                    2
-                )
-        );
+                        (
+                            Number.isFinite(
+                                importe
+                            )
+                                ? importe
+                                : 0
+                        )
+                    );
+
+                },
+                0
+            );
 
     }
 
 
     // =====================================================
-    // OPERACIÓN CORRECTA
-    // =====================================================
-
-    operacionCorrecta(
-        resultado
-    ) {
-
-        if (
-            resultado ===
-            false
-        ) {
-
-            return false;
-
-        }
-
-
-        if (
-            resultado
-            &&
-            resultado.ok ===
-            false
-        ) {
-
-            return false;
-
-        }
-
-
-        return true;
-
-    }
-
-
-    // =====================================================
-    // GUARDADO CORRECTO
-    // =====================================================
-
-    guardadoCorrecto(
-        resultado
-    ) {
-
-        /*
-         * Compatibilidad temporal con servicios antiguos
-         * que todavía no devolvían true.
-         *
-         * Solo consideramos fallo un false explícito.
-         */
-
-        return resultado !==
-            false;
-
-    }
-
-
-    // =====================================================
-    // FORMATO DINERO
+    // FORMATO
     // =====================================================
 
     formatearDinero(
         numero
     ) {
 
-        return numeroSeguro(
-            numero,
+        return Number(
+            numero
+            ||
             0
         )
             .toLocaleString(
                 "es-ES",
                 {
-
                     minimumFractionDigits:
                         2,
 
                     maximumFractionDigits:
                         2
-
                 }
             )
             +
@@ -2105,7 +1736,7 @@ export class FacturaService {
 
     guardar() {
 
-        return StorageService
+        StorageService
             .guardarFacturas(
                 this.facturas
             );

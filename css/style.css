@@ -12452,3 +12452,1584 @@ canvas {
     }
 
 }
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - TRABAJOS Y TAREAS
+===================================================== */
+
+
+/* =====================================================
+   GRID DE TAREAS
+===================================================== */
+
+.trabajos-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+.trabajo-card {
+    min-width: 0;
+
+    padding: 15px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.trabajo-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+
+.trabajo-icon {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--gc-green-soft);
+
+    font-size: 18px;
+}
+
+
+.trabajo-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+.trabajo-actions .secondary-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    font-size: 10px;
+}
+
+
+.trabajo-actions .delete-button {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+
+    padding: 0;
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.trabajo-card > h3 {
+    margin:
+        0
+        0
+        4px;
+
+    color: var(--gc-text);
+
+    font-size: 15px;
+
+    line-height: 1.2;
+}
+
+
+.trabajo-tipo {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: var(--gc-green-text);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   DATOS PRINCIPALES
+===================================================== */
+
+.trabajo-linea,
+.trabajo-campania {
+    margin:
+        5px
+        0;
+
+    color: var(--gc-muted-strong);
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+.trabajo-campania {
+    color: var(--gc-green-text);
+
+    font-weight: 600;
+}
+
+
+.trabajo-sin-campania {
+    color: var(--gc-muted);
+}
+
+
+/* =====================================================
+   ESTADO Y PRIORIDAD
+===================================================== */
+
+.trabajo-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin:
+        10px
+        0;
+}
+
+
+.trabajo-info-grid > div {
+    min-width: 0;
+
+    padding: 9px;
+
+    border-radius: 9px;
+
+    background: #f7f9f7;
+}
+
+
+.trabajo-info-grid span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.trabajo-info-grid strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gc-text);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   NOTAS
+===================================================== */
+
+.trabajo-card .trabajador-notas {
+    margin-top: 9px;
+
+    padding-top: 9px;
+}
+
+
+/* =====================================================
+   BOTONES DE ESTADO
+===================================================== */
+
+.trabajo-state-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 11px;
+}
+
+
+.task-state-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    border:
+        1px solid
+        #d9e8df;
+
+    border-radius: 8px;
+
+    background: #edf6f1;
+
+    color: var(--gc-green-text);
+
+    font-family: inherit;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.task-state-button:hover {
+    background: #dff0e7;
+}
+
+
+/* =====================================================
+   SELECTOR LISTA / CALENDARIO
+===================================================== */
+
+#vistaListaTrabajos,
+#vistaCalendarioTrabajos {
+    min-height: 36px !important;
+
+    padding:
+        0
+        12px !important;
+
+    font-size: 10px !important;
+
+    transition:
+        background
+        0.15s
+        ease,
+        color
+        0.15s
+        ease;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1050px) {
+
+    .trabajos-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .trabajos-grid {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+    }
+
+
+    .trabajo-card {
+        padding: 13px;
+
+        border-radius: 13px;
+    }
+
+
+    .trabajo-card-header {
+        margin-bottom: 8px;
+    }
+
+
+    .trabajo-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        font-size: 17px;
+    }
+
+
+    .trabajo-actions .secondary-button {
+        min-height: 32px;
+
+        padding:
+            0
+            9px;
+    }
+
+
+    .trabajo-actions .delete-button {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+    }
+
+
+    .trabajo-card > h3 {
+        font-size: 14px;
+    }
+
+
+    .trabajo-linea,
+    .trabajo-campania {
+        margin:
+            4px
+            0;
+
+        font-size: 9px;
+    }
+
+
+    .trabajo-info-grid {
+        margin:
+            8px
+            0;
+
+        gap: 6px;
+    }
+
+
+    .trabajo-info-grid > div {
+        padding: 8px;
+    }
+
+
+    .trabajo-state-actions {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 6px;
+
+        margin-top: 9px;
+    }
+
+
+    .trabajo-state-actions button {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+}
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - CALENDARIO DE TRABAJOS
+===================================================== */
+
+
+/* =====================================================
+   CALENDARIO - BASE
+===================================================== */
+
+.calendario-dia {
+    position: relative;
+
+    min-width: 0;
+
+    transition:
+        border-color
+        0.15s
+        ease,
+        background
+        0.15s
+        ease;
+}
+
+
+.calendario-dia:hover {
+    border-color: #cfe1d7 !important;
+}
+
+
+/* =====================================================
+   EVENTOS
+===================================================== */
+
+.evento-calendario {
+    transition:
+        transform
+        0.12s
+        ease,
+        box-shadow
+        0.12s
+        ease;
+}
+
+
+.evento-calendario:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 2px 6px
+        rgba(
+            18,
+            55,
+            42,
+            0.08
+        );
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .calendario-dia {
+        min-height: 82px !important;
+
+        padding: 5px !important;
+    }
+
+
+    .evento-calendario {
+        padding: 4px !important;
+    }
+
+
+    .evento-calendario strong {
+        font-size: 9px !important;
+    }
+
+
+    .evento-calendario span {
+        font-size: 7px !important;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ---------------------------------------------
+       CABECERA DEL CALENDARIO
+    ---------------------------------------------- */
+
+    #contenidoTrabajos > section {
+        padding: 12px !important;
+
+        border-radius: 13px !important;
+    }
+
+
+    #contenidoTrabajos > section > div:first-child {
+        margin-bottom: 10px !important;
+
+        gap: 8px !important;
+    }
+
+
+    #contenidoTrabajos > section > div:first-child h3 {
+        font-size: 17px !important;
+    }
+
+
+    #contenidoTrabajos > section > div:first-child p {
+        margin-top: 2px !important;
+
+        font-size: 10px !important;
+    }
+
+
+    /* ---------------------------------------------
+       BOTONES MES
+    ---------------------------------------------- */
+
+    #mesAnterior,
+    #mesSiguiente {
+        width: 38px;
+        min-width: 38px;
+
+        min-height: 36px;
+
+        padding: 0 !important;
+    }
+
+
+    #irHoy {
+        min-height: 36px;
+
+        padding:
+            0
+            11px !important;
+    }
+
+
+    /* ---------------------------------------------
+       GRID CALENDARIO
+    ---------------------------------------------- */
+
+    #contenidoTrabajos > section > div:nth-child(2) {
+        overflow-x: visible !important;
+    }
+
+
+    #contenidoTrabajos > section > div:nth-child(2) > div {
+        gap: 4px !important;
+    }
+
+
+    /* ---------------------------------------------
+       DÍAS
+    ---------------------------------------------- */
+
+    .calendario-dia {
+        min-height: 68px !important;
+
+        padding: 4px !important;
+
+        border-radius: 8px !important;
+    }
+
+
+    .calendario-dia > div:first-child {
+        margin-bottom: 3px !important;
+    }
+
+
+    .calendario-dia > div:first-child strong {
+        font-size: 10px !important;
+    }
+
+
+    .calendario-dia > div:first-child span {
+        display: none !important;
+    }
+
+
+    /* ---------------------------------------------
+       EVENTOS
+    ---------------------------------------------- */
+
+    .evento-calendario {
+        min-height: 24px;
+
+        padding:
+            3px
+            3px !important;
+
+        border-left-width: 2px !important;
+
+        border-radius: 5px !important;
+    }
+
+
+    .evento-calendario strong {
+        font-size: 8px !important;
+
+        line-height: 1.15 !important;
+    }
+
+
+    .evento-calendario span {
+        display: none !important;
+    }
+
+
+    /* ---------------------------------------------
+       LEYENDA
+    ---------------------------------------------- */
+
+    #contenidoTrabajos > section > div:last-child {
+        margin-top: 10px !important;
+
+        gap:
+            5px
+            9px !important;
+
+        font-size: 9px !important;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL MUY PEQUEÑO
+===================================================== */
+
+@media (max-width: 390px) {
+
+    .calendario-dia {
+        min-height: 62px !important;
+
+        padding: 3px !important;
+    }
+
+
+    .calendario-dia > div:first-child strong {
+        font-size: 9px !important;
+    }
+
+
+    .evento-calendario {
+        min-height: 21px;
+
+        padding:
+            2px
+            3px !important;
+    }
+
+
+    .evento-calendario strong {
+        font-size: 7px !important;
+    }
+
+}
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - PORTAL DEL TRABAJADOR
+===================================================== */
+
+
+/* =====================================================
+   PORTAL - CONTENEDOR GENERAL
+===================================================== */
+
+body.worker-portal-mode
+.main-content {
+    max-width: 1180px;
+
+    margin:
+        0
+        auto;
+
+    padding:
+        28px;
+}
+
+
+/* =====================================================
+   CABECERA DEL PORTAL
+===================================================== */
+
+body.worker-portal-mode
+.topbar {
+    display: grid;
+
+    grid-template-columns:
+        1fr
+        auto;
+
+    gap: 18px;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+    padding: 18px;
+
+    border-radius: 16px;
+
+    background:
+        linear-gradient(
+            135deg,
+            #173f31,
+            #246b52
+        );
+
+    color: white;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+body.worker-portal-mode
+.topbar h2 {
+    margin: 0;
+
+    color: white;
+}
+
+
+body.worker-portal-mode
+.topbar p {
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        ) !important;
+}
+
+
+body.worker-portal-mode
+.topbar > div:last-child {
+    display: flex !important;
+
+    gap: 8px !important;
+
+    flex-wrap: wrap;
+}
+
+
+/* =====================================================
+   BOTONES DE ACCIÓN
+===================================================== */
+
+body.worker-portal-mode
+#activarModoCampo,
+body.worker-portal-mode
+#comunicarIncidencia {
+    background: white;
+
+    color: var(--gc-green-text);
+}
+
+
+body.worker-portal-mode
+#cerrarSesionTrabajador {
+    border-color:
+        rgba(
+            255,
+            255,
+            255,
+            0.24
+        );
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.1
+        );
+
+    color: white;
+}
+
+
+/* =====================================================
+   KPIs
+===================================================== */
+
+body.worker-portal-mode
+.stats {
+    grid-template-columns:
+        repeat(
+            5,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   SECCIONES DE TAREAS
+===================================================== */
+
+body.worker-portal-mode
+.panel {
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+body.worker-portal-mode
+.panel-header h3 {
+    margin: 0;
+
+    font-size: 16px;
+}
+
+
+body.worker-portal-mode
+.panel-header p {
+    margin-top: 4px;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   TARJETAS DE TAREA
+===================================================== */
+
+body.worker-portal-mode
+.panel > div:not(.panel-header):not(.empty-state) {
+    border-color:
+        var(--gc-border-soft) !important;
+
+    border-radius: 12px !important;
+}
+
+
+body.worker-portal-mode
+.trabajo-linea {
+    margin:
+        4px
+        0;
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+/* =====================================================
+   ACCIONES TAREA
+===================================================== */
+
+body.worker-portal-mode
+.form-actions {
+    gap: 7px;
+}
+
+
+body.worker-portal-mode
+.portal-iniciar-tarea,
+body.worker-portal-mode
+.portal-completar-tarea {
+    min-height: 36px;
+
+    padding:
+        0
+        11px;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    body.worker-portal-mode
+    .stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    body.worker-portal-mode
+    .stats .card:last-child {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    body.worker-portal-mode
+    .main-content {
+        width: 100%;
+
+        max-width: none;
+
+        padding:
+            18px
+            12px
+            calc(
+                22px
+                +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+
+    /* ---------------------------------------------
+       HERO
+    ---------------------------------------------- */
+
+    body.worker-portal-mode
+    .topbar {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+
+    body.worker-portal-mode
+    .topbar h2 {
+        font-size: 21px;
+    }
+
+
+    body.worker-portal-mode
+    .topbar > div:first-child > p:first-child {
+        margin-bottom: 3px !important;
+
+        color:
+            rgba(
+                255,
+                255,
+                255,
+                0.65
+            ) !important;
+
+        font-size: 9px;
+
+        text-transform: uppercase;
+
+        letter-spacing: 0.06em;
+
+        font-weight: 700;
+    }
+
+
+    body.worker-portal-mode
+    .topbar > div:first-child > p:last-child {
+        margin-top: 4px;
+
+        font-size: 10px;
+    }
+
+
+    /* ---------------------------------------------
+       ACCIONES
+    ---------------------------------------------- */
+
+    body.worker-portal-mode
+    .topbar > div:last-child {
+        display: grid !important;
+
+        grid-template-columns:
+            1fr
+            1fr !important;
+
+        gap: 7px !important;
+    }
+
+
+    body.worker-portal-mode
+    #activarModoCampo {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+
+    body.worker-portal-mode
+    #activarModoCampo,
+    body.worker-portal-mode
+    #comunicarIncidencia,
+    body.worker-portal-mode
+    #cerrarSesionTrabajador {
+        width: 100%;
+
+        min-height: 38px;
+
+        justify-content: center;
+
+        padding:
+            0
+            8px;
+
+        font-size: 10px;
+    }
+
+
+    /* ---------------------------------------------
+       KPIs
+    ---------------------------------------------- */
+
+    body.worker-portal-mode
+    .stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px;
+
+        margin-bottom: 16px;
+    }
+
+
+    body.worker-portal-mode
+    .stats .card {
+        padding: 10px;
+    }
+
+
+    body.worker-portal-mode
+    .stats .card:last-child {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+
+    /* ---------------------------------------------
+       SECCIONES
+    ---------------------------------------------- */
+
+    body.worker-portal-mode
+    .panel {
+        padding: 13px;
+
+        border-radius: 13px;
+    }
+
+
+    body.worker-portal-mode
+    .panel + .panel {
+        margin-top: 12px !important;
+    }
+
+
+    body.worker-portal-mode
+    .panel-header {
+        margin-bottom: 10px;
+    }
+
+
+    body.worker-portal-mode
+    .panel-header h3 {
+        font-size: 15px;
+    }
+
+
+    /* ---------------------------------------------
+       TAREAS
+    ---------------------------------------------- */
+
+    body.worker-portal-mode
+    .panel > div:not(.panel-header):not(.empty-state) {
+        padding: 11px !important;
+
+        margin-bottom: 8px !important;
+    }
+
+
+    body.worker-portal-mode
+    .panel > div:not(.panel-header):not(.empty-state) h3 {
+        margin-bottom: 4px;
+
+        font-size: 14px;
+    }
+
+
+    body.worker-portal-mode
+    .trabajo-linea {
+        margin:
+            3px
+            0;
+
+        font-size: 9px;
+    }
+
+
+    body.worker-portal-mode
+    .portal-iniciar-tarea,
+    body.worker-portal-mode
+    .portal-completar-tarea {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+}
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - AJUSTE MODO CAMPO
+===================================================== */
+
+@media (max-width: 760px) {
+
+    body.worker-portal-mode
+    .modo-campo-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px;
+    }
+
+
+    body.worker-portal-mode
+    .modo-campo-stats
+    .card:last-child {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+
+    body.worker-portal-mode
+    .modo-campo-trabajo-actual {
+        padding: 14px !important;
+    }
+
+
+    body.worker-portal-mode
+    .modo-campo-trabajo-actual
+    .empty-state {
+        min-height: 150px !important;
+
+        padding:
+            18px
+            10px !important;
+    }
+
+}
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - CUADERNO DE CAMPO
+===================================================== */
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+#buscarCuaderno,
+#filtroFincaCuaderno,
+#filtroTipoCuaderno {
+    width: 100%;
+    min-width: 0;
+}
+
+
+/* =====================================================
+   LISTADO
+===================================================== */
+
+#listaCuadernoCampo {
+    min-width: 0;
+}
+
+
+/* =====================================================
+   TARJETAS DEL CUADERNO
+===================================================== */
+
+#listaCuadernoCampo > .panel {
+    min-width: 0;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+/* =====================================================
+   TEXTOS INTERNOS
+===================================================== */
+
+#listaCuadernoCampo p {
+    margin:
+        4px
+        0;
+
+    color: var(--gc-muted-strong);
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+#listaCuadernoCampo h3 {
+    color: var(--gc-text);
+
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+
+/* =====================================================
+   BOTONES TARJETA
+===================================================== */
+
+.editar-cuaderno {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    font-size: 10px;
+}
+
+
+.eliminar-cuaderno {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+
+    padding: 0;
+
+    color: #b13b3b;
+
+    background: #fdeaea;
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ---------------------------------------------
+       FILTROS EN UNA COLUMNA
+    ---------------------------------------------- */
+
+    #buscarCuaderno,
+    #filtroFincaCuaderno,
+    #filtroTipoCuaderno {
+        width: 100% !important;
+        min-width: 0 !important;
+        max-width: 100% !important;
+    }
+
+
+    #buscarCuaderno {
+        min-height: 42px;
+    }
+
+
+    #filtroFincaCuaderno,
+    #filtroTipoCuaderno {
+        min-height: 42px;
+    }
+
+
+    /* El panel de filtros usa un grid inline.
+       Lo forzamos a una sola columna. */
+
+    #buscarCuaderno
+        {
+        grid-column: 1 / -1;
+    }
+
+
+    #buscarCuaderno
+        {
+        box-sizing: border-box;
+    }
+
+
+    #buscarCuaderno,
+    #filtroFincaCuaderno,
+    #filtroTipoCuaderno {
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+
+    /* ---------------------------------------------
+       FORZAR EL GRID DEL PANEL DE FILTROS
+    ---------------------------------------------- */
+
+    #buscarCuaderno
+    {
+        display: block;
+    }
+
+
+    #buscarCuaderno
+    {
+        max-width: 100%;
+    }
+
+
+    /* Aprovechamos :has() para apuntar al grid real */
+
+    .panel:has(#buscarCuaderno) > div {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px !important;
+    }
+
+
+    .panel:has(#buscarCuaderno) {
+        padding: 12px !important;
+
+        margin-bottom: 14px !important;
+
+        border-radius: 13px;
+    }
+
+
+    /* ---------------------------------------------
+       LISTADO UNA COLUMNA
+    ---------------------------------------------- */
+
+    #listaCuadernoCampo {
+        grid-template-columns: 1fr !important;
+
+        gap: 11px !important;
+    }
+
+
+    /* ---------------------------------------------
+       TARJETAS
+    ---------------------------------------------- */
+
+    #listaCuadernoCampo > .panel {
+        padding: 13px !important;
+
+        border-radius: 13px;
+    }
+
+
+    #listaCuadernoCampo > .panel > div:first-child {
+        gap: 8px !important;
+    }
+
+
+    #listaCuadernoCampo > .panel > div:first-child > div:first-child > div:first-child {
+        margin-bottom: 5px !important;
+
+        font-size: 22px !important;
+    }
+
+
+    #listaCuadernoCampo h3 {
+        margin-bottom: 3px !important;
+
+        font-size: 14px;
+    }
+
+
+    #listaCuadernoCampo > .panel > div:nth-child(2) {
+        margin-top: 10px !important;
+
+        gap: 4px !important;
+    }
+
+
+    #listaCuadernoCampo p {
+        margin:
+            3px
+            0;
+
+        font-size: 9px;
+    }
+
+
+    .editar-cuaderno {
+        min-height: 32px;
+
+        padding:
+            0
+            9px;
+    }
+
+
+    .eliminar-cuaderno {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+    }
+
+}
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - HISTORIAL · SEPARACIÓN FINAL
+===================================================== */
+
+.historial-item {
+    padding:
+        14px
+        0;
+
+    border-bottom:
+        1px solid
+        #e2e9e4;
+}
+
+
+.historial-item + .historial-item {
+    margin-top: 2px;
+}
+
+
+.historial-item-contenido {
+    padding-right: 2px;
+}
+
+
+.historial-item-titulo {
+    margin-bottom: 2px;
+}
+
+
+.historial-item-fecha {
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.historial-item-referencia {
+    margin-top: 5px;
+}
+
+
+.historial-item-usuario {
+    margin-top: 6px;
+}
+
+
+.historial-item-cambios {
+    margin-top: 5px;
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .historial-item {
+        padding:
+            13px
+            0;
+    }
+
+
+    .historial-item + .historial-item {
+        margin-top: 3px;
+    }
+
+
+    .historial-item-titulo {
+        line-height: 1.25;
+    }
+
+
+    .historial-item-fecha {
+        margin-top: 3px;
+    }
+
+
+    .historial-item-referencia,
+    .historial-item-usuario,
+    .historial-item-cambios {
+        line-height: 1.4;
+    }
+
+}
+/* =====================================================
+   GESTACAMPS
+   CORRECCIÓN DESPLEGABLES SIDEBAR
+   EL ESTADO LO CONTROLA SOLO aria-expanded
+===================================================== */
+
+.sidebar-group .sidebar-group-content {
+    display: none !important;
+}
+
+.sidebar-group
+.sidebar-group-toggle[aria-expanded="true"]
++
+.sidebar-group-content {
+    display: flex !important;
+}
+
+
+/* Evitar que el enlace activo fuerce su grupo abierto */
+.sidebar-group:has(
+    .sidebar-group-content a.active
+)
+.sidebar-group-content {
+    display: none !important;
+}
+
+.sidebar-group:has(
+    .sidebar-group-content a.active
+)
+.sidebar-group-toggle[aria-expanded="true"]
++
+.sidebar-group-content {
+    display: flex !important;
+}

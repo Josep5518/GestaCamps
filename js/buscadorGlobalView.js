@@ -55,21 +55,14 @@ export class BuscadorGlobalView {
 
 
             <section
-                class="panel"
-                style="
-                    margin-bottom: 22px;
+                class="
+                    panel
+                    buscador-global-filtros-panel
                 "
             >
 
                 <div
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            minmax(220px, 1fr)
-                            minmax(180px, 280px);
-                        gap: 12px;
-                        align-items: end;
-                    "
+                    class="buscador-global-filtros-grid"
                 >
 
                     <div class="form-group">
@@ -133,31 +126,21 @@ export class BuscadorGlobalView {
                 </div>
 
 
-                <p
-                    style="
-                        margin:
-                            8px 0 0;
-                        color: #78837d;
-                        font-size: 13px;
-                    "
-                >
+                <p class="buscador-global-ayuda">
                     Escribe al menos 2 caracteres.
                 </p>
 
             </section>
 
 
-            <section class="panel">
+            <section
+                class="
+                    panel
+                    buscador-global-resultados-panel
+                "
+            >
 
-                <div
-                    class="panel-header"
-                    style="
-                        display: flex;
-                        justify-content: space-between;
-                        gap: 15px;
-                        align-items: center;
-                    "
-                >
+                <div class="panel-header buscador-global-resultados-header">
 
                     <h3>
                         Resultados
@@ -166,10 +149,7 @@ export class BuscadorGlobalView {
 
                     <span
                         id="contadorResultadosGlobal"
-                        style="
-                            color: #78837d;
-                            font-size: 14px;
-                        "
+                        class="buscador-global-contador"
                     >
                         0 resultados
                     </span>
@@ -179,6 +159,7 @@ export class BuscadorGlobalView {
 
                 <div
                     id="resultadosBuscadorGlobal"
+                    class="buscador-global-resultados"
                 ></div>
 
             </section>
@@ -198,7 +179,7 @@ export class BuscadorGlobalView {
             );
 
 
-        input.addEventListener(
+        input?.addEventListener(
             "input",
             () => {
 
@@ -212,7 +193,7 @@ export class BuscadorGlobalView {
         );
 
 
-        filtroModulo.addEventListener(
+        filtroModulo?.addEventListener(
             "change",
             () => {
 
@@ -232,7 +213,7 @@ export class BuscadorGlobalView {
         setTimeout(
             () => {
 
-                input.focus();
+                input?.focus();
 
             },
             0
@@ -366,12 +347,7 @@ export class BuscadorGlobalView {
 
         contenedor.innerHTML = `
 
-            <div
-                style="
-                    display: grid;
-                    gap: 10px;
-                "
-            >
+            <div class="buscador-global-resultados-grid">
 
                 ${resultados.map(
                     resultado =>
@@ -431,82 +407,41 @@ export class BuscadorGlobalView {
 
             <button
                 type="button"
-                class="resultado-global"
+                class="
+                    resultado-global
+                    buscador-global-resultado
+                "
                 data-pagina="${this.escaparHTML(
                     resultado.pagina
                 )}"
-                style="
-                    width: 100%;
-                    display: flex;
-                    align-items: center;
-                    gap: 14px;
-                    text-align: left;
-                    padding: 15px;
-                    border: 1px solid #e1e8e3;
-                    border-radius: 13px;
-                    background: white;
-                    cursor: pointer;
-                    font: inherit;
-                "
             >
 
-                <div
-                    style="
-                        width: 44px;
-                        height: 44px;
-                        min-width: 44px;
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        border-radius: 11px;
-                        background: #edf6f1;
-                        font-size: 21px;
-                    "
-                >
+                <div class="buscador-global-icono">
+
                     ${resultado.icono}
+
                 </div>
 
 
-                <div
-                    style="
-                        flex: 1;
-                        min-width: 0;
-                    "
-                >
+                <div class="buscador-global-contenido">
 
-                    <div
-                        style="
-                            display: flex;
-                            align-items: center;
-                            gap: 8px;
-                            flex-wrap: wrap;
-                        "
-                    >
+                    <div class="buscador-global-titulo-row">
 
-                        <strong
-                            style="
-                                font-size: 15px;
-                            "
-                        >
+                        <strong class="buscador-global-titulo">
+
                             ${this.escaparHTML(
                                 resultado.titulo
                             )}
+
                         </strong>
 
 
-                        <span
-                            style="
-                                padding: 4px 8px;
-                                border-radius: 999px;
-                                background: #edf6f1;
-                                color: #247354;
-                                font-size: 11px;
-                                font-weight: 600;
-                            "
-                        >
+                        <span class="buscador-global-modulo">
+
                             ${this.escaparHTML(
                                 resultado.modulo
                             )}
+
                         </span>
 
                     </div>
@@ -517,16 +452,12 @@ export class BuscadorGlobalView {
 
                             ? `
 
-                                <p
-                                    style="
-                                        margin: 5px 0 0;
-                                        color: #5f6d66;
-                                        font-size: 13px;
-                                    "
-                                >
+                                <p class="buscador-global-subtitulo">
+
                                     ${this.escaparHTML(
                                         resultado.subtitulo
                                     )}
+
                                 </p>
 
                             `
@@ -540,16 +471,12 @@ export class BuscadorGlobalView {
 
                             ? `
 
-                                <p
-                                    style="
-                                        margin: 4px 0 0;
-                                        color: #78837d;
-                                        font-size: 12px;
-                                    "
-                                >
+                                <p class="buscador-global-detalle">
+
                                     ${this.escaparHTML(
                                         resultado.detalle
                                     )}
+
                                 </p>
 
                             `
@@ -560,12 +487,7 @@ export class BuscadorGlobalView {
                 </div>
 
 
-                <span
-                    style="
-                        color: #78837d;
-                        font-size: 20px;
-                    "
-                >
+                <span class="buscador-global-flecha">
                     ›
                 </span>
 
