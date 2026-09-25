@@ -4,7 +4,8 @@ import {
     escaparHTML,
     normalizarTexto,
     formatearFecha,
-    obtenerHoraActual
+    obtenerHoraActual,
+    mismoId
 } from "./utils.js";
 
 import {
@@ -164,8 +165,7 @@ export class TratamientosView {
                                                 tratamiento.fincaId
                                         )
                                         .filter(Boolean)
-                                )
-                                    .size
+                                ).size
                             }
                         </h3>
 
@@ -195,8 +195,7 @@ export class TratamientosView {
                                                 tratamiento.productoId
                                         )
                                         .filter(Boolean)
-                                )
-                                    .size
+                                ).size
                             }
                         </h3>
 
@@ -208,24 +207,18 @@ export class TratamientosView {
 
 
             <section
-                class="panel tratamientos-filtros-panel"
+                class="panel"
                 style="
                     margin-bottom: 22px;
                 "
             >
 
                 <div
-                    class="tratamientos-filtros-grid"
                     style="
                         display: grid;
                         grid-template-columns:
-                            repeat(
-                                auto-fit,
-                                minmax(
-                                    min(100%, 220px),
-                                    1fr
-                                )
-                            );
+                            minmax(220px, 1fr)
+                            minmax(190px, 300px);
                         gap: 12px;
                     "
                 >
@@ -240,7 +233,9 @@ export class TratamientosView {
                             id="buscarTratamiento"
                             type="search"
                             placeholder="Producto, finca, cultivo..."
-                            value="${escaparHTML(this.busqueda)}"
+                            value="${escaparHTML(
+                                this.busqueda
+                            )}"
                         >
 
                     </div>
@@ -266,18 +261,17 @@ export class TratamientosView {
                                     <option
                                         value="${finca.id}"
                                         ${
-                                            String(
-                                                this.filtroFinca
-                                            )
-                                            ===
-                                            String(
+                                            mismoId(
+                                                this.filtroFinca,
                                                 finca.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(finca.nombre)}
+                                        ${escaparHTML(
+                                            finca.nombre
+                                        )}
                                     </option>
 
                                 `
@@ -296,16 +290,12 @@ export class TratamientosView {
 
                 <div
                     id="listaTratamientos"
-                    class="tratamientos-grid"
                     style="
                         display: grid;
                         grid-template-columns:
                             repeat(
                                 auto-fit,
-                                minmax(
-                                    min(100%, 340px),
-                                    1fr
-                                )
+                                minmax(340px, 1fr)
                             );
                         gap: 18px;
                     "
@@ -313,7 +303,6 @@ export class TratamientosView {
 
                     ${
                         tratamientos.length
-
                             ? tratamientos
                                 .map(
                                     tratamiento =>
@@ -322,7 +311,6 @@ export class TratamientosView {
                                         )
                                 )
                                 .join("")
-
                             : this.crearVacio()
                     }
 
@@ -355,8 +343,7 @@ export class TratamientosView {
                     this.busqueda =
                         event.target.value;
 
-
-                    this.mostrar();
+                    this.actualizarLista();
 
                 }
             );
@@ -373,11 +360,54 @@ export class TratamientosView {
                     this.filtroFinca =
                         event.target.value;
 
-
-                    this.mostrar();
+                    this.actualizarLista();
 
                 }
             );
+
+
+        this.configurarEventos();
+
+    }
+
+
+    // =====================================================
+    // ACTUALIZAR SOLO LISTADO
+    // =====================================================
+
+    actualizarLista() {
+
+        const contenedor =
+            document
+                .getElementById(
+                    "listaTratamientos"
+                );
+
+
+        if (
+            !contenedor
+        ) {
+
+            return;
+
+        }
+
+
+        const tratamientos =
+            this.obtenerFiltrados();
+
+
+        contenedor.innerHTML =
+            tratamientos.length
+                ? tratamientos
+                    .map(
+                        tratamiento =>
+                            this.crearTarjeta(
+                                tratamiento
+                            )
+                    )
+                    .join("")
+                : this.crearVacio();
 
 
         this.configurarEventos();
@@ -395,14 +425,12 @@ export class TratamientosView {
 
         return `
 
-            <article class="panel tratamiento-card">
+            <article class="panel">
 
                 <div
-                    class="tratamiento-card-header"
                     style="
                         display: flex;
                         justify-content: space-between;
-                        align-items: flex-start;
                         gap: 12px;
                     "
                 >
@@ -419,7 +447,9 @@ export class TratamientosView {
                         </div>
 
                         <h3>
-                            ${escaparHTML(tratamiento.productoNombre)}
+                            ${escaparHTML(
+                                tratamiento.productoNombre
+                            )}
                         </h3>
 
                         <strong
@@ -427,17 +457,17 @@ export class TratamientosView {
                                 color: #247354;
                             "
                         >
-                            ${escaparHTML(tratamiento.fincaNombre)}
+                            ${escaparHTML(
+                                tratamiento.fincaNombre
+                            )}
                         </strong>
 
                     </div>
 
 
                     <div
-                        class="tratamiento-actions"
                         style="
                             display: flex;
-                            align-items: flex-start;
                             gap: 7px;
                         "
                     >
@@ -464,7 +494,6 @@ export class TratamientosView {
 
 
                 <div
-                    class="tratamiento-detalles"
                     style="
                         margin-top: 16px;
                         display: grid;
@@ -473,79 +502,117 @@ export class TratamientosView {
                 >
 
                     <p>
-                        📅 ${formatearFecha(tratamiento.fecha)}
+                        📅 ${formatearFecha(
+                            tratamiento.fecha
+                        )}
+
                         ${
                             tratamiento.hora
-                                ? ` · ${escaparHTML(tratamiento.hora)}`
+                                ? ` · ${escaparHTML(
+                                    tratamiento.hora
+                                )}`
                                 : ""
                         }
                     </p>
+
 
                     ${
                         tratamiento.campaniaNombre
                             ? `
                                 <p>
-                                    🗓️ ${escaparHTML(tratamiento.campaniaNombre)}
+                                    🗓️
+                                    ${escaparHTML(
+                                        tratamiento.campaniaNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
+
 
                     ${
                         tratamiento.cultivoNombre
                             ? `
                                 <p>
-                                    🌱 ${escaparHTML(tratamiento.cultivoNombre)}
+                                    🌱
+                                    ${escaparHTML(
+                                        tratamiento.cultivoNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
 
+
                     <p>
-                        📦 ${tratamiento.cantidadUsada}
-                        ${escaparHTML(tratamiento.productoUnidad)}
+                        📦
+                        ${tratamiento.cantidadUsada}
+
+                        ${escaparHTML(
+                            tratamiento.productoUnidad
+                            ||
+                            ""
+                        )}
                     </p>
+
 
                     <p>
                         🧪 Dosis:
-                        ${escaparHTML(tratamiento.dosis)}
+                        ${escaparHTML(
+                            tratamiento.dosis
+                        )}
                     </p>
+
 
                     ${
                         tratamiento.superficieTratada
                             ? `
                                 <p>
-                                    📐 ${tratamiento.superficieTratada} ha
+                                    📐
+                                    ${tratamiento.superficieTratada}
+                                    ha
                                 </p>
                             `
                             : ""
                     }
+
 
                     ${
                         tratamiento.plagaObjetivo
                             ? `
                                 <p>
-                                    🐛 ${escaparHTML(tratamiento.plagaObjetivo)}
+                                    🐛
+                                    ${escaparHTML(
+                                        tratamiento.plagaObjetivo
+                                    )}
                                 </p>
                             `
                             : ""
                     }
+
 
                     ${
                         tratamiento.trabajadorNombre
                             ? `
                                 <p>
-                                    👷 ${escaparHTML(tratamiento.trabajadorNombre)}
+                                    👷
+                                    ${escaparHTML(
+                                        tratamiento.trabajadorNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
 
+
                     ${
                         tratamiento.maquinariaNombre
                             ? `
                                 <p>
-                                    🚜 ${escaparHTML(tratamiento.maquinariaNombre)}
+                                    🚜
+                                    ${escaparHTML(
+                                        tratamiento.maquinariaNombre
+                                    )}
                                 </p>
                             `
                             : ""
@@ -572,7 +639,9 @@ export class TratamientosView {
                                 </strong>
 
                                 <p>
-                                    ${escaparHTML(tratamiento.observaciones)}
+                                    ${escaparHTML(
+                                        tratamiento.observaciones
+                                    )}
                                 </p>
 
                             </div>
@@ -590,6 +659,7 @@ export class TratamientosView {
                     "
                 >
                     Registrado por
+
                     ${escaparHTML(
                         tratamiento.creadoPorNombre
                         ||
@@ -612,13 +682,35 @@ export class TratamientosView {
         tratamientoId = null
     ) {
 
+        const editando =
+            tratamientoId !==
+            null;
+
+
         const tratamiento =
-            tratamientoId
+            editando
                 ? this.tratamientoService
                     .obtenerPorId(
                         tratamientoId
                     )
                 : null;
+
+
+        if (
+            editando
+            &&
+            !tratamiento
+        ) {
+
+            alert(
+                "El tratamiento no existe."
+            );
+
+            this.mostrar();
+
+            return;
+
+        }
 
 
         const fincas =
@@ -662,11 +754,8 @@ export class TratamientosView {
                         >
                         0
                         ||
-                        Number(
-                            producto.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            producto.id,
                             tratamiento?.productoId
                         )
                 );
@@ -719,6 +808,7 @@ export class TratamientosView {
 
                 <div class="form-grid">
 
+
                     <div class="form-group">
 
                         <label>
@@ -728,7 +818,11 @@ export class TratamientosView {
                         <input
                             id="tratamientoFecha"
                             type="date"
-                            value="${tratamiento?.fecha || fechaHoy}"
+                            value="${
+                                tratamiento?.fecha
+                                ||
+                                fechaHoy
+                            }"
                         >
 
                     </div>
@@ -743,7 +837,11 @@ export class TratamientosView {
                         <input
                             id="tratamientoHora"
                             type="time"
-                            value="${tratamiento?.hora || horaActual}"
+                            value="${
+                                tratamiento?.hora
+                                ||
+                                horaActual
+                            }"
                         >
 
                     </div>
@@ -769,18 +867,17 @@ export class TratamientosView {
                                     <option
                                         value="${finca.id}"
                                         ${
-                                            Number(
-                                                tratamiento?.fincaId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                tratamiento?.fincaId,
                                                 finca.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(finca.nombre)}
+                                        ${escaparHTML(
+                                            finca.nombre
+                                        )}
                                     </option>
 
                                 `
@@ -812,18 +909,17 @@ export class TratamientosView {
                                         value="${campania.id}"
                                         data-finca-id="${campania.fincaId}"
                                         ${
-                                            Number(
-                                                tratamiento?.campaniaId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                tratamiento?.campaniaId,
                                                 campania.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(campania.nombre)}
+                                        ${escaparHTML(
+                                            campania.nombre
+                                        )}
                                     </option>
 
                                 `
@@ -853,13 +949,14 @@ export class TratamientosView {
 
                                     <option
                                         value="${cultivo.id}"
-                                        data-finca-id="${cultivo.fincaId || ""}"
+                                        data-finca-id="${
+                                            cultivo.fincaId
+                                            ||
+                                            ""
+                                        }"
                                         ${
-                                            Number(
-                                                tratamiento?.cultivoId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                tratamiento?.cultivoId,
                                                 cultivo.id
                                             )
                                                 ? "selected"
@@ -901,20 +998,25 @@ export class TratamientosView {
                                     <option
                                         value="${producto.id}"
                                         ${
-                                            Number(
-                                                tratamiento?.productoId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                tratamiento?.productoId,
                                                 producto.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(producto.nombre)}
+                                        ${escaparHTML(
+                                            producto.nombre
+                                        )}
+
                                         · ${producto.cantidad}
-                                        ${escaparHTML(producto.unidad)}
+
+                                        ${escaparHTML(
+                                            producto.unidad
+                                            ||
+                                            ""
+                                        )}
                                     </option>
 
                                 `
@@ -936,7 +1038,11 @@ export class TratamientosView {
                             type="number"
                             min="0.01"
                             step="0.01"
-                            value="${tratamiento?.cantidadUsada ?? ""}"
+                            value="${
+                                tratamiento?.cantidadUsada
+                                ??
+                                ""
+                            }"
                         >
 
                     </div>
@@ -952,7 +1058,11 @@ export class TratamientosView {
                             id="tratamientoDosis"
                             type="text"
                             placeholder="Ej. 2 L/ha"
-                            value="${escaparHTML(tratamiento?.dosis || "")}"
+                            value="${escaparHTML(
+                                tratamiento?.dosis
+                                ||
+                                ""
+                            )}"
                         >
 
                     </div>
@@ -969,7 +1079,11 @@ export class TratamientosView {
                             type="number"
                             min="0.01"
                             step="0.01"
-                            value="${tratamiento?.superficieTratada ?? ""}"
+                            value="${
+                                tratamiento?.superficieTratada
+                                ??
+                                ""
+                            }"
                         >
 
                     </div>
@@ -985,7 +1099,11 @@ export class TratamientosView {
                             id="tratamientoObjetivo"
                             type="text"
                             placeholder="Ej. Oídio, pulgón..."
-                            value="${escaparHTML(tratamiento?.plagaObjetivo || "")}"
+                            value="${escaparHTML(
+                                tratamiento?.plagaObjetivo
+                                ||
+                                ""
+                            )}"
                         >
 
                     </div>
@@ -1011,11 +1129,8 @@ export class TratamientosView {
                                     <option
                                         value="${trabajador.id}"
                                         ${
-                                            Number(
-                                                tratamiento?.trabajadorId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                tratamiento?.trabajadorId,
                                                 trabajador.id
                                             )
                                                 ? "selected"
@@ -1057,11 +1172,8 @@ export class TratamientosView {
                                     <option
                                         value="${maquina.id}"
                                         ${
-                                            Number(
-                                                tratamiento?.maquinariaId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                tratamiento?.maquinariaId,
                                                 maquina.id
                                             )
                                                 ? "selected"
@@ -1095,7 +1207,11 @@ export class TratamientosView {
                         id="tratamientoObservaciones"
                         rows="4"
                         placeholder="Observaciones del tratamiento..."
-                    >${escaparHTML(tratamiento?.observaciones || "")}</textarea>
+                    >${escaparHTML(
+                        tratamiento?.observaciones
+                        ||
+                        ""
+                    )}</textarea>
 
                 </div>
 
@@ -1373,21 +1489,28 @@ export class TratamientosView {
                         opcion.hidden =
                             false;
 
+                        opcion.disabled =
+                            false;
+
                         return;
 
                     }
 
 
-                    opcion.hidden =
-                        fincaId
+                    const pertenece =
+                        !!fincaId
                         &&
-                        String(
-                            opcion.dataset.fincaId
-                        )
-                        !==
-                        String(
+                        mismoId(
+                            opcion.dataset.fincaId,
                             fincaId
                         );
+
+
+                    opcion.hidden =
+                        !pertenece;
+
+                    opcion.disabled =
+                        !pertenece;
 
                 }
             );
@@ -1406,31 +1529,47 @@ export class TratamientosView {
                         opcion.hidden =
                             false;
 
+                        opcion.disabled =
+                            false;
+
                         return;
 
                     }
 
 
-                    opcion.hidden =
-                        fincaId
+                    const pertenece =
+                        !!fincaId
                         &&
-                        opcion.dataset.fincaId
-                        &&
-                        String(
-                            opcion.dataset.fincaId
-                        )
-                        !==
-                        String(
+                        mismoId(
+                            opcion.dataset.fincaId,
                             fincaId
                         );
+
+
+                    opcion.hidden =
+                        !pertenece;
+
+                    opcion.disabled =
+                        !pertenece;
 
                 }
             );
 
 
+        const campaniaSeleccionada =
+            campania.selectedOptions[0];
+
+
         if (
-            campania.selectedOptions[0]
-            ?.hidden
+            campaniaSeleccionada
+            &&
+            campaniaSeleccionada.value
+            &&
+            (
+                campaniaSeleccionada.hidden
+                ||
+                campaniaSeleccionada.disabled
+            )
         ) {
 
             campania.value =
@@ -1439,9 +1578,20 @@ export class TratamientosView {
         }
 
 
+        const cultivoSeleccionado =
+            cultivo.selectedOptions[0];
+
+
         if (
-            cultivo.selectedOptions[0]
-            ?.hidden
+            cultivoSeleccionado
+            &&
+            cultivoSeleccionado.value
+            &&
+            (
+                cultivoSeleccionado.hidden
+                ||
+                cultivoSeleccionado.disabled
+            )
         ) {
 
             cultivo.value =
@@ -1467,12 +1617,19 @@ export class TratamientosView {
 
                     boton.addEventListener(
                         "click",
-                        () =>
+                        () => {
+
+                            /*
+                             * IMPORTANTE:
+                             * el ID puede ser UUID.
+                             * No usar Number().
+                             */
+
                             this.mostrarFormulario(
-                                Number(
-                                    boton.dataset.id
-                                )
-                            )
+                                boton.dataset.id
+                            );
+
+                        }
                     );
 
                 }
@@ -1505,12 +1662,15 @@ export class TratamientosView {
                             }
 
 
+                            /*
+                             * También mantenemos aquí
+                             * el ID original.
+                             */
+
                             const resultado =
                                 this.tratamientoService
                                     .eliminar(
-                                        Number(
-                                            boton.dataset.id
-                                        )
+                                        boton.dataset.id
                                     );
 
 
@@ -1556,11 +1716,8 @@ export class TratamientosView {
             tratamientos =
                 tratamientos.filter(
                     tratamiento =>
-                        Number(
-                            tratamiento.fincaId
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            tratamiento.fincaId,
                             this.filtroFinca
                         )
                 );

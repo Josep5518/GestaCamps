@@ -22,6 +22,10 @@ export class CultivosView {
     }
 
 
+    // =====================================================
+    // MOSTRAR
+    // =====================================================
+
     mostrar() {
 
         const cultivos =
@@ -43,7 +47,9 @@ export class CultivosView {
                 ) =>
                     total +
                     Number(
-                        cultivo.superficie || 0
+                        cultivo.superficie
+                        ||
+                        0
                     ),
                 0
             );
@@ -58,7 +64,9 @@ export class CultivosView {
                     )
                     .map(
                         cultivo =>
-                            cultivo.campaniaId
+                            String(
+                                cultivo.campaniaId
+                            )
                     )
             ).size;
 
@@ -209,6 +217,10 @@ export class CultivosView {
     }
 
 
+    // =====================================================
+    // MOSTRAR LISTA
+    // =====================================================
+
     mostrarLista() {
 
         const cultivos =
@@ -223,7 +235,8 @@ export class CultivosView {
 
 
         if (
-            cultivos.length === 0
+            cultivos.length ===
+            0
         ) {
 
             contenedor.innerHTML = `
@@ -305,7 +318,9 @@ export class CultivosView {
 
                                 ${
                                     cultivo.parcela
+
                                         ? ` · ${cultivo.parcela}`
+
                                         : ""
                                 }
 
@@ -316,21 +331,25 @@ export class CultivosView {
                                 cultivo.campaniaNombre
 
                                     ? `
+
                                         <p class="cultivo-campania">
 
                                             📅
                                             ${cultivo.campaniaNombre}
 
                                         </p>
+
                                     `
 
                                     : `
+
                                         <p class="cultivo-campania cultivo-sin-campania">
 
                                             📅
                                             Sin campanya asignada
 
                                         </p>
+
                                     `
                             }
 
@@ -374,6 +393,7 @@ export class CultivosView {
                                 cultivo.fechaInicio
 
                                     ? `
+
                                         <p class="cultivo-date">
 
                                             📅 Inicio:
@@ -382,6 +402,7 @@ export class CultivosView {
                                             )}
 
                                         </p>
+
                                     `
 
                                     : ""
@@ -392,9 +413,11 @@ export class CultivosView {
                                 cultivo.notas
 
                                     ? `
+
                                         <p class="cultivo-notas">
                                             ${cultivo.notas}
                                         </p>
+
                                     `
 
                                     : ""
@@ -415,6 +438,10 @@ export class CultivosView {
     }
 
 
+    // =====================================================
+    // EVENTOS LISTADO
+    // =====================================================
+
     configurarEventos() {
 
         document
@@ -428,10 +455,17 @@ export class CultivosView {
                         "click",
                         () => {
 
+                            /*
+                             * MUY IMPORTANTE:
+                             *
+                             * NO convertir el ID con Number().
+                             *
+                             * Los cultivos nuevos utilizan
+                             * IDs UUID/texto.
+                             */
+
                             this.mostrarFormulario(
-                                Number(
-                                    button.dataset.id
-                                )
+                                button.dataset.id
                             );
 
                         }
@@ -452,10 +486,13 @@ export class CultivosView {
                         "click",
                         () => {
 
+                            /*
+                             * Conservamos el ID exactamente
+                             * como está almacenado.
+                             */
+
                             const id =
-                                Number(
-                                    button.dataset.id
-                                );
+                                button.dataset.id;
 
 
                             const cultivo =
@@ -465,7 +502,13 @@ export class CultivosView {
                                     );
 
 
-                            if (!cultivo) {
+                            if (
+                                !cultivo
+                            ) {
+
+                                alert(
+                                    "El cultivo no existe."
+                                );
 
                                 return;
 
@@ -490,7 +533,9 @@ export class CultivosView {
                                     );
 
 
-                            if (!resultado.ok) {
+                            if (
+                                !resultado.ok
+                            ) {
 
                                 alert(
                                     resultado.mensaje
@@ -512,15 +557,25 @@ export class CultivosView {
     }
 
 
+    // =====================================================
+    // FORMULARIO
+    // =====================================================
+
     mostrarFormulario(
         id = null
     ) {
 
         const editando =
-            id !== null;
+            id !==
+            null;
 
 
-        const cultivo =
+        /*
+         * Primero intentamos obtenerlo mediante
+         * CultivoService.
+         */
+
+        let cultivo =
             editando
 
                 ? this.cultivoService
@@ -529,6 +584,75 @@ export class CultivosView {
                     )
 
                 : null;
+
+
+        /*
+         * Fallback de seguridad.
+         *
+         * Si por cualquier motivo el servicio no
+         * lo encuentra, buscamos comparando los IDs
+         * como String.
+         */
+
+        if (
+            editando
+            &&
+            !cultivo
+        ) {
+
+            cultivo =
+                this.cultivoService
+                    .obtenerTodos()
+                    .find(
+                        item =>
+                            String(
+                                item.id
+                            )
+                            ===
+                            String(
+                                id
+                            )
+                    )
+                ||
+                null;
+
+        }
+
+
+        /*
+         * Si estamos editando y aun así no existe,
+         * NO mostramos un formulario vacío.
+         */
+
+        if (
+            editando
+            &&
+            !cultivo
+        ) {
+
+            console.error(
+                "No se ha encontrado el cultivo.",
+                {
+                    idRecibido:
+                        id,
+
+                    cultivos:
+                        this.cultivoService
+                            .obtenerTodos()
+                }
+            );
+
+
+            alert(
+                "No se ha podido cargar el cultivo para editar."
+            );
+
+
+            this.mostrar();
+
+            return;
+
+        }
 
 
         const fincas =
@@ -542,7 +666,8 @@ export class CultivosView {
 
 
         if (
-            fincas.length === 0
+            fincas.length ===
+            0
         ) {
 
             alert(
@@ -646,9 +771,18 @@ export class CultivosView {
                                     value="${finca.id}"
 
                                     ${
-                                        cultivo?.fincaId ===
-                                        finca.id
+                                        cultivo
+                                        &&
+                                        String(
+                                            cultivo.fincaId
+                                        )
+                                        ===
+                                        String(
+                                            finca.id
+                                        )
+
                                             ? "selected"
+
                                             : ""
                                     }
                                 >
@@ -691,7 +825,9 @@ export class CultivosView {
                         id="campaniaCultivo"
                     >
 
-                        <option value="">
+                        <option
+                            value=""
+                        >
                             Sin campanya
                         </option>
 
@@ -702,10 +838,23 @@ export class CultivosView {
                                 <option
                                     value="${campania.id}"
 
+                                    data-finca-id="${campania.fincaId}"
+
                                     ${
-                                        cultivo?.campaniaId ===
-                                        campania.id
+                                        cultivo
+                                        &&
+                                        cultivo.campaniaId
+                                        &&
+                                        String(
+                                            cultivo.campaniaId
+                                        )
+                                        ===
+                                        String(
+                                            campania.id
+                                        )
+
                                             ? "selected"
+
                                             : ""
                                     }
                                 >
@@ -770,10 +919,15 @@ export class CultivosView {
 
                         <option
                             value="Activo"
+
                             ${
-                                !cultivo ||
-                                cultivo.estado === "Activo"
+                                !cultivo
+                                ||
+                                cultivo.estado ===
+                                "Activo"
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
@@ -782,22 +936,14 @@ export class CultivosView {
 
 
                         <option
-                            value="Finalizado"
-                            ${
-                                cultivo?.estado === "Finalizado"
-                                    ? "selected"
-                                    : ""
-                            }
-                        >
-                            Finalizado
-                        </option>
-
-
-                        <option
                             value="Inactivo"
+
                             ${
-                                cultivo?.estado === "Inactivo"
+                                cultivo?.estado ===
+                                "Inactivo"
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
@@ -854,6 +1000,10 @@ export class CultivosView {
         `;
 
 
+        // =================================================
+        // VOLVER
+        // =================================================
+
         document
             .getElementById(
                 "volverCultivos"
@@ -868,6 +1018,10 @@ export class CultivosView {
             );
 
 
+        // =================================================
+        // CANCELAR
+        // =================================================
+
         document
             .getElementById(
                 "cancelarCultivo"
@@ -881,6 +1035,35 @@ export class CultivosView {
                 }
             );
 
+
+        // =================================================
+        // CAMBIO DE FINCA
+        // =================================================
+
+        document
+            .getElementById(
+                "fincaCultivo"
+            )
+            .addEventListener(
+                "change",
+                () => {
+
+                    this.actualizarCampanyasPorFinca();
+
+                }
+            );
+
+
+        /*
+         * Filtramos nada más abrir el formulario.
+         */
+
+        this.actualizarCampanyasPorFinca();
+
+
+        // =================================================
+        // GUARDAR
+        // =================================================
 
         document
             .getElementById(
@@ -906,14 +1089,22 @@ export class CultivosView {
                                 )
                                 .value,
 
+
+                        /*
+                         * IMPORTANTE:
+                         *
+                         * NO usar Number().
+                         *
+                         * El ID puede ser UUID.
+                         */
+
                         fincaId:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "fincaCultivo"
-                                    )
-                                    .value
-                            ),
+                            document
+                                .getElementById(
+                                    "fincaCultivo"
+                                )
+                                .value,
+
 
                         parcela:
                             document
@@ -922,14 +1113,16 @@ export class CultivosView {
                                 )
                                 .value,
 
+
                         campaniaId:
                             document
                                 .getElementById(
                                     "campaniaCultivo"
                                 )
                                 .value
-                                ||
-                                null,
+                            ||
+                            null,
+
 
                         superficie:
                             Number(
@@ -937,8 +1130,11 @@ export class CultivosView {
                                     .getElementById(
                                         "superficieCultivo"
                                     )
-                                    .value || 0
+                                    .value
+                                ||
+                                0
                             ),
+
 
                         fechaInicio:
                             document
@@ -947,12 +1143,14 @@ export class CultivosView {
                                 )
                                 .value,
 
+
                         estado:
                             document
                                 .getElementById(
                                     "estadoCultivo"
                                 )
                                 .value,
+
 
                         notas:
                             document
@@ -979,7 +1177,9 @@ export class CultivosView {
                                 );
 
 
-                    if (!resultado.ok) {
+                    if (
+                        !resultado.ok
+                    ) {
 
                         alert(
                             resultado.mensaje
@@ -998,11 +1198,133 @@ export class CultivosView {
     }
 
 
+    // =====================================================
+    // FILTRAR CAMPANYAS SEGÚN FINCA
+    // =====================================================
+
+    actualizarCampanyasPorFinca() {
+
+        const fincaSelect =
+            document
+                .getElementById(
+                    "fincaCultivo"
+                );
+
+
+        const campaniaSelect =
+            document
+                .getElementById(
+                    "campaniaCultivo"
+                );
+
+
+        if (
+            !fincaSelect
+            ||
+            !campaniaSelect
+        ) {
+
+            return;
+
+        }
+
+
+        const fincaId =
+            String(
+                fincaSelect.value
+                ||
+                ""
+            );
+
+
+        const opciones =
+            [
+                ...campaniaSelect.options
+            ];
+
+
+        opciones.forEach(
+            opcion => {
+
+                /*
+                 * "Sin campanya"
+                 */
+
+                if (
+                    !opcion.value
+                ) {
+
+                    opcion.hidden =
+                        false;
+
+                    opcion.disabled =
+                        false;
+
+                    return;
+
+                }
+
+
+                const fincaCampania =
+                    String(
+                        opcion.dataset.fincaId
+                        ||
+                        ""
+                    );
+
+
+                const pertenece =
+                    fincaCampania ===
+                    fincaId;
+
+
+                opcion.hidden =
+                    !pertenece;
+
+                opcion.disabled =
+                    !pertenece;
+
+            }
+        );
+
+
+        /*
+         * Si está seleccionada una campaña
+         * de otra finca, la quitamos.
+         */
+
+        const seleccionada =
+            campaniaSelect
+                .selectedOptions[0];
+
+
+        if (
+            seleccionada
+            &&
+            seleccionada.value
+            &&
+            seleccionada.disabled
+        ) {
+
+            campaniaSelect.value =
+                "";
+
+        }
+
+    }
+
+
+    // =====================================================
+    // FORMATEAR FECHA
+    // =====================================================
+
     formatearFecha(
         fecha
     ) {
 
-        if (!fecha) {
+        if (
+            !fecha
+        ) {
 
             return "—";
 
@@ -1010,27 +1332,51 @@ export class CultivosView {
 
 
         const partes =
-            fecha.split("-");
+            String(
+                fecha
+            )
+                .split(
+                    "-"
+                );
 
 
-        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+        if (
+            partes.length !==
+            3
+        ) {
+
+            return fecha;
+
+        }
+
+
+        return (
+            `${partes[2]}/${partes[1]}/${partes[0]}`
+        );
 
     }
 
+
+    // =====================================================
+    // FORMATEAR NÚMERO
+    // =====================================================
 
     formatearNumero(
         numero
     ) {
 
         return Number(
-            numero || 0
-        ).toLocaleString(
-            "es-ES",
-            {
-                maximumFractionDigits:
-                    2
-            }
-        );
+            numero
+            ||
+            0
+        )
+            .toLocaleString(
+                "es-ES",
+                {
+                    maximumFractionDigits:
+                        2
+                }
+            );
 
     }
 

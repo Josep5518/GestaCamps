@@ -1,4 +1,5 @@
 import { StorageService } from "./storage.js";
+import { mismoId } from "./utils.js";
 
 
 export class CuadernoCampoService {
@@ -58,11 +59,8 @@ export class CuadernoCampoService {
             this.registros
                 .find(
                     registro =>
-                        Number(
-                            registro.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            registro.id,
                             id
                         )
                 )
@@ -85,11 +83,8 @@ export class CuadernoCampoService {
             .obtenerTodos()
             .filter(
                 registro =>
-                    Number(
-                        registro.fincaId
-                    )
-                    ===
-                    Number(
+                    mismoId(
+                        registro.fincaId,
                         fincaId
                     )
             );
@@ -109,11 +104,8 @@ export class CuadernoCampoService {
             .obtenerTodos()
             .filter(
                 registro =>
-                    Number(
-                        registro.campaniaId
-                    )
-                    ===
-                    Number(
+                    mismoId(
+                        registro.campaniaId,
                         campaniaId
                     )
             );
@@ -141,7 +133,7 @@ export class CuadernoCampoService {
 
 
     // =====================================================
-    // TIPOS
+    // TIPOS DE ACTUACIÓN
     // =====================================================
 
     obtenerTiposActuacion() {
@@ -233,7 +225,8 @@ export class CuadernoCampoService {
                 "",
 
             tipoActuacion:
-                datos.tipoActuacion.trim(),
+                datos.tipoActuacion
+                    .trim(),
 
             fincaId:
                 relaciones.finca.id,
@@ -335,13 +328,19 @@ export class CuadernoCampoService {
                 "",
 
             creadoPorTipo:
-                usuario.tipo,
+                usuario?.tipo
+                ||
+                "admin",
 
             creadoPorId:
-                usuario.id,
+                usuario?.id
+                ??
+                null,
 
             creadoPorNombre:
-                usuario.nombre,
+                usuario?.nombre
+                ||
+                "Administrador",
 
             fechaCreacion:
                 ahora.toISOString(),
@@ -369,11 +368,8 @@ export class CuadernoCampoService {
                 this.registros
                     .filter(
                         item =>
-                            Number(
-                                item.id
-                            )
-                            !==
-                            Number(
+                            !mismoId(
+                                item.id,
                                 registro.id
                             )
                     );
@@ -486,7 +482,8 @@ export class CuadernoCampoService {
 
 
         registro.tipoActuacion =
-            datos.tipoActuacion.trim();
+            datos.tipoActuacion
+                .trim();
 
 
         registro.fincaId =
@@ -691,11 +688,8 @@ export class CuadernoCampoService {
             this.registros
                 .filter(
                     item =>
-                        Number(
-                            item.id
-                        )
-                        !==
-                        Number(
+                        !mismoId(
+                            item.id,
                             id
                         )
                 );
@@ -821,7 +815,16 @@ export class CuadernoCampoService {
 
 
         if (
-            !datos.fincaId
+            datos.fincaId ===
+            null
+            ||
+            datos.fincaId ===
+            undefined
+            ||
+            String(
+                datos.fincaId
+            ).trim() ===
+            ""
         ) {
 
             return {
@@ -923,14 +926,15 @@ export class CuadernoCampoService {
                 .obtenerInventario();
 
 
+        // =================================================
+        // FINCA
+        // =================================================
+
         const finca =
             fincas.find(
                 item =>
-                    Number(
-                        item.id
-                    )
-                    ===
-                    Number(
+                    mismoId(
+                        item.id,
                         datos.fincaId
                     )
             );
@@ -953,22 +957,32 @@ export class CuadernoCampoService {
         }
 
 
+        // =================================================
+        // CAMPANYA
+        // =================================================
+
         let campania =
             null;
 
 
         if (
-            datos.campaniaId
+            datos.campaniaId !==
+            null
+            &&
+            datos.campaniaId !==
+            undefined
+            &&
+            String(
+                datos.campaniaId
+            ).trim() !==
+            ""
         ) {
 
             campania =
                 campanias.find(
                     item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            item.id,
                             datos.campaniaId
                         )
                 );
@@ -992,11 +1006,8 @@ export class CuadernoCampoService {
 
 
             if (
-                Number(
-                    campania.fincaId
-                )
-                !==
-                Number(
+                !mismoId(
+                    campania.fincaId,
                     finca.id
                 )
             ) {
@@ -1016,22 +1027,32 @@ export class CuadernoCampoService {
         }
 
 
+        // =================================================
+        // CULTIVO
+        // =================================================
+
         let cultivo =
             null;
 
 
         if (
-            datos.cultivoId
+            datos.cultivoId !==
+            null
+            &&
+            datos.cultivoId !==
+            undefined
+            &&
+            String(
+                datos.cultivoId
+            ).trim() !==
+            ""
         ) {
 
             cultivo =
                 cultivos.find(
                     item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            item.id,
                             datos.cultivoId
                         )
                 );
@@ -1055,13 +1076,14 @@ export class CuadernoCampoService {
 
 
             if (
-                cultivo.fincaId
+                cultivo.fincaId !==
+                null
                 &&
-                Number(
-                    cultivo.fincaId
-                )
-                !==
-                Number(
+                cultivo.fincaId !==
+                undefined
+                &&
+                !mismoId(
+                    cultivo.fincaId,
                     finca.id
                 )
             ) {
@@ -1081,48 +1103,63 @@ export class CuadernoCampoService {
         }
 
 
+        // =================================================
+        // TRABAJADORES
+        // =================================================
+
         const trabajadorIds =
             Array.isArray(
                 datos.trabajadorIds
             )
-                ? datos.trabajadorIds
-                    .map(
-                        id =>
-                            Number(
-                                id
+                ? [
+                    ...new Set(
+                        datos.trabajadorIds
+                            .filter(
+                                id =>
+                                    id !==
+                                    null
+                                    &&
+                                    id !==
+                                    undefined
+                                    &&
+                                    String(
+                                        id
+                                    ).trim() !==
+                                    ""
+                            )
+                            .map(
+                                id =>
+                                    String(
+                                        id
+                                    )
                             )
                     )
-                    .filter(
-                        id =>
-                            !Number.isNaN(
-                                id
-                            )
-                    )
+                ]
                 : [];
 
 
-        const trabajadorIdsUnicos =
-            [
-                ...new Set(
-                    trabajadorIds
-                )
-            ];
-
-
         const trabajadoresSeleccionados =
-            trabajadores.filter(
-                trabajador =>
-                    trabajadorIdsUnicos.includes(
-                        Number(
-                            trabajador.id
+            trabajadorIds
+                .map(
+                    id =>
+                        trabajadores.find(
+                            trabajador =>
+                                mismoId(
+                                    trabajador.id,
+                                    id
+                                )
                         )
-                    )
-            );
+                        ||
+                        null
+                )
+                .filter(
+                    Boolean
+                );
 
 
         if (
             trabajadoresSeleccionados.length !==
-            trabajadorIdsUnicos.length
+            trabajadorIds.length
         ) {
 
             return {
@@ -1138,22 +1175,32 @@ export class CuadernoCampoService {
         }
 
 
+        // =================================================
+        // MAQUINARIA
+        // =================================================
+
         let maquina =
             null;
 
 
         if (
-            datos.maquinariaId
+            datos.maquinariaId !==
+            null
+            &&
+            datos.maquinariaId !==
+            undefined
+            &&
+            String(
+                datos.maquinariaId
+            ).trim() !==
+            ""
         ) {
 
             maquina =
                 maquinaria.find(
                     item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            item.id,
                             datos.maquinariaId
                         )
                 )
@@ -1180,22 +1227,32 @@ export class CuadernoCampoService {
         }
 
 
+        // =================================================
+        // PRODUCTO / MATERIAL
+        // =================================================
+
         let producto =
             null;
 
 
         if (
-            datos.productoInventarioId
+            datos.productoInventarioId !==
+            null
+            &&
+            datos.productoInventarioId !==
+            undefined
+            &&
+            String(
+                datos.productoInventarioId
+            ).trim() !==
+            ""
         ) {
 
             producto =
                 inventario.find(
                     item =>
-                        Number(
-                            item.id
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            item.id,
                             datos.productoInventarioId
                         )
                 )
@@ -1343,10 +1400,28 @@ export class CuadernoCampoService {
 
     guardar() {
 
-        return StorageService
-            .guardarCuadernoCampo(
-                this.registros
+        try {
+
+            return StorageService
+                .guardarCuadernoCampo(
+                    this.registros
+                );
+
+        }
+
+        catch (
+            error
+        ) {
+
+            console.error(
+                "Error guardando el cuaderno de campo:",
+                error
             );
+
+
+            return false;
+
+        }
 
     }
 

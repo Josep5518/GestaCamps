@@ -4,7 +4,8 @@ import {
     escaparHTML,
     normalizarTexto,
     formatearFecha,
-    obtenerHoraActual
+    obtenerHoraActual,
+    mismoId
 } from "./utils.js";
 
 import {
@@ -49,22 +50,18 @@ export class CuadernoCampoView {
         const registros =
             this.obtenerRegistrosFiltrados();
 
-
         const todos =
             this.cuadernoCampoService
                 .obtenerTodos();
-
 
         const hoy =
             this.obtenerRegistrosHoy(
                 todos
             );
 
-
         const fincas =
             StorageService
                 .obtenerFincas();
-
 
         const tipos =
             this.cuadernoCampoService
@@ -76,17 +73,9 @@ export class CuadernoCampoView {
             <header class="topbar">
 
                 <div>
-
-                    <h2>
-                        Cuaderno de campo
-                    </h2>
-
-                    <p>
-                        Registro de actuaciones agrícolas de la explotación
-                    </p>
-
+                    <h2>Cuaderno de campo</h2>
+                    <p>Registro de actuaciones agrícolas de la explotación</p>
                 </div>
-
 
                 <button
                     id="nuevoRegistroCuaderno"
@@ -102,59 +91,25 @@ export class CuadernoCampoView {
             <section class="stats">
 
                 <div class="card">
-
-                    <span class="card-icon">
-                        📖
-                    </span>
-
+                    <span class="card-icon">📖</span>
                     <div>
-
-                        <p>
-                            Registros
-                        </p>
-
-                        <h3>
-                            ${todos.length}
-                        </h3>
-
+                        <p>Registros</p>
+                        <h3>${todos.length}</h3>
                     </div>
-
                 </div>
 
-
                 <div class="card">
-
-                    <span class="card-icon">
-                        📅
-                    </span>
-
+                    <span class="card-icon">📅</span>
                     <div>
-
-                        <p>
-                            Hoy
-                        </p>
-
-                        <h3>
-                            ${hoy.length}
-                        </h3>
-
+                        <p>Hoy</p>
+                        <h3>${hoy.length}</h3>
                     </div>
-
                 </div>
 
-
                 <div class="card">
-
-                    <span class="card-icon">
-                        🌾
-                    </span>
-
+                    <span class="card-icon">🌾</span>
                     <div>
-
-                        <p>
-                            Fincas
-                        </p>
-
+                        <p>Fincas</p>
                         <h3>
                             ${
                                 new Set(
@@ -164,28 +119,16 @@ export class CuadernoCampoView {
                                                 registro.fincaId
                                         )
                                         .filter(Boolean)
-                                )
-                                    .size
+                                ).size
                             }
                         </h3>
-
                     </div>
-
                 </div>
 
-
                 <div class="card">
-
-                    <span class="card-icon">
-                        🚜
-                    </span>
-
+                    <span class="card-icon">🚜</span>
                     <div>
-
-                        <p>
-                            Actuaciones
-                        </p>
-
+                        <p>Actuaciones</p>
                         <h3>
                             ${
                                 new Set(
@@ -195,13 +138,10 @@ export class CuadernoCampoView {
                                                 registro.tipoActuacion
                                         )
                                         .filter(Boolean)
-                                )
-                                    .size
+                                ).size
                             }
                         </h3>
-
                     </div>
-
                 </div>
 
             </section>
@@ -209,9 +149,7 @@ export class CuadernoCampoView {
 
             <section
                 class="panel cuaderno-filtros-panel"
-                style="
-                    margin-bottom: 22px;
-                "
+                style="margin-bottom: 22px;"
             >
 
                 <div
@@ -231,97 +169,70 @@ export class CuadernoCampoView {
                 >
 
                     <div class="form-group">
-
-                        <label>
-                            Buscar
-                        </label>
-
+                        <label>Buscar</label>
                         <input
                             id="buscarCuaderno"
                             type="search"
                             placeholder="Finca, actuación, cultivo..."
-                            value="${escaparHTML(this.busqueda)}"
+                            value="${escaparHTML(
+                                this.busqueda
+                            )}"
                         >
-
                     </div>
 
-
                     <div class="form-group">
-
-                        <label>
-                            Finca
-                        </label>
-
-                        <select
-                            id="filtroFincaCuaderno"
-                        >
-
-                            <option value="">
-                                Todas las fincas
-                            </option>
+                        <label>Finca</label>
+                        <select id="filtroFincaCuaderno">
+                            <option value="">Todas las fincas</option>
 
                             ${fincas.map(
                                 finca => `
-
                                     <option
                                         value="${finca.id}"
                                         ${
-                                            String(
-                                                this.filtroFinca
-                                            )
-                                            ===
-                                            String(
+                                            mismoId(
+                                                this.filtroFinca,
                                                 finca.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(finca.nombre)}
+                                        ${escaparHTML(
+                                            finca.nombre
+                                        )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
-
                     <div class="form-group">
-
-                        <label>
-                            Actuación
-                        </label>
-
-                        <select
-                            id="filtroTipoCuaderno"
-                        >
-
-                            <option value="">
-                                Todas
-                            </option>
+                        <label>Actuación</label>
+                        <select id="filtroTipoCuaderno">
+                            <option value="">Todas</option>
 
                             ${tipos.map(
                                 tipo => `
-
                                     <option
-                                        value="${escaparHTML(tipo)}"
-                                        ${
-                                            this.filtroTipo ===
+                                        value="${escaparHTML(
                                             tipo
+                                        )}"
+                                        ${
+                                            this.filtroTipo === tipo
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(tipo)}
+                                        ${escaparHTML(
+                                            tipo
+                                        )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
                 </div>
@@ -347,11 +258,9 @@ export class CuadernoCampoView {
                         gap: 18px;
                     "
                 >
-
                     ${
                         registros.length
-                            ?
-                            registros
+                            ? registros
                                 .map(
                                     registro =>
                                         this.crearTarjeta(
@@ -359,10 +268,8 @@ export class CuadernoCampoView {
                                         )
                                 )
                                 .join("")
-                            :
-                            this.crearVacio()
+                            : this.crearVacio()
                     }
-
                 </div>
 
             </section>
@@ -376,8 +283,9 @@ export class CuadernoCampoView {
             )
             .addEventListener(
                 "click",
-                () =>
-                    this.mostrarFormulario()
+                () => {
+                    this.mostrarFormulario();
+                }
             );
 
 
@@ -392,8 +300,7 @@ export class CuadernoCampoView {
                     this.busqueda =
                         event.target.value;
 
-
-                    this.mostrar();
+                    this.actualizarLista();
 
                 }
             );
@@ -410,8 +317,7 @@ export class CuadernoCampoView {
                     this.filtroFinca =
                         event.target.value;
 
-
-                    this.mostrar();
+                    this.actualizarLista();
 
                 }
             );
@@ -428,12 +334,49 @@ export class CuadernoCampoView {
                     this.filtroTipo =
                         event.target.value;
 
-
-                    this.mostrar();
+                    this.actualizarLista();
 
                 }
             );
 
+
+        this.configurarEventos();
+
+    }
+
+
+    // =====================================================
+    // ACTUALIZAR SOLO EL LISTADO
+    // =====================================================
+
+    actualizarLista() {
+
+        const contenedor =
+            document
+                .getElementById(
+                    "listaCuadernoCampo"
+                );
+
+        if (
+            !contenedor
+        ) {
+            return;
+        }
+
+        const registros =
+            this.obtenerRegistrosFiltrados();
+
+        contenedor.innerHTML =
+            registros.length
+                ? registros
+                    .map(
+                        registro =>
+                            this.crearTarjeta(
+                                registro
+                            )
+                    )
+                    .join("")
+                : this.crearVacio();
 
         this.configurarEventos();
 
@@ -451,10 +394,8 @@ export class CuadernoCampoView {
         return `
 
             <article
-                class="panel cuaderno-card"
-                style="
-                    margin: 0;
-                "
+                class="panel"
+                style="margin: 0;"
             >
 
                 <div
@@ -474,25 +415,25 @@ export class CuadernoCampoView {
                                 margin-bottom: 8px;
                             "
                         >
-                            ${this.obtenerIcono(registro.tipoActuacion)}
+                            ${this.obtenerIcono(
+                                registro.tipoActuacion
+                            )}
                         </div>
 
-
                         <h3
-                            style="
-                                margin-bottom: 5px;
-                            "
+                            style="margin-bottom: 5px;"
                         >
-                            ${escaparHTML(registro.tipoActuacion)}
+                            ${escaparHTML(
+                                registro.tipoActuacion
+                            )}
                         </h3>
 
-
                         <strong
-                            style="
-                                color: #247354;
-                            "
+                            style="color: #247354;"
                         >
-                            ${escaparHTML(registro.fincaNombre)}
+                            ${escaparHTML(
+                                registro.fincaNombre
+                            )}
                         </strong>
 
                     </div>
@@ -512,7 +453,6 @@ export class CuadernoCampoView {
                         >
                             Editar
                         </button>
-
 
                         <button
                             type="button"
@@ -536,97 +476,117 @@ export class CuadernoCampoView {
                 >
 
                     <p>
-                        📅 ${formatearFecha(registro.fecha)}
+                        📅
+                        ${formatearFecha(
+                            registro.fecha
+                        )}
                         ${
                             registro.hora
-                                ? ` · ${escaparHTML(registro.hora)}`
+                                ? ` · ${escaparHTML(
+                                    registro.hora
+                                )}`
                                 : ""
                         }
                     </p>
-
 
                     ${
                         registro.campaniaNombre
                             ? `
                                 <p>
-                                    🗓️ ${escaparHTML(registro.campaniaNombre)}
+                                    🗓️
+                                    ${escaparHTML(
+                                        registro.campaniaNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
-
 
                     ${
                         registro.cultivoNombre
                             ? `
                                 <p>
-                                    🌱 ${escaparHTML(registro.cultivoNombre)}
+                                    🌱
+                                    ${escaparHTML(
+                                        registro.cultivoNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
-
 
                     ${
-                        registro.trabajadorNombres?.length
+                        registro.trabajadorNombres
+                            ?.length
                             ? `
                                 <p>
-                                    👷 ${registro.trabajadorNombres
-                                        .map(
-                                            nombre =>
-                                                escaparHTML(nombre)
-                                        )
-                                        .join(", ")}
+                                    👷
+                                    ${
+                                        registro
+                                            .trabajadorNombres
+                                            .map(
+                                                nombre =>
+                                                    escaparHTML(
+                                                        nombre
+                                                    )
+                                            )
+                                            .join(", ")
+                                    }
                                 </p>
                             `
                             : ""
                     }
-
 
                     ${
                         registro.maquinariaNombre
                             ? `
                                 <p>
-                                    🚜 ${escaparHTML(registro.maquinariaNombre)}
+                                    🚜
+                                    ${escaparHTML(
+                                        registro.maquinariaNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
-
 
                     ${
                         registro.productoNombre
                             ? `
                                 <p>
-                                    📦 ${escaparHTML(registro.productoNombre)}
+                                    📦
+                                    ${escaparHTML(
+                                        registro.productoNombre
+                                    )}
                                 </p>
                             `
                             : ""
                     }
-
 
                     ${
-                        registro.cantidad !==
-                        null
+                        registro.cantidad !== null
                         &&
-                        registro.cantidad !==
-                        undefined
+                        registro.cantidad !== undefined
                             ? `
                                 <p>
-                                    ⚖️ ${registro.cantidad}
-                                    ${escaparHTML(registro.unidad || "")}
+                                    ⚖️
+                                    ${registro.cantidad}
+                                    ${escaparHTML(
+                                        registro.unidad || ""
+                                    )}
                                 </p>
                             `
                             : ""
                     }
-
 
                     ${
                         registro.dosis
                             ? `
                                 <p>
                                     🧪 Dosis:
-                                    ${escaparHTML(registro.dosis)}
+                                    ${escaparHTML(
+                                        registro.dosis
+                                    )}
                                 </p>
                             `
                             : ""
@@ -638,7 +598,6 @@ export class CuadernoCampoView {
                 ${
                     registro.descripcion
                         ? `
-
                             <div
                                 style="
                                     margin-top: 15px;
@@ -647,21 +606,13 @@ export class CuadernoCampoView {
                                     border-radius: 10px;
                                 "
                             >
-
-                                <strong>
-                                    Descripción
-                                </strong>
-
-                                <p
-                                    style="
-                                        margin: 5px 0 0;
-                                    "
-                                >
-                                    ${escaparHTML(registro.descripcion)}
+                                <strong>Descripción</strong>
+                                <p style="margin: 5px 0 0;">
+                                    ${escaparHTML(
+                                        registro.descripcion
+                                    )}
                                 </p>
-
                             </div>
-
                         `
                         : ""
                 }
@@ -670,7 +621,6 @@ export class CuadernoCampoView {
                 ${
                     registro.observaciones
                         ? `
-
                             <div
                                 style="
                                     margin-top: 10px;
@@ -679,21 +629,13 @@ export class CuadernoCampoView {
                                     border-radius: 10px;
                                 "
                             >
-
-                                <strong>
-                                    Observaciones
-                                </strong>
-
-                                <p
-                                    style="
-                                        margin: 5px 0 0;
-                                    "
-                                >
-                                    ${escaparHTML(registro.observaciones)}
+                                <strong>Observaciones</strong>
+                                <p style="margin: 5px 0 0;">
+                                    ${escaparHTML(
+                                        registro.observaciones
+                                    )}
                                 </p>
-
                             </div>
-
                         `
                         : ""
                 }
@@ -701,8 +643,7 @@ export class CuadernoCampoView {
 
                 <p
                     style="
-                        margin:
-                            14px 0 0;
+                        margin: 14px 0 0;
                         color: #78837d;
                         font-size: 12px;
                     "
@@ -730,29 +671,45 @@ export class CuadernoCampoView {
         registroId = null
     ) {
 
+        const editando =
+            registroId !== null;
+
         const registro =
-            registroId
+            editando
                 ? this.cuadernoCampoService
                     .obtenerPorId(
                         registroId
                     )
                 : null;
 
+        if (
+            editando
+            &&
+            !registro
+        ) {
+
+            alert(
+                "El registro del cuaderno no existe."
+            );
+
+            this.mostrar();
+
+            return;
+
+        }
+
 
         const fincas =
             StorageService
                 .obtenerFincas();
 
-
         const campanias =
             StorageService
                 .obtenerCampanias();
 
-
         const cultivos =
             StorageService
                 .obtenerCultivos();
-
 
         const trabajadores =
             StorageService
@@ -763,32 +720,26 @@ export class CuadernoCampoView {
                         "Activo"
                 );
 
-
         const maquinaria =
             StorageService
                 .obtenerMaquinaria();
-
 
         const inventario =
             StorageService
                 .obtenerInventario();
 
-
         const tipos =
             this.cuadernoCampoService
                 .obtenerTiposActuacion();
 
-
         const ahora =
             new Date();
-
 
         const fechaHoy =
             StorageService
                 .obtenerFechaLocal(
                     ahora
                 );
-
 
         const horaAhora =
             obtenerHoraActual();
@@ -804,11 +755,8 @@ export class CuadernoCampoView {
                 ← Volver
             </button>
 
-
             <header class="topbar">
-
                 <div>
-
                     <h2>
                         ${
                             registro
@@ -816,13 +764,8 @@ export class CuadernoCampoView {
                                 : "Nueva actuación"
                         }
                     </h2>
-
-                    <p>
-                        Cuaderno de campo
-                    </p>
-
+                    <p>Cuaderno de campo</p>
                 </div>
-
             </header>
 
 
@@ -831,11 +774,7 @@ export class CuadernoCampoView {
                 <div class="form-grid">
 
                     <div class="form-group">
-
-                        <label>
-                            Fecha *
-                        </label>
-
+                        <label>Fecha *</label>
                         <input
                             id="cuadernoFecha"
                             type="date"
@@ -845,16 +784,10 @@ export class CuadernoCampoView {
                                 fechaHoy
                             }"
                         >
-
                     </div>
 
-
                     <div class="form-group">
-
-                        <label>
-                            Hora
-                        </label>
-
+                        <label>Hora</label>
                         <input
                             id="cuadernoHora"
                             type="time"
@@ -864,158 +797,112 @@ export class CuadernoCampoView {
                                 horaAhora
                             }"
                         >
-
                     </div>
 
-
                     <div class="form-group">
-
-                        <label>
-                            Tipo de actuación *
-                        </label>
-
-                        <select
-                            id="cuadernoTipo"
-                        >
-
-                            <option value="">
-                                Selecciona...
-                            </option>
+                        <label>Tipo de actuación *</label>
+                        <select id="cuadernoTipo">
+                            <option value="">Selecciona...</option>
 
                             ${tipos.map(
                                 tipo => `
-
                                     <option
-                                        value="${escaparHTML(tipo)}"
-                                        ${
-                                            registro?.tipoActuacion ===
+                                        value="${escaparHTML(
                                             tipo
+                                        )}"
+                                        ${
+                                            registro?.tipoActuacion === tipo
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(tipo)}
+                                        ${escaparHTML(
+                                            tipo
+                                        )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Finca *
-                        </label>
-
-                        <select
-                            id="cuadernoFinca"
-                        >
-
-                            <option value="">
-                                Selecciona finca...
-                            </option>
+                        <label>Finca *</label>
+                        <select id="cuadernoFinca">
+                            <option value="">Selecciona finca...</option>
 
                             ${fincas.map(
                                 finca => `
-
                                     <option
                                         value="${finca.id}"
                                         ${
-                                            Number(
-                                                registro?.fincaId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                registro?.fincaId,
                                                 finca.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(finca.nombre)}
+                                        ${escaparHTML(
+                                            finca.nombre
+                                        )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Campanya
-                        </label>
-
-                        <select
-                            id="cuadernoCampania"
-                        >
-
-                            <option value="">
-                                Sin Campanya
-                            </option>
+                        <label>Campanya</label>
+                        <select id="cuadernoCampania">
+                            <option value="">Sin Campanya</option>
 
                             ${campanias.map(
                                 campania => `
-
                                     <option
                                         value="${campania.id}"
                                         data-finca-id="${campania.fincaId}"
                                         ${
-                                            Number(
-                                                registro?.campaniaId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                registro?.campaniaId,
                                                 campania.id
                                             )
                                                 ? "selected"
                                                 : ""
                                         }
                                     >
-                                        ${escaparHTML(campania.nombre)}
+                                        ${escaparHTML(
+                                            campania.nombre
+                                        )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Cultivo
-                        </label>
-
-                        <select
-                            id="cuadernoCultivo"
-                        >
-
-                            <option value="">
-                                Sin cultivo concreto
-                            </option>
+                        <label>Cultivo</label>
+                        <select id="cuadernoCultivo">
+                            <option value="">Sin cultivo concreto</option>
 
                             ${cultivos.map(
                                 cultivo => `
-
                                     <option
                                         value="${cultivo.id}"
-                                        data-finca-id="${cultivo.fincaId || ""}"
+                                        data-finca-id="${
+                                            cultivo.fincaId
+                                            ||
+                                            ""
+                                        }"
                                         ${
-                                            Number(
-                                                registro?.cultivoId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                registro?.cultivoId,
                                                 cultivo.id
                                             )
                                                 ? "selected"
@@ -1028,40 +915,25 @@ export class CuadernoCampoView {
                                             )
                                         )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Maquinaria
-                        </label>
-
-                        <select
-                            id="cuadernoMaquinaria"
-                        >
-
-                            <option value="">
-                                Sin maquinaria
-                            </option>
+                        <label>Maquinaria</label>
+                        <select id="cuadernoMaquinaria">
+                            <option value="">Sin maquinaria</option>
 
                             ${maquinaria.map(
                                 maquina => `
-
                                     <option
                                         value="${maquina.id}"
                                         ${
-                                            Number(
-                                                registro?.maquinariaId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                registro?.maquinariaId,
                                                 maquina.id
                                             )
                                                 ? "selected"
@@ -1074,40 +946,25 @@ export class CuadernoCampoView {
                                             )
                                         )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Producto / material
-                        </label>
-
-                        <select
-                            id="cuadernoProducto"
-                        >
-
-                            <option value="">
-                                Sin producto
-                            </option>
+                        <label>Producto / material</label>
+                        <select id="cuadernoProducto">
+                            <option value="">Sin producto</option>
 
                             ${inventario.map(
                                 producto => `
-
                                     <option
                                         value="${producto.id}"
                                         ${
-                                            Number(
-                                                registro?.productoInventarioId
-                                            )
-                                            ===
-                                            Number(
+                                            mismoId(
+                                                registro?.productoInventarioId,
                                                 producto.id
                                             )
                                                 ? "selected"
@@ -1120,21 +977,15 @@ export class CuadernoCampoView {
                                             )
                                         )}
                                     </option>
-
                                 `
                             ).join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Cantidad
-                        </label>
-
+                        <label>Cantidad</label>
                         <input
                             id="cuadernoCantidad"
                             type="number"
@@ -1146,19 +997,12 @@ export class CuadernoCampoView {
                                 ""
                             }"
                         >
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Unidad
-                        </label>
-
-                        <select
-                            id="cuadernoUnidad"
-                        >
+                        <label>Unidad</label>
+                        <select id="cuadernoUnidad">
 
                             ${[
                                 "",
@@ -1172,12 +1016,10 @@ export class CuadernoCampoView {
                             ]
                                 .map(
                                     unidad => `
-
                                         <option
                                             value="${unidad}"
                                             ${
-                                                registro?.unidad ===
-                                                unidad
+                                                registro?.unidad === unidad
                                                     ? "selected"
                                                     : ""
                                             }
@@ -1188,39 +1030,33 @@ export class CuadernoCampoView {
                                                 "Sin unidad"
                                             }
                                         </option>
-
                                     `
                                 )
                                 .join("")}
 
                         </select>
-
                     </div>
 
 
                     <div class="form-group">
-
-                        <label>
-                            Dosis
-                        </label>
-
+                        <label>Dosis</label>
                         <input
                             id="cuadernoDosis"
                             type="text"
                             placeholder="Ej. 2 L/ha"
-                            value="${escaparHTML(registro?.dosis || "")}"
+                            value="${escaparHTML(
+                                registro?.dosis
+                                ||
+                                ""
+                            )}"
                         >
-
                     </div>
 
                 </div>
 
 
                 <div class="form-group">
-
-                    <label>
-                        Trabajadores
-                    </label>
+                    <label>Trabajadores</label>
 
                     <div
                         style="
@@ -1236,100 +1072,92 @@ export class CuadernoCampoView {
 
                         ${
                             trabajadores.length
+                                ? trabajadores
+                                    .map(
+                                        trabajador => {
 
-                                ? trabajadores.map(
-                                    trabajador => {
+                                            const marcado =
+                                                registro
+                                                    ?.trabajadorIds
+                                                    ?.some(
+                                                        id =>
+                                                            mismoId(
+                                                                id,
+                                                                trabajador.id
+                                                            )
+                                                    );
 
-                                        const marcado =
-                                            registro?.trabajadorIds
-                                                ?.some(
-                                                    id =>
-                                                        Number(id)
-                                                        ===
-                                                        Number(
-                                                            trabajador.id
-                                                        )
-                                                );
-
-
-                                        return `
-
-                                            <label
-                                                style="
-                                                    display: flex;
-                                                    gap: 8px;
-                                                    align-items: center;
-                                                    padding: 10px;
-                                                    border: 1px solid #e1e8e3;
-                                                    border-radius: 9px;
-                                                "
-                                            >
-
-                                                <input
-                                                    type="checkbox"
-                                                    class="cuaderno-trabajador"
-                                                    value="${trabajador.id}"
-                                                    ${
-                                                        marcado
-                                                            ? "checked"
-                                                            : ""
-                                                    }
+                                            return `
+                                                <label
+                                                    style="
+                                                        display: flex;
+                                                        gap: 8px;
+                                                        align-items: center;
+                                                        padding: 10px;
+                                                        border: 1px solid #e1e8e3;
+                                                        border-radius: 9px;
+                                                    "
                                                 >
 
-                                                ${escaparHTML(
-                                                    obtenerNombreTrabajador(
-                                                        trabajador
-                                                    )
-                                                )}
+                                                    <input
+                                                        type="checkbox"
+                                                        class="cuaderno-trabajador"
+                                                        value="${trabajador.id}"
+                                                        ${
+                                                            marcado
+                                                                ? "checked"
+                                                                : ""
+                                                        }
+                                                    >
 
-                                            </label>
+                                                    ${escaparHTML(
+                                                        obtenerNombreTrabajador(
+                                                            trabajador
+                                                        )
+                                                    )}
 
-                                        `;
+                                                </label>
+                                            `;
 
-                                    }
-                                ).join("")
-
+                                        }
+                                    )
+                                    .join("")
                                 : `
-
                                     <p>
                                         No hay trabajadores activos.
                                     </p>
-
                                 `
                         }
 
                     </div>
-
                 </div>
 
 
                 <div class="form-group">
-
-                    <label>
-                        Descripción
-                    </label>
-
+                    <label>Descripción</label>
                     <textarea
                         id="cuadernoDescripcion"
                         rows="4"
                         placeholder="Describe el trabajo realizado..."
-                    >${escaparHTML(registro?.descripcion || "")}</textarea>
-
+                    >${escaparHTML(
+                        registro?.descripcion
+                        ||
+                        ""
+                    )}</textarea>
                 </div>
 
 
                 <div class="form-group">
-
-                    <label>
-                        Observaciones
-                    </label>
-
+                    <label>Observaciones</label>
                     <textarea
                         id="cuadernoObservaciones"
                         rows="3"
                         placeholder="Observaciones adicionales..."
-                    >${escaparHTML(registro?.observaciones || "")}</textarea>
-
+                    >${escaparHTML(
+                        registro?.observaciones
+                        ||
+                        ""
+                    )}</textarea>
                 </div>
 
 
@@ -1342,7 +1170,6 @@ export class CuadernoCampoView {
                     >
                         Cancelar
                     </button>
-
 
                     <button
                         id="guardarCuaderno"
@@ -1369,10 +1196,10 @@ export class CuadernoCampoView {
             )
             .addEventListener(
                 "click",
-                () =>
-                    this.mostrar()
+                () => {
+                    this.mostrar();
+                }
             );
-
 
         document
             .getElementById(
@@ -1380,10 +1207,10 @@ export class CuadernoCampoView {
             )
             .addEventListener(
                 "click",
-                () =>
-                    this.mostrar()
+                () => {
+                    this.mostrar();
+                }
             );
-
 
         document
             .getElementById(
@@ -1391,10 +1218,10 @@ export class CuadernoCampoView {
             )
             .addEventListener(
                 "change",
-                () =>
-                    this.actualizarRelacionesFormulario()
+                () => {
+                    this.actualizarRelacionesFormulario();
+                }
             );
-
 
         document
             .getElementById(
@@ -1402,10 +1229,11 @@ export class CuadernoCampoView {
             )
             .addEventListener(
                 "click",
-                () =>
+                () => {
                     this.guardarFormulario(
                         registro
-                    )
+                    );
+                }
             );
 
 
@@ -1431,9 +1259,7 @@ export class CuadernoCampoView {
             ]
                 .map(
                     checkbox =>
-                        Number(
-                            checkbox.value
-                        )
+                        checkbox.value
                 );
 
 
@@ -1568,7 +1394,7 @@ export class CuadernoCampoView {
 
 
     // =====================================================
-    // FILTRAR CAMPANYA / CULTIVO
+    // FILTRAR CAMPANYA / CULTIVO POR FINCA
     // =====================================================
 
     actualizarRelacionesFormulario() {
@@ -1579,13 +1405,11 @@ export class CuadernoCampoView {
                     "cuadernoFinca"
                 );
 
-
         const campania =
             document
                 .getElementById(
                     "cuadernoCampania"
                 );
-
 
         const cultivo =
             document
@@ -1601,9 +1425,7 @@ export class CuadernoCampoView {
             ||
             !cultivo
         ) {
-
             return;
-
         }
 
 
@@ -1624,21 +1446,26 @@ export class CuadernoCampoView {
                         opcion.hidden =
                             false;
 
+                        opcion.disabled =
+                            false;
+
                         return;
 
                     }
 
-
-                    opcion.hidden =
-                        fincaId
+                    const pertenece =
+                        !!fincaId
                         &&
-                        String(
-                            opcion.dataset.fincaId
-                        )
-                        !==
-                        String(
+                        mismoId(
+                            opcion.dataset.fincaId,
                             fincaId
                         );
+
+                    opcion.hidden =
+                        !pertenece;
+
+                    opcion.disabled =
+                        !pertenece;
 
                 }
             );
@@ -1657,58 +1484,78 @@ export class CuadernoCampoView {
                         opcion.hidden =
                             false;
 
+                        opcion.disabled =
+                            false;
+
                         return;
 
                     }
 
-
                     const fincaCultivo =
                         opcion.dataset.fincaId;
 
-
-                    opcion.hidden =
-                        fincaId
+                    const pertenece =
+                        !!fincaId
                         &&
-                        fincaCultivo
-                        &&
-                        String(
-                            fincaCultivo
-                        )
-                        !==
-                        String(
+                        mismoId(
+                            fincaCultivo,
                             fincaId
                         );
+
+                    opcion.hidden =
+                        !pertenece;
+
+                    opcion.disabled =
+                        !pertenece;
 
                 }
             );
 
 
-        if (
-            campania.selectedOptions[0]
-            ?.hidden
-        ) {
+        const campaniaSeleccionada =
+            campania
+                .selectedOptions[0];
 
+        if (
+            campaniaSeleccionada
+            &&
+            campaniaSeleccionada.value
+            &&
+            (
+                campaniaSeleccionada.hidden
+                ||
+                campaniaSeleccionada.disabled
+            )
+        ) {
             campania.value =
                 "";
-
         }
 
 
-        if (
-            cultivo.selectedOptions[0]
-            ?.hidden
-        ) {
+        const cultivoSeleccionado =
+            cultivo
+                .selectedOptions[0];
 
+        if (
+            cultivoSeleccionado
+            &&
+            cultivoSeleccionado.value
+            &&
+            (
+                cultivoSeleccionado.hidden
+                ||
+                cultivoSeleccionado.disabled
+            )
+        ) {
             cultivo.value =
                 "";
-
         }
 
     }
 
 
     // =====================================================
-    // EVENTOS
+    // EVENTOS TARJETAS
     // =====================================================
 
     configurarEventos() {
@@ -1722,12 +1569,13 @@ export class CuadernoCampoView {
 
                     boton.addEventListener(
                         "click",
-                        () =>
+                        () => {
+
                             this.mostrarFormulario(
-                                Number(
-                                    boton.dataset.id
-                                )
-                            )
+                                boton.dataset.id
+                            );
+
+                        }
                     );
 
                 }
@@ -1750,24 +1598,17 @@ export class CuadernoCampoView {
                                     "¿Quieres eliminar este registro del cuaderno de campo?"
                                 );
 
-
                             if (
                                 !confirmar
                             ) {
-
                                 return;
-
                             }
-
 
                             const resultado =
                                 this.cuadernoCampoService
                                     .eliminar(
-                                        Number(
-                                            boton.dataset.id
-                                        )
+                                        boton.dataset.id
                                     );
-
 
                             if (
                                 !resultado.ok
@@ -1780,7 +1621,6 @@ export class CuadernoCampoView {
                                 return;
 
                             }
-
 
                             this.mostrar();
 
@@ -1811,11 +1651,8 @@ export class CuadernoCampoView {
             registros =
                 registros.filter(
                     registro =>
-                        Number(
-                            registro.fincaId
-                        )
-                        ===
-                        Number(
+                        mismoId(
+                            registro.fincaId,
                             this.filtroFinca
                         )
                 );
@@ -1858,7 +1695,12 @@ export class CuadernoCampoView {
                                     registro.fincaNombre,
                                     registro.campaniaNombre,
                                     registro.cultivoNombre,
-                                    ...(registro.trabajadorNombres || []),
+                                    ...(
+                                        registro
+                                            .trabajadorNombres
+                                        ||
+                                        []
+                                    ),
                                     registro.maquinariaNombre,
                                     registro.productoNombre,
                                     registro.descripcion,
@@ -1867,7 +1709,6 @@ export class CuadernoCampoView {
                                     .filter(Boolean)
                                     .join(" ")
                             );
-
 
                         return texto.includes(
                             busqueda
@@ -1884,6 +1725,10 @@ export class CuadernoCampoView {
     }
 
 
+    // =====================================================
+    // REGISTROS DE HOY
+    // =====================================================
+
     obtenerRegistrosHoy(
         registros
     ) {
@@ -1894,18 +1739,16 @@ export class CuadernoCampoView {
                     new Date()
                 );
 
-
         return registros.filter(
             registro =>
-                registro.fecha ===
-                hoy
+                registro.fecha === hoy
         );
 
     }
 
 
     // =====================================================
-    // VACÍO
+    // ESTADO VACÍO
     // =====================================================
 
     crearVacio() {
@@ -1914,9 +1757,7 @@ export class CuadernoCampoView {
 
             <div
                 class="panel empty-state"
-                style="
-                    grid-column: 1 / -1;
-                "
+                style="grid-column: 1 / -1;"
             >
 
                 <div class="empty-icon">
@@ -1977,10 +1818,11 @@ export class CuadernoCampoView {
 
         };
 
-
-        return iconos[tipo]
+        return (
+            iconos[tipo]
             ||
-            "📖";
+            "📖"
+        );
 
     }
 
