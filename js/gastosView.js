@@ -440,10 +440,15 @@ export class GastosView {
                         "click",
                         () => {
 
+                            /*
+                             * IMPORTANTE:
+                             * El ID puede ser UUID.
+                             *
+                             * NO usar Number().
+                             */
+
                             this.mostrarFormulario(
-                                Number(
-                                    boton.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }
@@ -464,10 +469,15 @@ export class GastosView {
                         "click",
                         () => {
 
+                            /*
+                             * IMPORTANTE:
+                             * El ID puede ser UUID.
+                             *
+                             * NO usar Number().
+                             */
+
                             this.eliminarGasto(
-                                Number(
-                                    boton.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }

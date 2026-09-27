@@ -126,7 +126,18 @@ export class BuscadorGlobalView {
                 </div>
 
 
-                <p class="buscador-global-ayuda">
+                <p
+                    id="ayudaBuscadorGlobal"
+                    class="buscador-global-ayuda"
+                    ${
+                        this.consulta
+                            .trim()
+                            .length >= 2
+
+                            ? "hidden"
+                            : ""
+                    }
+                >
                     Escribe al menos 2 caracteres.
                 </p>
 
@@ -240,6 +251,12 @@ export class BuscadorGlobalView {
             );
 
 
+        const ayuda =
+            document.getElementById(
+                "ayudaBuscadorGlobal"
+            );
+
+
         if (
             !contenedor
             ||
@@ -254,6 +271,25 @@ export class BuscadorGlobalView {
         const consulta =
             this.consulta.trim();
 
+
+        // =================================================
+        // TEXTO DE AYUDA
+        // =================================================
+
+        if (
+            ayuda
+        ) {
+
+            ayuda.hidden =
+                consulta.length >=
+                2;
+
+        }
+
+
+        // =================================================
+        // MENOS DE 2 CARACTERES
+        // =================================================
 
         if (
             consulta.length <
@@ -294,6 +330,10 @@ export class BuscadorGlobalView {
         }
 
 
+        // =================================================
+        // BUSCAR
+        // =================================================
+
         const resultados =
             this.buscadorService
                 .buscar(
@@ -310,6 +350,10 @@ export class BuscadorGlobalView {
                     : "resultados"
             }`;
 
+
+        // =================================================
+        // SIN RESULTADOS
+        // =================================================
 
         if (
             resultados.length ===
@@ -344,6 +388,10 @@ export class BuscadorGlobalView {
 
         }
 
+
+        // =================================================
+        // MOSTRAR RESULTADOS
+        // =================================================
 
         contenedor.innerHTML = `
 

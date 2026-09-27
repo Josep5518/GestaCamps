@@ -413,9 +413,7 @@ export class ClientesProveedoresView {
                         () => {
 
                             this.mostrarFormularioEditar(
-                                Number(
-                                    button.dataset.id
-                                )
+                                button.dataset.id
                             );
 
                         }
@@ -437,9 +435,7 @@ export class ClientesProveedoresView {
                         () => {
 
                             const id =
-                                Number(
-                                    button.dataset.id
-                                );
+                                button.dataset.id;
 
 
                             const contacto =

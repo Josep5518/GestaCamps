@@ -318,8 +318,11 @@ export class InventarioView {
                     "click",
                     () => {
 
+                        // IMPORTANTE:
+                        // No convertir a Number porque puede ser UUID.
+
                         this.mostrarFormularioEditar(
-                            Number(button.dataset.id)
+                            button.dataset.id
                         );
 
                     }
@@ -338,8 +341,11 @@ export class InventarioView {
                     "click",
                     () => {
 
+                        // IMPORTANTE:
+                        // El ID puede ser UUID.
+
                         const id =
-                            Number(button.dataset.id);
+                            button.dataset.id;
 
 
                         const producto =
@@ -361,8 +367,23 @@ export class InventarioView {
                         }
 
 
-                        this.inventarioService
-                            .eliminar(id);
+                        const resultado =
+                            this.inventarioService
+                                .eliminar(id);
+
+
+                        if (
+                            resultado
+                            &&
+                            resultado.ok === false
+                        ) {
+
+                            alert(
+                                resultado.mensaje
+                            );
+
+                            return;
+                        }
 
 
                         this.mostrar();
@@ -427,6 +448,11 @@ export class InventarioView {
 
 
         if (!producto) {
+
+            alert(
+                "El producto no existe."
+            );
+
             return;
         }
 

@@ -4,7 +4,6 @@ import {
     obtenerFechaHoy
 } from "../utils.js";
 
-
 export function crearCobrosPagosFormHelper({
     mainContent,
     cobroPagoService,
@@ -18,64 +17,31 @@ export function crearCobrosPagosFormHelper({
     // FORMULARIO COBRO
     // =====================================================
 
-    function mostrarFormularioCobro(
-        facturaInicialId = null
-    ) {
+    function mostrarFormularioCobro(facturaInicialId = null) {
 
-        const facturas =
-            obtenerFacturas()
-                .filter(
-                    factura =>
-                        factura.estado !==
-                        "Anulada"
-                        &&
-                        cobroPagoService
-                            .obtenerPendienteFactura(
-                                factura.id
-                            )
-                        >
-                        0.001
-                );
+        const facturas = obtenerFacturas().filter(
+            factura =>
+                factura.estado !== "Anulada" &&
+                cobroPagoService.obtenerPendienteFactura(factura.id) > 0.001
+        );
 
-
-        if (
-            facturas.length ===
-            0
-        ) {
-
-            alert(
-                "No hay facturas pendientes de cobro."
-            );
-
+        if (facturas.length === 0) {
+            alert("No hay facturas pendientes de cobro.");
             return;
-
         }
 
-
-        let facturaSeleccionadaId =
-            facturaInicialId;
-
+        let facturaSeleccionadaId = facturaInicialId;
 
         if (
-            !facturaSeleccionadaId
-            ||
+            !facturaSeleccionadaId ||
             !facturas.some(
                 factura =>
-                    String(
-                        factura.id
-                    )
-                    ===
-                    String(
-                        facturaSeleccionadaId
-                    )
+                    String(factura.id) ===
+                    String(facturaSeleccionadaId)
             )
         ) {
-
-            facturaSeleccionadaId =
-                facturas[0].id;
-
+            facturaSeleccionadaId = facturas[0].id;
         }
-
 
         mainContent.innerHTML = `
 
@@ -86,7 +52,6 @@ export function crearCobrosPagosFormHelper({
             >
                 ← Volver
             </button>
-
 
             <header class="topbar">
 
@@ -104,7 +69,6 @@ export function crearCobrosPagosFormHelper({
 
             </header>
 
-
             <div class="form-panel">
 
                 <div class="form-group">
@@ -115,62 +79,52 @@ export function crearCobrosPagosFormHelper({
 
                     <select id="facturaCobro">
 
-                        ${facturas
-                            .map(
-                                factura => `
+                        ${facturas.map(
+                            factura => `
 
-                                    <option
-                                        value="${escaparHTML(
-                                            factura.id
-                                        )}"
+                                <option
+                                    value="${escaparHTML(
+                                        factura.id
+                                    )}"
 
-                                        ${
-                                            String(
+                                    ${
+                                        String(factura.id) ===
+                                        String(facturaSeleccionadaId)
+
+                                            ? "selected"
+                                            : ""
+                                    }
+                                >
+
+                                    ${escaparHTML(
+                                        factura.numero
+                                    )}
+
+                                    ·
+
+                                    ${escaparHTML(
+                                        factura.clienteNombre ||
+                                        factura.cliente ||
+                                        "Sin cliente"
+                                    )}
+
+                                    · Pendiente:
+
+                                    ${formatearDinero(
+                                        cobroPagoService
+                                            .obtenerPendienteFactura(
                                                 factura.id
                                             )
-                                            ===
-                                            String(
-                                                facturaSeleccionadaId
-                                            )
+                                    )}
 
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
+                                </option>
 
-                                        ${escaparHTML(
-                                            factura.numero
-                                        )}
-
-                                        ·
-
-                                        ${escaparHTML(
-                                            factura.clienteNombre
-                                            ||
-                                            factura.cliente
-                                            ||
-                                            "Sin cliente"
-                                        )}
-
-                                        · Pendiente:
-
-                                        ${formatearDinero(
-                                            cobroPagoService
-                                                .obtenerPendienteFactura(
-                                                    factura.id
-                                                )
-                                        )}
-
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
+                            `
+                        ).join("")}
 
                     </select>
 
                 </div>
-
 
                 <div
                     id="resumenFacturaCobro"
@@ -178,7 +132,6 @@ export function crearCobrosPagosFormHelper({
                         margin-bottom:18px;
                     "
                 ></div>
-
 
                 <div class="form-group">
 
@@ -193,7 +146,6 @@ export function crearCobrosPagosFormHelper({
                     >
 
                 </div>
-
 
                 <div class="form-group">
 
@@ -219,7 +171,6 @@ export function crearCobrosPagosFormHelper({
 
                 </div>
 
-
                 <div class="form-group">
 
                     <label>
@@ -233,7 +184,6 @@ export function crearCobrosPagosFormHelper({
                     </select>
 
                 </div>
-
 
                 <div class="form-group">
 
@@ -249,7 +199,6 @@ export function crearCobrosPagosFormHelper({
 
                 </div>
 
-
                 <div class="form-group">
 
                     <label>
@@ -264,7 +213,6 @@ export function crearCobrosPagosFormHelper({
 
                 </div>
 
-
                 <div class="form-actions">
 
                     <button
@@ -274,7 +222,6 @@ export function crearCobrosPagosFormHelper({
                     >
                         Cancelar
                     </button>
-
 
                     <button
                         id="guardarCobro"
@@ -290,11 +237,9 @@ export function crearCobrosPagosFormHelper({
 
         `;
 
-
         configurarFormularioCobro(
             facturas
         );
-
     }
 
 
@@ -311,35 +256,22 @@ export function crearCobrosPagosFormHelper({
                 "facturaCobro"
             );
 
-
         const actualizarFactura =
             () => {
 
                 const facturaId =
                     facturaSelect.value;
 
-
                 const factura =
                     facturas.find(
                         item =>
-                            String(
-                                item.id
-                            )
-                            ===
-                            String(
-                                facturaId
-                            )
+                            String(item.id) ===
+                            String(facturaId)
                     );
 
-
-                if (
-                    !factura
-                ) {
-
+                if (!factura) {
                     return;
-
                 }
-
 
                 const total =
                     cobroPagoService
@@ -347,13 +279,11 @@ export function crearCobrosPagosFormHelper({
                             factura
                         );
 
-
                 const cobrado =
                     cobroPagoService
                         .obtenerCobradoFactura(
                             factura.id
                         );
-
 
                 const pendiente =
                     cobroPagoService
@@ -361,16 +291,12 @@ export function crearCobrosPagosFormHelper({
                             factura.id
                         );
 
-
                 const resumen =
                     document.getElementById(
                         "resumenFacturaCobro"
                     );
 
-
-                if (
-                    resumen
-                ) {
+                if (resumen) {
 
                     resumen.innerHTML = `
 
@@ -405,19 +331,14 @@ export function crearCobrosPagosFormHelper({
                         </div>
 
                     `;
-
                 }
-
 
                 const importe =
                     document.getElementById(
                         "importeCobro"
                     );
 
-
-                if (
-                    importe
-                ) {
+                if (importe) {
 
                     importe.max =
                         pendiente.toFixed(
@@ -428,29 +349,21 @@ export function crearCobrosPagosFormHelper({
                         pendiente.toFixed(
                             2
                         );
-
                 }
-
 
                 const limite =
                     document.getElementById(
                         "limiteCobro"
                     );
 
-
-                if (
-                    limite
-                ) {
+                if (limite) {
 
                     limite.textContent =
                         `Máximo permitido: ${formatearDinero(
                             pendiente
                         )}`;
-
                 }
-
             };
-
 
         facturaSelect
             ?.addEventListener(
@@ -458,9 +371,7 @@ export function crearCobrosPagosFormHelper({
                 actualizarFactura
             );
 
-
         actualizarFactura();
-
 
         document
             .getElementById(
@@ -471,7 +382,6 @@ export function crearCobrosPagosFormHelper({
                 onVolver
             );
 
-
         document
             .getElementById(
                 "cancelarCobro"
@@ -481,7 +391,6 @@ export function crearCobrosPagosFormHelper({
                 onVolver
             );
 
-
         document
             .getElementById(
                 "guardarCobro"
@@ -490,7 +399,6 @@ export function crearCobrosPagosFormHelper({
                 "click",
                 guardarCobro
             );
-
     }
 
 
@@ -502,76 +410,68 @@ export function crearCobrosPagosFormHelper({
 
         const resultado =
             cobroPagoService
-                .registrarCobro(
-                    {
+                .registrarCobro({
 
-                        facturaId:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "facturaCobro"
-                                    )
-                                    .value
-                            ),
-
-                        fecha:
+                    facturaId:
+                        Number(
                             document
                                 .getElementById(
-                                    "fechaCobro"
-                                )
-                                .value,
-
-                        importe:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "importeCobro"
-                                    )
-                                    .value
-                            ),
-
-                        metodo:
-                            document
-                                .getElementById(
-                                    "metodoCobro"
-                                )
-                                .value,
-
-                        referenciaPago:
-                            document
-                                .getElementById(
-                                    "referenciaCobro"
+                                    "facturaCobro"
                                 )
                                 .value
-                                .trim(),
+                        ),
 
-                        notas:
+                    fecha:
+                        document
+                            .getElementById(
+                                "fechaCobro"
+                            )
+                            .value,
+
+                    importe:
+                        Number(
                             document
                                 .getElementById(
-                                    "notasCobro"
+                                    "importeCobro"
                                 )
                                 .value
-                                .trim()
+                        ),
 
-                    }
-                );
+                    metodo:
+                        document
+                            .getElementById(
+                                "metodoCobro"
+                            )
+                            .value,
 
+                    referenciaPago:
+                        document
+                            .getElementById(
+                                "referenciaCobro"
+                            )
+                            .value
+                            .trim(),
 
-        if (
-            !resultado.ok
-        ) {
+                    notas:
+                        document
+                            .getElementById(
+                                "notasCobro"
+                            )
+                            .value
+                            .trim()
+
+                });
+
+        if (!resultado.ok) {
 
             alert(
                 resultado.mensaje
             );
 
             return;
-
         }
 
-
         onVolver();
-
     }
 
 
@@ -593,20 +493,14 @@ export function crearCobrosPagosFormHelper({
                         0.001
                 );
 
-
-        if (
-            gastos.length ===
-            0
-        ) {
+        if (gastos.length === 0) {
 
             alert(
                 "No hay gastos pendientes de pago."
             );
 
             return;
-
         }
-
 
         mainContent.innerHTML = `
 
@@ -617,7 +511,6 @@ export function crearCobrosPagosFormHelper({
             >
                 ← Volver
             </button>
-
 
             <header class="topbar">
 
@@ -635,7 +528,6 @@ export function crearCobrosPagosFormHelper({
 
             </header>
 
-
             <div class="form-panel">
 
                 <div class="form-group">
@@ -646,49 +538,44 @@ export function crearCobrosPagosFormHelper({
 
                     <select id="gastoPago">
 
-                        ${gastos
-                            .map(
-                                gasto => `
+                        ${gastos.map(
+                            gasto => `
 
-                                    <option
-                                        value="${escaparHTML(
-                                            gasto.id
-                                        )}"
-                                    >
+                                <option
+                                    value="${escaparHTML(
+                                        gasto.id
+                                    )}"
+                                >
 
-                                        ${escaparHTML(
-                                            gasto.concepto
-                                        )}
+                                    ${escaparHTML(
+                                        gasto.concepto
+                                    )}
 
-                                        ·
+                                    ·
 
-                                        ${escaparHTML(
-                                            gasto.proveedor
-                                            ||
-                                            gasto.proveedorNombre
-                                            ||
-                                            "Sin proveedor"
-                                        )}
+                                    ${escaparHTML(
+                                        gasto.proveedor ||
+                                        gasto.proveedorNombre ||
+                                        "Sin proveedor"
+                                    )}
 
-                                        · Pendiente:
+                                    · Pendiente:
 
-                                        ${formatearDinero(
-                                            cobroPagoService
-                                                .obtenerPendienteGasto(
-                                                    gasto.id
-                                                )
-                                        )}
+                                    ${formatearDinero(
+                                        cobroPagoService
+                                            .obtenerPendienteGasto(
+                                                gasto.id
+                                            )
+                                    )}
 
-                                    </option>
+                                </option>
 
-                                `
-                            )
-                            .join("")}
+                            `
+                        ).join("")}
 
                     </select>
 
                 </div>
-
 
                 <div class="form-group">
 
@@ -703,7 +590,6 @@ export function crearCobrosPagosFormHelper({
                     >
 
                 </div>
-
 
                 <div class="form-group">
 
@@ -729,7 +615,6 @@ export function crearCobrosPagosFormHelper({
 
                 </div>
 
-
                 <div class="form-group">
 
                     <label>
@@ -743,7 +628,6 @@ export function crearCobrosPagosFormHelper({
                     </select>
 
                 </div>
-
 
                 <div class="form-group">
 
@@ -759,7 +643,6 @@ export function crearCobrosPagosFormHelper({
 
                 </div>
 
-
                 <div class="form-group">
 
                     <label>
@@ -773,7 +656,6 @@ export function crearCobrosPagosFormHelper({
 
                 </div>
 
-
                 <div class="form-actions">
 
                     <button
@@ -783,7 +665,6 @@ export function crearCobrosPagosFormHelper({
                     >
                         Cancelar
                     </button>
-
 
                     <button
                         id="guardarPago"
@@ -799,9 +680,7 @@ export function crearCobrosPagosFormHelper({
 
         `;
 
-
         configurarFormularioPago();
-
     }
 
 
@@ -816,15 +695,24 @@ export function crearCobrosPagosFormHelper({
                 "gastoPago"
             );
 
-
         const completarImporte =
             () => {
 
-                const gastoId =
-                    Number(
-                        gastoSelect.value
-                    );
+                /*
+                 * IMPORTANTE:
+                 * NO convertir este ID con Number().
+                 *
+                 * Los gastos nuevos utilizan UUID.
+                 *
+                 * Antes estaba:
+                 *
+                 * Number(gastoSelect.value)
+                 *
+                 * y eso convertía el UUID en NaN.
+                 */
 
+                const gastoId =
+                    gastoSelect.value;
 
                 const pendiente =
                     cobroPagoService
@@ -832,16 +720,12 @@ export function crearCobrosPagosFormHelper({
                             gastoId
                         );
 
-
                 const input =
                     document.getElementById(
                         "importePago"
                     );
 
-
-                if (
-                    input
-                ) {
+                if (input) {
 
                     input.value =
                         pendiente.toFixed(
@@ -852,29 +736,21 @@ export function crearCobrosPagosFormHelper({
                         pendiente.toFixed(
                             2
                         );
-
                 }
-
 
                 const limite =
                     document.getElementById(
                         "limitePago"
                     );
 
-
-                if (
-                    limite
-                ) {
+                if (limite) {
 
                     limite.textContent =
                         `Máximo permitido: ${formatearDinero(
                             pendiente
                         )}`;
-
                 }
-
             };
-
 
         gastoSelect
             ?.addEventListener(
@@ -882,9 +758,7 @@ export function crearCobrosPagosFormHelper({
                 completarImporte
             );
 
-
         completarImporte();
-
 
         document
             .getElementById(
@@ -895,7 +769,6 @@ export function crearCobrosPagosFormHelper({
                 onVolver
             );
 
-
         document
             .getElementById(
                 "cancelarPago"
@@ -905,7 +778,6 @@ export function crearCobrosPagosFormHelper({
                 onVolver
             );
 
-
         document
             .getElementById(
                 "guardarPago"
@@ -914,7 +786,6 @@ export function crearCobrosPagosFormHelper({
                 "click",
                 guardarPago
             );
-
     }
 
 
@@ -926,76 +797,73 @@ export function crearCobrosPagosFormHelper({
 
         const resultado =
             cobroPagoService
-                .registrarPago(
-                    {
+                .registrarPago({
 
-                        gastoId:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "gastoPago"
-                                    )
-                                    .value
-                            ),
+                    /*
+                     * IMPORTANTE:
+                     * Mantener el UUID como string.
+                     *
+                     * NO usar Number().
+                     */
 
-                        fecha:
+                    gastoId:
+                        document
+                            .getElementById(
+                                "gastoPago"
+                            )
+                            .value,
+
+                    fecha:
+                        document
+                            .getElementById(
+                                "fechaPago"
+                            )
+                            .value,
+
+                    importe:
+                        Number(
                             document
                                 .getElementById(
-                                    "fechaPago"
-                                )
-                                .value,
-
-                        importe:
-                            Number(
-                                document
-                                    .getElementById(
-                                        "importePago"
-                                    )
-                                    .value
-                            ),
-
-                        metodo:
-                            document
-                                .getElementById(
-                                    "metodoPago"
-                                )
-                                .value,
-
-                        referenciaPago:
-                            document
-                                .getElementById(
-                                    "referenciaPago"
+                                    "importePago"
                                 )
                                 .value
-                                .trim(),
+                        ),
 
-                        notas:
-                            document
-                                .getElementById(
-                                    "notasPago"
-                                )
-                                .value
-                                .trim()
+                    metodo:
+                        document
+                            .getElementById(
+                                "metodoPago"
+                            )
+                            .value,
 
-                    }
-                );
+                    referenciaPago:
+                        document
+                            .getElementById(
+                                "referenciaPago"
+                            )
+                            .value
+                            .trim(),
 
+                    notas:
+                        document
+                            .getElementById(
+                                "notasPago"
+                            )
+                            .value
+                            .trim()
 
-        if (
-            !resultado.ok
-        ) {
+                });
+
+        if (!resultado.ok) {
 
             alert(
                 resultado.mensaje
             );
 
             return;
-
         }
 
-
         onVolver();
-
     }
 
 
@@ -1017,7 +885,6 @@ export function crearCobrosPagosFormHelper({
 
         ];
 
-
         return metodos
             .map(
                 metodo => `
@@ -1027,15 +894,16 @@ export function crearCobrosPagosFormHelper({
                             metodo
                         )}"
                     >
+
                         ${escaparHTML(
                             metodo
                         )}
+
                     </option>
 
                 `
             )
             .join("");
-
     }
 
 
@@ -1052,5 +920,4 @@ export function crearCobrosPagosFormHelper({
         crearOpcionesMetodo
 
     };
-
 }
