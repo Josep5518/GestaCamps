@@ -1,0 +1,26 @@
+/* =====================================================
+   GESTACAMPS
+   COMPONENTE · ESTADOS
+===================================================== */
+
+.status {
+    padding: 6px 10px;
+
+    border-radius: 20px;
+
+    font-size: 12px;
+}
+
+
+.pending {
+    background-color: #fff4cf;
+
+    color: #896b00;
+}
+
+
+.progress {
+    background-color: #dff3e9;
+
+    color: var(--gc-green-success);
+}

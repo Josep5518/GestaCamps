@@ -1,0 +1,197 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · GASTOS
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   ESTILOS BASE
+===================================================== */
+
+/* ==================================
+   GASTOS
+================================== */
+
+.gastos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+.gasto-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.gasto-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.gasto-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--gc-green-soft);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.gasto-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.gasto-card h3 {
+    margin: 0 0 8px;
+}
+
+.gasto-categoria {
+    color: var(--gc-green);
+    font-weight: 600;
+}
+
+.gasto-importe {
+    background-color: var(--gc-green-soft);
+    padding: 14px;
+    border-radius: 9px;
+    margin: 16px 0 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.gasto-importe span {
+    color: var(--gc-muted);
+    font-size: 12px;
+}
+
+.gasto-importe strong {
+    color: var(--gc-green-text);
+    font-size: 21px;
+}
+
+.gasto-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.gasto-info div {
+    background-color: var(--gc-surface-soft);
+    padding: 12px;
+    border-radius: 9px;
+}
+
+.gasto-info span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.gasto-card > p {
+    color: var(--gc-muted-strong);
+    font-size: 14px;
+}
+
+.gasto-status {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 7px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.gasto-pagado-status {
+    background-color: #dff3e9;
+    color: var(--gc-green-success);
+}
+
+.gasto-pendiente-status {
+    background-color: #fff4cf;
+    color: #896b00;
+}
+
+.gasto-state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 12px;
+}
+
+.gasto-notas {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gc-border-soft);
+}
+
+.gasto-notas span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.gasto-notas p {
+    margin: 0;
+}
+
+@media (max-width: 1100px) {
+
+    .gastos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .gastos-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   CAMPAÑA
+===================================================== */
+
+/* ==================================
+   GASTOS - CAMPANYA
+================================== */
+
+.gasto-campania {
+    margin: 10px 0;
+    color: var(--gc-green-success);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.gasto-sin-campania {
+    color: #8a928e;
+    font-weight: 400;
+}
+
+.gasto-linea {
+    margin: 10px 0;
+    color: #68756f;
+}
+
+.gasto-state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}

@@ -1,0 +1,1816 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · ESTADÍSTICAS
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   ESTADÍSTICAS BASE
+===================================================== */
+
+/* ==================================
+   ESTADÍSTICAS
+================================== */
+
+.estadisticas-main-stats {
+    margin-bottom: 20px;
+}
+
+.estadisticas-secondary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-bottom: 22px;
+}
+
+.estadistica-small-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.estadistica-small-card span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 13px;
+    margin-bottom: 8px;
+}
+
+.estadistica-small-card strong {
+    font-size: 18px;
+}
+
+.estadisticas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+.estadisticas-panel {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.estadisticas-panel-header {
+    margin-bottom: 20px;
+}
+
+.estadisticas-panel-header h3 {
+    margin: 0 0 5px;
+}
+
+.estadisticas-panel-header p {
+    margin: 0;
+    color: var(--gc-muted);
+    font-size: 14px;
+}
+
+.estadisticas-empty {
+    color: var(--gc-muted);
+}
+
+
+/* BARRAS */
+
+.stats-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.stats-bar-item {
+    width: 100%;
+}
+
+.stats-bar-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 7px;
+}
+
+.stats-bar-header span {
+    color: var(--gc-muted-strong);
+    font-size: 13px;
+}
+
+.stats-bar-track {
+    width: 100%;
+    height: 11px;
+    background-color: #edf1ee;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.stats-bar-fill {
+    height: 100%;
+    background-color: #28775d;
+    border-radius: 20px;
+    transition: width 0.3s ease;
+}
+
+
+/* RESUMEN ECONÓMICO */
+
+.economic-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--gc-border-soft);
+}
+
+.economic-row span {
+    color: var(--gc-muted-strong);
+}
+
+.economic-total {
+    border-bottom: none;
+    border-top: 2px solid var(--gc-green);
+    margin-top: 8px;
+    padding-top: 18px;
+}
+
+.economic-total strong {
+    font-size: 22px;
+}
+
+
+/* POSITIVO / NEGATIVO */
+
+.positive-number {
+    color: var(--gc-green-success);
+}
+
+.negative-number {
+    color: #b33d3d;
+}
+
+
+/* RENTABILIDAD POR FINCA */
+
+.estadisticas-fincas-section {
+    margin-top: 28px;
+}
+
+.rentabilidad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+}
+
+.rentabilidad-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.rentabilidad-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.rentabilidad-header h3 {
+    margin: 0;
+}
+
+.rentabilidad-icon {
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--gc-green-soft);
+    border-radius: 11px;
+    font-size: 22px;
+}
+
+.rentabilidad-info {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.rentabilidad-info div {
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+    padding: 12px;
+}
+
+.rentabilidad-info span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1100px) {
+
+    .estadisticas-secondary-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .estadisticas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rentabilidad-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .rentabilidad-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rentabilidad-info {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   TESORERÍA
+===================================================== */
+
+/* ==================================
+   ESTADÍSTICAS - TESORERÍA
+================================== */
+
+.statistics-section-title {
+    margin: 28px 0 14px;
+}
+
+.statistics-section-title h3 {
+    margin: 0 0 4px;
+}
+
+.statistics-section-title p {
+    margin: 0;
+    color: var(--gc-muted);
+    font-size: 14px;
+}
+
+.statistics-secondary-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.statistics-mini-card {
+    background-color: white;
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.statistics-mini-card span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 13px;
+    margin-bottom: 7px;
+}
+
+.statistics-mini-card strong {
+    font-size: 17px;
+}
+
+.statistics-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.statistics-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.statistics-bar-label {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 7px;
+}
+
+.statistics-bar-label span {
+    color: #64716b;
+    font-size: 13px;
+}
+
+.statistics-bar-track {
+    width: 100%;
+    height: 9px;
+    background-color: #edf1ee;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.statistics-bar-fill {
+    height: 100%;
+    background-color: #23765b;
+    border-radius: 999px;
+}
+
+.economic-summary {
+    display: flex;
+    flex-direction: column;
+}
+
+.economic-summary > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 13px 0;
+    border-bottom: 1px solid var(--gc-border-soft);
+}
+
+.economic-summary > div:last-child {
+    border-bottom: none;
+}
+
+.economic-summary span {
+    color: #68756f;
+}
+
+.economic-summary-total {
+    margin-top: 4px;
+    border-top: 1px solid #23765b !important;
+}
+
+.economic-summary-total strong {
+    color: var(--gc-green-success);
+    font-size: 19px;
+}
+
+.rentabilidad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.rentabilidad-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.rentabilidad-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.rentabilidad-title h3 {
+    margin: 0;
+}
+
+.rentabilidad-data {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 9px;
+}
+
+.rentabilidad-data > div {
+    padding: 11px;
+    border-radius: 8px;
+    background-color: var(--gc-surface-soft);
+}
+
+.rentabilidad-data span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 11px;
+    margin-bottom: 4px;
+}
+
+.resultado-positivo {
+    color: var(--gc-green-success);
+}
+
+.resultado-negativo {
+    color: #b33d3d;
+}
+
+@media (max-width: 1050px) {
+
+    .statistics-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rentabilidad-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .statistics-secondary-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .rentabilidad-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   ESTADÍSTICAS Y RENTABILIDAD
+===================================================== */
+
+/* ==================================
+   ESTADÍSTICAS
+================================== */
+
+.estadistica-seccion-titulo {
+    margin: 20px 0 10px;
+}
+
+.estadistica-seccion-titulo h3 {
+    margin: 0 0 4px;
+    font-size: 18px;
+}
+
+.estadistica-seccion-titulo p {
+    margin: 0;
+    color: var(--gc-muted);
+    font-size: 13px;
+}
+
+.estadisticas-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 18px;
+}
+
+.estadistica-panel {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.estadistica-panel h3 {
+    margin: 0 0 4px;
+}
+
+.estadistica-subtitulo {
+    margin: 0 0 18px;
+    color: var(--gc-muted);
+    font-size: 13px;
+}
+
+.estadistica-vacio {
+    color: var(--gc-muted);
+    font-size: 14px;
+}
+
+.estadistica-barra-item {
+    margin-bottom: 16px;
+}
+
+.estadistica-barra-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+    margin-bottom: 7px;
+    font-size: 13px;
+}
+
+.estadistica-barra-fondo {
+    width: 100%;
+    height: 8px;
+    background: #edf2ef;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.estadistica-barra {
+    height: 100%;
+    background: #21765c;
+    border-radius: 999px;
+}
+
+.estadistica-resumen-fila {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--gc-border-soft);
+}
+
+.estadistica-resumen-fila:last-child {
+    border-bottom: none;
+}
+
+.estadistica-separador {
+    height: 1px;
+    background: var(--gc-green-success);
+    margin: 8px 0;
+}
+
+.estadistica-resumen-destacado strong {
+    color: var(--gc-green-success);
+    font-size: 18px;
+}
+
+
+/* ==================================
+   RENTABILIDAD
+================================== */
+
+.rentabilidad-bloque {
+    margin-top: 26px;
+}
+
+.rentabilidad-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 12px;
+}
+
+.rentabilidad-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.rentabilidad-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.rentabilidad-card-header > div {
+    flex: 1;
+}
+
+.rentabilidad-card-header h3 {
+    margin: 0 0 3px;
+}
+
+.rentabilidad-card-header p {
+    margin: 0;
+    color: var(--gc-muted);
+    font-size: 13px;
+}
+
+.rentabilidad-card-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.rentabilidad-card-grid > div {
+    background: #f5f7f5;
+    border-radius: 10px;
+    padding: 12px;
+}
+
+.rentabilidad-card-grid span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.rentabilidad-card-grid strong {
+    font-size: 15px;
+}
+
+.rentabilidad-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding: 12px;
+    border-radius: 10px;
+    background: var(--gc-green-soft);
+}
+
+.rentabilidad-footer strong {
+    color: var(--gc-green-success);
+}
+
+.valor-positivo {
+    color: var(--gc-green-success);
+}
+
+.valor-negativo {
+    color: #c0392b;
+}
+
+
+/* ==================================
+   RESPONSIVE
+================================== */
+
+@media (max-width: 1150px) {
+
+    .estadisticas-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rentabilidad-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 700px) {
+
+    .rentabilidad-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .rentabilidad-card-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE MÓVIL
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - ESTADÍSTICAS MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ================================================
+       CABECERAS DE SECCIÓN
+    ================================================= */
+
+    .estadistica-seccion-titulo {
+        margin:
+            18px
+            0
+            8px;
+    }
+
+
+    .estadistica-seccion-titulo h3 {
+        margin: 0;
+
+        font-size: 16px;
+    }
+
+
+    .estadistica-seccion-titulo p {
+        margin:
+            3px
+            0
+            0;
+
+        font-size: 10px;
+
+        line-height: 1.35;
+
+        color: var(--gc-muted);
+    }
+
+
+    /* ================================================
+       STATS 2x2
+    ================================================= */
+
+    .estadisticas-mini-stats {
+        margin-top: 8px !important;
+    }
+
+
+    .estadisticas-mini-stats .card,
+    .stats .card {
+        min-height: 66px;
+
+        padding: 11px;
+
+        gap: 9px;
+
+        border-radius: 12px;
+    }
+
+
+    .stats .card-icon {
+        width: 34px;
+        height: 34px;
+
+        flex: 0 0 34px;
+
+        border-radius: 9px;
+
+        font-size: 16px;
+    }
+
+
+    .stats .card p {
+        font-size: 9px;
+
+        line-height: 1.2;
+    }
+
+
+    .stats .card h3 {
+        font-size: 14px;
+    }
+
+
+    /* ================================================
+       GRID DE ESTADÍSTICAS
+    ================================================= */
+
+    .estadisticas-grid {
+        display: grid;
+
+        grid-template-columns: 1fr !important;
+
+        gap: 12px;
+
+        margin-top: 16px;
+    }
+
+
+    /* ================================================
+       PANELES
+    ================================================= */
+
+    .estadistica-panel {
+        padding: 14px;
+
+        border-radius: 13px;
+    }
+
+
+    .estadistica-panel h3 {
+        margin: 0;
+
+        font-size: 15px;
+    }
+
+
+    .estadistica-subtitulo {
+        margin:
+            3px
+            0
+            12px;
+
+        font-size: 10px;
+
+        line-height: 1.3;
+
+        color: var(--gc-muted);
+    }
+
+
+    /* ================================================
+       BARRAS
+    ================================================= */
+
+    .estadistica-barra-item {
+        margin-bottom: 11px;
+    }
+
+
+    .estadistica-barra-cabecera {
+        gap: 8px;
+
+        margin-bottom: 5px;
+    }
+
+
+    .estadistica-barra-cabecera strong {
+        min-width: 0;
+
+        font-size: 10px;
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        text-overflow: ellipsis;
+    }
+
+
+    .estadistica-barra-cabecera span {
+        flex: 0 0 auto;
+
+        font-size: 10px;
+    }
+
+
+    .estadistica-barra-fondo {
+        height: 7px;
+
+        border-radius: 999px;
+    }
+
+
+    .estadistica-barra {
+        min-height: 7px;
+
+        border-radius: 999px;
+    }
+
+
+    /* ================================================
+       RESÚMENES
+    ================================================= */
+
+    .estadistica-resumen-fila {
+        min-height: 38px;
+
+        padding:
+            9px
+            10px;
+
+        gap: 10px;
+    }
+
+
+    .estadistica-resumen-fila span {
+        font-size: 10px;
+    }
+
+
+    .estadistica-resumen-fila strong {
+        font-size: 11px;
+
+        white-space: nowrap;
+    }
+
+
+    .estadistica-separador {
+        margin:
+            6px
+            0;
+    }
+
+
+    /* ================================================
+       RENTABILIDAD
+    ================================================= */
+
+    .rentabilidad-bloque {
+        margin-top: 20px;
+    }
+
+
+    .rentabilidad-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 12px;
+    }
+
+
+    .rentabilidad-card {
+        padding: 14px;
+
+        border-radius: 13px;
+    }
+
+
+    .rentabilidad-card-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .rentabilidad-card-header h3 {
+        margin: 0;
+
+        font-size: 14px;
+    }
+
+
+    .rentabilidad-card-header p {
+        margin:
+            3px
+            0
+            0;
+
+        font-size: 10px;
+    }
+
+
+    .campania-status {
+        padding:
+            4px
+            7px;
+
+        font-size: 9px;
+    }
+
+
+    .rentabilidad-card-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 7px;
+    }
+
+
+    .rentabilidad-card-grid > div {
+        min-width: 0;
+
+        padding: 9px;
+
+        border-radius: 9px;
+    }
+
+
+    .rentabilidad-card-grid span {
+        font-size: 9px;
+    }
+
+
+    .rentabilidad-card-grid strong {
+        margin-top: 2px;
+
+        font-size: 12px;
+    }
+
+
+    .rentabilidad-footer {
+        margin-top: 9px;
+
+        padding-top: 9px;
+    }
+
+
+    .rentabilidad-footer span {
+        font-size: 10px;
+    }
+
+
+    .rentabilidad-footer strong {
+        font-size: 12px;
+    }
+
+}
+
+
+/* =====================================================
+   GRÁFICOS
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - GRÁFICOS ESTADÍSTICAS
+===================================================== */
+
+
+/* =====================================================
+   GRID DE GRÁFICOS
+===================================================== */
+
+.estadisticas-graficos-grid {
+    align-items: stretch;
+}
+
+
+.gc-chart-panel {
+    min-height: 310px;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-start;
+}
+
+
+/* =====================================================
+   CABECERA DE GRÁFICO
+===================================================== */
+
+.gc-chart-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 18px;
+}
+
+
+.gc-chart-panel-header h3 {
+    margin: 0;
+}
+
+
+.gc-chart-badge {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 27px;
+
+    padding:
+        0
+        10px;
+
+    border-radius: 999px;
+
+    background: var(--gc-green-soft);
+
+    color: var(--gc-green-text);
+
+    font-size: 10px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   ESTADO VACÍO
+===================================================== */
+
+.gc-chart-empty {
+    flex: 1;
+
+    min-height: 180px;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    color: var(--gc-muted);
+
+    text-align: center;
+}
+
+
+.gc-chart-empty span {
+    font-size: 30px;
+}
+
+
+.gc-chart-empty p {
+    margin: 0;
+
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   BARRAS HORIZONTALES
+===================================================== */
+
+.gc-chart-bars {
+    display: grid;
+
+    gap: 14px;
+}
+
+
+.estadistica-barra-item {
+    margin: 0;
+}
+
+
+.estadistica-barra-cabecera {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 7px;
+}
+
+
+.estadistica-barra-cabecera strong {
+    min-width: 0;
+
+    color: var(--gc-text);
+
+    font-size: 12px;
+}
+
+
+.estadistica-barra-cabecera span {
+    flex: 0 0 auto;
+
+    color: var(--gc-muted);
+
+    font-size: 11px;
+}
+
+
+.estadistica-barra-fondo {
+    width: 100%;
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #e8efeb;
+}
+
+
+.estadistica-barra {
+    min-width: 3px;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gc-green),
+            #4ca374
+        );
+}
+
+
+/* =====================================================
+   DONUT
+===================================================== */
+
+.gc-donut-layout {
+    flex: 1;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(160px, 0.8fr)
+        minmax(0, 1.2fr);
+
+    align-items: center;
+
+    gap: 28px;
+}
+
+
+.gc-donut-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.gc-donut {
+    width: 180px;
+    height: 180px;
+
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    box-shadow:
+        inset
+        0
+        0
+        0
+        1px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.gc-donut::after {
+    content: "";
+
+    position: absolute;
+
+    width: 110px;
+    height: 110px;
+
+    border-radius: 50%;
+
+    background: white;
+
+    box-shadow:
+        0
+        0
+        0
+        1px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+}
+
+
+.gc-donut-center {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+
+    gap: 4px;
+
+    text-align: center;
+}
+
+
+.gc-donut-center span {
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.gc-donut-center strong {
+    color: var(--gc-text);
+
+    font-size: 16px;
+}
+
+
+.gc-donut-legend {
+    display: grid;
+
+    gap: 10px;
+}
+
+
+.gc-donut-legend-item {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    min-width: 0;
+}
+
+
+.gc-donut-dot {
+    width: 10px;
+    height: 10px;
+
+    flex: 0 0 10px;
+
+    border-radius: 50%;
+}
+
+
+.gc-donut-legend-item > div {
+    min-width: 0;
+}
+
+
+.gc-donut-legend-item strong {
+    display: block;
+
+    overflow: hidden;
+
+    color: var(--gc-text);
+
+    font-size: 11px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.gc-donut-legend-item small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   GRÁFICO DE COLUMNAS
+===================================================== */
+
+.gc-column-chart {
+    position: relative;
+
+    min-height: 220px;
+
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: flex-end;
+
+    padding-top: 18px;
+}
+
+
+.gc-column-chart-grid {
+    position: absolute;
+
+    inset:
+        18px
+        0
+        37px
+        0;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: space-between;
+
+    pointer-events: none;
+}
+
+
+.gc-column-chart-grid span {
+    width: 100%;
+
+    border-top:
+        1px dashed
+        rgba(
+            18,
+            55,
+            42,
+            0.09
+        );
+}
+
+
+.gc-column-chart-columns {
+    position: relative;
+
+    z-index: 1;
+
+    height: 190px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-around;
+
+    gap: 10px;
+}
+
+
+.gc-column-item {
+    min-width: 0;
+
+    flex: 1;
+
+    height: 100%;
+
+    display: flex;
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: flex-end;
+
+    gap: 6px;
+}
+
+
+.gc-column-value {
+    min-height: 16px;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+    font-weight: 600;
+
+    text-align: center;
+
+    white-space: nowrap;
+}
+
+
+.gc-column-track {
+    width: min(42px, 70%);
+    height: 145px;
+
+    display: flex;
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    border-radius:
+        8px
+        8px
+        4px
+        4px;
+
+    background: #edf3ef;
+}
+
+
+.gc-column-bar {
+    width: 100%;
+
+    border-radius:
+        8px
+        8px
+        3px
+        3px;
+
+    background:
+        linear-gradient(
+            180deg,
+            #38a169,
+            var(--gc-green)
+        );
+
+    box-shadow:
+        0
+        4px
+        10px
+        rgba(
+            31,
+            122,
+            85,
+            0.16
+        );
+}
+
+
+.gc-column-label {
+    width: 100%;
+
+    overflow: hidden;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+    font-weight: 600;
+
+    text-align: center;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   COMPARACIÓN
+===================================================== */
+
+.gc-comparison-chart {
+    flex: 1;
+
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+
+    gap: 24px;
+
+    min-height: 190px;
+}
+
+
+.gc-comparison-item {
+    display: grid;
+
+    gap: 9px;
+}
+
+
+.gc-comparison-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.gc-comparison-header span {
+    color: var(--gc-muted);
+
+    font-size: 11px;
+}
+
+
+.gc-comparison-header strong {
+    color: var(--gc-text);
+
+    font-size: 13px;
+}
+
+
+.gc-comparison-track {
+    width: 100%;
+    height: 14px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #edf3ef;
+}
+
+
+.gc-comparison-bar {
+    height: 100%;
+
+    border-radius: inherit;
+}
+
+
+.gc-comparison-principal {
+    background:
+        linear-gradient(
+            90deg,
+            var(--gc-green),
+            #48a875
+        );
+}
+
+
+.gc-comparison-secundario {
+    background:
+        linear-gradient(
+            90deg,
+            #9da8a2,
+            #c1c9c5
+        );
+}
+
+
+/* =====================================================
+   DESKTOP GRANDE
+===================================================== */
+
+@media (min-width: 1181px) {
+
+    .estadisticas-graficos-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1180px) {
+
+    .estadisticas-graficos-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .gc-chart-panel {
+        min-height: 280px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .gc-chart-panel {
+        min-height: auto;
+    }
+
+
+    .gc-chart-panel-header {
+        margin-bottom: 14px;
+    }
+
+
+    .gc-chart-badge {
+        min-height: 24px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 9px;
+    }
+
+
+    /* DONUT */
+
+    .gc-donut-layout {
+        grid-template-columns: 1fr;
+
+        gap: 18px;
+    }
+
+
+    .gc-donut {
+        width: 150px;
+        height: 150px;
+    }
+
+
+    .gc-donut::after {
+        width: 92px;
+        height: 92px;
+    }
+
+
+    .gc-donut-center strong {
+        font-size: 14px;
+    }
+
+
+    .gc-donut-legend {
+        gap: 8px;
+    }
+
+
+    /* COLUMNAS */
+
+    .gc-column-chart {
+        min-height: 190px;
+
+        overflow-x: auto;
+
+        padding-bottom: 4px;
+    }
+
+
+    .gc-column-chart-columns {
+        min-width: 250px;
+
+        height: 165px;
+    }
+
+
+    .gc-column-track {
+        height: 120px;
+
+        width: min(36px, 65%);
+    }
+
+
+    .gc-column-value {
+        font-size: 8px;
+    }
+
+
+    .gc-column-label {
+        font-size: 9px;
+    }
+
+
+    /* COMPARACIÓN */
+
+    .gc-comparison-chart {
+        min-height: 145px;
+
+        gap: 18px;
+    }
+
+
+    .gc-comparison-track {
+        height: 11px;
+    }
+
+
+    .gc-comparison-header span {
+        font-size: 10px;
+    }
+
+
+    .gc-comparison-header strong {
+        font-size: 11px;
+    }
+
+}
+
+
+/* =====================================================
+   AJUSTE FINO DE GRÁFICOS EN MÓVIL
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - AJUSTE FINO GRÁFICOS MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .gc-chart-panel {
+        padding: 13px;
+    }
+
+
+    .gc-donut {
+        width: 135px;
+        height: 135px;
+    }
+
+
+    .gc-donut::after {
+        width: 82px;
+        height: 82px;
+    }
+
+
+    .gc-donut-center strong {
+        font-size: 13px;
+    }
+
+
+    .gc-donut-center span {
+        font-size: 9px;
+    }
+
+
+    .gc-donut-legend-item strong {
+        font-size: 10px;
+    }
+
+
+    .gc-donut-legend-item small {
+        font-size: 9px;
+    }
+
+
+    .gc-column-chart {
+        min-height: 170px;
+    }
+
+
+    .gc-column-chart-columns {
+        height: 145px;
+    }
+
+
+    .gc-column-track {
+        height: 105px;
+    }
+
+
+    .gc-column-value {
+        font-size: 8px;
+    }
+
+
+    .gc-column-label {
+        font-size: 8px;
+    }
+
+
+    .gc-comparison-chart {
+        min-height: 125px;
+    }
+
+}

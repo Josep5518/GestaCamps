@@ -1,0 +1,987 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · SIDEBAR / MENÚ LATERAL
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   EVITAR SALTOS DE LÍNEA
+===================================================== */
+
+/* =====================================================
+   MENÚ LATERAL - EVITAR SALTOS DE LÍNEA
+===================================================== */
+
+.sidebar nav a {
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   MENÚ DESPLEGABLE COMPACTO
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - MENÚ LATERAL DESPLEGABLE COMPACTO
+===================================================== */
+
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+.sidebar nav {
+    margin-top: 28px;
+
+    display: flex;
+    flex-direction: column;
+
+    gap: 6px;
+}
+
+
+/* =====================================================
+   GRUPO
+===================================================== */
+
+.nav-group {
+    display: block;
+
+    border-radius: 9px;
+
+    overflow: hidden;
+}
+
+
+/* =====================================================
+   BOTÓN DEL GRUPO
+===================================================== */
+
+.nav-group-toggle {
+    width: 100%;
+
+    min-height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding:
+        8px
+        10px;
+
+    border: none;
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.04
+        );
+
+    color: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition:
+        background-color 0.18s ease;
+}
+
+
+.nav-group-toggle:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.nav-group-toggle-main {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 0.055em;
+
+    line-height: 1.2;
+
+    text-transform: uppercase;
+}
+
+
+.nav-group-icon {
+    width: 18px;
+
+    flex: 0 0 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 13px;
+}
+
+
+/* =====================================================
+   FLECHA
+===================================================== */
+
+.nav-group-chevron {
+    flex: 0 0 auto;
+
+    font-size: 11px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.65
+        );
+
+    transform: rotate(-90deg);
+
+    transition:
+        transform 0.18s ease;
+}
+
+
+.nav-group.is-open
+.nav-group-chevron {
+    transform: rotate(0deg);
+}
+
+
+/* =====================================================
+   CONTENIDO CERRADO
+===================================================== */
+
+.nav-group-content {
+    display: none;
+}
+
+
+/* =====================================================
+   CONTENIDO ABIERTO
+===================================================== */
+
+.nav-group.is-open
+.nav-group-content {
+    display: block;
+
+    padding-top: 4px;
+}
+
+
+/* =====================================================
+   GRUPO ABIERTO
+===================================================== */
+
+.nav-group.is-open
+.nav-group-toggle {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+}
+
+
+/* =====================================================
+   LINKS
+===================================================== */
+
+.nav-group-content a {
+    display: flex;
+
+    align-items: center;
+
+    min-height: 36px;
+
+    margin-bottom: 2px;
+
+    padding:
+        8px
+        10px
+        8px
+        14px;
+
+    border-radius: 7px;
+
+    color: white;
+
+    text-decoration: none;
+
+    font-size: 12px;
+
+    white-space: nowrap;
+
+    transition:
+        background-color 0.16s ease,
+        padding-left 0.16s ease;
+}
+
+
+.nav-group-content a:hover {
+    padding-left: 17px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.07
+        );
+}
+
+
+.nav-group-content a.active {
+    padding-left: 14px;
+
+    background-color:
+        var(--gc-green);
+
+    box-shadow:
+        inset
+        3px
+        0
+        0
+        rgba(
+            255,
+            255,
+            255,
+            0.7
+        );
+}
+
+
+/* =====================================================
+   ESPACIADO ENTRE GRUPOS
+===================================================== */
+
+.nav-group + .nav-group {
+    margin-top: 0;
+
+    padding-top: 0;
+}
+
+
+/* =====================================================
+   GRUPOS OCULTOS POR PERMISOS
+===================================================== */
+
+.nav-group[hidden] {
+    display: none !important;
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .sidebar nav {
+        margin-top: 20px;
+
+        gap: 5px;
+
+        padding-bottom: 16px;
+    }
+
+
+    .nav-group-toggle {
+        min-height: 42px;
+
+        padding:
+            9px
+            11px;
+    }
+
+
+    .nav-group-toggle-main {
+        font-size: 10px;
+    }
+
+
+    .nav-group-content a {
+        min-height: 40px;
+
+        padding:
+            9px
+            12px
+            9px
+            17px;
+    }
+
+
+    .nav-group-content a.active {
+        padding-left: 17px;
+    }
+
+}
+
+
+/* =====================================================
+   FIX DEFINITIVO SIDEBAR MÓVIL
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   FIX DEFINITIVO SIDEBAR MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* =================================================
+       CONTENIDO SIEMPRE A ANCHO COMPLETO
+    ================================================= */
+
+    .main-content {
+        width: 100% !important;
+
+        margin-left: 0 !important;
+    }
+
+
+    /* =================================================
+       SIDEBAR CERRADO
+    ================================================= */
+
+    .sidebar {
+        position: fixed !important;
+
+        top: 0;
+        left: 0;
+
+        width: min(86vw, 290px) !important;
+        height: 100dvh;
+
+        z-index: 1100;
+
+        transform: translateX(-105%) !important;
+
+        transition:
+            transform
+            0.25s
+            ease;
+
+        visibility: hidden;
+
+        pointer-events: none;
+    }
+
+
+    /* =================================================
+       SIDEBAR ABIERTO
+    ================================================= */
+
+    .sidebar.sidebar-open {
+        transform: translateX(0) !important;
+
+        visibility: visible;
+
+        pointer-events: auto;
+    }
+
+
+    /* =================================================
+       FONDO DEL MENÚ
+    ================================================= */
+
+    .sidebar-backdrop {
+        position: fixed;
+
+        inset: 0;
+
+        z-index: 1090;
+
+        display: block;
+
+        border: 0;
+
+        background:
+            rgba(
+                0,
+                0,
+                0,
+                0.42
+            );
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transition:
+            opacity
+            0.2s
+            ease,
+            visibility
+            0.2s
+            ease;
+    }
+
+
+    body.mobile-menu-open
+    .sidebar-backdrop {
+        opacity: 1;
+
+        visibility: visible;
+
+        pointer-events: auto;
+    }
+
+
+    /* =================================================
+       BLOQUEO DEL SCROLL DE FONDO
+    ================================================= */
+
+    body.mobile-menu-open {
+        overflow: hidden;
+    }
+
+
+    /* =================================================
+       CABECERA MÓVIL
+    ================================================= */
+
+    .mobile-header {
+        display: flex;
+    }
+
+}
+
+
+/* =====================================================
+   ESCRITORIO
+===================================================== */
+
+@media (min-width: 761px) {
+
+    .sidebar {
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        transform: none !important;
+    }
+
+
+    .sidebar-backdrop {
+        display: none !important;
+    }
+
+}
+
+
+/* =====================================================
+   MENÚ DEFINITIVO
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - MENÚ DEFINITIVO
+   2 ACCESOS FIJOS + 5 DESPLEGABLES
+===================================================== */
+
+
+/* =====================================================
+   NAVEGACIÓN
+===================================================== */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    width: 100%;
+}
+
+
+/* =====================================================
+   ACCESOS FIJOS
+===================================================== */
+
+.sidebar-fixed-links {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    margin-bottom: 4px;
+}
+
+
+.sidebar-fixed-links a {
+    display: flex;
+    align-items: center;
+
+    min-height: 38px;
+
+    padding: 0 12px;
+
+    border-radius: 8px;
+
+    color: #ffffff;
+
+    text-decoration: none;
+
+    font-size: 12px;
+    font-weight: 600;
+
+    transition:
+        background 0.15s ease,
+        color 0.15s ease;
+}
+
+
+.sidebar-fixed-links a:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.08
+        );
+}
+
+
+.sidebar-fixed-links a.active {
+    background: #26775d;
+
+    color: #ffffff;
+}
+
+
+/* =====================================================
+   GRUPOS
+===================================================== */
+
+.sidebar-group {
+    width: 100%;
+}
+
+
+/* =====================================================
+   BOTÓN DEL GRUPO
+===================================================== */
+
+.sidebar-group-toggle {
+    width: 100%;
+    min-height: 37px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 8px;
+
+    padding:
+        0
+        11px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.055
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+.sidebar-group-toggle:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.09
+        );
+}
+
+
+.sidebar-group-toggle[aria-expanded="true"] {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.105
+        );
+
+    box-shadow:
+        inset
+        2px
+        0
+        0
+        #76b79d;
+}
+
+
+/* =====================================================
+   TÍTULO GRUPO
+===================================================== */
+
+.sidebar-group-title {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    min-width: 0;
+
+    color: #ffffff;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.055em;
+
+    text-align: left;
+}
+
+
+.sidebar-group-title > span {
+    width: 17px;
+
+    flex: 0 0 17px;
+
+    text-align: center;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   FLECHA
+===================================================== */
+
+.sidebar-group-arrow {
+    flex: 0 0 auto;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.72
+        );
+
+    font-size: 15px;
+    font-weight: 700;
+
+    transform: rotate(0deg);
+
+    transition:
+        transform
+        0.18s
+        ease;
+}
+
+
+.sidebar-group-toggle[aria-expanded="true"]
+.sidebar-group-arrow {
+    transform: rotate(90deg);
+}
+
+
+/* =====================================================
+   CONTENIDO DESPLEGABLE
+===================================================== */
+
+.sidebar-group-content {
+    display: none;
+
+    flex-direction: column;
+
+    gap: 2px;
+
+    padding:
+        4px
+        0
+        2px;
+}
+
+
+/* Abierto mediante JS */
+
+.sidebar-group-toggle[aria-expanded="true"]
++
+.sidebar-group-content {
+    display: flex;
+}
+
+
+/* También mantener abierto el grupo de la página activa */
+
+.sidebar-group:has(
+    .sidebar-group-content a.active
+)
+.sidebar-group-content {
+    display: flex;
+}
+
+
+.sidebar-group:has(
+    .sidebar-group-content a.active
+)
+.sidebar-group-toggle {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.105
+        );
+}
+
+
+/* =====================================================
+   ENLACES INTERIORES
+===================================================== */
+
+.sidebar-group-content a {
+    display: flex;
+    align-items: center;
+
+    min-height: 34px;
+
+    margin-left: 6px;
+
+    padding:
+        0
+        10px;
+
+    border-radius: 7px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.92
+        );
+
+    text-decoration: none;
+
+    font-size: 11px;
+    font-weight: 500;
+
+    transition:
+        background
+        0.15s
+        ease;
+}
+
+
+.sidebar-group-content a:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.07
+        );
+}
+
+
+.sidebar-group-content a.active {
+    background: #26775d;
+
+    color: #ffffff;
+
+    box-shadow:
+        inset
+        2px
+        0
+        0
+        rgba(
+            255,
+            255,
+            255,
+            0.75
+        );
+}
+
+
+/* =====================================================
+   FOOTER / CERRAR SESIÓN
+===================================================== */
+
+.sidebar-footer {
+    margin-top: auto;
+
+    padding-top: 12px;
+}
+
+
+.sidebar-logout-button {
+    width: 100%;
+
+    min-height: 40px;
+
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.22
+        );
+
+    border-radius: 8px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.06
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.sidebar-logout-button:hover {
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.1
+        );
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .sidebar-nav {
+        gap: 7px;
+    }
+
+
+    .sidebar-fixed-links a {
+        min-height: 40px;
+
+        font-size: 12px;
+    }
+
+
+    .sidebar-group-toggle {
+        min-height: 40px;
+    }
+
+
+    .sidebar-group-title {
+        font-size: 9px;
+    }
+
+
+    .sidebar-group-content a {
+        min-height: 38px;
+
+        font-size: 11px;
+    }
+
+
+    .sidebar-footer {
+        padding-bottom:
+            calc(
+                10px
+                +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+}
+
+
+/* =====================================================
+   CORRECCIÓN FINAL DE DESPLEGABLES
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   CORRECCIÓN DESPLEGABLES SIDEBAR
+   EL ESTADO LO CONTROLA SOLO aria-expanded
+===================================================== */
+
+.sidebar-group .sidebar-group-content {
+    display: none !important;
+}
+
+.sidebar-group
+.sidebar-group-toggle[aria-expanded="true"]
++
+.sidebar-group-content {
+    display: flex !important;
+}
+
+
+/* Evitar que el enlace activo fuerce su grupo abierto */
+.sidebar-group:has(
+    .sidebar-group-content a.active
+)
+.sidebar-group-content {
+    display: none !important;
+}
+
+.sidebar-group:has(
+    .sidebar-group-content a.active
+)
+.sidebar-group-toggle[aria-expanded="true"]
++
+.sidebar-group-content {
+    display: flex !important;
+}

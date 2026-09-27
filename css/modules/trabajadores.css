@@ -1,0 +1,628 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · TRABAJADORES
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   ESTILOS BASE
+===================================================== */
+
+/* ==================================
+   TRABAJADORES
+================================== */
+
+.trabajadores-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+
+.trabajador-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+.trabajador-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+
+.trabajador-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--gc-green-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+
+.trabajador-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.trabajador-card h3 {
+    margin: 0 0 8px;
+}
+
+
+.trabajador-puesto {
+    color: var(--gc-green);
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+
+.trabajador-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+
+.trabajador-info div {
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+    padding: 12px;
+}
+
+
+.trabajador-info span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.trabajador-card p {
+    color: var(--gc-muted-strong);
+    font-size: 14px;
+}
+
+
+.trabajador-notas {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gc-border-soft);
+}
+
+
+.trabajador-notas span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.trabajador-notas p {
+    margin: 0;
+}
+
+
+@media (max-width: 1100px) {
+
+    .trabajadores-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .trabajadores-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   AJUSTES Y VERSIÓN PREMIUM
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - TRABAJADORES
+===================================================== */
+
+
+/* =====================================================
+   STATS
+===================================================== */
+
+.trabajadores-stats {
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.trabajadores-grid-premium {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+.trabajador-card-premium {
+    min-width: 0;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.trabajador-card-premium
+.trabajador-card-header {
+    display: flex;
+
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 13px;
+}
+
+
+.trabajador-identity {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+/* =====================================================
+   AVATAR
+===================================================== */
+
+.trabajador-avatar {
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            135deg,
+            #dff1e8,
+            #edf7f2
+        );
+
+    color: var(--gc-green-text);
+
+    font-size: 14px;
+    font-weight: 800;
+
+    border:
+        1px solid
+        #d1e9dc;
+}
+
+
+/* =====================================================
+   NOMBRE Y PUESTO
+===================================================== */
+
+.trabajador-identity h3 {
+    margin: 0;
+
+    overflow: hidden;
+
+    color: var(--gc-text);
+
+    font-size: 15px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+.trabajador-puesto {
+    margin: 4px 0 0 !important;
+
+    color: var(--gc-muted);
+
+    font-size: 10px !important;
+}
+
+
+/* =====================================================
+   ACCIONES
+===================================================== */
+
+.trabajador-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    flex: 0 0 auto;
+}
+
+
+.trabajador-actions
+.secondary-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    font-size: 10px;
+}
+
+
+.trabajador-actions
+.delete-button {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+
+    padding: 0;
+}
+
+
+/* =====================================================
+   ESTADO / PIN
+===================================================== */
+
+.trabajador-state-row {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-bottom: 12px;
+}
+
+
+.trabajador-status,
+.trabajador-pin-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 25px;
+
+    padding:
+        0
+        8px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.trabajador-status.activo {
+    background: #e3f5ea;
+
+    color: #176044;
+}
+
+
+.trabajador-status.inactivo {
+    background: #fde8e8;
+
+    color: #a42b2b;
+}
+
+
+.trabajador-pin-status {
+    background: #f1f4f2;
+
+    color: var(--gc-muted-strong);
+}
+
+
+/* =====================================================
+   DATOS
+===================================================== */
+
+.trabajador-info-premium {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
+}
+
+
+.trabajador-info-premium > div {
+    min-width: 0;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    background: #f7f9f7;
+}
+
+
+.trabajador-info-premium span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.trabajador-info-premium strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gc-text);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   CONTACTO
+===================================================== */
+
+.trabajador-contact {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+
+    margin-top: 11px;
+}
+
+
+.trabajador-contact span {
+    overflow: hidden;
+
+    color: var(--gc-muted-strong);
+
+    font-size: 10px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+
+/* =====================================================
+   NOTAS
+===================================================== */
+
+.trabajador-notas {
+    margin-top: 11px;
+
+    padding-top: 10px;
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.trabajador-notas span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.trabajador-notas p {
+    margin: 4px 0 0;
+
+    color: var(--gc-muted-strong);
+
+    font-size: 10px;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   FORMULARIO
+===================================================== */
+
+.trabajador-form-panel {
+    max-width: 900px;
+
+    margin:
+        0
+        auto;
+}
+
+
+.trabajador-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        14px
+        16px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1050px) {
+
+    .trabajadores-grid-premium {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .trabajadores-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px;
+    }
+
+
+    .trabajadores-grid-premium {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+    }
+
+
+    .trabajador-card-premium {
+        padding: 13px;
+
+        border-radius: 13px;
+    }
+
+
+    .trabajador-card-premium
+    .trabajador-card-header {
+        gap: 8px;
+
+        margin-bottom: 10px;
+    }
+
+
+    .trabajador-identity {
+        gap: 9px;
+    }
+
+
+    .trabajador-avatar {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+
+        font-size: 12px;
+    }
+
+
+    .trabajador-identity h3 {
+        font-size: 14px;
+    }
+
+
+    .trabajador-actions
+    .secondary-button {
+        min-height: 32px;
+
+        padding:
+            0
+            9px;
+    }
+
+
+    .trabajador-actions
+    .delete-button {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+    }
+
+
+    .trabajador-state-row {
+        margin-bottom: 9px;
+    }
+
+
+    .trabajador-info-premium {
+        gap: 7px;
+    }
+
+
+    .trabajador-info-premium > div {
+        padding: 9px;
+    }
+
+
+    .trabajador-form-grid {
+        grid-template-columns: 1fr;
+
+        gap: 0;
+    }
+
+}

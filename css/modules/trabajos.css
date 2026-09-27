@@ -1,0 +1,159 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · TRABAJOS Y TAREAS
+   Día 21 · Modularización CSS
+===================================================== */
+
+/* ==================================
+   TRABAJOS Y TAREAS
+================================== */
+
+.trabajos-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+
+.trabajo-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+.trabajo-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+
+.trabajo-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--gc-green-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+
+.trabajo-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.trabajo-card h3 {
+    margin: 0 0 7px;
+}
+
+
+.trabajo-tipo {
+    margin: 0 0 14px;
+    color: var(--gc-green);
+    font-weight: 600;
+}
+
+
+.trabajo-location,
+.trabajo-cultivo,
+.trabajo-fecha {
+    color: var(--gc-muted);
+    font-size: 14px;
+}
+
+
+.trabajo-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+
+.trabajo-info div {
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+    padding: 12px;
+}
+
+
+.trabajo-info span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.trabajo-state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 18px;
+}
+
+
+.task-state-button {
+    border: none;
+    border-radius: 8px;
+    padding: 8px 11px;
+    cursor: pointer;
+    background-color: var(--gc-green-soft);
+    color: var(--gc-green-text);
+}
+
+
+.task-state-button:hover {
+    background-color: #dcece4;
+}
+
+
+.trabajo-notas {
+    border-top: 1px solid var(--gc-border-soft);
+    margin-top: 18px;
+    padding-top: 14px;
+}
+
+
+.trabajo-notas span {
+    font-size: 12px;
+    color: var(--gc-muted);
+}
+
+
+.trabajo-notas p {
+    margin-bottom: 0;
+}
+
+
+@media (max-width: 1100px) {
+
+    .trabajos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .trabajos-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+.completed {
+    background-color: #e8f3ec;
+    color: #2d6b46;
+}

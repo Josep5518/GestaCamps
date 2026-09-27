@@ -1,0 +1,128 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · MAQUINARIA
+   Día 21 · Modularización CSS
+===================================================== */
+
+/* ==================================
+   MAQUINARIA
+================================== */
+
+.maquinaria-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+
+.maquina-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+.maquina-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+
+.maquina-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--gc-green-soft);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+}
+
+
+.maquina-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+
+.maquina-card h3 {
+    margin: 0 0 8px;
+}
+
+
+.maquina-tipo {
+    color: var(--gc-green);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+
+.maquina-modelo {
+    color: var(--gc-muted);
+    font-size: 14px;
+}
+
+
+.maquina-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+
+.maquina-info div {
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+    padding: 12px;
+}
+
+
+.maquina-info span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.maquina-card > p {
+    color: var(--gc-muted-strong);
+    font-size: 14px;
+}
+
+
+.maquina-notas {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gc-border-soft);
+}
+
+
+.maquina-notas span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.maquina-notas p {
+    margin: 0;
+}
+
+
+@media (max-width: 1100px) {
+
+    .maquinaria-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+

@@ -1,0 +1,33 @@
+/* =====================================================
+   GESTACAMPS
+   COMPONENTE · ACTIVIDAD
+===================================================== */
+
+.activity {
+    display: flex;
+
+    gap: 12px;
+
+    padding: 14px 0;
+
+    border-bottom: 1px solid var(--gc-border-soft);
+}
+
+
+.activity:last-child {
+    border-bottom: none;
+}
+
+
+.activity span {
+    font-size: 22px;
+}
+
+
+.activity p {
+    margin: 4px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 14px;
+}

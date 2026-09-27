@@ -1,0 +1,157 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · INVENTARIO
+   Día 21 · Modularización CSS
+===================================================== */
+
+/* ==================================
+   INVENTARIO
+================================== */
+
+.inventario-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+
+.inventario-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+.inventario-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+
+.inventario-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--gc-green-soft);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+
+.inventario-actions {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+
+.inventario-card h3 {
+    margin: 0 0 8px;
+}
+
+
+.inventario-categoria {
+    color: var(--gc-green);
+    font-weight: 600;
+}
+
+
+.inventario-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin: 18px 0;
+}
+
+
+.inventario-info div {
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+    padding: 12px;
+}
+
+
+.inventario-info span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.stock-status {
+    display: inline-block;
+    padding: 7px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+
+.stock-ok {
+    background-color: #dff3e9;
+    color: var(--gc-green-success);
+}
+
+
+.stock-low {
+    background-color: #fff4cf;
+    color: #896b00;
+}
+
+
+.stock-empty {
+    background-color: #ffe2e2;
+    color: #a33636;
+}
+
+
+.inventario-card > p {
+    color: var(--gc-muted-strong);
+    font-size: 14px;
+}
+
+
+.inventario-notas {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gc-border-soft);
+}
+
+
+.inventario-notas span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+
+.inventario-notas p {
+    margin: 0;
+}
+
+
+@media (max-width: 1100px) {
+
+    .inventario-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .inventario-grid {
+        grid-template-columns: 1fr;
+    }
+
+}

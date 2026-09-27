@@ -1,0 +1,280 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · LOGIN Y AUTENTICACIÓN
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   LOGIN / AUTENTICACIÓN
+===================================================== */
+
+/* =====================================================
+   LOGIN / AUTENTICACIÓN
+===================================================== */
+
+.auth-screen {
+    width: 100%;
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #eef5f0,
+            #f8faf8
+        );
+}
+
+.auth-card {
+    width: 100%;
+    max-width: 410px;
+
+    background: var(--gc-white);
+
+    border-radius: 20px;
+
+    padding: 32px;
+
+    box-shadow:
+        0 12px 40px
+        rgba(18, 55, 42, 0.12);
+}
+
+.auth-card.auth-card-setup {
+    max-width: 430px;
+}
+
+.auth-header {
+    text-align: center;
+
+    margin-bottom: 30px;
+}
+
+.auth-icon {
+    font-size: 52px;
+
+    line-height: 1;
+
+    margin-bottom: 10px;
+}
+
+.auth-card-setup .auth-icon {
+    font-size: 48px;
+}
+
+.auth-header h1 {
+    margin: 0;
+
+    color: var(--gc-green-dark);
+
+    font-size: 30px;
+}
+
+.auth-header p {
+    margin: 6px 0 0;
+
+    color: #6c7972;
+
+    font-size: 14px;
+}
+
+.auth-info {
+    padding: 14px;
+
+    margin-bottom: 22px;
+
+    border-radius: 12px;
+
+    background: #f2f7f4;
+
+    color: #46574f;
+
+    font-size: 14px;
+
+    line-height: 1.5;
+}
+
+.auth-error {
+    display: none;
+
+    padding: 11px 13px;
+
+    margin-bottom: 14px;
+
+    border-radius: 9px;
+
+    background: #fff0f0;
+
+    color: #a33232;
+}
+
+.auth-error.is-visible {
+    display: block;
+}
+
+.auth-card .primary-button,
+.auth-card .secondary-button {
+    width: 100%;
+}
+
+.auth-card .primary-button {
+    margin-top: 8px;
+}
+
+.auth-card .secondary-button {
+    margin-top: 10px;
+}
+
+
+/* =====================================================
+   CERRAR SESIÓN
+===================================================== */
+
+/* =====================================================
+   BOTÓN CERRAR SESIÓN
+===================================================== */
+
+.sidebar-logout-button {
+    width: calc(100% - 28px);
+
+    margin: 14px;
+
+    padding: 11px 12px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.18);
+
+    border-radius: 9px;
+
+    background:
+        rgba(255, 255, 255, 0.08);
+
+    color: var(--gc-white);
+
+    cursor: pointer;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 600;
+
+    transition:
+        background-color 0.18s ease,
+        border-color 0.18s ease;
+}
+
+.sidebar-logout-button:hover {
+    background:
+        rgba(255, 255, 255, 0.15);
+
+    border-color:
+        rgba(255, 255, 255, 0.26);
+}
+
+.sidebar-logout-button:focus-visible {
+    outline:
+        2px solid
+        rgba(255, 255, 255, 0.75);
+
+    outline-offset: 2px;
+}
+
+
+/* =====================================================
+   ESTADO DESHABILITADO
+===================================================== */
+
+.sidebar-logout-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =====================================================
+   RESPONSIVE MÓVIL
+===================================================== */
+
+/* =====================================================
+   LOGIN EN MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    body:has(.auth-screen) {
+        padding-top: 0;
+    }
+
+    .auth-screen {
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        padding:
+            calc(
+                18px +
+                env(safe-area-inset-top)
+            )
+            16px
+            calc(
+                18px +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+    .auth-card {
+        max-width: 100%;
+
+        padding: 26px 22px;
+
+        border-radius: 18px;
+    }
+
+    .auth-header {
+        margin-bottom: 25px;
+    }
+
+    .auth-icon {
+        font-size: 46px;
+    }
+
+    .auth-card-setup .auth-icon {
+        font-size: 44px;
+    }
+
+    .auth-header h1 {
+        font-size: 27px;
+    }
+
+    .seguridad-grid,
+    .backup-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 480px) {
+
+    .auth-screen {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .auth-card {
+        padding: 23px 18px;
+    }
+
+}

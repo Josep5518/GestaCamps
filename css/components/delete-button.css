@@ -1,0 +1,26 @@
+/* =====================================================
+   GESTACAMPS
+   COMPONENTE · ELIMINAR
+===================================================== */
+
+.delete-button {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+
+    border-radius: 7px;
+
+    cursor: pointer;
+
+    background-color: #fff0f0;
+
+    color: #b83a3a;
+
+    font-size: 20px;
+}
+
+
+.delete-button:hover {
+    background-color: #ffdede;
+}

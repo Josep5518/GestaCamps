@@ -1,0 +1,94 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · HISTORIAL
+   Día 21 · Modularización CSS
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - HISTORIAL · SEPARACIÓN FINAL
+===================================================== */
+
+.historial-item {
+    padding:
+        14px
+        0;
+
+    border-bottom:
+        1px solid
+        #e2e9e4;
+}
+
+
+.historial-item + .historial-item {
+    margin-top: 2px;
+}
+
+
+.historial-item-contenido {
+    padding-right: 2px;
+}
+
+
+.historial-item-titulo {
+    margin-bottom: 2px;
+}
+
+
+.historial-item-fecha {
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.historial-item-referencia {
+    margin-top: 5px;
+}
+
+
+.historial-item-usuario {
+    margin-top: 6px;
+}
+
+
+.historial-item-cambios {
+    margin-top: 5px;
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .historial-item {
+        padding:
+            13px
+            0;
+    }
+
+
+    .historial-item + .historial-item {
+        margin-top: 3px;
+    }
+
+
+    .historial-item-titulo {
+        line-height: 1.25;
+    }
+
+
+    .historial-item-fecha {
+        margin-top: 3px;
+    }
+
+
+    .historial-item-referencia,
+    .historial-item-usuario,
+    .historial-item-cambios {
+        line-height: 1.4;
+    }
+
+}

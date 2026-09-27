@@ -1,0 +1,74 @@
+/* =====================================================
+   GESTACAMPS
+   COMPONENTE · FORMULARIOS
+===================================================== */
+
+.form-panel {
+    max-width: 700px;
+
+    background-color: white;
+
+    padding: 30px;
+
+    border-radius: 14px;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+.form-group {
+    margin-bottom: 22px;
+}
+
+
+.form-group label {
+    display: block;
+
+    font-weight: 600;
+
+    margin-bottom: 8px;
+}
+
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    width: 100%;
+
+    border: 1px solid var(--gc-border);
+
+    border-radius: 8px;
+
+    padding: 12px;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    outline: none;
+
+    background-color: white;
+}
+
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    border-color: var(--gc-green);
+}
+
+
+.form-group input:disabled {
+    background-color: #f2f4f3;
+
+    color: #69736e;
+}
+
+
+.form-actions {
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 10px;
+}

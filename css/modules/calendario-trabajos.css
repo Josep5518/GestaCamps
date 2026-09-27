@@ -1,0 +1,275 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · CALENDARIO DE TRABAJOS
+   Día 21 · Modularización CSS
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - CALENDARIO DE TRABAJOS
+===================================================== */
+
+
+/* =====================================================
+   CALENDARIO - BASE
+===================================================== */
+
+.calendario-dia {
+    position: relative;
+
+    min-width: 0;
+
+    transition:
+        border-color
+        0.15s
+        ease,
+        background
+        0.15s
+        ease;
+}
+
+
+.calendario-dia:hover {
+    border-color: #cfe1d7 !important;
+}
+
+
+/* =====================================================
+   EVENTOS
+===================================================== */
+
+.evento-calendario {
+    transition:
+        transform
+        0.12s
+        ease,
+        box-shadow
+        0.12s
+        ease;
+}
+
+
+.evento-calendario:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+        0 2px 6px
+        rgba(
+            18,
+            55,
+            42,
+            0.08
+        );
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .calendario-dia {
+        min-height: 82px !important;
+
+        padding: 5px !important;
+    }
+
+
+    .evento-calendario {
+        padding: 4px !important;
+    }
+
+
+    .evento-calendario strong {
+        font-size: 9px !important;
+    }
+
+
+    .evento-calendario span {
+        font-size: 7px !important;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ---------------------------------------------
+       CABECERA DEL CALENDARIO
+    ---------------------------------------------- */
+
+    #contenidoTrabajos > section {
+        padding: 12px !important;
+
+        border-radius: 13px !important;
+    }
+
+
+    #contenidoTrabajos > section > div:first-child {
+        margin-bottom: 10px !important;
+
+        gap: 8px !important;
+    }
+
+
+    #contenidoTrabajos > section > div:first-child h3 {
+        font-size: 17px !important;
+    }
+
+
+    #contenidoTrabajos > section > div:first-child p {
+        margin-top: 2px !important;
+
+        font-size: 10px !important;
+    }
+
+
+    /* ---------------------------------------------
+       BOTONES MES
+    ---------------------------------------------- */
+
+    #mesAnterior,
+    #mesSiguiente {
+        width: 38px;
+        min-width: 38px;
+
+        min-height: 36px;
+
+        padding: 0 !important;
+    }
+
+
+    #irHoy {
+        min-height: 36px;
+
+        padding:
+            0
+            11px !important;
+    }
+
+
+    /* ---------------------------------------------
+       GRID CALENDARIO
+    ---------------------------------------------- */
+
+    #contenidoTrabajos > section > div:nth-child(2) {
+        overflow-x: visible !important;
+    }
+
+
+    #contenidoTrabajos > section > div:nth-child(2) > div {
+        gap: 4px !important;
+    }
+
+
+    /* ---------------------------------------------
+       DÍAS
+    ---------------------------------------------- */
+
+    .calendario-dia {
+        min-height: 68px !important;
+
+        padding: 4px !important;
+
+        border-radius: 8px !important;
+    }
+
+
+    .calendario-dia > div:first-child {
+        margin-bottom: 3px !important;
+    }
+
+
+    .calendario-dia > div:first-child strong {
+        font-size: 10px !important;
+    }
+
+
+    .calendario-dia > div:first-child span {
+        display: none !important;
+    }
+
+
+    /* ---------------------------------------------
+       EVENTOS
+    ---------------------------------------------- */
+
+    .evento-calendario {
+        min-height: 24px;
+
+        padding:
+            3px
+            3px !important;
+
+        border-left-width: 2px !important;
+
+        border-radius: 5px !important;
+    }
+
+
+    .evento-calendario strong {
+        font-size: 8px !important;
+
+        line-height: 1.15 !important;
+    }
+
+
+    .evento-calendario span {
+        display: none !important;
+    }
+
+
+    /* ---------------------------------------------
+       LEYENDA
+    ---------------------------------------------- */
+
+    #contenidoTrabajos > section > div:last-child {
+        margin-top: 10px !important;
+
+        gap:
+            5px
+            9px !important;
+
+        font-size: 9px !important;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL MUY PEQUEÑO
+===================================================== */
+
+@media (max-width: 390px) {
+
+    .calendario-dia {
+        min-height: 62px !important;
+
+        padding: 3px !important;
+    }
+
+
+    .calendario-dia > div:first-child strong {
+        font-size: 9px !important;
+    }
+
+
+    .evento-calendario {
+        min-height: 21px;
+
+        padding:
+            2px
+            3px !important;
+    }
+
+
+    .evento-calendario strong {
+        font-size: 7px !important;
+    }
+
+}

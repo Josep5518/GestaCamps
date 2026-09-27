@@ -1,0 +1,872 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · FICHAJES
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   ESTILOS BASE
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - FICHAJES
+===================================================== */
+
+
+/* =====================================================
+   RESUMEN
+===================================================== */
+
+.fichajes-stats {
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   ZONA PRINCIPAL
+===================================================== */
+
+.fichajes-main-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    margin-bottom: 22px;
+}
+
+
+.fichajes-register-card,
+.fichajes-working-card {
+    min-width: 0;
+}
+
+
+/* =====================================================
+   CABECERAS
+===================================================== */
+
+.fichajes-panel-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.fichajes-panel-header h3 {
+    margin: 0;
+}
+
+
+.fichajes-panel-header p {
+    margin: 4px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   CONTADORES
+===================================================== */
+
+.fichajes-counter {
+    min-width: 30px;
+    height: 30px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 auto;
+
+    padding: 0 9px;
+
+    border-radius: 999px;
+
+    background: var(--gc-green-soft);
+
+    color: var(--gc-green-text);
+
+    font-size: 11px;
+    font-weight: 700;
+}
+
+
+.fichajes-counter-success {
+    background: #e4f5eb;
+
+    color: #176044;
+}
+
+
+.fichajes-counter-warning {
+    background: #fff4d8;
+
+    color: #745500;
+}
+
+
+/* =====================================================
+   REGISTRO POR PIN
+===================================================== */
+
+.fichajes-pin-area {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+.fichajes-pin-icon {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--gc-green-soft);
+
+    font-size: 20px;
+}
+
+
+.fichajes-pin-area label {
+    display: block;
+
+    color: var(--gc-text);
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.fichajes-pin-area p {
+    margin: 3px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.fichajes-pin-input {
+    width: 100%;
+
+    min-height: 48px;
+
+    padding:
+        0
+        14px;
+
+    border:
+        1px solid
+        var(--gc-border);
+
+    border-radius: 11px;
+
+    background: white;
+
+    color: var(--gc-text);
+
+    font-size: 24px;
+    font-weight: 700;
+
+    letter-spacing: 0.32em;
+
+    text-align: center;
+}
+
+
+.fichajes-pin-input:focus {
+    outline: none;
+
+    border-color: var(--gc-green);
+
+    box-shadow:
+        0
+        0
+        0
+        3px
+        rgba(
+            36,
+            107,
+            82,
+            0.1
+        );
+}
+
+
+.fichajes-register-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 9px;
+
+    margin-top: 13px;
+}
+
+
+.fichajes-register-actions button {
+    width: 100%;
+
+    min-height: 40px;
+
+    justify-content: center;
+}
+
+
+/* =====================================================
+   TRABAJANDO AHORA
+===================================================== */
+
+.fichajes-working-list {
+    display: grid;
+
+    gap: 8px;
+}
+
+
+.fichajes-worker {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        11px
+        0;
+
+    border-bottom:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.fichajes-worker:last-child {
+    border-bottom: 0;
+}
+
+
+.fichajes-worker-status {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: #e7f6ed;
+}
+
+
+.fichajes-worker strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+
+.fichajes-worker p {
+    margin: 3px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   SECCIONES
+===================================================== */
+
+.fichajes-section {
+    margin-top: 18px;
+
+    overflow: hidden;
+}
+
+
+.fichajes-section-body {
+    padding-top: 4px;
+}
+
+
+/* =====================================================
+   CORRECCIONES
+===================================================== */
+
+.fichajes-corrections-list {
+    display: grid;
+
+    gap: 10px;
+}
+
+
+.fichajes-correction-card {
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+}
+
+
+.fichajes-correction-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 12px;
+}
+
+
+.fichajes-correction-header strong {
+    display: block;
+
+    font-size: 13px;
+}
+
+
+.fichajes-correction-header p {
+    margin: 3px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.fichajes-correction-status {
+    flex: 0 0 auto;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        5px
+        9px;
+
+    border-radius: 999px;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.fichajes-correction-status.pendiente {
+    background: #fff4d8;
+
+    color: #745500;
+}
+
+
+.fichajes-correction-status.aprobada {
+    background: #def5e8;
+
+    color: #176044;
+}
+
+
+.fichajes-correction-status.rechazada {
+    background: #fde8e8;
+
+    color: #a42b2b;
+}
+
+
+.fichajes-correction-data {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
+
+    margin-top: 12px;
+}
+
+
+.fichajes-correction-data > div {
+    min-width: 0;
+
+    padding: 9px;
+
+    border-radius: 9px;
+
+    background: #f7f9f7;
+}
+
+
+.fichajes-correction-data span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.fichajes-correction-data strong {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 11px;
+
+    overflow-wrap: anywhere;
+}
+
+
+.fichajes-correction-reason {
+    margin-top: 10px;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    background: #f7f9f7;
+}
+
+
+.fichajes-correction-reason span {
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.fichajes-correction-reason p {
+    margin: 4px 0 0;
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+.fichajes-correction-resolved {
+    margin: 9px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.fichajes-correction-actions {
+    display: flex;
+
+    gap: 8px;
+
+    flex-wrap: wrap;
+
+    margin-top: 12px;
+}
+
+
+.fichajes-correction-actions button {
+    min-height: 36px;
+}
+
+
+.fichajes-permission-inline {
+    margin-top: 10px;
+
+    padding: 9px 10px;
+
+    border-radius: 9px;
+
+    background: #fff7e5;
+
+    color: #7b5b12;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   SIN PERMISO
+===================================================== */
+
+.fichajes-permission-warning {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding: 14px;
+
+    border-radius: 11px;
+
+    background: #fff7e5;
+}
+
+
+.fichajes-permission-warning > span {
+    font-size: 20px;
+}
+
+
+.fichajes-permission-warning strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+
+.fichajes-permission-warning p {
+    margin: 3px 0 0;
+
+    color: #7b5b12;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   HISTORIAL
+===================================================== */
+
+.fichajes-history {
+    display: grid;
+}
+
+
+.fichajes-history-row {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    padding:
+        12px
+        0;
+
+    border-bottom:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.fichajes-history-row:last-child {
+    border-bottom: 0;
+}
+
+
+.fichajes-history-icon {
+    width: 36px;
+    height: 36px;
+
+    flex: 0 0 36px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    font-size: 16px;
+    font-weight: 800;
+}
+
+
+.fichajes-history-icon.entrada {
+    background: #e5f6ec;
+
+    color: #18764f;
+}
+
+
+.fichajes-history-icon.salida {
+    background: #fdeaea;
+
+    color: #b13b3b;
+}
+
+
+.fichajes-history-main {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.fichajes-history-main strong {
+    display: block;
+
+    font-size: 11px;
+}
+
+
+.fichajes-history-main p {
+    margin: 3px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.fichajes-history-main small {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   VACÍO
+===================================================== */
+
+.fichajes-empty {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    min-height: 92px;
+
+    padding: 10px 0;
+}
+
+
+.fichajes-empty > span {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--gc-green-soft);
+
+    font-size: 18px;
+}
+
+
+.fichajes-empty strong {
+    display: block;
+
+    font-size: 12px;
+}
+
+
+.fichajes-empty p {
+    margin: 3px 0 0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1050px) {
+
+    .fichajes-main-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .fichajes-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px;
+    }
+
+
+    .fichajes-main-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-bottom: 16px;
+    }
+
+
+    .fichajes-register-card,
+    .fichajes-working-card,
+    .fichajes-section {
+        border-radius: 13px;
+    }
+
+
+    .fichajes-pin-input {
+        min-height: 44px;
+
+        font-size: 21px;
+    }
+
+
+    .fichajes-register-actions {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 7px;
+    }
+
+
+    .fichajes-register-actions button {
+        padding:
+            0
+            8px;
+
+        font-size: 10px;
+    }
+
+
+    .fichajes-correction-data {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .fichajes-correction-data > div:last-child {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+
+    .fichajes-correction-actions {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .fichajes-correction-actions button {
+        width: 100%;
+
+        justify-content: center;
+
+        font-size: 10px;
+    }
+
+
+    .fichajes-history-row .status {
+        padding:
+            4px
+            6px;
+
+        font-size: 8px;
+    }
+
+}
+
+
+/* =====================================================
+   AJUSTE FINO MÓVIL
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - AJUSTE FINO FICHAJES MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .fichajes-register-card {
+        padding: 13px;
+    }
+
+    .fichajes-register-card .panel-header {
+        margin-bottom: 10px;
+    }
+
+    .fichajes-pin-area {
+        margin-bottom: 10px;
+    }
+
+    .fichajes-pin-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        font-size: 17px;
+    }
+
+    .fichajes-pin-input {
+        min-height: 42px;
+    }
+
+    .fichajes-register-actions {
+        margin-top: 10px;
+    }
+
+    .fichajes-working-card {
+        padding: 13px;
+    }
+
+    .fichajes-empty {
+        min-height: 72px;
+    }
+
+}

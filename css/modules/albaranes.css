@@ -1,0 +1,477 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · ALBARANES
+   Día 21 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   ESTILOS BASE
+===================================================== */
+
+/* ==================================
+   ALBARANES
+================================== */
+
+.albaranes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 20px;
+}
+
+.albaran-card {
+    background-color: white;
+    border-radius: 14px;
+    padding: 22px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.albaran-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+}
+
+.albaran-icon {
+    width: 48px;
+    height: 48px;
+    background-color: var(--gc-green-soft);
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px;
+}
+
+.albaran-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.albaran-card h3 {
+    margin: 0 0 12px;
+}
+
+.albaran-cliente {
+    font-weight: 600;
+}
+
+.albaran-location {
+    color: var(--gc-muted);
+}
+
+.albaran-producto {
+    margin: 18px 0 10px;
+    padding: 12px;
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+}
+
+.albaran-producto span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.albaran-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+.albaran-info div {
+    background-color: var(--gc-surface-soft);
+    border-radius: 9px;
+    padding: 12px;
+}
+
+.albaran-info span,
+.albaran-total span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.albaran-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-top: 10px;
+    padding: 14px;
+    background-color: var(--gc-green-soft);
+    border-radius: 9px;
+}
+
+.albaran-total strong {
+    font-size: 20px;
+    color: var(--gc-green-text);
+}
+
+.albaran-card > p {
+    color: var(--gc-muted-strong);
+    font-size: 14px;
+}
+
+.albaran-status {
+    display: inline-block;
+    margin-top: 8px;
+    padding: 7px 11px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.albaran-pendiente-status {
+    background-color: #fff4cf;
+    color: #896b00;
+}
+
+.albaran-entregado-status {
+    background-color: #dff3e9;
+    color: var(--gc-green-success);
+}
+
+.albaran-cancelado-status {
+    background-color: #ffe2e2;
+    color: #a33636;
+}
+
+.albaran-facturado {
+    background-color: #e7e7f8;
+    color: #4e4b91;
+}
+
+.albaran-state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.albaran-notas {
+    margin-top: 18px;
+    padding-top: 14px;
+    border-top: 1px solid var(--gc-border-soft);
+}
+
+.albaran-notas span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 5px;
+}
+
+.albaran-notas p {
+    margin: 0;
+}
+
+.invoice-lock {
+    background-color: #f0f0fa;
+    color: #57538d;
+    padding: 8px 11px;
+    border-radius: 8px;
+    font-size: 12px;
+}
+
+.albaran-summary-note {
+    display: inline-block;
+    background-color: white;
+    padding: 10px 14px;
+    border-radius: 9px;
+    box-shadow: var(--gc-shadow-card);
+    margin-bottom: 5px;
+    color: var(--gc-muted-strong);
+    font-size: 13px;
+}
+
+@media (max-width: 1100px) {
+
+    .albaranes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 650px) {
+
+    .albaranes-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   CAMPAÑA
+===================================================== */
+
+/* ==================================
+   ALBARANES - CAMPANYA
+================================== */
+
+.albaranes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.albaran-card {
+    background: white;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.albaran-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.albaran-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: var(--gc-green-soft);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.albaran-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.albaran-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+}
+
+.albaran-info-grid > div {
+    background: #f5f7f5;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.albaran-info-grid span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.albaran-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--gc-green-soft);
+    border-radius: 10px;
+    padding: 14px;
+    margin-top: 10px;
+}
+
+.albaran-total strong {
+    color: var(--gc-green-success);
+    font-size: 18px;
+}
+
+.albaran-estado {
+    display: inline-block;
+    padding: 6px 10px;
+    background: var(--gc-green-soft);
+    border-radius: 999px;
+    font-size: 12px;
+}
+
+@media (max-width: 1200px) {
+
+    .albaranes-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+@media (max-width: 750px) {
+
+    .albaranes-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE MÓVIL
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 17 - ALBARANES MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ================================================
+       AVISO DE STOCK
+    ================================================= */
+
+    #listaAlbaranes + * ,
+    .albaranes-stock-info,
+    .albaran-stock-info,
+    .stock-info {
+        font-size: 10px;
+        line-height: 1.4;
+    }
+
+
+    /* ================================================
+       GRID
+    ================================================= */
+
+    .albaranes-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 12px;
+
+        margin-top: 12px;
+    }
+
+
+    /* ================================================
+       TARJETA
+    ================================================= */
+
+    .albaran-card {
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+
+    .albaran-card-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        margin-bottom: 10px;
+    }
+
+
+    .albaran-card h3 {
+        margin:
+            5px
+            0
+            8px;
+
+        font-size: 16px;
+    }
+
+
+    /* ================================================
+       ESTADO
+    ================================================= */
+
+    .albaran-card .status,
+    .albaran-card .estado,
+    .albaran-card .badge {
+        padding:
+            5px
+            8px;
+
+        font-size: 10px;
+    }
+
+
+    /* ================================================
+       DATOS GENERALES
+    ================================================= */
+
+    .albaran-card p {
+        margin:
+            4px
+            0;
+
+        font-size: 11px;
+    }
+
+
+    /* ================================================
+       LÍNEAS
+    ================================================= */
+
+    .albaran-linea,
+    .albaran-linea-card {
+        margin-top: 10px;
+
+        padding: 11px;
+
+        border-radius: 10px;
+    }
+
+
+    .albaran-linea h4,
+    .albaran-linea-card h4 {
+        margin:
+            0
+            0
+            6px;
+
+        font-size: 13px;
+    }
+
+
+    .albaran-linea-grid,
+    .albaran-linea-datos {
+        gap: 7px;
+    }
+
+
+    .albaran-linea-grid > div,
+    .albaran-linea-datos > div {
+        min-width: 0;
+    }
+
+
+    .albaran-linea span,
+    .albaran-linea-card span {
+        font-size: 9px;
+    }
+
+
+    .albaran-linea strong,
+    .albaran-linea-card strong {
+        font-size: 12px;
+    }
+
+
+    /* ================================================
+       TOTAL
+    ================================================= */
+
+    .albaran-total {
+        margin-top: 10px;
+
+        padding: 10px;
+
+        border-radius: 9px;
+    }
+
+
+    .albaran-total span {
+        font-size: 10px;
+    }
+
+
+    .albaran-total strong {
+        font-size: 14px;
+    }
+
+}
