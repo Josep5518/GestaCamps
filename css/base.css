@@ -1,0 +1,48 @@
+/* =====================================================
+   GESTACAMPS
+   VARIABLES GLOBALES
+===================================================== */
+
+:root {
+    --gc-green-dark: #12372a;
+    --gc-green: #246b52;
+    --gc-green-hover: #1b5842;
+    --gc-green-text: #175640;
+    --gc-green-success: #176044;
+    --gc-green-soft: #edf6f1;
+
+    --gc-bg: #f4f7f2;
+    --gc-text: #24352e;
+    --gc-muted: #78837d;
+    --gc-muted-strong: #5f6d66;
+    --gc-surface-soft: #f7f9f6;
+
+    --gc-border: #dce3df;
+    --gc-border-soft: #edf0ed;
+
+    --gc-white: #ffffff;
+    --gc-sidebar-muted: #cfded6;
+
+    --gc-shadow-card: 0 3px 12px rgba(0, 0, 0, 0.05);
+}
+
+
+/* =====================================================
+   GESTACAMPS
+   BASE
+===================================================== */
+
+* {
+    box-sizing: border-box;
+}
+
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: var(--gc-bg);
+    color: var(--gc-text);
+}
