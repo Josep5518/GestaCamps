@@ -24,3 +24,13 @@
 
     color: var(--gc-green-success);
 }
+
+/* =====================================================
+   ESTADO COMPLETADO
+===================================================== */
+
+.completed {
+    background-color: #e8f3ec;
+
+    color: #2d6b46;
+}

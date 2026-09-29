@@ -182,10 +182,6 @@
    RESPONSIVE DEL PERFIL BASE
 ===================================================== */
 
-/* ==================================
-   RESPONSIVE
-================================== */
-
 @media (max-width: 1000px) {
 
     .perfil-layout {
@@ -223,10 +219,6 @@
    MENSAJES DE PERFIL
 ===================================================== */
 
-/* ==================================
-   MENSAJE PERFIL
-================================== */
-
 .perfil-success-message {
     background-color: #dff3e9;
     color: var(--gc-green-success);
@@ -242,19 +234,9 @@
    AJUSTES INTERMEDIOS
 ===================================================== */
 
-/* ==========================================
-   PERFIL Y EXPLOTACIÓN
-========================================== */
-
-
-/* Zona de documentos */
-
 .perfil-documentos {
     width: 100%;
 }
-
-
-/* Responsive */
 
 @media (max-width: 900px) {
 
@@ -263,7 +245,6 @@
     }
 
 }
-
 
 .perfil-form-panel {
     width: 100%;
@@ -286,11 +267,6 @@
 /* =====================================================
    VERSIÓN AISLADA DEL PERFIL
 ===================================================== */
-
-/* =========================================================
-   PERFIL Y EXPLOTACIÓN - VERSIÓN FINAL AISLADA
-   Compatible con el PerfilView.js actual
-========================================================= */
 
 .perfil-top-grid {
     width: 100%;
@@ -388,7 +364,9 @@
 }
 
 
-/* FORMULARIO */
+/* =====================================================
+   FORMULARIO
+===================================================== */
 
 .perfil-edit-card {
     width: 100%;
@@ -493,7 +471,9 @@
 }
 
 
-/* DOCUMENTOS */
+/* =====================================================
+   DOCUMENTOS
+===================================================== */
 
 .perfil-docs {
     width: 100%;
@@ -575,7 +555,9 @@
 }
 
 
-/* RESPONSIVE PERFIL */
+/* =====================================================
+   RESPONSIVE PERFIL
+===================================================== */
 
 @media (max-width: 900px) {
 
@@ -604,10 +586,6 @@
 
 /* =====================================================
    SEGURIDAD, BACKUP Y ZONA DE PELIGRO
-===================================================== */
-
-/* =====================================================
-   PERFIL - SECCIONES EXTRA
 ===================================================== */
 
 .perfil-section-spaced {
@@ -773,6 +751,7 @@
 .backup-action {
     margin-top: 14px;
 }
+
 .backup-file-input {
     width: 100%;
 
@@ -877,12 +856,7 @@
 
 
 /* =====================================================
-   VERSIÓN DÍA 17 · PERFIL Y EXPLOTACIÓN
-===================================================== */
-
-/* =====================================================
-   GESTACAMPS
-   DÍA 17 - PERFIL Y EXPLOTACIÓN
+   DÍA 17 · PERFIL Y EXPLOTACIÓN
 ===================================================== */
 
 
@@ -913,7 +887,6 @@
 
     box-shadow: var(--gc-shadow-card);
 }
-
 
 .perfil-hero-avatar {
     width: 54px;
@@ -948,13 +921,11 @@
     font-weight: 800;
 }
 
-
 .perfil-hero-main {
     min-width: 0;
 
     flex: 1;
 }
-
 
 .perfil-hero-label {
     display: block;
@@ -977,7 +948,6 @@
     letter-spacing: 0.08em;
 }
 
-
 .perfil-hero-main h2 {
     margin: 0;
 
@@ -985,7 +955,6 @@
 
     font-size: 20px;
 }
-
 
 .perfil-hero-main p {
     margin: 4px 0 0;
@@ -1000,7 +969,6 @@
 
     font-size: 11px;
 }
-
 
 .perfil-hero-explotacion {
     min-width: 160px;
@@ -1027,7 +995,6 @@
         );
 }
 
-
 .perfil-hero-explotacion span {
     display: block;
 
@@ -1041,7 +1008,6 @@
 
     font-size: 9px;
 }
-
 
 .perfil-hero-explotacion strong {
     display: block;
@@ -1091,7 +1057,6 @@
     box-shadow: var(--gc-shadow-card);
 }
 
-
 .perfil-card-header {
     display: flex;
     align-items: center;
@@ -1100,7 +1065,6 @@
 
     margin-bottom: 14px;
 }
-
 
 .perfil-icon {
     width: 40px;
@@ -1119,13 +1083,11 @@
     font-size: 18px;
 }
 
-
 .perfil-card-header h3 {
     margin: 0;
 
     font-size: 14px;
 }
-
 
 .perfil-card-header p {
     margin: 3px 0 0;
@@ -1152,7 +1114,6 @@
     gap: 8px;
 }
 
-
 .perfil-summary-item {
     min-width: 0;
 
@@ -1163,7 +1124,6 @@
     background: #f7f9f7;
 }
 
-
 .perfil-summary-item span {
     display: block;
 
@@ -1171,7 +1131,6 @@
 
     font-size: 9px;
 }
-
 
 .perfil-summary-item strong {
     display: block;
@@ -1203,7 +1162,6 @@
     background: #f7f9f7;
 }
 
-
 .perfil-user-avatar {
     width: 42px;
     height: 42px;
@@ -1224,13 +1182,11 @@
     font-weight: 800;
 }
 
-
 .perfil-user-box strong {
     display: block;
 
     font-size: 12px;
 }
-
 
 .perfil-user-box span {
     display: block;
@@ -1251,18 +1207,15 @@
     margin-top: 18px;
 }
 
-
 .perfil-edit-header {
     margin-bottom: 14px;
 }
-
 
 .perfil-edit-header h3 {
     margin: 0;
 
     font-size: 15px;
 }
-
 
 .perfil-edit-header p {
     margin: 4px 0 0;
@@ -1271,7 +1224,6 @@
 
     font-size: 10px;
 }
-
 
 .perfil-form-layout {
     display: grid;
@@ -1287,11 +1239,9 @@
         15px;
 }
 
-
 .perfil-field {
     min-width: 0;
 }
-
 
 .perfil-field label {
     display: block;
@@ -1303,7 +1253,6 @@
     font-size: 10px;
     font-weight: 700;
 }
-
 
 .perfil-field input {
     width: 100%;
@@ -1325,7 +1274,6 @@
     color: var(--gc-text);
 }
 
-
 .perfil-field input:focus {
     outline: none;
 
@@ -1344,14 +1292,12 @@
         );
 }
 
-
 .perfil-full {
     grid-column:
         1
         /
         -1;
 }
-
 
 .perfil-divider {
     height: 1px;
@@ -1370,7 +1316,6 @@
     font-size: 13px;
 }
 
-
 .perfil-docs-header p {
     margin: 3px 0 10px;
 
@@ -1378,7 +1323,6 @@
 
     font-size: 9px;
 }
-
 
 .perfil-doc-option {
     display: flex;
@@ -1393,18 +1337,15 @@
     background: #f7f9f7;
 }
 
-
 .perfil-doc-option input {
     margin-top: 2px;
 }
-
 
 .perfil-doc-option strong {
     display: block;
 
     font-size: 11px;
 }
-
 
 .perfil-doc-option span {
     display: block;
@@ -1417,7 +1358,6 @@
 
     line-height: 1.4;
 }
-
 
 .perfil-actions {
     display: flex;
@@ -1453,11 +1393,9 @@
     margin-top: 18px;
 }
 
-
 .perfil-section-title {
     margin-bottom: 12px;
 }
-
 
 .perfil-section-title > div {
     display: flex;
@@ -1465,7 +1403,6 @@
 
     gap: 10px;
 }
-
 
 .perfil-section-icon {
     width: 38px;
@@ -1484,13 +1421,11 @@
     font-size: 17px;
 }
 
-
 .perfil-section-title h3 {
     margin: 0;
 
     font-size: 14px;
 }
-
 
 .perfil-section-title p {
     margin: 3px 0 0;
@@ -1509,7 +1444,6 @@
     margin-top: 18px;
 }
 
-
 .backup-grid {
     display: grid;
 
@@ -1522,7 +1456,6 @@
     gap: 12px;
 }
 
-
 .backup-card {
     padding: 14px;
 
@@ -1530,7 +1463,6 @@
 
     background: #f7f9f7;
 }
-
 
 .backup-icon {
     width: 38px;
@@ -1549,13 +1481,11 @@
     font-size: 17px;
 }
 
-
 .backup-card h3 {
     margin: 0;
 
     font-size: 12px;
 }
-
 
 .backup-description {
     min-height: 42px;
@@ -1572,13 +1502,11 @@
     line-height: 1.4;
 }
 
-
 .backup-action {
     width: 100%;
 
     justify-content: center;
 }
-
 
 .backup-last {
     margin:
@@ -1590,7 +1518,6 @@
 
     font-size: 8px;
 }
-
 
 .backup-file-input {
     width: 100%;
@@ -1617,7 +1544,6 @@
         var(--gc-border-soft);
 }
 
-
 .backup-preview > strong {
     display: block;
 
@@ -1626,13 +1552,11 @@
     font-size: 11px;
 }
 
-
 .backup-preview p {
     margin: 4px 0;
 
     font-size: 9px;
 }
-
 
 .backup-preview-grid {
     display: grid;
@@ -1648,7 +1572,6 @@
     margin-top: 8px;
 }
 
-
 .backup-preview-grid span {
     padding: 6px;
 
@@ -1658,7 +1581,6 @@
 
     font-size: 8px;
 }
-
 
 .backup-restore-button {
     width: 100%;
@@ -1712,7 +1634,6 @@
         #f4d7d7;
 }
 
-
 .perfil-danger-zone h3 {
     margin: 0;
 
@@ -1720,7 +1641,6 @@
 
     font-size: 12px;
 }
-
 
 .perfil-danger-zone p {
     margin: 4px 0 0;
@@ -1766,7 +1686,6 @@
         border-radius: 14px;
     }
 
-
     .perfil-hero-avatar {
         width: 46px;
         height: 46px;
@@ -1776,11 +1695,9 @@
         font-size: 14px;
     }
 
-
     .perfil-hero-main h2 {
         font-size: 18px;
     }
-
 
     .perfil-hero-explotacion {
         grid-column:
@@ -1793,13 +1710,11 @@
         padding: 9px 10px;
     }
 
-
     .perfil-top-grid {
         grid-template-columns: 1fr;
 
         gap: 12px;
     }
-
 
     .perfil-card,
     .perfil-edit-card,
@@ -1809,7 +1724,6 @@
         border-radius: 12px;
     }
 
-
     .perfil-summary-grid {
         grid-template-columns:
             repeat(
@@ -1818,23 +1732,19 @@
             );
     }
 
-
     .perfil-form-layout {
         grid-template-columns: 1fr;
 
         gap: 11px;
     }
 
-
     .perfil-full {
         grid-column: auto;
     }
 
-
     .backup-grid {
         grid-template-columns: 1fr;
     }
-
 
     .perfil-danger-zone {
         flex-direction: column;
@@ -1842,8 +1752,41 @@
         align-items: stretch;
     }
 
-
     .perfil-danger-zone button {
+        width: 100%;
+    }
+
+}
+
+
+/* =====================================================
+   RESPONSIVE EXTRA · SEGURIDAD Y BACKUP
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .seguridad-grid,
+    .backup-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+@media (max-width: 480px) {
+
+    .seguridad-card,
+    .backup-card,
+    .perfil-danger-zone {
+        padding: 16px;
+    }
+
+    .backup-preview-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .seguridad-save-button,
+    .backup-action,
+    .backup-restore-button {
         width: 100%;
     }
 

@@ -146,3 +146,52 @@
 .cultivo-notas p {
     margin: 0;
 }
+
+
+/* =====================================================
+   CULTIVOS · CAMPAÑA
+===================================================== */
+
+/* ==================================
+   CULTIVO - CAMPANYA
+================================== */
+
+.cultivo-campania {
+    margin: 10px 0 16px;
+    color: var(--gc-green-success);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.cultivo-sin-campania {
+    color: #8a928e;
+    font-weight: 400;
+}
+
+.cultivo-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.cultivo-info-grid > div {
+    background-color: #f5f7f5;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.cultivo-info-grid span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.cultivo-notas {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid var(--gc-border-soft);
+    color: #68756f;
+    font-size: 13px;
+}

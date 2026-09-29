@@ -157,3 +157,474 @@
     background-color: #e8f3ec;
     color: #2d6b46;
 }
+
+
+/* =====================================================
+   TRABAJOS · CAMPAÑA
+===================================================== */
+
+/* ==================================
+   TRABAJOS - CAMPANYA
+================================== */
+
+.trabajo-campania {
+    margin: 10px 0 14px;
+    color: var(--gc-green-success);
+    font-weight: 600;
+    font-size: 14px;
+}
+
+.trabajo-sin-campania {
+    color: #8a928e;
+    font-weight: 400;
+}
+
+.trabajo-linea {
+    margin: 11px 0;
+    color: #68756f;
+}
+
+.trabajo-info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin: 14px 0;
+}
+
+.trabajo-info-grid > div {
+    background-color: #f5f7f5;
+    padding: 12px;
+    border-radius: 10px;
+}
+
+.trabajo-info-grid span {
+    display: block;
+    color: var(--gc-muted);
+    font-size: 12px;
+    margin-bottom: 4px;
+}
+
+.trabajo-state-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 15px;
+}
+
+
+/* =====================================================
+   DÍA 18 · TRABAJOS Y TAREAS
+===================================================== */
+
+/* =====================================================
+   GESTACAMPS
+   DÍA 18 - TRABAJOS Y TAREAS
+===================================================== */
+
+
+/* =====================================================
+   GRID DE TAREAS
+===================================================== */
+
+.trabajos-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+.trabajo-card {
+    min-width: 0;
+
+    padding: 15px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: #ffffff;
+
+    box-shadow: var(--gc-shadow-card);
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.trabajo-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+
+.trabajo-icon {
+    width: 40px;
+    height: 40px;
+
+    flex: 0 0 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--gc-green-soft);
+
+    font-size: 18px;
+}
+
+
+.trabajo-actions {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+.trabajo-actions .secondary-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    font-size: 10px;
+}
+
+
+.trabajo-actions .delete-button {
+    width: 34px;
+    min-width: 34px;
+    height: 34px;
+
+    padding: 0;
+}
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.trabajo-card > h3 {
+    margin:
+        0
+        0
+        4px;
+
+    color: var(--gc-text);
+
+    font-size: 15px;
+
+    line-height: 1.2;
+}
+
+
+.trabajo-tipo {
+    display: inline-block;
+
+    margin-bottom: 8px;
+
+    color: var(--gc-green-text);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   DATOS PRINCIPALES
+===================================================== */
+
+.trabajo-linea,
+.trabajo-campania {
+    margin:
+        5px
+        0;
+
+    color: var(--gc-muted-strong);
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+.trabajo-campania {
+    color: var(--gc-green-text);
+
+    font-weight: 600;
+}
+
+
+.trabajo-sin-campania {
+    color: var(--gc-muted);
+}
+
+
+/* =====================================================
+   ESTADO Y PRIORIDAD
+===================================================== */
+
+.trabajo-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin:
+        10px
+        0;
+}
+
+
+.trabajo-info-grid > div {
+    min-width: 0;
+
+    padding: 9px;
+
+    border-radius: 9px;
+
+    background: #f7f9f7;
+}
+
+
+.trabajo-info-grid span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.trabajo-info-grid strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gc-text);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   NOTAS
+===================================================== */
+
+.trabajo-card .trabajador-notas {
+    margin-top: 9px;
+
+    padding-top: 9px;
+}
+
+
+/* =====================================================
+   BOTONES DE ESTADO
+===================================================== */
+
+.trabajo-state-actions {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    margin-top: 11px;
+}
+
+
+.task-state-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    border:
+        1px solid
+        #d9e8df;
+
+    border-radius: 8px;
+
+    background: #edf6f1;
+
+    color: var(--gc-green-text);
+
+    font-family: inherit;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.task-state-button:hover {
+    background: #dff0e7;
+}
+
+
+/* =====================================================
+   SELECTOR LISTA / CALENDARIO
+===================================================== */
+
+#vistaListaTrabajos,
+#vistaCalendarioTrabajos {
+    min-height: 36px !important;
+
+    padding:
+        0
+        12px !important;
+
+    font-size: 10px !important;
+
+    transition:
+        background
+        0.15s
+        ease,
+        color
+        0.15s
+        ease;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1050px) {
+
+    .trabajos-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .trabajos-grid {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+    }
+
+
+    .trabajo-card {
+        padding: 13px;
+
+        border-radius: 13px;
+    }
+
+
+    .trabajo-card-header {
+        margin-bottom: 8px;
+    }
+
+
+    .trabajo-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        font-size: 17px;
+    }
+
+
+    .trabajo-actions .secondary-button {
+        min-height: 32px;
+
+        padding:
+            0
+            9px;
+    }
+
+
+    .trabajo-actions .delete-button {
+        width: 32px;
+        min-width: 32px;
+        height: 32px;
+    }
+
+
+    .trabajo-card > h3 {
+        font-size: 14px;
+    }
+
+
+    .trabajo-linea,
+    .trabajo-campania {
+        margin:
+            4px
+            0;
+
+        font-size: 9px;
+    }
+
+
+    .trabajo-info-grid {
+        margin:
+            8px
+            0;
+
+        gap: 6px;
+    }
+
+
+    .trabajo-info-grid > div {
+        padding: 8px;
+    }
+
+
+    .trabajo-state-actions {
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 6px;
+
+        margin-top: 9px;
+    }
+
+
+    .trabajo-state-actions button {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+}

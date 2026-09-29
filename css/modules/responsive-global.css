@@ -1,0 +1,686 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · RESPONSIVE GLOBAL / PWA
+   Día 23 · Modularización CSS
+===================================================== */
+
+
+/* =====================================================
+   RESPONSIVE GENERAL INICIAL
+===================================================== */
+
+/* ==================================
+   RESPONSIVE
+================================== */
+
+@media (max-width: 1100px) {
+
+    .stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .fincas-grid,
+    .parcelas-grid,
+    .cultivos-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+}
+
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 210px;
+    }
+
+    .main-content {
+        margin-left: 210px;
+
+        padding: 25px;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+@media (max-width: 650px) {
+
+    .sidebar {
+        display: none;
+    }
+
+    .main-content {
+        margin-left: 0;
+    }
+
+    .stats,
+    .finca-stats,
+    .cultivos-stats,
+    .fincas-grid,
+    .parcelas-grid,
+    .cultivos-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
+   PWA + RESPONSIVE MÓVIL
+===================================================== */
+
+/* ==================================
+   DÍA 6 - PWA + RESPONSIVE MÓVIL
+================================== */
+
+html {
+    min-height: 100%;
+    background-color: var(--gc-bg);
+}
+
+body {
+    min-width: 320px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    overflow-x: hidden;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+}
+
+button,
+a,
+input,
+select,
+textarea {
+    -webkit-tap-highlight-color: transparent;
+}
+
+img,
+svg,
+canvas {
+    max-width: 100%;
+}
+
+.sidebar-desktop-brand > p {
+    margin-top: 12px;
+    color: var(--gc-sidebar-muted);
+    font-size: 14px;
+}
+
+.sidebar-mobile-top,
+.mobile-header,
+.sidebar-backdrop {
+    display: none;
+}
+
+
+/* TABLET */
+
+@media (max-width: 1180px) {
+
+    .main-content {
+        padding: 28px 28px;
+    }
+
+    .stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+.fincas-grid,
+.parcelas-grid,
+.cultivos-grid,
+.trabajos-grid,
+.trabajadores-grid,
+.maquinaria-grid,
+.inventario-grid,
+.produccion-grid,
+.albaranes-grid,
+.facturas-grid,
+.gastos-grid,
+.contactos-grid,
+.campanias-grid,
+.rentabilidad-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.dashboard-grid,
+.estadisticas-grid,
+.statistics-grid,
+.perfil-layout,
+.perfil-top-grid {
+    grid-template-columns: 1fr;
+}
+
+
+/* MÓVIL / DRAWER */
+
+@media (max-width: 760px) {
+
+    body {
+        padding-top: calc(64px + env(safe-area-inset-top));
+    }
+
+    body.mobile-menu-open {
+        overflow: hidden;
+        touch-action: none;
+    }
+
+    .mobile-header {
+        position: fixed;
+        z-index: 1200;
+        top: 0;
+        right: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        height: calc(64px + env(safe-area-inset-top));
+        padding:
+            calc(10px + env(safe-area-inset-top))
+            16px
+            10px;
+        background-color: var(--gc-green-dark);
+        color: var(--gc-white);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16);
+    }
+
+    .mobile-menu-button,
+    .mobile-menu-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        border: 0;
+        border-radius: 10px;
+        cursor: pointer;
+    }
+
+    .mobile-menu-button {
+        background: rgba(255, 255, 255, 0.12);
+        color: var(--gc-white);
+        font-size: 24px;
+    }
+
+    .mobile-menu-close {
+        background: rgba(255, 255, 255, 0.1);
+        color: var(--gc-white);
+        font-size: 28px;
+        line-height: 1;
+    }
+
+    .mobile-brand {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .mobile-brand strong {
+        font-size: 18px;
+        line-height: 1.15;
+    }
+
+    .mobile-brand span {
+        margin-top: 2px;
+        color: var(--gc-sidebar-muted);
+        font-size: 11px;
+    }
+
+    .sidebar {
+        z-index: 1300;
+        display: block;
+        width: min(86vw, 320px);
+        height: 100vh;
+        height: 100dvh;
+        padding:
+            calc(18px + env(safe-area-inset-top))
+            16px
+            calc(20px + env(safe-area-inset-bottom));
+        transform: translateX(-105%);
+        transition: transform 0.24s ease;
+        box-shadow: 12px 0 30px rgba(0, 0, 0, 0.18);
+        overscroll-behavior: contain;
+    }
+
+    .sidebar.sidebar-open {
+        transform: translateX(0);
+    }
+
+    .sidebar-desktop-brand {
+        display: none;
+    }
+
+    .sidebar-mobile-top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+    }
+
+    .sidebar-mobile-top h1 {
+        margin: 3px 0 4px;
+        font-size: 24px;
+    }
+
+    .sidebar-mobile-top p {
+        margin: 0;
+        color: var(--gc-sidebar-muted);
+        font-size: 12px;
+    }
+
+    .sidebar nav {
+        margin-top: 24px;
+        padding-bottom: 16px;
+    }
+
+    .sidebar nav a {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 4px;
+        padding: 11px 12px;
+    }
+
+    .sidebar-backdrop {
+        position: fixed;
+        z-index: 1250;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: rgba(10, 25, 19, 0.48);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.24s ease;
+    }
+
+    body.mobile-menu-open .sidebar-backdrop {
+        display: block;
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    .main-content {
+        width: 100%;
+        margin-left: 0;
+        padding: 20px 16px calc(28px + env(safe-area-inset-bottom));
+        overflow-x: hidden;
+    }
+
+    .topbar,
+    .detail-title,
+    .section-header,
+    .panel-header,
+    .campania-bottom,
+    .factura-detail-header {
+        gap: 12px;
+    }
+
+    .topbar {
+        align-items: flex-start;
+        margin-bottom: 22px;
+    }
+
+    .topbar h2 {
+        font-size: 24px;
+    }
+
+    .topbar p {
+        font-size: 13px;
+    }
+
+    .topbar > button,
+    .detail-title > button {
+        flex: 0 0 auto;
+    }
+
+    .welcome {
+        margin-bottom: 18px;
+    }
+
+    .welcome h2 {
+        font-size: 21px;
+    }
+
+    .stats,
+    .finca-stats,
+    .cultivos-stats,
+    .estadisticas-secondary-stats,
+    .statistics-secondary-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+    }
+
+    .card {
+        min-width: 0;
+        padding: 15px;
+        gap: 11px;
+    }
+
+    .card-icon {
+        flex: 0 0 42px;
+        width: 42px;
+        height: 42px;
+        font-size: 20px;
+    }
+
+    .card p {
+        font-size: 12px;
+    }
+
+    .card h3 {
+        font-size: 18px;
+        overflow-wrap: anywhere;
+    }
+
+    .dashboard-grid,
+    .estadisticas-grid,
+    .statistics-grid,
+    .perfil-layout,
+    .perfil-top-grid,
+    .perfil-form-layout,
+    .perfil-form-panel {
+        grid-template-columns: 1fr !important;
+        gap: 14px;
+    }
+
+    .fincas-grid,
+    .parcelas-grid,
+    .cultivos-grid,
+    .trabajos-grid,
+    .trabajadores-grid,
+    .maquinaria-grid,
+    .inventario-grid,
+    .produccion-grid,
+    .albaranes-grid,
+    .facturas-grid,
+    .gastos-grid,
+    .contactos-grid,
+    .campanias-grid,
+    .rentabilidad-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+
+    .panel,
+    .finca-card,
+    .parcela-card,
+    .cultivo-card,
+    .trabajo-card,
+    .trabajador-card,
+    .maquina-card,
+    .inventario-card,
+    .produccion-card,
+    .albaran-card,
+    .factura-card,
+    .gasto-card,
+    .contacto-card,
+    .campania-card,
+    .rentabilidad-card,
+    .estadisticas-panel,
+    .factura-detail,
+    .form-panel,
+    .perfil-card,
+    .perfil-form-card,
+    .perfil-edit-card {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        padding: 18px;
+    }
+
+    .form-panel,
+    .factura-form-panel,
+    .factura-detail {
+        max-width: none;
+    }
+
+    .form-actions,
+    .factura-screen-actions,
+    .factura-export-actions,
+    .trabajo-state-actions,
+    .albaran-state-actions,
+    .factura-state-actions,
+    .gasto-state-actions,
+    .perfil-actions,
+    .cobros-top-actions {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .form-actions > button,
+    .factura-screen-actions > button,
+    .factura-export-actions > button {
+        min-height: 44px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select,
+    .perfil-field input,
+    .perfil-field select,
+    .perfil-field textarea {
+        min-height: 44px;
+        font-size: 16px;
+    }
+
+    textarea {
+        resize: vertical;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .task-state-button,
+    .back-button {
+        touch-action: manipulation;
+    }
+
+    .primary-button,
+    .secondary-button,
+    .task-state-button {
+        min-height: 40px;
+    }
+
+    .delete-button {
+        flex: 0 0 36px;
+        width: 36px;
+        height: 36px;
+    }
+
+    .finca-info,
+    .cultivo-info,
+    .trabajo-info,
+    .trabajador-info,
+    .maquina-info,
+    .inventario-info,
+    .produccion-info,
+    .albaran-info,
+    .factura-importes,
+    .gasto-info,
+    .contacto-info,
+    .campania-info-grid,
+    .rentabilidad-info,
+    .rentabilidad-data,
+    .perfil-info-grid,
+    .perfil-summary-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .factura-line {
+        grid-template-columns: 1fr;
+        gap: 6px;
+    }
+
+    .albaran-selector {
+        grid-template-columns: auto minmax(0, 1fr);
+        gap: 10px;
+    }
+
+    .albaran-selector > strong,
+    .albaran-selector > span:last-child {
+        grid-column: 2;
+    }
+
+    .factura-detail-totals {
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+    }
+
+    .movimiento-item,
+    .task,
+    .activity {
+        min-width: 0;
+    }
+
+    .movimiento-item {
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .movimiento-main,
+    .movimiento-right,
+    .task > div,
+    .activity > div {
+        min-width: 0;
+    }
+
+    .movimiento-main strong,
+    .movimiento-main p,
+    .task strong,
+    .task p,
+    .activity strong,
+    .activity p {
+        overflow-wrap: anywhere;
+    }
+
+}
+
+
+/* MÓVIL ESTRECHO */
+
+@media (max-width: 480px) {
+
+    .main-content {
+        padding-right: 12px;
+        padding-left: 12px;
+    }
+
+    .topbar,
+    .detail-title,
+    .campania-bottom {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .topbar > button,
+    .detail-title > button,
+    .campania-bottom button {
+        width: 100%;
+    }
+
+    .stats,
+    .finca-stats,
+    .cultivos-stats,
+    .estadisticas-secondary-stats,
+    .statistics-secondary-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .finca-info,
+    .cultivo-info,
+    .trabajo-info,
+    .trabajador-info,
+    .maquina-info,
+    .inventario-info,
+    .produccion-info,
+    .albaran-info,
+    .factura-importes,
+    .gasto-info,
+    .contacto-info,
+    .campania-info-grid,
+    .rentabilidad-info,
+    .rentabilidad-data,
+    .perfil-info-grid,
+    .perfil-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .panel,
+    .finca-card,
+    .parcela-card,
+    .cultivo-card,
+    .trabajo-card,
+    .trabajador-card,
+    .maquina-card,
+    .inventario-card,
+    .produccion-card,
+    .albaran-card,
+    .factura-card,
+    .gasto-card,
+    .contacto-card,
+    .campania-card,
+    .rentabilidad-card,
+    .estadisticas-panel,
+    .factura-detail,
+    .form-panel,
+    .perfil-card,
+    .perfil-form-card,
+    .perfil-edit-card {
+        padding: 15px;
+    }
+
+    .form-actions,
+    .factura-screen-actions,
+    .factura-export-actions,
+    .perfil-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .form-actions > button,
+    .factura-screen-actions > button,
+    .factura-export-actions > button,
+    .perfil-actions > button {
+        width: 100%;
+    }
+
+}
+
+
+/* PANTALLAS MUY PEQUEÑAS */
+
+@media (max-width: 360px) {
+
+    .mobile-header {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .main-content {
+        padding-right: 10px;
+        padding-left: 10px;
+    }
+
+    .mobile-brand strong {
+        font-size: 17px;
+    }
+
+}

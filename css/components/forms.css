@@ -72,3 +72,18 @@
 
     gap: 10px;
 }
+
+
+/* =====================================================
+   AYUDA DE FORMULARIOS
+===================================================== */
+
+.form-help {
+    display: block;
+
+    margin-top: 7px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+}

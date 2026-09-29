@@ -47,3 +47,15 @@
 .secondary-button:hover {
     background-color: #dcece4;
 }
+
+
+/* =====================================================
+   BOTONES DESHABILITADOS
+===================================================== */
+
+.primary-button:disabled,
+.secondary-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
