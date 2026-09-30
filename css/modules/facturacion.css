@@ -655,3 +655,214 @@
     }
 
 }
+
+
+/* =====================================================
+   DÍA 24 · PULIDO VISUAL DEL DETALLE DE FACTURA MÓVIL
+   Mantiene la lógica actual y mejora solo la presentación.
+===================================================== */
+
+.factura-documento {
+    width: 100%;
+    max-width: 920px;
+    margin: 0 auto;
+    padding: 28px;
+    background: white;
+    border: 1px solid var(--gc-border-soft);
+    border-radius: 16px;
+    box-shadow: var(--gc-shadow-card);
+}
+
+.factura-documento > div:first-child h1 {
+    overflow-wrap: anywhere;
+}
+
+.factura-documento > hr {
+    border: 0;
+    border-top: 1px solid var(--gc-border-soft);
+}
+
+@media (max-width: 760px) {
+
+    .factura-documento {
+        padding: 18px;
+        border-radius: 14px;
+    }
+
+    .factura-documento > div:first-child {
+        gap: 12px !important;
+    }
+
+    .factura-documento > div:first-child h1 {
+        font-size: 25px;
+        line-height: 1.1;
+    }
+
+    .factura-documento > hr + div {
+        gap: 18px !important;
+        margin: 20px 0 24px !important;
+    }
+
+    .factura-documento > h3 {
+        margin-bottom: 12px;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"] {
+        margin-bottom: 14px !important;
+        border-radius: 12px !important;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"] {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+        gap: 8px !important;
+        padding: 12px !important;
+        align-items: stretch !important;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:first-child {
+        grid-column: 1 / -1;
+        padding-bottom: 10px;
+        border-bottom: 1px solid var(--gc-border-soft);
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:nth-child(2),
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:nth-child(3),
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > strong:last-child {
+        min-width: 0;
+        padding: 9px 7px;
+        border-radius: 8px;
+        background: var(--gc-surface-soft);
+        font-size: 12px;
+        line-height: 1.3;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:nth-child(2)::before,
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:nth-child(3)::before,
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > strong:last-child::before {
+        display: block;
+        margin-bottom: 4px;
+        color: var(--gc-muted);
+        font-size: 9px;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:nth-child(2)::before {
+        content: "Cantidad";
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:nth-child(3)::before {
+        content: "Precio";
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > strong:last-child {
+        text-align: left !important;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > strong:last-child::before {
+        content: "Importe";
+    }
+
+    .factura-documento > div[style*="max-width:420px"] {
+        width: 100% !important;
+        max-width: none !important;
+        margin: 20px 0 0 !important;
+        padding: 14px;
+        border-radius: 10px;
+        background: var(--gc-surface-soft);
+        box-sizing: border-box;
+    }
+
+}
+
+@media (max-width: 520px) {
+
+    .factura-documento > hr + div {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    .factura-documento > hr + div > div {
+        padding: 13px;
+        border-radius: 10px;
+        background: var(--gc-surface-soft);
+    }
+
+}
+
+@media (max-width: 390px) {
+
+    .factura-documento {
+        padding: 14px;
+    }
+
+    .factura-documento > div:first-child {
+        flex-direction: column;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    .factura-documento
+    > h3
+    ~ div[style*="border:1px solid #edf0ed"]
+    > div[style*="grid-template-columns"]
+    > div:first-child {
+        grid-column: auto;
+    }
+
+}
