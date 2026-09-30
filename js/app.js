@@ -176,6 +176,8 @@ function navegarA(
 
         mostrarPortalTrabajador();
 
+        cerrarMenuMovil();
+
         return;
 
     }
@@ -187,6 +189,8 @@ function navegarA(
     ) {
 
         mostrarAccesoAdministracion();
+
+        cerrarMenuMovil();
 
         return;
 
@@ -214,6 +218,9 @@ function navegarA(
     mostrarPaginaAdministracion(
         paginaPermitida
     );
+
+
+    cerrarMenuMovil();
 
 }
 
