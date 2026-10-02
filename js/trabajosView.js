@@ -554,7 +554,7 @@ export class TrabajosView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats trabajos-stats">
 
                 <div class="card">
 
@@ -785,8 +785,7 @@ export class TrabajosView {
     // =====================================================
     // LISTA
     // =====================================================
-
-    mostrarLista() {
+        mostrarLista() {
 
         const trabajos =
             this.trabajoService
@@ -2374,8 +2373,7 @@ export class TrabajosView {
 
 
         this.mainContent.innerHTML = `
-
-            <button
+                    <button
                 id="volverTrabajos"
                 class="back-button"
                 type="button"
@@ -3400,45 +3398,205 @@ export class TrabajosView {
     // =====================================================
     // GUARDAR FORMULARIO
     // =====================================================
-
-    guardarFormulario(
+        guardarFormulario(
         id,
         editando
     ) {
 
-        const maquinariaIdTexto =
+        const titulo =
             document
                 .getElementById(
-                    "maquinariaTrabajo"
+                    "tituloTrabajo"
+                )
+                .value
+                .trim();
+
+
+        const tipo =
+            document
+                .getElementById(
+                    "tipoTrabajo"
                 )
                 .value;
 
 
-        const maquinariaId =
-            maquinariaIdTexto
+        const fincaId =
+            document
+                .getElementById(
+                    "fincaTrabajo"
+                )
+                .value;
+
+
+        const parcela =
+            document
+                .getElementById(
+                    "parcelaTrabajo"
+                )
+                .value
+                .trim();
+
+
+        const cultivo =
+            document
+                .getElementById(
+                    "cultivoTrabajo"
+                )
+                .value
+                .trim();
+
+
+        const campaniaId =
+            document
+                .getElementById(
+                    "campaniaTrabajo"
+                )
+                .value
             ||
             null;
 
 
-        const maquina =
-            this.obtenerMaquinariaPorId(
-                maquinariaId
-            );
+        const fecha =
+            document
+                .getElementById(
+                    "fechaTrabajo"
+                )
+                .value;
+
+
+        const prioridad =
+            document
+                .getElementById(
+                    "prioridadTrabajo"
+                )
+                .value;
+
+
+        const estado =
+            document
+                .getElementById(
+                    "estadoTrabajo"
+                )
+                .value;
 
 
         const trabajadorIds =
-            Array.from(
-                document.querySelectorAll(
-                    ".trabajador-tarea-checkbox:checked"
+            Array
+                .from(
+                    document
+                        .querySelectorAll(
+                            ".trabajador-tarea-checkbox:checked"
+                        )
                 )
-            )
                 .map(
                     checkbox =>
                         checkbox.value
                 );
 
 
-        const trabajadoresSeleccionados =
+        const maquinariaId =
+            document
+                .getElementById(
+                    "maquinariaTrabajo"
+                )
+                .value
+            ||
+            null;
+
+
+        const notas =
+            document
+                .getElementById(
+                    "notasTrabajo"
+                )
+                .value
+                .trim();
+
+
+        if (
+            !titulo
+        ) {
+
+            alert(
+                "Indica el nombre del trabajo."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !tipo
+        ) {
+
+            alert(
+                "Selecciona el tipo de trabajo."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !fincaId
+        ) {
+
+            alert(
+                "Selecciona una finca."
+            );
+
+            return;
+
+        }
+
+
+        if (
+            !fecha
+        ) {
+
+            alert(
+                "Selecciona una fecha."
+            );
+
+            return;
+
+        }
+
+
+        const finca =
+            this.fincaService
+                .obtenerPorId(
+                    fincaId
+                );
+
+
+        if (
+            !finca
+        ) {
+
+            alert(
+                "La finca seleccionada no existe."
+            );
+
+            return;
+
+        }
+
+
+        const campania =
+            campaniaId
+
+                ? this.campaniaService
+                    .obtenerPorId(
+                        campaniaId
+                    )
+
+                : null;
+
+
+        const trabajadores =
             trabajadorIds
                 .map(
                     trabajadorId =>
@@ -3452,7 +3610,7 @@ export class TrabajosView {
 
 
         const trabajadorNombres =
-            trabajadoresSeleccionados
+            trabajadores
                 .map(
                     trabajador =>
                         this.obtenerNombreTrabajador(
@@ -3461,80 +3619,52 @@ export class TrabajosView {
                 );
 
 
-        const fincaId =
-            document
-                .getElementById(
-                    "fincaTrabajo"
-                )
-                .value;
+        const maquina =
+            maquinariaId
 
-
-        const campaniaId =
-            document
-                .getElementById(
-                    "campaniaTrabajo"
+                ? this.obtenerMaquinariaPorId(
+                    maquinariaId
                 )
-                .value
-            ||
-            null;
+
+                : null;
 
 
         const datos = {
 
             titulo:
-                document
-                    .getElementById(
-                        "tituloTrabajo"
-                    )
-                    .value,
+                titulo,
 
             tipo:
-                document
-                    .getElementById(
-                        "tipoTrabajo"
-                    )
-                    .value,
+                tipo,
 
             fincaId:
                 fincaId,
 
+            fincaNombre:
+                finca.nombre,
+
             parcela:
-                document
-                    .getElementById(
-                        "parcelaTrabajo"
-                    )
-                    .value,
+                parcela,
 
             cultivo:
-                document
-                    .getElementById(
-                        "cultivoTrabajo"
-                    )
-                    .value,
+                cultivo,
 
             campaniaId:
                 campaniaId,
 
+            campaniaNombre:
+                campania?.nombre
+                ||
+                "",
+
             fecha:
-                document
-                    .getElementById(
-                        "fechaTrabajo"
-                    )
-                    .value,
+                fecha,
 
             prioridad:
-                document
-                    .getElementById(
-                        "prioridadTrabajo"
-                    )
-                    .value,
+                prioridad,
 
             estado:
-                document
-                    .getElementById(
-                        "estadoTrabajo"
-                    )
-                    .value,
+                estado,
 
             trabajadorIds:
                 trabajadorIds,
@@ -3542,133 +3672,185 @@ export class TrabajosView {
             trabajadorNombres:
                 trabajadorNombres,
 
+            trabajadorId:
+                trabajadorIds[0]
+                ||
+                null,
+
+            trabajadorNombre:
+                trabajadorNombres[0]
+                ||
+                "",
+
             maquinariaId:
                 maquinariaId,
 
             maquinariaNombre:
-                this.obtenerNombreMaquinaria(
-                    maquina
-                ),
+                maquina
+
+                    ? this.obtenerNombreMaquinaria(
+                        maquina
+                    )
+
+                    : "",
 
             notas:
-                document
-                    .getElementById(
-                        "notasTrabajo"
-                    )
-                    .value
+                notas
 
         };
-
-
-        if (
-            !editando
-        ) {
-
-            const tipoRecurrencia =
-                document
-                    .getElementById(
-                        "recurrenciaTipo"
-                    )
-                    .value;
-
-
-            if (
-                tipoRecurrencia ===
-                "Ninguna"
-            ) {
-
-                datos.recurrencia = {
-
-                    activa:
-                        false,
-
-                    tipo:
-                        "Ninguna"
-
-                };
-
-            }
-
-            else {
-
-                const finTipo =
-                    document
-                        .getElementById(
-                            "recurrenciaFinTipo"
-                        )
-                        .value;
-
-
-                datos.recurrencia = {
-
-                    activa:
-                        true,
-
-                    tipo:
-                        tipoRecurrencia,
-
-                    finTipo:
-                        finTipo,
-
-                    repeticiones:
-                        Number(
-                            document
-                                .getElementById(
-                                    "recurrenciaRepeticiones"
-                                )
-                                .value
-                        ),
-
-                    fechaFin:
-                        document
-                            .getElementById(
-                                "recurrenciaFechaFin"
-                            )
-                            .value
-
-                };
-
-            }
-
-        }
-
-
-        let resultado;
 
 
         if (
             editando
         ) {
 
-            resultado =
+            const resultado =
                 this.trabajoService
                     .editar(
                         id,
                         datos
                     );
 
+
+            if (
+                !resultado.ok
+            ) {
+
+                alert(
+                    resultado.mensaje
+                );
+
+                return;
+
+            }
+
+
+            this.mostrar();
+
+            return;
+
         }
 
-        else {
 
-            resultado =
+        const recurrenciaTipo =
+            document
+                .getElementById(
+                    "recurrenciaTipo"
+                )
+                ?.value
+            ||
+            "Ninguna";
+
+
+        if (
+            recurrenciaTipo ===
+            "Ninguna"
+        ) {
+
+            const resultado =
                 this.trabajoService
                     .crear(
                         datos
                     );
 
+
+            if (
+                !resultado.ok
+            ) {
+
+                alert(
+                    resultado.mensaje
+                );
+
+                return;
+
+            }
+
+
+            this.mostrar();
+
+            return;
+
         }
 
 
+        const finTipo =
+            document
+                .getElementById(
+                    "recurrenciaFinTipo"
+                )
+                .value;
+
+
+        const repeticiones =
+            Number(
+                document
+                    .getElementById(
+                        "recurrenciaRepeticiones"
+                    )
+                    .value
+            );
+
+
+        const fechaFin =
+            document
+                .getElementById(
+                    "recurrenciaFechaFin"
+                )
+                .value;
+
+
+        const configuracionRecurrencia = {
+
+            tipo:
+                recurrenciaTipo,
+
+            finTipo:
+                finTipo,
+
+            repeticiones:
+                repeticiones,
+
+            fechaFin:
+                fechaFin
+
+        };
+
+
+        const validacion =
+            this.validarRecurrencia(
+                fecha,
+                configuracionRecurrencia
+            );
+
+
         if (
-            resultado
-            &&
-            resultado.ok ===
-            false
+            !validacion.ok
         ) {
 
             alert(
-                resultado.mensaje
+                validacion.mensaje
+            );
+
+            return;
+
+        }
+
+
+        const fechas =
+            this.generarFechasRecurrencia(
+                fecha,
+                configuracionRecurrencia
+            );
+
+
+        if (
+            fechas.length ===
+            0
+        ) {
+
+            alert(
+                "No se han podido generar las fechas de la recurrencia."
             );
 
             return;
@@ -3677,16 +3859,82 @@ export class TrabajosView {
 
 
         if (
-            !editando
-            &&
-            resultado?.recurrente
+            typeof this.trabajoService
+                .crearSerieRecurrente ===
+                "function"
         ) {
 
-            alert(
-                `Serie creada correctamente: ${resultado.totalCreados} tareas.`
-            );
+            const resultado =
+                this.trabajoService
+                    .crearSerieRecurrente(
+                        datos,
+                        {
+                            tipo:
+                                recurrenciaTipo,
+
+                            fechas:
+                                fechas
+                        }
+                    );
+
+
+            if (
+                !resultado.ok
+            ) {
+
+                alert(
+                    resultado.mensaje
+                );
+
+                return;
+
+            }
+
+
+            this.mostrar();
+
+            return;
 
         }
+
+
+        fechas.forEach(
+            (
+                fechaRepeticion,
+                indice
+            ) => {
+
+                this.trabajoService
+                    .crear(
+                        {
+                            ...datos,
+
+                            fecha:
+                                fechaRepeticion,
+
+                            serieRecurrenciaId:
+                                `${Date.now()}-${Math.random()}`,
+
+                            recurrencia: {
+
+                                activa:
+                                    true,
+
+                                tipo:
+                                    recurrenciaTipo,
+
+                                indice:
+                                    indice + 1,
+
+                                total:
+                                    fechas.length
+
+                            }
+                        }
+                    );
+
+            }
+        );
 
 
         this.mostrar();
@@ -3695,11 +3943,401 @@ export class TrabajosView {
 
 
     // =====================================================
-    // TIPOS
+    // VALIDAR RECURRENCIA
+    // =====================================================
+
+    validarRecurrencia(
+        fechaInicio,
+        configuracion
+    ) {
+
+        if (
+            !fechaInicio
+        ) {
+
+            return {
+
+                ok:
+                    false,
+
+                mensaje:
+                    "Indica una fecha de inicio."
+
+            };
+
+        }
+
+
+        if (
+            configuracion.finTipo ===
+            "repeticiones"
+        ) {
+
+            if (
+                !Number.isFinite(
+                    configuracion.repeticiones
+                )
+                ||
+                configuracion.repeticiones <
+                2
+                ||
+                configuracion.repeticiones >
+                365
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "El número de repeticiones debe estar entre 2 y 365."
+
+                };
+
+            }
+
+
+            return {
+
+                ok:
+                    true
+
+            };
+
+        }
+
+
+        if (
+            configuracion.finTipo ===
+            "fecha"
+        ) {
+
+            if (
+                !configuracion.fechaFin
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "Indica la fecha final de la recurrencia."
+
+                };
+
+            }
+
+
+            if (
+                configuracion.fechaFin <=
+                fechaInicio
+            ) {
+
+                return {
+
+                    ok:
+                        false,
+
+                    mensaje:
+                        "La fecha final debe ser posterior a la fecha de inicio."
+
+                };
+
+            }
+
+
+            return {
+
+                ok:
+                    true
+
+            };
+
+        }
+
+
+        return {
+
+            ok:
+                false,
+
+            mensaje:
+                "La configuración de recurrencia no es válida."
+
+        };
+
+    }
+
+
+    // =====================================================
+    // GENERAR FECHAS DE RECURRENCIA
+    // =====================================================
+
+    generarFechasRecurrencia(
+        fechaInicio,
+        configuracion
+    ) {
+
+        const fechaBase =
+            this.parsearFechaISO(
+                fechaInicio
+            );
+
+
+        if (
+            !fechaBase
+        ) {
+
+            return [];
+
+        }
+
+
+        const fechas =
+            [];
+
+
+        if (
+            configuracion.finTipo ===
+            "repeticiones"
+        ) {
+
+            for (
+                let indice = 0;
+                indice < configuracion.repeticiones;
+                indice++
+            ) {
+
+                const fecha =
+                    this.sumarRecurrencia(
+                        fechaBase,
+                        configuracion.tipo,
+                        indice
+                    );
+
+
+                fechas.push(
+                    this.formatearFechaISO(
+                        fecha
+                    )
+                );
+
+            }
+
+
+            return fechas;
+
+        }
+
+
+        if (
+            configuracion.finTipo ===
+            "fecha"
+        ) {
+
+            const fechaLimite =
+                this.parsearFechaISO(
+                    configuracion.fechaFin
+                );
+
+
+            if (
+                !fechaLimite
+            ) {
+
+                return [];
+
+            }
+
+
+            let indice =
+                0;
+
+
+            while (
+                indice <
+                3650
+            ) {
+
+                const fecha =
+                    this.sumarRecurrencia(
+                        fechaBase,
+                        configuracion.tipo,
+                        indice
+                    );
+
+
+                if (
+                    fecha >
+                    fechaLimite
+                ) {
+
+                    break;
+
+                }
+
+
+                fechas.push(
+                    this.formatearFechaISO(
+                        fecha
+                    )
+                );
+
+
+                indice++;
+
+            }
+
+        }
+
+
+        return fechas;
+
+    }
+
+
+    // =====================================================
+    // SUMAR RECURRENCIA
+    // =====================================================
+
+    sumarRecurrencia(
+        fechaBase,
+        tipo,
+        indice
+    ) {
+
+        const fecha =
+            new Date(
+                fechaBase.getFullYear(),
+                fechaBase.getMonth(),
+                fechaBase.getDate()
+            );
+
+
+        if (
+            indice ===
+            0
+        ) {
+
+            return fecha;
+
+        }
+
+
+        if (
+            tipo ===
+            "Diaria"
+        ) {
+
+            fecha.setDate(
+                fecha.getDate()
+                +
+                indice
+            );
+
+
+            return fecha;
+
+        }
+
+
+        if (
+            tipo ===
+            "Semanal"
+        ) {
+
+            fecha.setDate(
+                fecha.getDate()
+                +
+                (
+                    indice
+                    *
+                    7
+                )
+            );
+
+
+            return fecha;
+
+        }
+
+
+        if (
+            tipo ===
+            "Quincenal"
+        ) {
+
+            fecha.setDate(
+                fecha.getDate()
+                +
+                (
+                    indice
+                    *
+                    14
+                )
+            );
+
+
+            return fecha;
+
+        }
+
+
+        if (
+            tipo ===
+            "Mensual"
+        ) {
+
+            const diaOriginal =
+                fechaBase.getDate();
+
+
+            const destino =
+                new Date(
+                    fechaBase.getFullYear(),
+                    fechaBase.getMonth()
+                    +
+                    indice,
+                    1
+                );
+
+
+            const ultimoDiaDestino =
+                new Date(
+                    destino.getFullYear(),
+                    destino.getMonth() +
+                    1,
+                    0
+                )
+                    .getDate();
+
+
+            destino.setDate(
+                Math.min(
+                    diaOriginal,
+                    ultimoDiaDestino
+                )
+            );
+
+
+            return destino;
+
+        }
+
+
+        return fecha;
+
+    }
+
+
+    // =====================================================
+    // TIPOS DE TRABAJO
     // =====================================================
 
     crearOpcionesTipo(
-        seleccionado = ""
+        seleccionada = ""
     ) {
 
         const tipos = [
@@ -3709,26 +4347,26 @@ export class TrabajosView {
             "Riego",
             "Fertilización",
             "Tratamiento",
-            "Siembra",
-            "Plantación",
             "Cosecha",
+            "Plantación",
             "Mantenimiento",
             "Preparación del terreno",
+            "Inspección",
             "Otro"
 
         ];
 
 
         if (
-            seleccionado
+            seleccionada
             &&
             !tipos.includes(
-                seleccionado
+                seleccionada
             )
         ) {
 
             tipos.unshift(
-                seleccionado
+                seleccionada
             );
 
         }
@@ -3744,9 +4382,11 @@ export class TrabajosView {
                         )}"
 
                         ${
-                            seleccionado ===
-                            tipo
+                            tipo ===
+                            seleccionada
+
                                 ? "selected"
+
                                 : ""
                         }
                     >
@@ -3765,6 +4405,23 @@ export class TrabajosView {
 
 
     // =====================================================
+    // OBTENER FECHA HOY
+    // =====================================================
+
+    obtenerFechaHoy() {
+
+        const hoy =
+            new Date();
+
+
+        return this.formatearFechaISO(
+            hoy
+        );
+
+    }
+
+
+    // =====================================================
     // CREAR FECHA ISO
     // =====================================================
 
@@ -3774,37 +4431,131 @@ export class TrabajosView {
         dia
     ) {
 
-        return (
-            `${anio}-${String(
-                mes + 1
-            ).padStart(
-                2,
-                "0"
-            )}-${String(
+        return this.formatearFechaISO(
+
+            new Date(
+                anio,
+                mes,
                 dia
-            ).padStart(
-                2,
-                "0"
-            )}`
+            )
+
         );
 
     }
 
 
     // =====================================================
-    // FECHA HOY
+    // PARSEAR FECHA ISO
     // =====================================================
 
-    obtenerFechaHoy() {
+    parsearFechaISO(
+        fecha
+    ) {
 
-        const fecha =
-            new Date();
+        if (
+            !fecha
+            ||
+            typeof fecha !==
+            "string"
+        ) {
+
+            return null;
+
+        }
 
 
-        return this.crearFechaISO(
-            fecha.getFullYear(),
-            fecha.getMonth(),
-            fecha.getDate()
+        const partes =
+            fecha
+                .split(
+                    "-"
+                );
+
+
+        if (
+            partes.length !==
+            3
+        ) {
+
+            return null;
+
+        }
+
+
+        const anio =
+            Number(
+                partes[0]
+            );
+
+
+        const mes =
+            Number(
+                partes[1]
+            );
+
+
+        const dia =
+            Number(
+                partes[2]
+            );
+
+
+        if (
+            !anio
+            ||
+            !mes
+            ||
+            !dia
+        ) {
+
+            return null;
+
+        }
+
+
+        return new Date(
+            anio,
+            mes - 1,
+            dia
+        );
+
+    }
+
+
+    // =====================================================
+    // FORMATEAR FECHA ISO
+    // =====================================================
+
+    formatearFechaISO(
+        fecha
+    ) {
+
+        const anio =
+            fecha.getFullYear();
+
+
+        const mes =
+            String(
+                fecha.getMonth() +
+                1
+            )
+                .padStart(
+                    2,
+                    "0"
+                );
+
+
+        const dia =
+            String(
+                fecha.getDate()
+            )
+                .padStart(
+                    2,
+                    "0"
+                );
+
+
+        return (
+            `${anio}-${mes}-${dia}`
         );
 
     }
@@ -3822,35 +4573,30 @@ export class TrabajosView {
             !fecha
         ) {
 
-            return "—";
+            return "Sin fecha";
 
         }
 
 
-        const partes =
-            String(
-                fecha
-            )
-                .split(
-                    "-"
-                );
-
-
-        if (
-            partes.length !==
-            3
-        ) {
-
-            return this.escapar(
+        const fechaObjeto =
+            this.parsearFechaISO(
                 fecha
             );
 
+
+        if (
+            !fechaObjeto
+        ) {
+
+            return fecha;
+
         }
 
 
-        return (
-            `${partes[2]}/${partes[1]}/${partes[0]}`
-        );
+        return fechaObjeto
+            .toLocaleDateString(
+                "es-ES"
+            );
 
     }
 
@@ -3867,7 +4613,7 @@ export class TrabajosView {
             !valor
         ) {
 
-            return "—";
+            return "";
 
         }
 
@@ -3895,24 +4641,722 @@ export class TrabajosView {
             .toLocaleString(
                 "es-ES",
                 {
+                    dateStyle:
+                        "short",
 
-                    day:
-                        "2-digit",
+                    timeStyle:
+                        "short"
+                }
+            );
 
-                    month:
-                        "2-digit",
+    }
+        // =====================================================
+    // OBTENER TRABAJO POR ID CON FALLBACK
+    // =====================================================
 
-                    year:
-                        "numeric",
+    obtenerTrabajoPorIdSeguro(
+        id
+    ) {
 
-                    hour:
-                        "2-digit",
+        if (
+            id === null
+            ||
+            id === undefined
+            ||
+            id === ""
+        ) {
 
-                    minute:
-                        "2-digit"
+            return null;
+
+        }
+
+
+        if (
+            this.trabajoService
+            &&
+            typeof this.trabajoService
+                .obtenerPorId ===
+                "function"
+        ) {
+
+            const trabajo =
+                this.trabajoService
+                    .obtenerPorId(
+                        id
+                    );
+
+
+            if (
+                trabajo
+            ) {
+
+                return trabajo;
+
+            }
+
+        }
+
+
+        return (
+            this.trabajoService
+                .obtenerTodos()
+                .find(
+                    trabajo =>
+                        this.mismoId(
+                            trabajo.id,
+                            id
+                        )
+                )
+            ||
+            null
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER FINCA POR ID CON FALLBACK
+    // =====================================================
+
+    obtenerFincaPorIdSeguro(
+        id
+    ) {
+
+        if (
+            id === null
+            ||
+            id === undefined
+            ||
+            id === ""
+        ) {
+
+            return null;
+
+        }
+
+
+        if (
+            this.fincaService
+            &&
+            typeof this.fincaService
+                .obtenerPorId ===
+                "function"
+        ) {
+
+            const finca =
+                this.fincaService
+                    .obtenerPorId(
+                        id
+                    );
+
+
+            if (
+                finca
+            ) {
+
+                return finca;
+
+            }
+
+        }
+
+
+        return (
+            this.fincaService
+                .obtenerTodas()
+                .find(
+                    finca =>
+                        this.mismoId(
+                            finca.id,
+                            id
+                        )
+                )
+            ||
+            null
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER CAMPAÑA POR ID CON FALLBACK
+    // =====================================================
+
+    obtenerCampaniaPorIdSeguro(
+        id
+    ) {
+
+        if (
+            id === null
+            ||
+            id === undefined
+            ||
+            id === ""
+        ) {
+
+            return null;
+
+        }
+
+
+        if (
+            this.campaniaService
+            &&
+            typeof this.campaniaService
+                .obtenerPorId ===
+                "function"
+        ) {
+
+            const campania =
+                this.campaniaService
+                    .obtenerPorId(
+                        id
+                    );
+
+
+            if (
+                campania
+            ) {
+
+                return campania;
+
+            }
+
+        }
+
+
+        return (
+            this.campaniaService
+                .obtenerTodas()
+                .find(
+                    campania =>
+                        this.mismoId(
+                            campania.id,
+                            id
+                        )
+                )
+            ||
+            null
+        );
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR ESTADO
+    // =====================================================
+
+    normalizarEstado(
+        estado
+    ) {
+
+        const valor =
+            String(
+                estado
+                ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        if (
+            valor ===
+            "completada"
+            ||
+            valor ===
+            "completado"
+        ) {
+
+            return "Completada";
+
+        }
+
+
+        if (
+            valor ===
+            "en curso"
+            ||
+            valor ===
+            "encurso"
+        ) {
+
+            return "En curso";
+
+        }
+
+
+        return "Pendiente";
+
+    }
+
+
+    // =====================================================
+    // NORMALIZAR PRIORIDAD
+    // =====================================================
+
+    normalizarPrioridad(
+        prioridad
+    ) {
+
+        const valor =
+            String(
+                prioridad
+                ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        if (
+            valor ===
+            "urgente"
+        ) {
+
+            return "Urgente";
+
+        }
+
+
+        if (
+            valor ===
+            "alta"
+        ) {
+
+            return "Alta";
+
+        }
+
+
+        if (
+            valor ===
+            "baja"
+        ) {
+
+            return "Baja";
+
+        }
+
+
+        return "Media";
+
+    }
+
+
+    // =====================================================
+    // ORDENAR TRABAJOS
+    // =====================================================
+
+    ordenarTrabajos(
+        trabajos = []
+    ) {
+
+        return [
+            ...trabajos
+        ]
+            .sort(
+                (
+                    a,
+                    b
+                ) => {
+
+                    const fechaA =
+                        a.fecha
+                        ||
+                        "";
+
+
+                    const fechaB =
+                        b.fecha
+                        ||
+                        "";
+
+
+                    if (
+                        fechaA !==
+                        fechaB
+                    ) {
+
+                        return fechaA
+                            .localeCompare(
+                                fechaB
+                            );
+
+                    }
+
+
+                    return (
+                        this.obtenerOrdenPrioridad(
+                            a.prioridad
+                        )
+                        -
+                        this.obtenerOrdenPrioridad(
+                            b.prioridad
+                        )
+                    );
 
                 }
             );
+
+    }
+
+
+    // =====================================================
+    // COMPROBAR SI FECHA ES HOY
+    // =====================================================
+
+    esHoy(
+        fecha
+    ) {
+
+        return (
+            fecha ===
+            this.obtenerFechaHoy()
+        );
+
+    }
+
+
+    // =====================================================
+    // COMPROBAR SI ESTÁ VENCIDA
+    // =====================================================
+
+    estaVencida(
+        trabajo
+    ) {
+
+        if (
+            !trabajo
+            ||
+            !trabajo.fecha
+            ||
+            trabajo.estado ===
+            "Completada"
+        ) {
+
+            return false;
+
+        }
+
+
+        return (
+            trabajo.fecha <
+            this.obtenerFechaHoy()
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER ETIQUETA DE FECHA
+    // =====================================================
+
+    obtenerEtiquetaFecha(
+        trabajo
+    ) {
+
+        if (
+            !trabajo?.fecha
+        ) {
+
+            return "Sin fecha";
+
+        }
+
+
+        if (
+            this.esHoy(
+                trabajo.fecha
+            )
+        ) {
+
+            return "Hoy";
+
+        }
+
+
+        if (
+            this.estaVencida(
+                trabajo
+            )
+        ) {
+
+            return (
+                `Vencida · ${this.formatearFecha(
+                    trabajo.fecha
+                )}`
+            );
+
+        }
+
+
+        return this.formatearFecha(
+            trabajo.fecha
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER CLASE SEGÚN ESTADO
+    // =====================================================
+
+    obtenerClaseEstado(
+        estado
+    ) {
+
+        const normalizado =
+            this.normalizarEstado(
+                estado
+            );
+
+
+        if (
+            normalizado ===
+            "Completada"
+        ) {
+
+            return "completed";
+
+        }
+
+
+        if (
+            normalizado ===
+            "En curso"
+        ) {
+
+            return "in-progress";
+
+        }
+
+
+        return "pending";
+
+    }
+
+
+    // =====================================================
+    // OBTENER TEXTO DEL ESTADO
+    // =====================================================
+
+    obtenerTextoEstado(
+        estado
+    ) {
+
+        return this.normalizarEstado(
+            estado
+        );
+
+    }
+
+
+    // =====================================================
+    // OBTENER ICONO SEGÚN TIPO
+    // =====================================================
+
+    obtenerIconoTipo(
+        tipo
+    ) {
+
+        const valor =
+            String(
+                tipo
+                ||
+                ""
+            )
+                .trim()
+                .toLowerCase();
+
+
+        if (
+            valor.includes(
+                "poda"
+            )
+        ) {
+
+            return "✂️";
+
+        }
+
+
+        if (
+            valor.includes(
+                "riego"
+            )
+        ) {
+
+            return "💧";
+
+        }
+
+
+        if (
+            valor.includes(
+                "fertiliz"
+            )
+        ) {
+
+            return "🧪";
+
+        }
+
+
+        if (
+            valor.includes(
+                "tratamiento"
+            )
+        ) {
+
+            return "🧴";
+
+        }
+
+
+        if (
+            valor.includes(
+                "cosecha"
+            )
+        ) {
+
+            return "🧺";
+
+        }
+
+
+        if (
+            valor.includes(
+                "plant"
+            )
+        ) {
+
+            return "🌱";
+
+        }
+
+
+        if (
+            valor.includes(
+                "mantenimiento"
+            )
+        ) {
+
+            return "🔧";
+
+        }
+
+
+        if (
+            valor.includes(
+                "desbro"
+            )
+        ) {
+
+            return "🌿";
+
+        }
+
+
+        return "🚜";
+
+    }
+
+
+    // =====================================================
+    // OBTENER COLOR DE PRIORIDAD
+    // =====================================================
+
+    obtenerColorPrioridad(
+        prioridad
+    ) {
+
+        const valor =
+            this.normalizarPrioridad(
+                prioridad
+            );
+
+
+        if (
+            valor ===
+            "Urgente"
+        ) {
+
+            return {
+
+                fondo:
+                    "#fdeceb",
+
+                texto:
+                    "#a64038"
+
+            };
+
+        }
+
+
+        if (
+            valor ===
+            "Alta"
+        ) {
+
+            return {
+
+                fondo:
+                    "#fff0e2",
+
+                texto:
+                    "#a85d1a"
+
+            };
+
+        }
+
+
+        if (
+            valor ===
+            "Baja"
+        ) {
+
+            return {
+
+                fondo:
+                    "#eef3f0",
+
+                texto:
+                    "#607168"
+
+            };
+
+        }
+
+
+        return {
+
+            fondo:
+                "#edf4fb",
+
+            texto:
+                "#41698f"
+
+        };
+
+    }
+
+
+    // =====================================================
+    // DESTRUIR / LIMPIAR
+    // =====================================================
+
+    destruir() {
+
+        /*
+         * Actualmente no hay listeners globales
+         * persistentes en esta vista.
+         *
+         * Este método queda preparado para futuras
+         * ampliaciones sin romper la navegación.
+         */
 
     }
 

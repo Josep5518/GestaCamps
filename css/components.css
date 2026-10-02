@@ -1,7 +1,7 @@
 /* =====================================================
    GESTACAMPS
    COMPONENTES COMPARTIDOS
-   Día 21 · Modularización CSS
+   Día 25
 ===================================================== */
 
 @import url("./components/panels.css");
@@ -11,3 +11,4 @@
 @import url("./components/empty-state.css");
 @import url("./components/forms.css");
 @import url("./components/delete-button.css");
+@import url("./components/stats.css");

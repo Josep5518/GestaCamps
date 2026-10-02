@@ -1,0 +1,133 @@
+/* =====================================================
+   GESTACAMPS
+   COMPONENTE · ESTADÍSTICAS / KPI
+   Día 25
+===================================================== */
+
+.stats {
+    display: grid;
+
+    gap: 16px;
+
+    margin-bottom: 24px;
+}
+
+
+.card {
+    min-width: 0;
+
+    display: flex;
+    align-items: center;
+
+    gap: 13px;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+}
+
+
+.card-icon {
+    width: 44px;
+    height: 44px;
+
+    flex: 0 0 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: var(--gc-green-soft);
+
+    font-size: 20px;
+}
+
+
+.card > div {
+    min-width: 0;
+}
+
+
+.card p {
+    margin: 0;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+    line-height: 1.25;
+}
+
+
+.card h3 {
+    margin: 4px 0 0;
+
+    color: var(--gc-text);
+
+    font-size: 19px;
+    line-height: 1.15;
+
+    overflow-wrap: anywhere;
+}
+
+
+@media (max-width: 760px) {
+
+    .stats {
+        gap: 8px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .card {
+        min-height: 66px;
+
+        gap: 9px;
+
+        padding: 11px;
+
+        border-radius: 12px;
+    }
+
+
+    .card-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-basis: 34px;
+
+        border-radius: 9px;
+
+        font-size: 16px;
+    }
+
+
+    .card p {
+        font-size: 9px;
+    }
+
+
+    .card h3 {
+        margin-top: 2px;
+
+        font-size: 14px;
+    }
+
+}

@@ -1,153 +1,838 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · CAMPAÑAS
-   Día 21 · Modularización CSS
+   Día 25 · Pulido visual
 ===================================================== */
 
-/* ==================================
-   CAMPANYA
-================================== */
+
+/* =====================================================
+   ESTADÍSTICAS · LISTADO PRINCIPAL
+===================================================== */
+
+.campanias-stats {
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+}
+
+
+/* =====================================================
+   GRID DE CAMPAÑAS
+===================================================== */
 
 .campanias-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 22px;
-    margin-top: 22px;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    margin-top: 18px;
 }
 
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
 .campania-card {
-    background-color: white;
+    min-width: 0;
+
+    padding: 18px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
     border-radius: 14px;
-    padding: 22px;
-    box-shadow: var(--gc-shadow-card);
+
+    background: white;
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
 }
+
+
+@media (hover: hover) {
+
+    .campania-card:hover {
+        transform: translateY(-2px);
+
+        border-color: #d7e3dc;
+
+        box-shadow:
+            0 12px 28px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
+    }
+
+}
+
+
+/* =====================================================
+   CABECERA TARJETA
+===================================================== */
 
 .campania-card-header {
     display: flex;
-    align-items: center;
+
+    align-items: flex-start;
+
     justify-content: space-between;
+
     gap: 12px;
-    margin-bottom: 18px;
+
+    margin-bottom: 14px;
 }
+
 
 .campania-icon {
-    width: 48px;
-    height: 48px;
-    background-color: var(--gc-green-soft);
-    border-radius: 12px;
+    width: 42px;
+    height: 42px;
+
+    flex: 0 0 42px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    font-size: 23px;
-}
+    border-radius: 11px;
 
-.campania-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    background-color:
+        var(--gc-green-soft);
 
-.campania-card h3 {
-    margin: 0 0 12px;
     font-size: 20px;
 }
 
-.campania-finca {
-    margin: 0 0 18px;
-    color: #68756f;
+
+.campania-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
 }
+
+
+/* =====================================================
+   TÍTULO
+===================================================== */
+
+.campania-card h3 {
+    margin:
+        12px
+        0
+        7px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 16px;
+
+    line-height: 1.25;
+}
+
+
+.campania-finca {
+    margin:
+        0
+        0
+        14px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.35;
+}
+
+
+/* =====================================================
+   INFORMACIÓN GENERAL
+===================================================== */
 
 .campania-info-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
 }
 
+
 .campania-info-grid > div {
-    background-color: #f5f7f5;
-    border-radius: 10px;
-    padding: 12px;
+    min-width: 0;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    background:
+        var(--gc-surface-soft);
 }
+
 
 .campania-info-grid span {
     display: block;
-    font-size: 12px;
-    color: var(--gc-muted);
-    margin-bottom: 5px;
+
+    margin-bottom: 3px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 9px;
+
+    line-height: 1.2;
 }
+
 
 .campania-info-grid strong {
-    font-size: 15px;
+    display: block;
+
+    color:
+        var(--gc-text);
+
+    font-size: 12px;
+
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
 }
+
+
+/* =====================================================
+   MÉTRICAS ECONÓMICAS / PRODUCCIÓN
+===================================================== */
+
+.campania-card
+.campania-info-grid
++ .campania-info-grid {
+    margin-top: 8px;
+}
+
+
+/* =====================================================
+   PIE
+===================================================== */
 
 .campania-bottom {
-    margin-top: 18px;
-
     display: flex;
+
     align-items: center;
+
     justify-content: space-between;
 
-    gap: 12px;
+    gap: 10px;
+
+    margin-top: 14px;
 }
+
+
+.campania-bottom > div {
+    display: flex;
+
+    align-items: center;
+
+    flex-wrap: wrap;
+
+    gap: 7px;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
 
 .campania-status {
     display: inline-flex;
+
     align-items: center;
 
-    padding: 6px 10px;
+    width: fit-content;
+
+    padding:
+        5px
+        9px;
+
     border-radius: 999px;
 
-    font-size: 12px;
-    font-weight: 600;
+    font-size: 10px;
+
+    font-weight: 700;
+
+    line-height: 1;
 }
+
 
 .campania-activa {
-    background-color: #ddf3e8;
-    color: var(--gc-green-success);
+    background:
+        #ddf3e8;
+
+    color:
+        var(--gc-green-success);
 }
+
 
 .campania-cerrada {
-    background-color: #eeeeee;
-    color: #626262;
+    background:
+        #eeeeee;
+
+    color:
+        #626262;
 }
+
+
+/* =====================================================
+   NOTAS
+===================================================== */
 
 .campania-notas {
-    margin: 16px 0 0;
-    padding-top: 15px;
+    margin:
+        14px
+        0
+        0;
 
-    border-top: 1px solid var(--gc-border-soft);
+    padding-top: 12px;
 
-    color: #68756f;
-    font-size: 13px;
-    line-height: 1.5;
+    border-top:
+        1px solid
+        var(--gc-border-soft);
+
+    color:
+        var(--gc-muted);
+
+    font-size: 11px;
+
+    line-height: 1.4;
 }
-/* ==================================
-   RESPONSIVE CAMPANYA
-================================== */
 
-@media (max-width: 1100px) {
+
+/* =====================================================
+   BOTONES DE TARJETA
+===================================================== */
+
+.campania-card
+.primary-button,
+.campania-card
+.secondary-button {
+    min-height: 34px;
+
+    padding:
+        7px
+        11px;
+
+    border-radius: 8px;
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   DETALLE DE CAMPANYA
+   Detectamos el detalle por el botón "Volver"
+===================================================== */
+
+
+/* -----------------------------------------------------
+   CABECERA DETALLE
+----------------------------------------------------- */
+
+.back-button
++ .topbar {
+    margin-bottom: 18px;
+}
+
+
+.back-button
++ .topbar h2 {
+    font-size: 24px;
+}
+
+
+.back-button
++ .topbar p {
+    margin-top: 4px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 12px;
+}
+
+
+/* -----------------------------------------------------
+   TÍTULOS DE SECCIÓN
+----------------------------------------------------- */
+
+.back-button
+~ div > h3 {
+    margin: 0;
+
+    color:
+        var(--gc-text);
+
+    font-size: 17px;
+
+    line-height: 1.2;
+}
+
+
+/* -----------------------------------------------------
+   KPI DEL DETALLE
+----------------------------------------------------- */
+
+.back-button
+~ .stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 12px;
+
+    margin-bottom: 20px;
+}
+
+
+.back-button
+~ .stats
+.card {
+    min-height: 66px;
+
+    padding: 13px;
+
+    border-radius: 12px;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+}
+
+
+.back-button
+~ .stats
+.card-icon {
+    width: 38px;
+    height: 38px;
+
+    flex: 0 0 38px;
+
+    border-radius: 10px;
+
+    font-size: 18px;
+}
+
+
+.back-button
+~ .stats
+.card p {
+    font-size: 9px;
+}
+
+
+.back-button
+~ .stats
+.card h3 {
+    margin-top: 2px;
+
+    font-size: 14px;
+}
+
+
+/* -----------------------------------------------------
+   PANELES INFERIORES DEL DETALLE
+----------------------------------------------------- */
+
+.back-button
+~ .dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 14px;
+
+    align-items: stretch;
+}
+
+
+.back-button
+~ .dashboard-grid
+.panel {
+    min-width: 0;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.back-button
+~ .dashboard-grid
+.panel-header {
+    margin-bottom: 10px;
+}
+
+
+.back-button
+~ .dashboard-grid
+.panel-header h3 {
+    margin: 0;
+
+    font-size: 13px;
+}
+
+
+/* -----------------------------------------------------
+   ELEMENTOS DE LISTA DEL DETALLE
+----------------------------------------------------- */
+
+.back-button
+~ .dashboard-grid
+.task {
+    min-height: 42px;
+
+    padding:
+        9px
+        0;
+
+    border-bottom:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.back-button
+~ .dashboard-grid
+.task:last-child {
+    border-bottom: 0;
+}
+
+
+.back-button
+~ .dashboard-grid
+.task strong {
+    font-size: 11px;
+}
+
+
+.back-button
+~ .dashboard-grid
+.task p {
+    margin:
+        3px
+        0
+        0;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.back-button
+~ .dashboard-grid
+.text-muted {
+    margin:
+        5px
+        0
+        0;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* -----------------------------------------------------
+   PANEL DE NOTAS DEL DETALLE
+----------------------------------------------------- */
+
+.back-button
+~ .panel {
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.back-button
+~ .panel p {
+    color:
+        var(--gc-text);
+
+    font-size: 11px;
+
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .campanias-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .campanias-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .back-button
+    ~ .stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .back-button
+    ~ .dashboard-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
 }
 
-@media (max-width: 700px) {
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .campanias-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .campanias-grid {
         grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-top: 14px;
     }
+
+
+    .campania-card {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .campania-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 9px;
+
+        font-size: 18px;
+    }
+
+
+    .campania-card h3 {
+        margin-top: 10px;
+
+        font-size: 15px;
+    }
+
+
+    .campania-finca {
+        margin-bottom: 12px;
+
+        font-size: 11px;
+    }
+
+
+    .campania-info-grid {
+        gap: 7px;
+    }
+
+
+    .campania-info-grid > div {
+        padding: 9px;
+    }
+
+
+    .campania-bottom {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    /* DETALLE */
+
+    .back-button
+    ~ .stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+
+        margin-bottom: 17px;
+    }
+
+
+    .back-button
+    ~ .stats
+    .card {
+        min-height: 60px;
+
+        padding: 10px;
+    }
+
+
+    .back-button
+    ~ .stats
+    .card-icon {
+        width: 34px;
+        height: 34px;
+
+        flex-basis: 34px;
+
+        font-size: 16px;
+    }
+
+
+    .back-button
+    ~ .dashboard-grid {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .back-button
+    ~ .dashboard-grid
+    .panel {
+        padding: 13px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL PEQUEÑO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .campanias-stats {
+        grid-template-columns: 1fr;
+    }
+
 
     .campania-info-grid {
         grid-template-columns: 1fr;
     }
 
-    .campania-bottom {
-        align-items: flex-start;
-        flex-direction: column;
+
+    .back-button
+    ~ .stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
 }

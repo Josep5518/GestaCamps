@@ -152,7 +152,7 @@ export class CampaniasView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats campanias-stats">
 
                 ${this.crearTarjeta(
                     "📅",
@@ -939,9 +939,7 @@ export class CampaniasView {
                 </span>
 
             </header>
-
-
-            <!-- PRODUCCIÓN -->
+                        <!-- PRODUCCIÓN -->
 
             <div
                 style="
@@ -1740,9 +1738,7 @@ export class CampaniasView {
         };
 
     }
-
-
-    // =====================================================
+        // =====================================================
     // LISTAS DETALLE
     // =====================================================
 
@@ -2568,9 +2564,7 @@ export class CampaniasView {
             );
 
     }
-
-
-    // =====================================================
+        // =====================================================
     // FINCAS
     // =====================================================
 

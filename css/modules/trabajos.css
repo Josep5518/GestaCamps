@@ -1,225 +1,21 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · TRABAJOS Y TAREAS
-   Día 21 · Modularización CSS
+   Día 25 · Pulido visual
 ===================================================== */
-
-/* ==================================
-   TRABAJOS Y TAREAS
-================================== */
-
-.trabajos-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-    margin-top: 20px;
-}
-
-
-.trabajo-card {
-    background-color: white;
-    border-radius: 14px;
-    padding: 22px;
-    box-shadow: var(--gc-shadow-card);
-}
-
-
-.trabajo-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-}
-
-
-.trabajo-icon {
-    width: 48px;
-    height: 48px;
-    background-color: var(--gc-green-soft);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-
-
-.trabajo-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-
-.trabajo-card h3 {
-    margin: 0 0 7px;
-}
-
-
-.trabajo-tipo {
-    margin: 0 0 14px;
-    color: var(--gc-green);
-    font-weight: 600;
-}
-
-
-.trabajo-location,
-.trabajo-cultivo,
-.trabajo-fecha {
-    color: var(--gc-muted);
-    font-size: 14px;
-}
-
-
-.trabajo-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 18px 0;
-}
-
-
-.trabajo-info div {
-    background-color: var(--gc-surface-soft);
-    border-radius: 9px;
-    padding: 12px;
-}
-
-
-.trabajo-info span {
-    display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-
-.trabajo-state-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 18px;
-}
-
-
-.task-state-button {
-    border: none;
-    border-radius: 8px;
-    padding: 8px 11px;
-    cursor: pointer;
-    background-color: var(--gc-green-soft);
-    color: var(--gc-green-text);
-}
-
-
-.task-state-button:hover {
-    background-color: #dcece4;
-}
-
-
-.trabajo-notas {
-    border-top: 1px solid var(--gc-border-soft);
-    margin-top: 18px;
-    padding-top: 14px;
-}
-
-
-.trabajo-notas span {
-    font-size: 12px;
-    color: var(--gc-muted);
-}
-
-
-.trabajo-notas p {
-    margin-bottom: 0;
-}
-
-
-@media (max-width: 1100px) {
-
-    .trabajos-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-
-@media (max-width: 650px) {
-
-    .trabajos-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-.completed {
-    background-color: #e8f3ec;
-    color: #2d6b46;
-}
 
 
 /* =====================================================
-   TRABAJOS · CAMPAÑA
+   KPI
 ===================================================== */
 
-/* ==================================
-   TRABAJOS - CAMPANYA
-================================== */
-
-.trabajo-campania {
-    margin: 10px 0 14px;
-    color: var(--gc-green-success);
-    font-weight: 600;
-    font-size: 14px;
+.trabajos-stats {
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
 }
-
-.trabajo-sin-campania {
-    color: #8a928e;
-    font-weight: 400;
-}
-
-.trabajo-linea {
-    margin: 11px 0;
-    color: #68756f;
-}
-
-.trabajo-info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin: 14px 0;
-}
-
-.trabajo-info-grid > div {
-    background-color: #f5f7f5;
-    padding: 12px;
-    border-radius: 10px;
-}
-
-.trabajo-info-grid span {
-    display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
-    margin-bottom: 4px;
-}
-
-.trabajo-state-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 15px;
-}
-
-
-/* =====================================================
-   DÍA 18 · TRABAJOS Y TAREAS
-===================================================== */
-
-/* =====================================================
-   GESTACAMPS
-   DÍA 18 - TRABAJOS Y TAREAS
-===================================================== */
 
 
 /* =====================================================
@@ -236,6 +32,8 @@
         );
 
     gap: 14px;
+
+    margin-top: 18px;
 }
 
 
@@ -256,36 +54,72 @@
 
     background: #ffffff;
 
-    box-shadow: var(--gc-shadow-card);
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
+}
+
+
+@media (hover: hover) {
+
+    .trabajo-card:hover {
+        transform: translateY(-2px);
+
+        border-color: #d7e3dc;
+
+        box-shadow:
+            0 12px 28px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
+    }
+
 }
 
 
 /* =====================================================
-   CABECERA
+   CABECERA TARJETA
 ===================================================== */
 
 .trabajo-card-header {
     display: flex;
-    align-items: center;
+
+    align-items: flex-start;
+
     justify-content: space-between;
 
-    gap: 10px;
+    gap: 12px;
 
-    margin-bottom: 10px;
+    margin-bottom: 11px;
 }
 
 
 .trabajo-icon {
-    width: 40px;
-    height: 40px;
+    width: 38px;
+    height: 38px;
 
-    flex: 0 0 40px;
+    flex: 0 0 38px;
 
     display: flex;
+
     align-items: center;
+
     justify-content: center;
 
-    border-radius: 11px;
+    border-radius: 10px;
 
     background: var(--gc-green-soft);
 
@@ -295,72 +129,58 @@
 
 .trabajo-actions {
     display: flex;
+
     align-items: center;
 
-    gap: 6px;
-}
-
-
-.trabajo-actions .secondary-button {
-    min-height: 34px;
-
-    padding:
-        0
-        10px;
-
-    font-size: 10px;
-}
-
-
-.trabajo-actions .delete-button {
-    width: 34px;
-    min-width: 34px;
-    height: 34px;
-
-    padding: 0;
+    gap: 7px;
 }
 
 
 /* =====================================================
-   TÍTULO
+   TITULAR
 ===================================================== */
 
-.trabajo-card > h3 {
+.trabajo-card h3 {
     margin:
         0
         0
-        4px;
+        6px;
 
     color: var(--gc-text);
 
-    font-size: 15px;
+    font-size: 14px;
 
-    line-height: 1.2;
+    line-height: 1.25;
 }
 
 
 .trabajo-tipo {
-    display: inline-block;
+    margin:
+        0
+        0
+        10px;
 
-    margin-bottom: 8px;
+    color: var(--gc-green);
 
-    color: var(--gc-green-text);
+    font-size: 10px;
 
-    font-size: 11px;
+    font-weight: 700;
 }
 
 
 /* =====================================================
-   DATOS PRINCIPALES
+   LÍNEAS SECUNDARIAS
 ===================================================== */
 
-.trabajo-linea,
-.trabajo-campania {
+.trabajo-location,
+.trabajo-cultivo,
+.trabajo-fecha,
+.trabajo-linea {
     margin:
         5px
         0;
 
-    color: var(--gc-muted-strong);
+    color: var(--gc-muted);
 
     font-size: 10px;
 
@@ -368,22 +188,52 @@
 }
 
 
+/* =====================================================
+   CAMPAÑA
+===================================================== */
+
 .trabajo-campania {
-    color: var(--gc-green-text);
+    display: inline-flex;
+
+    align-items: center;
+
+    width: fit-content;
+
+    margin:
+        7px
+        0
+        10px;
+
+    padding:
+        5px
+        8px;
+
+    border-radius: 999px;
+
+    background: var(--gc-green-soft);
+
+    color: var(--gc-green-success);
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.trabajo-sin-campania {
+    background: #f1f3f2;
+
+    color: #7d8782;
 
     font-weight: 600;
 }
 
 
-.trabajo-sin-campania {
-    color: var(--gc-muted);
-}
-
-
 /* =====================================================
-   ESTADO Y PRIORIDAD
+   INFO
 ===================================================== */
 
+.trabajo-info,
 .trabajo-info-grid {
     display: grid;
 
@@ -393,27 +243,31 @@
             minmax(0, 1fr)
         );
 
-    gap: 7px;
+    gap: 8px;
 
     margin:
-        10px
+        12px
         0;
 }
 
 
+.trabajo-info div,
 .trabajo-info-grid > div {
     min-width: 0;
 
     padding: 9px;
 
-    border-radius: 9px;
+    border-radius: 8px;
 
-    background: #f7f9f7;
+    background: var(--gc-surface-soft);
 }
 
 
+.trabajo-info span,
 .trabajo-info-grid span {
     display: block;
+
+    margin-bottom: 3px;
 
     color: var(--gc-muted);
 
@@ -421,14 +275,17 @@
 }
 
 
+.trabajo-info strong,
 .trabajo-info-grid strong {
     display: block;
 
-    margin-top: 3px;
-
     color: var(--gc-text);
 
-    font-size: 11px;
+    font-size: 10px;
+
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
 }
 
 
@@ -436,15 +293,40 @@
    NOTAS
 ===================================================== */
 
-.trabajo-card .trabajador-notas {
-    margin-top: 9px;
+.trabajo-notas {
+    margin-top: 12px;
 
-    padding-top: 9px;
+    padding-top: 10px;
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.trabajo-notas span {
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.trabajo-notas p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-text);
+
+    font-size: 9px;
+
+    line-height: 1.4;
 }
 
 
 /* =====================================================
-   BOTONES DE ESTADO
+   ACCIONES DE ESTADO
 ===================================================== */
 
 .trabajo-state-actions {
@@ -454,38 +336,55 @@
 
     gap: 7px;
 
-    margin-top: 11px;
+    margin-top: 12px;
 }
 
 
 .task-state-button {
-    min-height: 34px;
+    min-height: 32px;
 
     padding:
-        0
+        7px
         10px;
 
-    border:
-        1px solid
-        #d9e8df;
+    border: 0;
 
     border-radius: 8px;
 
-    background: #edf6f1;
+    background: var(--gc-green-soft);
 
     color: var(--gc-green-text);
 
-    font-family: inherit;
+    cursor: pointer;
 
     font-size: 9px;
-    font-weight: 700;
 
-    cursor: pointer;
+    font-weight: 600;
+
+    transition:
+        background 0.15s ease,
+        transform 0.15s ease;
 }
 
 
 .task-state-button:hover {
-    background: #dff0e7;
+    background: #dcece4;
+}
+
+
+@media (hover: hover) {
+
+    .task-state-button:hover {
+        transform: translateY(-1px);
+    }
+
+}
+
+
+.completed {
+    background: #e8f3ec;
+
+    color: #2d6b46;
 }
 
 
@@ -493,23 +392,359 @@
    SELECTOR LISTA / CALENDARIO
 ===================================================== */
 
-#vistaListaTrabajos,
-#vistaCalendarioTrabajos {
-    min-height: 36px !important;
+.trabajos-view-switch {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    margin:
+        18px
+        0
+        2px;
+
+    padding: 4px;
+
+    border-radius: 10px;
+
+    background: #eef3f0;
+}
+
+
+.trabajos-view-button {
+    min-height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 6px;
 
     padding:
-        0
-        12px !important;
+        7px
+        11px;
 
-    font-size: 10px !important;
+    border: none;
 
-    transition:
-        background
-        0.15s
-        ease,
-        color
-        0.15s
-        ease;
+    border-radius: 8px;
+
+    background: transparent;
+
+    color: var(--gc-muted);
+
+    cursor: pointer;
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+.trabajos-view-button.active {
+    background: var(--gc-green);
+
+    color: white;
+}
+
+
+/* =====================================================
+   CALENDARIO
+===================================================== */
+
+.trabajos-calendar {
+    margin-top: 16px;
+
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+}
+
+
+.trabajos-calendar-header {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+.trabajos-calendar-title {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-size: 15px;
+}
+
+
+.trabajos-calendar-nav {
+    display: flex;
+
+    gap: 7px;
+}
+
+
+.trabajos-calendar-nav button {
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: var(--gc-green-text);
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   CABECERA DÍAS
+===================================================== */
+
+.trabajos-calendar-weekdays {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            7,
+            minmax(0, 1fr)
+        );
+
+    gap: 5px;
+
+    margin-bottom: 5px;
+}
+
+
+.trabajos-calendar-weekdays span {
+    padding:
+        7px
+        4px;
+
+    color: var(--gc-muted);
+
+    text-align: center;
+
+    font-size: 8px;
+
+    font-weight: 700;
+
+    text-transform: uppercase;
+}
+
+
+/* =====================================================
+   DÍAS
+===================================================== */
+
+.trabajos-calendar-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            7,
+            minmax(0, 1fr)
+        );
+
+    gap: 5px;
+}
+
+
+.trabajos-calendar-day {
+    min-height: 92px;
+
+    padding: 7px;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 9px;
+
+    background: #fafcfb;
+}
+
+
+.trabajos-calendar-day.is-empty {
+    opacity: 0.3;
+
+    background: #f6f8f7;
+}
+
+
+.trabajos-calendar-day.is-today {
+    border-color: var(--gc-green);
+
+    background: #f1f8f4;
+}
+
+
+.trabajos-calendar-day-number {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color: var(--gc-text);
+
+    font-size: 9px;
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   EVENTOS CALENDARIO
+===================================================== */
+
+.trabajos-calendar-events {
+    display: grid;
+
+    gap: 4px;
+}
+
+
+.trabajos-calendar-event {
+    min-width: 0;
+
+    padding:
+        5px
+        6px;
+
+    border-radius: 6px;
+
+    background: var(--gc-green-soft);
+
+    color: var(--gc-green-text);
+
+    font-size: 7px;
+
+    line-height: 1.25;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+}
+
+
+.trabajos-calendar-event strong {
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+.trabajos-filters {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+
+    margin:
+        14px
+        0;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 12px;
+
+    background: white;
+}
+
+
+.trabajos-filter {
+    min-width: 0;
+}
+
+
+.trabajos-filter label {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+
+    font-weight: 700;
+}
+
+
+.trabajos-filter select,
+.trabajos-filter input {
+    width: 100%;
+
+    min-height: 36px;
+
+    padding:
+        7px
+        9px;
+
+    box-sizing: border-box;
+
+    border:
+        1px solid
+        var(--gc-border);
+
+    border-radius: 8px;
+
+    background: white;
+
+    color: var(--gc-text);
+
+    font-size: 10px;
 }
 
 
@@ -517,10 +752,32 @@
    TABLET
 ===================================================== */
 
-@media (max-width: 1050px) {
+@media (max-width: 1250px) {
+
+    .trabajos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .trabajos-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .trabajos-filters {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
 }
@@ -532,81 +789,55 @@
 
 @media (max-width: 760px) {
 
+    .trabajos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
     .trabajos-grid {
         grid-template-columns: 1fr;
 
-        gap: 11px;
+        gap: 12px;
     }
 
 
     .trabajo-card {
         padding: 13px;
 
-        border-radius: 13px;
-    }
-
-
-    .trabajo-card-header {
-        margin-bottom: 8px;
+        border-radius: 12px;
     }
 
 
     .trabajo-icon {
-        width: 38px;
-        height: 38px;
+        width: 34px;
+        height: 34px;
 
-        flex-basis: 38px;
+        flex-basis: 34px;
 
-        font-size: 17px;
+        border-radius: 9px;
+
+        font-size: 16px;
     }
 
 
-    .trabajo-actions .secondary-button {
-        min-height: 32px;
-
-        padding:
-            0
-            9px;
+    .trabajo-card h3 {
+        font-size: 13px;
     }
 
 
-    .trabajo-actions .delete-button {
-        width: 32px;
-        min-width: 32px;
-        height: 32px;
-    }
-
-
-    .trabajo-card > h3 {
-        font-size: 14px;
-    }
-
-
-    .trabajo-linea,
-    .trabajo-campania {
-        margin:
-            4px
-            0;
-
-        font-size: 9px;
-    }
-
-
+    .trabajo-info,
     .trabajo-info-grid {
-        margin:
-            8px
-            0;
-
-        gap: 6px;
+        gap: 7px;
     }
 
 
-    .trabajo-info-grid > div {
-        padding: 8px;
-    }
+    .trabajos-view-switch {
+        width: 100%;
 
-
-    .trabajo-state-actions {
         display: grid;
 
         grid-template-columns:
@@ -615,16 +846,74 @@
                 minmax(0, 1fr)
             );
 
-        gap: 6px;
-
-        margin-top: 9px;
+        box-sizing: border-box;
     }
 
 
-    .trabajo-state-actions button {
+    .trabajos-view-button {
         width: 100%;
+    }
 
-        justify-content: center;
+
+    .trabajos-calendar {
+        padding: 10px;
+    }
+
+
+    .trabajos-calendar-day {
+        min-height: 72px;
+
+        padding: 5px;
+    }
+
+
+    .trabajos-calendar-event {
+        padding:
+            4px
+            5px;
+
+        font-size: 6px;
+    }
+
+
+    .trabajos-filters {
+        grid-template-columns: 1fr;
+
+        gap: 8px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL PEQUEÑO
+===================================================== */
+
+@media (max-width: 430px) {
+
+    .trabajos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .trabajo-info,
+    .trabajo-info-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .trabajos-calendar {
+        overflow-x: auto;
+    }
+
+
+    .trabajos-calendar-weekdays,
+    .trabajos-calendar-grid {
+        min-width: 620px;
     }
 
 }

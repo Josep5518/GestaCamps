@@ -98,7 +98,7 @@ export class CultivosView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats cultivos-stats">
 
 
                 <div class="card">

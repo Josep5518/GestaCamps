@@ -1,58 +1,117 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · CULTIVOS
-   Día 21 · Modularización CSS
+   Día 25 · Pulido visual
 ===================================================== */
 
-/* ==================================
-   CULTIVOS
-================================== */
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
 
 .cultivos-stats {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
 }
 
+
+/* =====================================================
+   GRID
+===================================================== */
 
 .cultivos-grid {
     display: grid;
 
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
 
-    gap: 22px;
+    gap: 18px;
 
-    margin-top: 20px;
+    margin-top: 18px;
 }
 
 
+/* =====================================================
+   TARJETA
+===================================================== */
+
 .cultivo-card {
-    background-color: white;
+    min-width: 0;
+
+    padding: 18px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
 
     border-radius: 14px;
 
-    padding: 22px;
+    background: white;
 
-    box-shadow: var(--gc-shadow-card);
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        border-color 0.15s ease;
 }
 
+
+@media (hover: hover) {
+
+    .cultivo-card:hover {
+        transform: translateY(-2px);
+
+        border-color: #d7e3dc;
+
+        box-shadow:
+            0 12px 28px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
+    }
+
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
 
 .cultivo-card-header {
     display: flex;
 
     justify-content: space-between;
 
-    align-items: center;
+    align-items: flex-start;
 
-    margin-bottom: 18px;
+    gap: 12px;
+
+    margin-bottom: 14px;
 }
 
 
 .cultivo-icon {
-    width: 48px;
-    height: 48px;
+    width: 42px;
+    height: 42px;
 
-    background-color: var(--gc-green-soft);
-
-    border-radius: 12px;
+    flex: 0 0 42px;
 
     display: flex;
 
@@ -60,7 +119,11 @@
 
     justify-content: center;
 
-    font-size: 24px;
+    border-radius: 11px;
+
+    background-color: var(--gc-green-soft);
+
+    font-size: 20px;
 }
 
 
@@ -69,129 +132,326 @@
 
     align-items: center;
 
-    gap: 8px;
+    gap: 7px;
 }
 
 
+/* =====================================================
+   TÍTULO / UBICACIÓN
+===================================================== */
+
 .cultivo-card h3 {
-    margin: 0 0 10px 0;
+    margin:
+        12px
+        0
+        6px;
+
+    color: var(--gc-text);
+
+    font-size: 16px;
+
+    line-height: 1.2;
 }
 
 
 .cultivo-location {
-    color: var(--gc-muted);
-
-    margin: 0 0 20px 0;
-}
-
-
-.cultivo-info {
-    display: grid;
-
-    grid-template-columns: 1fr 1fr;
-
-    gap: 10px;
-}
-
-
-.cultivo-info div {
-    background-color: var(--gc-surface-soft);
-
-    border-radius: 9px;
-
-    padding: 12px;
-}
-
-
-.cultivo-info span {
-    display: block;
+    margin:
+        0
+        0
+        14px;
 
     color: var(--gc-muted);
 
     font-size: 12px;
 
-    margin-bottom: 5px;
+    line-height: 1.35;
 }
 
 
-.cultivo-date {
+/* =====================================================
+   INFORMACIÓN
+===================================================== */
+
+.cultivo-info,
+.cultivo-info-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
+}
+
+
+.cultivo-info {
+    margin-top: 0;
+}
+
+
+.cultivo-info-grid {
+    margin-top: 12px;
+}
+
+
+.cultivo-info div,
+.cultivo-info-grid > div {
+    min-width: 0;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    background-color: var(--gc-surface-soft);
+}
+
+
+.cultivo-info span,
+.cultivo-info-grid span {
+    display: block;
+
+    margin-bottom: 3px;
+
     color: var(--gc-muted);
 
-    font-size: 14px;
+    font-size: 9px;
 
-    margin-top: 18px;
+    line-height: 1.2;
 }
 
 
+.cultivo-info strong,
+.cultivo-info-grid strong {
+    display: block;
+
+    color: var(--gc-text);
+
+    font-size: 12px;
+
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =====================================================
+   CAMPAÑA
+===================================================== */
+
+.cultivo-campania {
+    display: inline-flex;
+
+    align-items: center;
+
+    width: fit-content;
+
+    margin:
+        8px
+        0
+        12px;
+
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background:
+        var(--gc-green-soft);
+
+    color:
+        var(--gc-green-success);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    line-height: 1;
+}
+
+
+.cultivo-sin-campania {
+    background:
+        #f1f3f2;
+
+    color:
+        #7d8782;
+
+    font-weight: 600;
+}
+
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+.cultivo-date {
+    margin-top: 14px;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+/* =====================================================
+   NOTAS
+===================================================== */
+
 .cultivo-notas {
-    margin-top: 18px;
+    margin-top: 14px;
 
-    padding-top: 14px;
+    padding-top: 12px;
 
-    border-top: 1px solid var(--gc-border-soft);
+    border-top:
+        1px solid
+        var(--gc-border-soft);
+
+    color: var(--gc-muted);
+
+    font-size: 11px;
+
+    line-height: 1.4;
 }
 
 
 .cultivo-notas span {
     display: block;
 
-    font-size: 12px;
+    margin-bottom: 4px;
 
     color: var(--gc-muted);
 
-    margin-bottom: 5px;
+    font-size: 9px;
 }
 
 
 .cultivo-notas p {
     margin: 0;
+
+    color: var(--gc-text);
+
+    font-size: 11px;
+
+    line-height: 1.4;
 }
 
 
 /* =====================================================
-   CULTIVOS · CAMPAÑA
+   TABLET
 ===================================================== */
 
-/* ==================================
-   CULTIVO - CAMPANYA
-================================== */
+@media (max-width: 1250px) {
 
-.cultivo-campania {
-    margin: 10px 0 16px;
-    color: var(--gc-green-success);
-    font-weight: 600;
-    font-size: 14px;
+    .cultivos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .cultivos-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 }
 
-.cultivo-sin-campania {
-    color: #8a928e;
-    font-weight: 400;
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .cultivos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .cultivos-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-top: 14px;
+    }
+
+
+    .cultivo-card {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .cultivo-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis: 38px;
+
+        border-radius: 9px;
+
+        font-size: 18px;
+    }
+
+
+    .cultivo-card h3 {
+        margin-top: 10px;
+
+        font-size: 15px;
+    }
+
+
+    .cultivo-location {
+        margin-bottom: 12px;
+
+        font-size: 11px;
+    }
+
+
+    .cultivo-info,
+    .cultivo-info-grid {
+        gap: 7px;
+    }
+
+
+    .cultivo-info div,
+    .cultivo-info-grid > div {
+        padding: 9px;
+    }
+
 }
 
-.cultivo-info-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
-    margin-top: 14px;
-}
 
-.cultivo-info-grid > div {
-    background-color: #f5f7f5;
-    padding: 12px;
-    border-radius: 10px;
-}
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
 
-.cultivo-info-grid span {
-    display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
-    margin-bottom: 4px;
-}
+@media (max-width: 420px) {
 
-.cultivo-notas {
-    margin-top: 15px;
-    padding-top: 15px;
-    border-top: 1px solid var(--gc-border-soft);
-    color: #68756f;
-    font-size: 13px;
+    .cultivos-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    .cultivo-info,
+    .cultivo-info-grid {
+        grid-template-columns: 1fr;
+    }
+
 }
