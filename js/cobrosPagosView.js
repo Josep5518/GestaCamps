@@ -2,9 +2,11 @@ import {
     formatearDinero
 } from "./utils.js";
 
+
 import {
     crearCobrosPagosCardsHelper
 } from "./cobrosPagos/cobrosPagosCards.js";
+
 
 import {
     crearCobrosPagosFormHelper
@@ -23,11 +25,14 @@ export class CobrosPagosView {
         this.mainContent =
             mainContent;
 
+
         this.cobroPagoService =
             cobroPagoService;
 
+
         this.facturaService =
             facturaService;
+
 
         this.gastoService =
             gastoService;
@@ -179,7 +184,7 @@ export class CobrosPagosView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats cobros-pagos-stats">
 
                 ${this.cardsHelper.crearTarjeta(
                     "💰",
@@ -189,6 +194,7 @@ export class CobrosPagosView {
                     )
                 )}
 
+
                 ${this.cardsHelper.crearTarjeta(
                     "📥",
                     "Pendiente de cobro",
@@ -197,6 +203,7 @@ export class CobrosPagosView {
                     )
                 )}
 
+
                 ${this.cardsHelper.crearTarjeta(
                     "💸",
                     "Pagado",
@@ -204,6 +211,7 @@ export class CobrosPagosView {
                         pagado
                     )
                 )}
+
 
                 ${this.cardsHelper.crearTarjeta(
                     "📤",
@@ -216,12 +224,7 @@ export class CobrosPagosView {
             </section>
 
 
-            <section
-                class="panel"
-                style="
-                    margin-top:22px;
-                "
-            >
+            <section class="panel cobros-facturas-panel">
 
                 <div class="panel-header">
 
@@ -231,13 +234,7 @@ export class CobrosPagosView {
                             Facturas por cobrar
                         </h3>
 
-                        <p
-                            style="
-                                margin:4px 0 0;
-                                color:#78837d;
-                                font-size:13px;
-                            "
-                        >
+                        <p class="cobros-panel-subtitle">
                             El estado se actualiza automáticamente según los cobros.
                         </p>
 
@@ -252,12 +249,7 @@ export class CobrosPagosView {
             </section>
 
 
-            <section
-                class="dashboard-grid"
-                style="
-                    margin-top:20px;
-                "
-            >
+            <section class="dashboard-grid cobros-dashboard-grid">
 
                 <div class="panel">
 
@@ -287,12 +279,7 @@ export class CobrosPagosView {
                     </div>
 
 
-                    <div
-                        style="
-                            display:grid;
-                            gap:10px;
-                        "
-                    >
+                    <div class="cobros-resumen-list">
 
                         ${this.cardsHelper.crearFilaResumen(
                             "Entradas",
@@ -300,11 +287,13 @@ export class CobrosPagosView {
                             "💰"
                         )}
 
+
                         ${this.cardsHelper.crearFilaResumen(
                             "Salidas",
                             pagado,
                             "💸"
                         )}
+
 
                         ${this.cardsHelper.crearFilaResumen(
                             "Caja",
@@ -321,12 +310,7 @@ export class CobrosPagosView {
             </section>
 
 
-            <section
-                class="panel cobros-movimientos-panel"
-                style="
-                    margin-top:20px;
-                "
-            >
+            <section class="panel cobros-movimientos-panel">
 
                 <div class="panel-header">
 
@@ -344,12 +328,15 @@ export class CobrosPagosView {
                         0
 
                             ? `
-                                <p>
+
+                                <p class="cobros-empty-text">
                                     Todavía no hay cobros ni pagos registrados.
                                 </p>
+
                             `
 
                             : `
+
                                 <div class="movimientos-list">
 
                                     ${movimientos
@@ -381,6 +368,7 @@ export class CobrosPagosView {
                                         .join("")}
 
                                 </div>
+
                             `
                     }
 

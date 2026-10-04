@@ -9,128 +9,69 @@ export class TrabajadorPortalView {
         fichajeService,
         onSalirPortal = null
     ) {
+        this.mainContent = mainContent;
+        this.trabajadorService = trabajadorService;
+        this.trabajoService = trabajoService;
+        this.incidenciaService = incidenciaService;
+        this.fincaService = fincaService;
+        this.fichajeService = fichajeService;
+        this.onSalirPortal = onSalirPortal;
 
-        this.mainContent =
-            mainContent;
-
-        this.trabajadorService =
-            trabajadorService;
-
-        this.trabajoService =
-            trabajoService;
-
-        this.incidenciaService =
-            incidenciaService;
-
-        this.fincaService =
-            fincaService;
-
-        this.fichajeService =
-            fichajeService;
-
-        this.onSalirPortal =
-            onSalirPortal;
-
-
-        this.claveSesion =
-            "gestacamps_trabajador_sesion";
-
-
-        this.claveModoCampo =
-            "gestacamps_modo_campo";
-
+        this.claveSesion = "gestacamps_trabajador_sesion";
+        this.claveModoCampo = "gestacamps_modo_campo";
     }
 
 
+    // =====================================================
+    // MOSTRAR
+    // =====================================================
+
     mostrar() {
+        const trabajador = this.obtenerTrabajadorSesion();
 
-        const trabajador =
-            this.obtenerTrabajadorSesion();
+        if (trabajador) {
 
-
-        if (
-            trabajador
-        ) {
-
-            if (
-                this.estaModoCampoActivo()
-            ) {
-
+            if (this.estaModoCampoActivo()) {
                 this.mostrarModoCampo(
                     trabajador
                 );
-
             }
 
             else {
-
                 this.mostrarPanel(
                     trabajador
                 );
-
             }
 
-
             return;
-
         }
 
-
         this.mostrarAcceso();
-
     }
 
 
-    mostrarAcceso() {
+    // =====================================================
+    // ACCESO POR PIN
+    // =====================================================
 
+    mostrarAcceso() {
         this.mainContent.innerHTML = `
 
-            <div
-                style="
-                    min-height: calc(100vh - 40px);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    padding: 20px;
-                "
-            >
+            <div class="portal-login-screen">
 
-                <div
-                    class="panel"
-                    style="
-                        width: 100%;
-                        max-width: 480px;
-                        padding: 30px;
-                    "
-                >
+                <div class="panel portal-login-card">
 
-                    <div
-                        style="
-                            text-align: center;
-                            margin-bottom: 28px;
-                        "
-                    >
+                    <div class="portal-login-header">
 
-                        <div
-                            style="
-                                font-size: 48px;
-                                margin-bottom: 12px;
-                            "
-                        >
+                        <div class="portal-login-icon">
                             👷
                         </div>
-
 
                         <h2>
                             Portal del trabajador
                         </h2>
 
-
-                        <p
-                            style="
-                                color: #78837d;
-                            "
-                        >
+                        <p>
                             Introduce tu PIN personal para acceder.
                         </p>
 
@@ -143,20 +84,15 @@ export class TrabajadorPortalView {
                             PIN
                         </label>
 
-
                         <input
                             id="pinPortalTrabajador"
+                            class="portal-login-pin"
                             type="password"
                             inputmode="numeric"
                             pattern="[0-9]*"
                             maxlength="4"
                             autocomplete="off"
                             placeholder="••••"
-                            style="
-                                text-align: center;
-                                font-size: 24px;
-                                letter-spacing: 8px;
-                            "
                         >
 
                     </div>
@@ -164,12 +100,8 @@ export class TrabajadorPortalView {
 
                     <button
                         id="entrarPortalTrabajador"
-                        class="primary-button"
+                        class="primary-button portal-login-button"
                         type="button"
-                        style="
-                            width: 100%;
-                            min-height: 50px;
-                        "
                     >
                         Entrar
                     </button>
@@ -177,13 +109,8 @@ export class TrabajadorPortalView {
 
                     <button
                         id="volverAdministracionPortal"
-                        class="secondary-button"
+                        class="secondary-button portal-login-button portal-login-back"
                         type="button"
-                        style="
-                            width: 100%;
-                            min-height: 50px;
-                            margin-top: 12px;
-                        "
                     >
                         ← Volver a administración
                     </button>
@@ -260,12 +187,10 @@ export class TrabajadorPortalView {
 
 
         input.focus();
-
     }
 
 
     iniciarSesion() {
-
         const input =
             document.getElementById(
                 "pinPortalTrabajador"
@@ -275,9 +200,7 @@ export class TrabajadorPortalView {
         if (
             !input
         ) {
-
             return;
-
         }
 
 
@@ -296,7 +219,6 @@ export class TrabajadorPortalView {
             );
 
             return;
-
         }
 
 
@@ -315,16 +237,12 @@ export class TrabajadorPortalView {
                 "PIN incorrecto."
             );
 
-
             input.value =
                 "";
 
-
             input.focus();
 
-
             return;
-
         }
 
 
@@ -338,7 +256,6 @@ export class TrabajadorPortalView {
             );
 
             return;
-
         }
 
 
@@ -358,12 +275,10 @@ export class TrabajadorPortalView {
         this.mostrarPanel(
             trabajador
         );
-
     }
 
 
     obtenerTrabajadorSesion() {
-
         const id =
             sessionStorage.getItem(
                 this.claveSesion
@@ -373,9 +288,7 @@ export class TrabajadorPortalView {
         if (
             !id
         ) {
-
             return null;
-
         }
 
 
@@ -397,48 +310,42 @@ export class TrabajadorPortalView {
                 this.claveSesion
             );
 
-
             sessionStorage.removeItem(
                 this.claveModoCampo
             );
 
-
             return null;
-
         }
 
 
         return trabajador;
-
     }
 
 
     cerrarSesion() {
-
         sessionStorage.removeItem(
             this.claveSesion
         );
-
 
         sessionStorage.removeItem(
             this.claveModoCampo
         );
 
-
         this.mostrarAcceso();
-
     }
 
 
-    estaModoCampoActivo() {
+    // =====================================================
+    // MODO CAMPO
+    // =====================================================
 
+    estaModoCampoActivo() {
         return (
             sessionStorage.getItem(
                 this.claveModoCampo
             ) ===
             "true"
         );
-
     }
 
 
@@ -455,7 +362,6 @@ export class TrabajadorPortalView {
         this.mostrarModoCampo(
             trabajador
         );
-
     }
 
 
@@ -471,9 +377,12 @@ export class TrabajadorPortalView {
         this.mostrarPanel(
             trabajador
         );
-
     }
 
+
+    // =====================================================
+    // PANEL COMPLETO
+    // =====================================================
 
     mostrarPanel(
         trabajador
@@ -526,6 +435,7 @@ export class TrabajadorPortalView {
 
         const fichajes =
             this.fichajeService
+
                 ? this.fichajeService
                     .obtenerPorTrabajador(
                         trabajador.id
@@ -534,6 +444,7 @@ export class TrabajadorPortalView {
                         0,
                         30
                     )
+
                 : [];
 
 
@@ -549,24 +460,19 @@ export class TrabajadorPortalView {
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <header class="topbar portal-worker-hero">
 
                 <div>
 
-                    <p
-                        style="
-                            margin-bottom: 3px;
-                            color: #78837d;
-                        "
-                    >
+                    <p class="portal-worker-kicker">
                         Portal del trabajador
                     </p>
 
-
                     <h2>
-                        Hola, ${this.obtenerNombreTrabajador(trabajador)}
+                        Hola, ${this.obtenerNombreTrabajador(
+                            trabajador
+                        )}
                     </h2>
-
 
                     <p>
                         ${trabajador.puesto || "Trabajador"}
@@ -575,13 +481,7 @@ export class TrabajadorPortalView {
                 </div>
 
 
-                <div
-                    style="
-                        display: flex;
-                        gap: 10px;
-                        flex-wrap: wrap;
-                    "
-                >
+                <div class="portal-header-actions">
 
                     <button
                         id="activarModoCampo"
@@ -614,111 +514,41 @@ export class TrabajadorPortalView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats portal-worker-stats">
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        📋
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Mis tareas
-                        </p>
-
-                        <h3>
-                            ${tareas.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStatPortal(
+                    "📋",
+                    "Mis tareas",
+                    tareas.length
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🕒
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Pendientes
-                        </p>
-
-                        <h3>
-                            ${pendientes.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStatPortal(
+                    "🕒",
+                    "Pendientes",
+                    pendientes.length
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🚜
-                    </span>
-
-                    <div>
-
-                        <p>
-                            En curso
-                        </p>
-
-                        <h3>
-                            ${enCurso.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStatPortal(
+                    "🚜",
+                    "En curso",
+                    enCurso.length
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        ⚠️
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Incidencias abiertas
-                        </p>
-
-                        <h3>
-                            ${incidenciasActivas.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStatPortal(
+                    "⚠️",
+                    "Incidencias abiertas",
+                    incidenciasActivas.length
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        ✏️
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Correcciones pendientes
-                        </p>
-
-                        <h3>
-                            ${correccionesPendientes}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStatPortal(
+                    "✏️",
+                    "Correcciones pendientes",
+                    correccionesPendientes
+                )}
 
             </section>
 
@@ -811,9 +641,44 @@ export class TrabajadorPortalView {
         this.configurarEventosFichajes(
             trabajador
         );
-
     }
 
+
+    crearStatPortal(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <div class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <p>
+                        ${titulo}
+                    </p>
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        `;
+    }
+
+
+    // =====================================================
+    // VISTA MODO CAMPO
+    // =====================================================
 
     mostrarModoCampo(
         trabajador
@@ -859,70 +724,33 @@ export class TrabajadorPortalView {
         const tareaActual =
             enCurso.length >
             0
+
                 ? enCurso[0]
+
                 : null;
 
 
         this.mainContent.innerHTML = `
 
-            <div
-                style="
-                    max-width: 900px;
-                    margin: 0 auto;
-                    padding-bottom: 40px;
-                "
-            >
+            <div class="modo-campo-shell">
 
-                <div
-                    style="
-                        background: #12372a;
-                        color: white;
-                        border-radius: 18px;
-                        padding: 22px;
-                        margin-bottom: 18px;
-                    "
-                >
+                <section class="modo-campo-hero">
 
-                    <div
-                        style="
-                            display: flex;
-                            justify-content: space-between;
-                            align-items: flex-start;
-                            gap: 15px;
-                            flex-wrap: wrap;
-                        "
-                    >
+                    <div class="modo-campo-hero-content">
 
                         <div>
 
-                            <p
-                                style="
-                                    margin: 0 0 5px;
-                                    opacity: 0.8;
-                                    font-size: 14px;
-                                "
-                            >
+                            <p class="modo-campo-kicker">
                                 🌾 GestaCamps · Modo campo
                             </p>
 
-
-                            <h2
-                                style="
-                                    margin: 0;
-                                    color: white;
-                                    font-size: 27px;
-                                "
-                            >
-                                ${this.obtenerNombreTrabajador(trabajador)}
+                            <h2>
+                                ${this.obtenerNombreTrabajador(
+                                    trabajador
+                                )}
                             </h2>
 
-
-                            <p
-                                style="
-                                    margin: 6px 0 0;
-                                    opacity: 0.85;
-                                "
-                            >
+                            <p class="modo-campo-role">
                                 ${trabajador.puesto || "Trabajador"}
                             </p>
 
@@ -931,38 +759,18 @@ export class TrabajadorPortalView {
 
                         <button
                             id="salirModoCampo"
+                            class="modo-campo-vista-completa"
                             type="button"
-                            style="
-                                border: 0;
-                                border-radius: 12px;
-                                min-height: 46px;
-                                padding: 0 16px;
-                                background: rgba(255,255,255,0.14);
-                                color: white;
-                                font-weight: 600;
-                                cursor: pointer;
-                            "
                         >
                             Vista completa
                         </button>
 
                     </div>
 
-                </div>
+                </section>
 
 
-                <div
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            repeat(
-                                auto-fit,
-                                minmax(145px, 1fr)
-                            );
-                        gap: 12px;
-                        margin-bottom: 18px;
-                    "
-                >
+                <section class="modo-campo-stats">
 
                     ${this.crearTarjetaCampoResumen(
                         "🚜",
@@ -984,29 +792,17 @@ export class TrabajadorPortalView {
                         incidenciasActivas.length
                     )}
 
-                </div>
+                </section>
 
 
                 <section
-                    style="
-                        background: white;
-                        border-radius: 18px;
-                        padding: 20px;
-                        box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-                        margin-bottom: 18px;
+                    class="
+                        modo-campo-panel
+                        modo-campo-trabajo-actual
                     "
                 >
 
-                    <p
-                        style="
-                            margin: 0 0 12px;
-                            color: #78837d;
-                            font-size: 13px;
-                            font-weight: 600;
-                            text-transform: uppercase;
-                            letter-spacing: .4px;
-                        "
-                    >
+                    <p class="modo-campo-section-label">
                         Trabajo actual
                     </p>
 
@@ -1020,38 +816,17 @@ export class TrabajadorPortalView {
 
                             : `
 
-                                <div
-                                    style="
-                                        text-align: center;
-                                        padding: 20px 10px;
-                                    "
-                                >
+                                <div class="modo-campo-empty">
 
-                                    <div
-                                        style="
-                                            font-size: 40px;
-                                            margin-bottom: 10px;
-                                        "
-                                    >
+                                    <div class="modo-campo-empty-icon">
                                         🌱
                                     </div>
 
-
-                                    <strong
-                                        style="
-                                            font-size: 18px;
-                                        "
-                                    >
+                                    <strong>
                                         No tienes ninguna tarea en curso
                                     </strong>
 
-
-                                    <p
-                                        style="
-                                            color: #78837d;
-                                            margin-bottom: 0;
-                                        "
-                                    >
+                                    <p>
                                         Puedes iniciar una de tus tareas pendientes.
                                     </p>
 
@@ -1063,33 +838,15 @@ export class TrabajadorPortalView {
                 </section>
 
 
-                <div
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            repeat(
-                                auto-fit,
-                                minmax(220px, 1fr)
-                            );
-                        gap: 12px;
-                        margin-bottom: 18px;
-                    "
-                >
+                <div class="modo-campo-quick-actions">
 
                     <button
                         id="campoVerTareas"
-                        type="button"
-                        style="
-                            min-height: 82px;
-                            padding: 16px;
-                            border: 0;
-                            border-radius: 16px;
-                            background: #1f7255;
-                            color: white;
-                            font-size: 17px;
-                            font-weight: 700;
-                            cursor: pointer;
+                        class="
+                            modo-campo-action
+                            modo-campo-action-primary
                         "
+                        type="button"
                     >
                         📋 Mis tareas
                     </button>
@@ -1097,18 +854,11 @@ export class TrabajadorPortalView {
 
                     <button
                         id="campoIncidencia"
-                        type="button"
-                        style="
-                            min-height: 82px;
-                            padding: 16px;
-                            border: 0;
-                            border-radius: 16px;
-                            background: #fff4cf;
-                            color: #6c5500;
-                            font-size: 17px;
-                            font-weight: 700;
-                            cursor: pointer;
+                        class="
+                            modo-campo-action
+                            modo-campo-action-warning
                         "
+                        type="button"
                     >
                         ⚠️ Comunicar incidencia
                     </button>
@@ -1122,38 +872,23 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <section
-                                style="
-                                    background: white;
-                                    border-radius: 18px;
-                                    padding: 20px;
-                                    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-                                    margin-bottom: 18px;
-                                "
-                            >
+                            <section class="modo-campo-panel">
 
-                                <h3
-                                    style="
-                                        margin-top: 0;
-                                    "
-                                >
+                                <h3 class="modo-campo-panel-title">
                                     🕒 Próximas tareas
                                 </h3>
 
 
-                                <div
-                                    style="
-                                        display: grid;
-                                        gap: 12px;
-                                    "
-                                >
+                                <div class="modo-campo-pending-list">
 
-                                    ${pendientes.map(
-                                        tarea =>
-                                            this.crearTarjetaPendienteCampo(
-                                                tarea
-                                            )
-                                    ).join("")}
+                                    ${pendientes
+                                        .map(
+                                            tarea =>
+                                                this.crearTarjetaPendienteCampo(
+                                                    tarea
+                                                )
+                                        )
+                                        .join("")}
 
                                 </div>
 
@@ -1171,64 +906,42 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <section
-                                style="
-                                    background: white;
-                                    border-radius: 18px;
-                                    padding: 20px;
-                                    box-shadow: 0 4px 18px rgba(0,0,0,0.06);
-                                    margin-bottom: 18px;
-                                "
-                            >
+                            <section class="modo-campo-panel">
 
-                                <h3
-                                    style="
-                                        margin-top: 0;
-                                    "
-                                >
+                                <h3 class="modo-campo-panel-title">
                                     ⚠️ Mis incidencias activas
                                 </h3>
 
 
-                                ${incidenciasActivas.map(
-                                    incidencia => `
+                                <div class="modo-campo-incidencias-list">
 
-                                        <div
-                                            style="
-                                                padding: 14px 0;
-                                                border-bottom: 1px solid #edf0ed;
-                                            "
-                                        >
+                                    ${incidenciasActivas
+                                        .map(
+                                            incidencia => `
 
-                                            <strong>
-                                                ${incidencia.tipo}
-                                            </strong>
+                                                <div class="modo-campo-incidencia-item">
 
+                                                    <strong>
+                                                        ${incidencia.tipo}
+                                                    </strong>
 
-                                            <p
-                                                style="
-                                                    margin: 5px 0;
-                                                    color: #5f6d66;
-                                                "
-                                            >
-                                                ${incidencia.descripcion}
-                                            </p>
+                                                    <p>
+                                                        ${incidencia.descripcion}
+                                                    </p>
 
+                                                    <small>
+                                                        ${incidencia.estado}
+                                                        ·
+                                                        ${incidencia.prioridad}
+                                                    </small>
 
-                                            <small
-                                                style="
-                                                    color: #78837d;
-                                                "
-                                            >
-                                                ${incidencia.estado}
-                                                ·
-                                                ${incidencia.prioridad}
-                                            </small>
+                                                </div>
 
-                                        </div>
+                                            `
+                                        )
+                                        .join("")}
 
-                                    `
-                                ).join("")}
+                                </div>
 
                             </section>
 
@@ -1240,18 +953,8 @@ export class TrabajadorPortalView {
 
                 <button
                     id="campoCerrarSesion"
+                    class="modo-campo-logout"
                     type="button"
-                    style="
-                        width: 100%;
-                        min-height: 56px;
-                        border: 1px solid #dce5df;
-                        border-radius: 15px;
-                        background: white;
-                        color: #34483e;
-                        font-size: 16px;
-                        font-weight: 600;
-                        cursor: pointer;
-                    "
                 >
                     Cerrar sesión
                 </button>
@@ -1358,7 +1061,6 @@ export class TrabajadorPortalView {
 
                 }
             );
-
     }
 
 
@@ -1370,50 +1072,23 @@ export class TrabajadorPortalView {
 
         return `
 
-            <div
-                style="
-                    background: white;
-                    border-radius: 16px;
-                    padding: 16px;
-                    box-shadow: 0 4px 18px rgba(0,0,0,0.05);
-                "
-            >
+            <div class="modo-campo-stat-card">
 
-                <div
-                    style="
-                        font-size: 26px;
-                        margin-bottom: 8px;
-                    "
-                >
+                <div class="modo-campo-stat-icon">
                     ${icono}
                 </div>
 
-
-                <p
-                    style="
-                        margin: 0;
-                        color: #78837d;
-                        font-size: 13px;
-                    "
-                >
+                <p>
                     ${titulo}
                 </p>
 
-
-                <strong
-                    style="
-                        display: block;
-                        font-size: 25px;
-                        margin-top: 3px;
-                    "
-                >
+                <strong>
                     ${valor}
                 </strong>
 
             </div>
 
         `;
-
     }
 
 
@@ -1423,65 +1098,31 @@ export class TrabajadorPortalView {
 
         return `
 
-            <div>
+            <div class="modo-campo-current-task">
 
-                <div
-                    style="
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: flex-start;
-                        gap: 15px;
-                        flex-wrap: wrap;
-                    "
-                >
+                <div class="modo-campo-current-head">
 
                     <div>
 
-                        <h2
-                            style="
-                                margin: 0 0 6px;
-                                font-size: 24px;
-                            "
-                        >
+                        <h2>
                             ${tarea.titulo}
                         </h2>
 
-
-                        <strong
-                            style="
-                                color: #247354;
-                            "
-                        >
+                        <strong class="modo-campo-task-type">
                             ${tarea.tipo || "Trabajo"}
                         </strong>
 
                     </div>
 
 
-                    <span
-                        style="
-                            padding: 7px 12px;
-                            border-radius: 999px;
-                            background: #e3f3eb;
-                            color: #176044;
-                            font-size: 13px;
-                            font-weight: 600;
-                        "
-                    >
+                    <span class="modo-campo-status">
                         En curso
                     </span>
 
                 </div>
 
 
-                <div
-                    style="
-                        margin-top: 18px;
-                        display: grid;
-                        gap: 10px;
-                        font-size: 16px;
-                    "
-                >
+                <div class="modo-campo-current-meta">
 
                     <div>
                         📍
@@ -1566,25 +1207,13 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <div
-                                style="
-                                    margin-top: 16px;
-                                    padding: 14px;
-                                    border-radius: 12px;
-                                    background: #f5f7f5;
-                                "
-                            >
+                            <div class="modo-campo-task-notes">
 
                                 <strong>
                                     Notas
                                 </strong>
 
-
-                                <p
-                                    style="
-                                        margin: 6px 0 0;
-                                    "
-                                >
+                                <p>
                                     ${tarea.notas}
                                 </p>
 
@@ -1598,20 +1227,11 @@ export class TrabajadorPortalView {
 
                 <button
                     type="button"
-                    class="campo-completar-tarea"
-                    data-id="${tarea.id}"
-                    style="
-                        width: 100%;
-                        min-height: 62px;
-                        margin-top: 20px;
-                        border: 0;
-                        border-radius: 15px;
-                        background: #1f7255;
-                        color: white;
-                        font-size: 18px;
-                        font-weight: 700;
-                        cursor: pointer;
+                    class="
+                        campo-completar-tarea
+                        modo-campo-complete-button
                     "
+                    data-id="${tarea.id}"
                 >
                     ✅ Completar tarea
                 </button>
@@ -1619,7 +1239,6 @@ export class TrabajadorPortalView {
             </div>
 
         `;
-
     }
 
 
@@ -1629,29 +1248,13 @@ export class TrabajadorPortalView {
 
         return `
 
-            <div
-                style="
-                    border: 1px solid #e4eae6;
-                    border-radius: 14px;
-                    padding: 16px;
-                "
-            >
+            <article class="modo-campo-pending-card">
 
-                <h3
-                    style="
-                        margin: 0 0 6px;
-                    "
-                >
+                <h3>
                     ${tarea.titulo}
                 </h3>
 
-
-                <p
-                    style="
-                        margin: 5px 0;
-                        color: #5f6d66;
-                    "
-                >
+                <p>
                     📍 ${tarea.fincaNombre || "Sin finca"}
                 </p>
 
@@ -1661,12 +1264,7 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <p
-                                style="
-                                    margin: 5px 0;
-                                    color: #5f6d66;
-                                "
-                            >
+                            <p>
                                 🗓️ ${tarea.campaniaNombre}
                             </p>
 
@@ -1676,40 +1274,27 @@ export class TrabajadorPortalView {
                 }
 
 
-                <p
-                    style="
-                        margin: 5px 0;
-                        color: #5f6d66;
-                    "
-                >
-                    📅 ${this.formatearFecha(tarea.fecha)}
+                <p>
+                    📅 ${this.formatearFecha(
+                        tarea.fecha
+                    )}
                 </p>
 
 
                 <button
                     type="button"
-                    class="campo-iniciar-tarea"
-                    data-id="${tarea.id}"
-                    style="
-                        width: 100%;
-                        min-height: 54px;
-                        margin-top: 13px;
-                        border: 0;
-                        border-radius: 13px;
-                        background: #1f7255;
-                        color: white;
-                        font-size: 16px;
-                        font-weight: 700;
-                        cursor: pointer;
+                    class="
+                        campo-iniciar-tarea
+                        modo-campo-start-button
                     "
+                    data-id="${tarea.id}"
                 >
                     ▶️ Iniciar tarea
                 </button>
 
-            </div>
+            </article>
 
         `;
-
     }
 
 
@@ -1737,9 +1322,12 @@ export class TrabajadorPortalView {
             );
 
         }
-
     }
 
+
+    // =====================================================
+    // TAREAS
+    // =====================================================
 
     obtenerTareasTrabajador(
         trabajadorId
@@ -1751,7 +1339,10 @@ export class TrabajadorPortalView {
             )
             .slice()
             .sort(
-                (a, b) =>
+                (
+                    a,
+                    b
+                ) =>
                     new Date(
                         a.fecha
                     )
@@ -1760,7 +1351,6 @@ export class TrabajadorPortalView {
                         b.fecha
                     )
             );
-
     }
 
 
@@ -1774,20 +1364,13 @@ export class TrabajadorPortalView {
             tareas.length ===
             0
         ) {
-
             return "";
-
         }
 
 
         return `
 
-            <section
-                class="panel"
-                style="
-                    margin-top: 24px;
-                "
-            >
+            <section class="panel portal-section">
 
                 <div class="panel-header">
 
@@ -1798,32 +1381,23 @@ export class TrabajadorPortalView {
                 </div>
 
 
-                <div
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            repeat(
-                                auto-fit,
-                                minmax(280px, 1fr)
-                            );
-                        gap: 18px;
-                    "
-                >
+                <div class="portal-task-grid">
 
-                    ${tareas.map(
-                        tarea =>
-                            this.crearTarjetaTarea(
-                                tarea,
-                                tipo
-                            )
-                    ).join("")}
+                    ${tareas
+                        .map(
+                            tarea =>
+                                this.crearTarjetaTarea(
+                                    tarea,
+                                    tipo
+                                )
+                        )
+                        .join("")}
 
                 </div>
 
             </section>
 
         `;
-
     }
 
 
@@ -1834,25 +1408,14 @@ export class TrabajadorPortalView {
 
         return `
 
-            <div
-                style="
-                    border: 1px solid #e1e8e3;
-                    border-radius: 14px;
-                    padding: 18px;
-                    background: white;
-                "
-            >
+            <article class="portal-task-card">
 
                 <h3>
                     ${tarea.titulo}
                 </h3>
 
 
-                <strong
-                    style="
-                        color: #247354;
-                    "
-                >
+                <strong class="portal-task-type">
                     ${tarea.tipo || "Trabajo"}
                 </strong>
 
@@ -1908,7 +1471,9 @@ export class TrabajadorPortalView {
 
 
                 <p class="trabajo-linea">
-                    📅 ${this.formatearFecha(tarea.fecha)}
+                    📅 ${this.formatearFecha(
+                        tarea.fecha
+                    )}
                 </p>
 
 
@@ -1976,14 +1541,7 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <div
-                                style="
-                                    padding: 12px;
-                                    margin-top: 12px;
-                                    background: #f6f8f6;
-                                    border-radius: 10px;
-                                "
-                            >
+                            <div class="portal-task-notes">
                                 ${tarea.notas}
                             </div>
 
@@ -1994,11 +1552,9 @@ export class TrabajadorPortalView {
 
 
                 <div
-                    class="form-actions"
-                    style="
-                        justify-content: flex-start;
-                        flex-wrap: wrap;
-                        margin-top: 16px;
+                    class="
+                        form-actions
+                        portal-task-actions
                     "
                 >
 
@@ -2009,7 +1565,10 @@ export class TrabajadorPortalView {
                             ? `
 
                                 <button
-                                    class="primary-button portal-iniciar-tarea"
+                                    class="
+                                        primary-button
+                                        portal-iniciar-tarea
+                                    "
                                     data-id="${tarea.id}"
                                     type="button"
                                 >
@@ -2029,7 +1588,10 @@ export class TrabajadorPortalView {
                             ? `
 
                                 <button
-                                    class="primary-button portal-completar-tarea"
+                                    class="
+                                        primary-button
+                                        portal-completar-tarea
+                                    "
                                     data-id="${tarea.id}"
                                     type="button"
                                 >
@@ -2043,10 +1605,9 @@ export class TrabajadorPortalView {
 
                 </div>
 
-            </div>
+            </article>
 
         `;
-
     }
 
 
@@ -2094,7 +1655,6 @@ export class TrabajadorPortalView {
 
                 }
             );
-
     }
 
 
@@ -2121,7 +1681,6 @@ export class TrabajadorPortalView {
             );
 
             return false;
-
         }
 
 
@@ -2133,7 +1692,9 @@ export class TrabajadorPortalView {
             tarea.trabajadorIds
                 .some(
                     id =>
-                        String(id) ===
+                        String(
+                            id
+                        ) ===
                         String(
                             trabajador.id
                         )
@@ -2149,7 +1710,6 @@ export class TrabajadorPortalView {
             );
 
             return false;
-
         }
 
 
@@ -2170,7 +1730,6 @@ export class TrabajadorPortalView {
             );
 
             return false;
-
         }
 
 
@@ -2186,9 +1745,12 @@ export class TrabajadorPortalView {
 
 
         return true;
-
     }
 
+
+    // =====================================================
+    // FICHAJES
+    // =====================================================
 
     crearSeccionFichajes(
         fichajes
@@ -2196,12 +1758,7 @@ export class TrabajadorPortalView {
 
         return `
 
-            <section
-                class="panel"
-                style="
-                    margin-top: 24px;
-                "
-            >
+            <section class="panel portal-section">
 
                 <div class="panel-header">
 
@@ -2209,12 +1766,7 @@ export class TrabajadorPortalView {
                         🕒 Mis fichajes
                     </h3>
 
-                    <p
-                        style="
-                            margin: 5px 0 0;
-                            color: #78837d;
-                        "
-                    >
+                    <p>
                         Consulta tus entradas y salidas y solicita una corrección si detectas una hora incorrecta.
                     </p>
 
@@ -2245,20 +1797,27 @@ export class TrabajadorPortalView {
 
                         `
 
-                        : fichajes
-                            .map(
-                                fichaje =>
-                                    this.crearTarjetaFichaje(
-                                        fichaje
+                        : `
+
+                            <div class="portal-fichajes-list">
+
+                                ${fichajes
+                                    .map(
+                                        fichaje =>
+                                            this.crearTarjetaFichaje(
+                                                fichaje
+                                            )
                                     )
-                            )
-                            .join("")
+                                    .join("")}
+
+                            </div>
+
+                        `
                 }
 
             </section>
 
         `;
-
     }
 
 
@@ -2283,46 +1842,31 @@ export class TrabajadorPortalView {
             "Pendiente";
 
 
-        const estiloEstado =
-            this.obtenerEstiloCorreccion(
+        const claseEstado =
+            this.obtenerClaseCorreccion(
                 estadoCorreccion
             );
 
 
         return `
 
-            <div
-                style="
-                    padding: 14px 0;
-                    border-bottom: 1px solid #edf0ed;
-                "
-            >
+            <article class="portal-fichaje-item">
 
-                <div
-                    style="
-                        display: flex;
-                        align-items: flex-start;
-                        justify-content: space-between;
-                        gap: 12px;
-                        flex-wrap: wrap;
-                    "
-                >
+                <div class="portal-fichaje-head">
 
-                    <div
-                        style="
-                            display: flex;
-                            gap: 10px;
-                            align-items: flex-start;
-                        "
-                    >
+                    <div class="portal-fichaje-identity">
 
                         <span>
+
                             ${
                                 fichaje.tipo ===
                                 "Entrada"
+
                                     ? "🟢"
+
                                     : "🔴"
                             }
+
                         </span>
 
 
@@ -2332,12 +1876,7 @@ export class TrabajadorPortalView {
                                 ${fichaje.tipo}
                             </strong>
 
-                            <p
-                                style="
-                                    margin: 4px 0 0;
-                                    color: #65736c;
-                                "
-                            >
+                            <p>
                                 ${this.formatearFecha(
                                     fichaje.fecha
                                 )}
@@ -2356,15 +1895,9 @@ export class TrabajadorPortalView {
                             ? `
 
                                 <span
-                                    style="
-                                        display: inline-flex;
-                                        align-items: center;
-                                        padding: 5px 9px;
-                                        border-radius: 999px;
-                                        background: ${estiloEstado.fondo};
-                                        color: ${estiloEstado.texto};
-                                        font-size: 12px;
-                                        font-weight: 700;
+                                    class="
+                                        portal-correction-status
+                                        ${claseEstado}
                                     "
                                 >
                                     Corrección ${estadoCorreccion}
@@ -2383,33 +1916,20 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <div
-                                style="
-                                    margin-top: 10px;
-                                    padding: 11px;
-                                    border-radius: 10px;
-                                    background: #f7f9f7;
-                                "
-                            >
+                            <div class="portal-correction-box">
 
-                                <p
-                                    style="
-                                        margin: 0;
-                                    "
-                                >
+                                <p>
+
                                     <strong>
                                         Hora solicitada:
                                     </strong>
+
                                     ${correccion.nuevaHora || "—"}
+
                                 </p>
 
 
-                                <p
-                                    style="
-                                        margin: 5px 0 0;
-                                        color: #65736c;
-                                    "
-                                >
+                                <p class="portal-correction-muted">
                                     ${correccion.motivo || "Sin motivo"}
                                 </p>
 
@@ -2420,13 +1940,7 @@ export class TrabajadorPortalView {
 
                                         ? `
 
-                                            <p
-                                                style="
-                                                    margin: 5px 0 0;
-                                                    color: #65736c;
-                                                    font-size: 12px;
-                                                "
-                                            >
+                                            <p class="portal-correction-original">
                                                 Hora original:
                                                 ${correccion.horaOriginal || "—"}
                                             </p>
@@ -2451,11 +1965,11 @@ export class TrabajadorPortalView {
 
                             <button
                                 type="button"
-                                class="secondary-button portal-corregir-fichaje"
-                                data-id="${fichaje.id}"
-                                style="
-                                    margin-top: 10px;
+                                class="
+                                    secondary-button
+                                    portal-corregir-fichaje
                                 "
+                                data-id="${fichaje.id}"
                             >
                                 ✏️ Solicitar corrección
                             </button>
@@ -2464,27 +1978,20 @@ export class TrabajadorPortalView {
 
                         : `
 
-                            <p
-                                style="
-                                    margin: 10px 0 0;
-                                    color: #8a6b00;
-                                    font-size: 12px;
-                                "
-                            >
+                            <p class="portal-correction-pending">
                                 ⏳ Esta solicitud está pendiente de revisión.
                             </p>
 
                         `
                 }
 
-            </div>
+            </article>
 
         `;
-
     }
 
 
-    obtenerEstiloCorreccion(
+    obtenerClaseCorreccion(
         estado
     ) {
 
@@ -2492,17 +1999,7 @@ export class TrabajadorPortalView {
             estado ===
             "Aprobada"
         ) {
-
-            return {
-
-                fondo:
-                    "#def5e8",
-
-                texto:
-                    "#176044"
-
-            };
-
+            return "aprobada";
         }
 
 
@@ -2510,30 +2007,11 @@ export class TrabajadorPortalView {
             estado ===
             "Rechazada"
         ) {
-
-            return {
-
-                fondo:
-                    "#fde8e8",
-
-                texto:
-                    "#a42b2b"
-
-            };
-
+            return "rechazada";
         }
 
 
-        return {
-
-            fondo:
-                "#fff4d8",
-
-            texto:
-                "#745500"
-
-        };
-
+        return "pendiente";
     }
 
 
@@ -2562,7 +2040,6 @@ export class TrabajadorPortalView {
 
                 }
             );
-
     }
 
 
@@ -2600,7 +2077,6 @@ export class TrabajadorPortalView {
 
 
             return;
-
         }
 
 
@@ -2622,7 +2098,6 @@ export class TrabajadorPortalView {
 
 
             return;
-
         }
 
 
@@ -2637,7 +2112,7 @@ export class TrabajadorPortalView {
             </button>
 
 
-            <header class="topbar">
+            <header class="topbar portal-form-header">
 
                 <div>
 
@@ -2654,26 +2129,15 @@ export class TrabajadorPortalView {
             </header>
 
 
-            <div class="form-panel">
+            <div class="form-panel portal-form-panel">
 
-                <div
-                    style="
-                        padding: 14px;
-                        margin-bottom: 18px;
-                        border-radius: 12px;
-                        background: #f5f8f6;
-                    "
-                >
+                <div class="portal-fichaje-summary">
 
                     <strong>
                         ${fichaje.tipo}
                     </strong>
 
-                    <p
-                        style="
-                            margin: 6px 0 0;
-                        "
-                    >
+                    <p>
                         ${this.formatearFecha(
                             fichaje.fecha
                         )}
@@ -2700,7 +2164,10 @@ export class TrabajadorPortalView {
                             fichaje.hora
                             ||
                             ""
-                        ).slice(0, 5)}"
+                        ).slice(
+                            0,
+                            5
+                        )}"
                     >
 
                 </div>
@@ -2817,7 +2284,6 @@ export class TrabajadorPortalView {
                         );
 
                         return;
-
                     }
 
 
@@ -2832,9 +2298,12 @@ export class TrabajadorPortalView {
 
                 }
             );
-
     }
 
+
+    // =====================================================
+    // INCIDENCIAS
+    // =====================================================
 
     crearSeccionIncidencias(
         incidencias
@@ -2844,20 +2313,13 @@ export class TrabajadorPortalView {
             incidencias.length ===
             0
         ) {
-
             return "";
-
         }
 
 
         return `
 
-            <section
-                class="panel"
-                style="
-                    margin-top: 24px;
-                "
-            >
+            <section class="panel portal-section">
 
                 <div class="panel-header">
 
@@ -2868,62 +2330,64 @@ export class TrabajadorPortalView {
                 </div>
 
 
-                ${incidencias.map(
-                    incidencia => `
+                <div class="portal-incidencias-list">
 
-                        <div class="activity">
+                    ${incidencias
+                        .map(
+                            incidencia => `
 
-                            <span>
+                                <div
+                                    class="
+                                        activity
+                                        portal-incidencia-item
+                                    "
+                                >
 
-                                ${
-                                    incidencia.estado ===
-                                    "Resuelta"
-                                        ? "✅"
-                                        : "⚠️"
-                                }
+                                    <span>
 
-                            </span>
+                                        ${
+                                            incidencia.estado ===
+                                            "Resuelta"
 
+                                                ? "✅"
 
-                            <div
-                                style="
-                                    flex: 1;
-                                "
-                            >
+                                                : "⚠️"
+                                        }
 
-                                <strong>
-                                    ${incidencia.tipo}
-                                </strong>
-
-
-                                <p>
-                                    ${incidencia.descripcion}
-                                </p>
+                                    </span>
 
 
-                                <p>
+                                    <div class="portal-incidencia-content">
 
-                                    ${this.formatearFechaHora(
-                                        incidencia.fechaCreacion
-                                    )}
+                                        <strong>
+                                            ${incidencia.tipo}
+                                        </strong>
 
-                                    ·
+                                        <p>
+                                            ${incidencia.descripcion}
+                                        </p>
 
-                                    ${incidencia.estado}
+                                        <p>
+                                            ${this.formatearFechaHora(
+                                                incidencia.fechaCreacion
+                                            )}
+                                            ·
+                                            ${incidencia.estado}
+                                        </p>
 
-                                </p>
+                                    </div>
 
-                            </div>
+                                </div>
 
-                        </div>
+                            `
+                        )
+                        .join("")}
 
-                    `
-                ).join("")}
+                </div>
 
             </section>
 
         `;
-
     }
 
 
@@ -2955,7 +2419,7 @@ export class TrabajadorPortalView {
             </button>
 
 
-            <header class="topbar">
+            <header class="topbar portal-form-header">
 
                 <div>
 
@@ -2972,7 +2436,7 @@ export class TrabajadorPortalView {
             </header>
 
 
-            <div class="form-panel">
+            <div class="form-panel portal-form-panel">
 
                 <div class="form-group">
 
@@ -3063,17 +2527,18 @@ export class TrabajadorPortalView {
                             Sin finca concreta
                         </option>
 
-                        ${fincas.map(
-                            finca => `
 
-                                <option
-                                    value="${finca.id}"
-                                >
-                                    ${finca.nombre}
-                                </option>
+                        ${fincas
+                            .map(
+                                finca => `
 
-                            `
-                        ).join("")}
+                                    <option value="${finca.id}">
+                                        ${finca.nombre}
+                                    </option>
+
+                                `
+                            )
+                            .join("")}
 
                     </select>
 
@@ -3092,17 +2557,18 @@ export class TrabajadorPortalView {
                             Sin tarea relacionada
                         </option>
 
-                        ${tareas.map(
-                            tarea => `
 
-                                <option
-                                    value="${tarea.id}"
-                                >
-                                    ${tarea.titulo}
-                                </option>
+                        ${tareas
+                            .map(
+                                tarea => `
 
-                            `
-                        ).join("")}
+                                    <option value="${tarea.id}">
+                                        ${tarea.titulo}
+                                    </option>
+
+                                `
+                            )
+                            .join("")}
 
                     </select>
 
@@ -3265,7 +2731,6 @@ export class TrabajadorPortalView {
                         );
 
                         return;
-
                     }
 
 
@@ -3278,16 +2743,17 @@ export class TrabajadorPortalView {
 
                 }
             );
-
     }
 
 
-    volverAdministracion() {
+    // =====================================================
+    // SALIR / HELPERS
+    // =====================================================
 
+    volverAdministracion() {
         sessionStorage.removeItem(
             this.claveSesion
         );
-
 
         sessionStorage.removeItem(
             this.claveModoCampo
@@ -3295,14 +2761,14 @@ export class TrabajadorPortalView {
 
 
         if (
-            typeof this.onSalirPortal ===
+            typeof
+            this.onSalirPortal ===
             "function"
         ) {
 
             this.onSalirPortal();
 
         }
-
     }
 
 
@@ -3314,9 +2780,12 @@ export class TrabajadorPortalView {
             trabajador.nombre,
             trabajador.apellidos
         ]
-            .filter(Boolean)
-            .join(" ");
-
+            .filter(
+                Boolean
+            )
+            .join(
+                " "
+            );
     }
 
 
@@ -3327,30 +2796,27 @@ export class TrabajadorPortalView {
         if (
             !fecha
         ) {
-
             return "—";
-
         }
 
 
         const partes =
-            fecha.split("-");
+            fecha.split(
+                "-"
+            );
 
 
         if (
             partes.length !==
             3
         ) {
-
             return fecha;
-
         }
 
 
         return (
             `${partes[2]}/${partes[1]}/${partes[0]}`
         );
-
     }
 
 
@@ -3361,9 +2827,7 @@ export class TrabajadorPortalView {
         if (
             !valor
         ) {
-
             return "—";
-
         }
 
 
@@ -3378,9 +2842,7 @@ export class TrabajadorPortalView {
                 fecha.getTime()
             )
         ) {
-
             return valor;
-
         }
 
 
@@ -3406,7 +2868,5 @@ export class TrabajadorPortalView {
 
                 }
             );
-
     }
-
 }

@@ -1,7 +1,7 @@
 /* =====================================================
    GESTACAMPS
    STYLE.CSS DEFINITIVO
-   Día 23 · Modularización CSS completada
+   Día 26 · Refactorización 1
 ===================================================== */
 
 
@@ -63,9 +63,15 @@
 
 @import url("./modules/cuaderno-campo.css");
 
+@import url("./modules/tratamientos.css");
+
 @import url("./modules/historial.css");
 
+@import url("./modules/incidencias.css");
 
+@import url("./modules/usuarios.css");
+
+@import url("./modules/buscador-global.css");
 /* =====================================================
    SIDEBAR
    Se carga al final para conservar sus correcciones

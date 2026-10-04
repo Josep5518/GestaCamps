@@ -1,59 +1,500 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · HISTORIAL
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
+
 /* =====================================================
-   GESTACAMPS
-   DÍA 18 - HISTORIAL · SEPARACIÓN FINAL
+   ESTADÍSTICAS
+===================================================== */
+
+.historial-stats {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 16px;
+
+    margin-bottom: 18px;
+}
+
+
+/* =====================================================
+   FILTROS
+===================================================== */
+
+.historial-filtros-panel {
+    margin-bottom: 18px !important;
+
+    padding: 16px !important;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0
+        6px
+        18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.historial-filtros-grid {
+    display: grid;
+
+    grid-template-columns:
+        minmax(
+            0,
+            1.6fr
+        )
+        minmax(
+            240px,
+            0.7fr
+        );
+
+    gap: 12px;
+
+    align-items: end;
+}
+
+
+.historial-filtros-panel
+.form-group {
+    min-width: 0;
+
+    margin: 0;
+}
+
+
+.historial-filtros-panel
+label {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+#buscarHistorial,
+#filtroModuloHistorial {
+    width: 100%;
+
+    min-width: 0;
+
+    min-height: 40px;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   PANEL ACTIVIDAD
+===================================================== */
+
+.historial-actividad-panel {
+    padding: 0 !important;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0
+        7px
+        20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+}
+
+
+.historial-actividad-header {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 16px;
+
+    margin: 0 !important;
+
+    padding:
+        17px
+        18px;
+
+    border-bottom:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.historial-actividad-header > div {
+    min-width: 0;
+}
+
+
+.historial-actividad-header h3 {
+    margin:
+        0
+        0
+        3px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 16px;
+
+    line-height: 1.25;
+}
+
+
+.historial-actividad-header p {
+    margin: 0;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 10px;
+
+    line-height: 1.35;
+}
+
+
+.historial-contador {
+    flex:
+        0
+        0
+        auto;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    min-height: 28px;
+
+    padding:
+        0
+        10px;
+
+    border-radius: 999px;
+
+    background:
+        var(--gc-green-soft);
+
+    color:
+        var(--gc-green-text);
+
+    font-size: 10px;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   LISTA
+===================================================== */
+
+.historial-lista {
+    min-width: 0;
+
+    padding:
+        0
+        18px;
+}
+
+
+/* =====================================================
+   REGISTRO
 ===================================================== */
 
 .historial-item {
+    min-width: 0;
+
+    display: grid;
+
+    grid-template-columns:
+        38px
+        minmax(
+            0,
+            1fr
+        );
+
+    gap: 12px;
+
     padding:
         14px
         0;
 
     border-bottom:
         1px solid
-        #e2e9e4;
+        var(--gc-border-soft);
 }
 
 
-.historial-item + .historial-item {
-    margin-top: 2px;
+.historial-item:last-child {
+    border-bottom: none;
 }
 
+
+/* =====================================================
+   ICONO
+===================================================== */
+
+.historial-item-icono {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+        var(--gc-green-soft);
+
+    font-size: 17px;
+
+    line-height: 1;
+}
+
+
+/* =====================================================
+   CONTENIDO
+===================================================== */
 
 .historial-item-contenido {
+    min-width: 0;
+
     padding-right: 2px;
 }
 
 
+.historial-item-cabecera {
+    display: flex;
+
+    align-items: flex-start;
+
+    justify-content: space-between;
+
+    gap: 14px;
+}
+
+
 .historial-item-titulo {
-    margin-bottom: 2px;
+    min-width: 0;
+
+    display: flex;
+
+    align-items: baseline;
+
+    flex-wrap: wrap;
+
+    gap: 4px;
+
+    color:
+        var(--gc-text);
+
+    line-height: 1.3;
+}
+
+
+.historial-item-titulo strong {
+    color:
+        var(--gc-text);
+
+    font-size: 12px;
+}
+
+
+.historial-item-titulo span {
+    color:
+        var(--gc-muted-strong);
+
+    font-size: 10px;
 }
 
 
 .historial-item-fecha {
-    color: var(--gc-muted);
+    flex:
+        0
+        0
+        auto;
+
+    color:
+        var(--gc-muted);
 
     font-size: 9px;
+
+    line-height: 1.3;
+
+    white-space: nowrap;
 }
 
+
+/* =====================================================
+   REFERENCIA
+===================================================== */
 
 .historial-item-referencia {
-    margin-top: 5px;
+    margin:
+        6px
+        0
+        0;
+
+    color:
+        var(--gc-text);
+
+    font-size: 11px;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
 }
 
+
+/* =====================================================
+   USUARIO
+===================================================== */
 
 .historial-item-usuario {
-    margin-top: 6px;
+    margin:
+        6px
+        0
+        0;
+
+    color:
+        var(--gc-muted-strong);
+
+    font-size: 9px;
+
+    line-height: 1.4;
 }
 
 
+/* =====================================================
+   CAMBIOS
+===================================================== */
+
 .historial-item-cambios {
-    margin-top: 5px;
+    margin:
+        6px
+        0
+        0;
+
+    padding:
+        7px
+        9px;
+
+    border-radius: 8px;
+
+    background:
+        var(--gc-surface-soft);
+
+    color:
+        var(--gc-muted-strong);
+
+    font-size: 9px;
+
+    line-height: 1.4;
+
+    overflow-wrap: anywhere;
+}
+
+
+.historial-item-cambios strong {
+    color:
+        var(--gc-text);
+
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   ESTADO VACÍO
+===================================================== */
+
+.historial-empty-state {
+    min-height: 220px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 30px;
+
+    text-align: center;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .historial-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .historial-filtros-grid {
+        grid-template-columns:
+            minmax(
+                0,
+                1fr
+            )
+            minmax(
+                220px,
+                0.7fr
+            );
+    }
+
 }
 
 
@@ -63,32 +504,203 @@
 
 @media (max-width: 760px) {
 
-    .historial-item {
+    .historial-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px;
+    }
+
+
+    /* ---------------------------------------------
+       FILTROS
+    ---------------------------------------------- */
+
+    .historial-filtros-panel {
+        margin-bottom: 14px !important;
+
+        padding: 12px !important;
+
+        border-radius: 12px;
+    }
+
+
+    .historial-filtros-grid {
+        grid-template-columns:
+            1fr;
+
+        gap: 10px;
+    }
+
+
+    #buscarHistorial,
+    #filtroModuloHistorial {
+        width: 100% !important;
+
+        min-width: 0 !important;
+
+        max-width: 100% !important;
+
+        min-height: 42px;
+    }
+
+
+    /* ---------------------------------------------
+       ACTIVIDAD
+    ---------------------------------------------- */
+
+    .historial-actividad-panel {
+        border-radius: 12px;
+    }
+
+
+    .historial-actividad-header {
         padding:
-            13px
+            13px;
+
+        gap: 10px;
+    }
+
+
+    .historial-actividad-header h3 {
+        font-size: 15px;
+    }
+
+
+    .historial-actividad-header p {
+        font-size: 9px;
+    }
+
+
+    .historial-contador {
+        min-height: 25px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 9px;
+    }
+
+
+    .historial-lista {
+        padding:
+            0
+            13px;
+    }
+
+
+    /* ---------------------------------------------
+       REGISTRO
+    ---------------------------------------------- */
+
+    .historial-item {
+        grid-template-columns:
+            34px
+            minmax(
+                0,
+                1fr
+            );
+
+        gap: 9px;
+
+        padding:
+            12px
             0;
     }
 
 
-    .historial-item + .historial-item {
-        margin-top: 3px;
+    .historial-item-icono {
+        width: 34px;
+        height: 34px;
+
+        border-radius: 9px;
+
+        font-size: 15px;
     }
 
 
-    .historial-item-titulo {
-        line-height: 1.25;
+    .historial-item-cabecera {
+        gap: 8px;
+    }
+
+
+    .historial-item-titulo strong {
+        font-size: 11px;
+    }
+
+
+    .historial-item-titulo span {
+        font-size: 9px;
     }
 
 
     .historial-item-fecha {
-        margin-top: 3px;
+        font-size: 8px;
     }
 
 
-    .historial-item-referencia,
-    .historial-item-usuario,
+    .historial-item-referencia {
+        margin-top: 5px;
+
+        font-size: 10px;
+    }
+
+
+    .historial-item-usuario {
+        margin-top: 5px;
+
+        font-size: 8px;
+    }
+
+
     .historial-item-cambios {
-        line-height: 1.4;
+        margin-top: 5px;
+
+        padding:
+            6px
+            8px;
+
+        font-size: 8px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .historial-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .historial-actividad-header {
+        flex-direction: column;
+
+        align-items: flex-start;
+    }
+
+
+    .historial-item-cabecera {
+        flex-direction: column;
+
+        gap: 3px;
+    }
+
+
+    .historial-item-fecha {
+        white-space: normal;
     }
 
 }

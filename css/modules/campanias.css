@@ -1,25 +1,418 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · CAMPAÑAS
-   Día 25 · Pulido visual
+   FRUIT ATTRACTION · VISUAL FINAL
 ===================================================== */
 
 
 /* =====================================================
-   ESTADÍSTICAS · LISTADO PRINCIPAL
+   PÁGINA
+===================================================== */
+
+.campanias-page,
+.campania-detail-page,
+.campania-form-page {
+    width: 100%;
+
+    padding-bottom: 40px;
+}
+
+
+/* =====================================================
+   HERO PRINCIPAL
+===================================================== */
+
+.campanias-hero {
+    display: grid;
+
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+
+.campanias-hero-content {
+    min-height: 215px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.campanias-eyebrow {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #39725b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+
+.campanias-hero h1 {
+    max-width: 510px;
+
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.campanias-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.campanias-hero-content > p {
+    max-width: 500px;
+
+    margin:
+        14px
+        0
+        18px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+    line-height: 1.55;
+}
+
+
+.campanias-hero-button {
+    align-self: flex-start;
+
+    min-height: 39px;
+}
+
+
+/* =====================================================
+   FOTO HERO
+===================================================== */
+
+.campanias-hero-image {
+    position: relative;
+
+    min-height: 215px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(7, 38, 25, 0.03),
+            rgba(7, 38, 25, 0.27)
+        ),
+        url("../../assets/images/campanias-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dbe8dd;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.campanias-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.02) 0%,
+            rgba(9, 42, 30, 0) 45%,
+            rgba(7, 33, 23, 0.42) 100%
+        );
+}
+
+
+.campanias-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 108px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.88
+        );
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.campanias-hero-badge span {
+    display: block;
+
+    color: #66786f;
+
+    font-size: 8px;
+}
+
+
+.campanias-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 21px;
+}
+
+
+.campanias-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    max-width: 290px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(
+            0,
+            0,
+            0,
+            0.28
+        );
+}
+
+
+.campanias-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.campanias-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+    line-height: 1.03;
+}
+
+
+/* =====================================================
+   KPIs
 ===================================================== */
 
 .campanias-stats {
+    display: grid !important;
+
     grid-template-columns:
         repeat(
             4,
             minmax(0, 1fr)
+        ) !important;
+
+    gap: 13px !important;
+
+    margin-bottom: 24px !important;
+}
+
+
+.campanias-stats .card {
+    min-width: 0;
+
+    min-height: 76px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
         );
 }
 
 
 /* =====================================================
-   GRID DE CAMPAÑAS
+   CABECERA LISTADO
+===================================================== */
+
+.campanias-list-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin:
+        7px
+        0
+        13px;
+}
+
+
+.campanias-list-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+
+    text-transform: uppercase;
+}
+
+
+.campanias-list-header h2 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+}
+
+
+.campanias-list-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.campanias-list-summary {
+    display: flex;
+
+    gap: 6px;
+}
+
+
+.campanias-list-summary span {
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   GRID
 ===================================================== */
 
 .campanias-grid {
@@ -31,9 +424,7 @@
             minmax(0, 1fr)
         );
 
-    gap: 18px;
-
-    margin-top: 18px;
+    gap: 16px;
 }
 
 
@@ -44,46 +435,48 @@
 .campania-card {
     min-width: 0;
 
-    padding: 18px;
+    overflow: hidden;
 
     border:
         1px solid
         var(--gc-border-soft);
 
-    border-radius: 14px;
+    border-radius: 16px;
 
     background: white;
 
     box-shadow:
-        0 7px 20px
+        0 8px 22px
         rgba(
             18,
             55,
             42,
-            0.05
+            0.055
         );
 
     transition:
-        transform 0.15s ease,
-        box-shadow 0.15s ease,
-        border-color 0.15s ease;
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        border-color 0.16s ease;
 }
 
 
 @media (hover: hover) {
 
     .campania-card:hover {
-        transform: translateY(-2px);
+        transform:
+            translateY(-3px);
 
-        border-color: #d7e3dc;
+        border-color:
+            #d3e2da;
 
         box-shadow:
-            0 12px 28px
+            0 14px 32px
             rgba(
                 18,
                 55,
                 42,
-                0.075
+                0.09
             );
     }
 
@@ -91,88 +484,282 @@
 
 
 /* =====================================================
-   CABECERA TARJETA
+   FOTO TARJETA
 ===================================================== */
 
-.campania-card-header {
+.campania-cover {
+    position: relative;
+
+    height: 150px;
+
+    overflow: hidden;
+
+    background-position: center;
+    background-size: cover;
+
+    background-color: #d9e6dc;
+}
+
+
+.campania-cover-1 {
+    background-image:
+        url("../../assets/images/campania-1.jpg");
+}
+
+
+.campania-cover-2 {
+    background-image:
+        url("../../assets/images/campania-2.jpg");
+}
+
+
+.campania-cover-3 {
+    background-image:
+        url("../../assets/images/campania-3.jpg");
+}
+
+
+.campania-cover-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(7, 32, 23, 0.03) 15%,
+            rgba(7, 32, 23, 0.58) 100%
+        );
+}
+
+
+.campania-cover-top {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 12px;
+    right: 12px;
+    left: 12px;
+
     display: flex;
-
-    align-items: flex-start;
-
+    align-items: center;
     justify-content: space-between;
 
-    gap: 12px;
-
-    margin-bottom: 14px;
+    gap: 10px;
 }
 
 
-.campania-icon {
-    width: 42px;
-    height: 42px;
+.campania-cover-copy {
+    position: absolute;
 
-    flex: 0 0 42px;
+    z-index: 3;
 
-    display: flex;
+    right: 16px;
+    bottom: 14px;
+    left: 16px;
 
+    color: white;
+
+    text-shadow:
+        0 2px 12px
+        rgba(
+            0,
+            0,
+            0,
+            0.33
+        );
+}
+
+
+.campania-cover-copy span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 9px;
+
+    opacity: 0.9;
+}
+
+
+.campania-cover-copy strong {
+    display: block;
+
+    overflow: hidden;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 21px;
+
+    line-height: 1.08;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.campania-status {
+    display: inline-flex;
     align-items: center;
 
-    justify-content: center;
+    width: fit-content;
 
-    border-radius: 11px;
+    padding:
+        6px
+        9px;
 
-    background-color:
-        var(--gc-green-soft);
+    border-radius: 999px;
 
-    font-size: 20px;
+    font-size: 8px;
+    font-weight: 800;
+
+    line-height: 1;
 }
 
+
+.campania-activa {
+    background:
+        rgba(
+            229,
+            247,
+            237,
+            0.95
+        );
+
+    color: #176044;
+}
+
+
+.campania-cerrada {
+    background:
+        rgba(
+            242,
+            242,
+            242,
+            0.94
+        );
+
+    color: #535d57;
+}
+
+
+/* =====================================================
+   BOTONES FOTO
+===================================================== */
 
 .campania-actions {
     display: flex;
 
-    align-items: center;
+    gap: 6px;
+}
 
-    gap: 7px;
+
+.campania-action-button {
+    width: 31px;
+    height: 31px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.34);
+
+    border-radius: 9px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.91
+        );
+
+    color: #285943;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    backdrop-filter:
+        blur(8px);
+}
+
+
+.campania-action-button:hover {
+    background: white;
+}
+
+
+.campania-action-delete {
+    color: #b63c3c;
 }
 
 
 /* =====================================================
-   TÍTULO
+   CUERPO TARJETA
 ===================================================== */
+
+.campania-card-body {
+    padding: 16px;
+}
+
+
+.campania-card-kicker {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #58806e;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.09em;
+
+    text-transform: uppercase;
+}
+
 
 .campania-card h3 {
     margin:
-        12px
         0
-        7px;
+        0
+        5px;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size: 16px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    line-height: 1.25;
+    font-size: 18px;
 }
 
 
 .campania-finca {
-    margin:
-        0
-        0
-        14px;
+    margin: 0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 12px;
-
-    line-height: 1.35;
+    font-size: 10px;
 }
 
 
 /* =====================================================
-   INFORMACIÓN GENERAL
+   FECHAS
 ===================================================== */
 
 .campania-info-grid {
@@ -185,13 +772,17 @@
         );
 
     gap: 8px;
+
+    margin-top: 13px;
 }
 
 
 .campania-info-grid > div {
     min-width: 0;
 
-    padding: 10px;
+    padding:
+        9px
+        10px;
 
     border-radius: 9px;
 
@@ -205,237 +796,932 @@
 
     margin-bottom: 3px;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 9px;
-
-    line-height: 1.2;
+    font-size: 8px;
 }
 
 
 .campania-info-grid strong {
-    display: block;
+    color: var(--gc-text);
 
-    color:
-        var(--gc-text);
-
-    font-size: 12px;
-
-    line-height: 1.25;
-
-    overflow-wrap: anywhere;
+    font-size: 10px;
 }
 
 
 /* =====================================================
-   MÉTRICAS ECONÓMICAS / PRODUCCIÓN
+   PROGRESO
 ===================================================== */
 
-.campania-card
-.campania-info-grid
-+ .campania-info-grid {
-    margin-top: 8px;
+.campania-progress {
+    margin-top: 13px;
+}
+
+
+.campania-progress-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 5px;
+}
+
+
+.campania-progress-head span {
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.campania-progress-head strong {
+    color: #226248;
+
+    font-size: 9px;
+}
+
+
+.campania-progress-track {
+    position: relative;
+
+    overflow: hidden;
+
+    height: 6px;
+
+    border-radius: 999px;
+
+    background:
+        #eaf0ec;
+}
+
+
+.campania-progress-track span {
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            #1d684c,
+            #54b17e
+        );
 }
 
 
 /* =====================================================
-   PIE
+   MINI KPIs
+===================================================== */
+
+.campania-mini-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin-top: 13px;
+}
+
+
+.campania-mini-dato {
+    min-width: 0;
+
+    padding: 9px;
+
+    border-radius: 9px;
+
+    background:
+        #f6f8f6;
+}
+
+
+.campania-mini-label {
+    display: block;
+
+    overflow: hidden;
+
+    color: #7d8882;
+
+    font-size: 7px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+.campania-mini-value {
+    display: block;
+
+    margin-top: 3px;
+
+    overflow: hidden;
+
+    color: #18261f;
+
+    font-size: 11px;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+
+/* =====================================================
+   PIE TARJETA
 ===================================================== */
 
 .campania-bottom {
     display: flex;
-
     align-items: center;
-
     justify-content: space-between;
 
-    gap: 10px;
+    gap: 8px;
 
     margin-top: 14px;
 }
 
 
-.campania-bottom > div {
+.campania-view-button {
+    flex: 1;
+
+    min-height: 36px;
+
     display: flex;
-
     align-items: center;
-
-    flex-wrap: wrap;
-
-    gap: 7px;
-}
-
-
-/* =====================================================
-   ESTADO
-===================================================== */
-
-.campania-status {
-    display: inline-flex;
-
-    align-items: center;
-
-    width: fit-content;
+    justify-content: space-between;
 
     padding:
-        5px
-        9px;
+        0
+        12px;
 
-    border-radius: 999px;
+    border: 0;
+    border-radius: 9px;
 
-    font-size: 10px;
+    background:
+        #e8f3ed;
 
+    color: #17553e;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.campania-view-button:hover {
+    background:
+        #dceee4;
+}
+
+
+.campania-view-button span {
+    font-size: 15px;
+
+    transition:
+        transform 0.15s ease;
+}
+
+
+.campania-view-button:hover span {
+    transform:
+        translateX(3px);
+}
+
+
+.campania-state-button {
+    min-height: 36px;
+
+    padding:
+        0
+        11px;
+
+    border:
+        1px solid
+        #dfe7e2;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #5c6d64;
+
+    font-size: 8px;
     font-weight: 700;
 
-    line-height: 1;
+    cursor: pointer;
 }
 
 
-.campania-activa {
+.campania-state-button:hover {
     background:
-        #ddf3e8;
-
-    color:
-        var(--gc-green-success);
-}
-
-
-.campania-cerrada {
-    background:
-        #eeeeee;
-
-    color:
-        #626262;
+        #f5f8f6;
 }
 
 
 /* =====================================================
-   NOTAS
+   NOTAS TARJETA
 ===================================================== */
 
 .campania-notas {
     margin:
-        14px
+        13px
         0
         0;
 
-    padding-top: 12px;
+    padding-top: 11px;
 
     border-top:
         1px solid
         var(--gc-border-soft);
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 11px;
+    font-size: 9px;
 
     line-height: 1.4;
 }
 
 
+.campania-notas span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #355f4d;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+}
+
+
 /* =====================================================
-   BOTONES DE TARJETA
+   VACÍO
 ===================================================== */
 
-.campania-card
-.primary-button,
-.campania-card
-.secondary-button {
-    min-height: 34px;
+.campanias-empty {
+    min-height: 330px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    overflow: hidden;
+
+    padding: 26px;
+
+    border:
+        1px dashed
+        #dbe5df;
+
+    border-radius: 16px;
+
+    background: white;
+
+    text-align: center;
+}
+
+
+.campanias-empty-illustration {
+    position: relative;
+
+    width: 210px;
+    height: 100px;
+
+    margin-bottom: 10px;
+}
+
+
+.campanias-empty-sun {
+    position: absolute;
+
+    top: 3px;
+    right: 36px;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 50%;
+
+    background:
+        #f7eac7;
+}
+
+
+.campanias-empty-hill {
+    position: absolute;
+
+    bottom: 0;
+
+    width: 140px;
+    height: 55px;
+
+    border-radius:
+        50%
+        50%
+        0
+        0;
+}
+
+
+.campanias-empty-hill-1 {
+    left: 0;
+
+    background:
+        #dfeadf;
+
+    transform:
+        rotate(3deg);
+}
+
+
+.campanias-empty-hill-2 {
+    right: 0;
+
+    background:
+        #eef2df;
+
+    transform:
+        rotate(-4deg);
+}
+
+
+.campanias-empty-calendar {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 22px;
+    left: 83px;
+
+    width: 48px;
+    height: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+        1px solid
+        #d8e5dc;
+
+    border-radius: 13px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.95
+        );
+
+    box-shadow:
+        0 8px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.08
+        );
+
+    font-size: 24px;
+}
+
+
+.campanias-empty h3 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 20px;
+}
+
+
+.campanias-empty p {
+    max-width: 410px;
+
+    margin:
+        7px
+        0
+        16px;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   DETALLE · HERO
+===================================================== */
+
+.campania-detail-page > .back-button,
+.campania-form-page > .back-button {
+    margin-bottom: 10px;
+}
+
+
+.campania-detail-hero {
+    position: relative;
+
+    min-height: 210px;
+
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 30px;
+
+    overflow: hidden;
 
     padding:
-        7px
-        11px;
+        26px
+        28px;
 
-    border-radius: 8px;
+    border-radius: 18px;
+
+    background:
+        url("../../assets/images/campanias-hero.jpg")
+        center
+        55%
+        /
+        cover
+        no-repeat;
+
+    box-shadow:
+        0 9px 27px
+        rgba(
+            17,
+            57,
+            41,
+            0.09
+        );
+}
+
+
+.campania-detail-hero-overlay {
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(6, 34, 24, 0.74),
+            rgba(6, 34, 24, 0.17)
+        );
+}
+
+
+.campania-detail-hero-content,
+.campania-detail-hero-side {
+    position: relative;
+
+    z-index: 2;
+}
+
+
+.campania-detail-kicker {
+    display: block;
+
+    margin-bottom: 6px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.76
+        );
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.11em;
+}
+
+
+.campania-detail-hero h1 {
+    margin: 0;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            28px,
+            3vw,
+            43px
+        );
+
+    line-height: 1.02;
+}
+
+
+.campania-detail-hero-content p {
+    margin:
+        8px
+        0
+        0;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.88
+        );
+
+    font-size: 10px;
+}
+
+
+.campania-detail-hero-side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+
+    gap: 8px;
+}
+
+
+.campania-detail-progress {
+    min-width: 110px;
+
+    padding:
+        8px
+        10px;
+
+    border:
+        1px solid
+        rgba(255, 255, 255, 0.28);
+
+    border-radius: 9px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.84
+        );
+
+    backdrop-filter:
+        blur(8px);
+}
+
+
+.campania-detail-progress span {
+    display: block;
+
+    color: #6d7c74;
+
+    font-size: 7px;
+}
+
+
+.campania-detail-progress strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #18543e;
+
+    font-size: 14px;
+}
+
+
+/* =====================================================
+   DETALLE · SECCIONES
+===================================================== */
+
+.campania-detail-heading {
+    margin-top: 21px;
+    margin-bottom: 9px;
+}
+
+
+.campania-detail-heading-first {
+    margin-top: 18px;
+}
+
+
+.campania-detail-section-kicker {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #4f7d68;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.campania-detail-heading h3 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+}
+
+
+.campania-detail-subtitle {
+    margin:
+        3px
+        0
+        0;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.campania-detail-stats {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 11px !important;
+
+    margin-bottom: 0 !important;
+}
+
+
+/* =====================================================
+   DETALLE · PANELES
+===================================================== */
+
+.campania-detail-grid {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 13px !important;
+
+    margin-top: 20px;
+}
+
+
+.campania-detail-grid .panel {
+    min-width: 0;
+
+    min-height: 180px;
+
+    padding: 15px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.campania-detail-grid .panel-header {
+    margin-bottom: 9px;
+}
+
+
+.campania-panel-kicker {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #628274;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+
+.campania-detail-grid .panel-header h3 {
+    margin: 0;
+
+    font-size: 12px;
+}
+
+
+.campania-detail-grid .task {
+    min-height: 40px;
+
+    padding:
+        8px
+        0;
+
+    border-bottom:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.campania-detail-grid .task:last-child {
+    border-bottom: 0;
+}
+
+
+.campania-detail-grid .task strong {
+    font-size: 10px;
+}
+
+
+.campania-detail-grid .task p {
+    margin:
+        2px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.campania-list-empty {
+    min-height: 105px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.campania-list-empty span {
+    margin-bottom: 5px;
+
+    font-size: 22px;
+
+    opacity: 0.65;
+}
+
+
+.campania-list-empty p {
+    margin: 0;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+}
+
+
+.campania-notas-panel {
+    margin-top: 18px;
+
+    padding: 16px;
+}
+
+
+.campania-notas-panel > p {
+    margin:
+        8px
+        0
+        0;
+
+    color: var(--gc-muted-strong);
+
+    font-size: 10px;
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   FORMULARIO · CABECERA
+===================================================== */
+
+.campania-form-header {
+    margin-bottom: 16px;
+}
+
+
+.campania-form-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #41735d;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.campania-form-header h1 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 29px;
+
+    line-height: 1.05;
+}
+
+
+.campania-form-header p {
+    margin:
+        5px
+        0
+        0;
+
+    color: var(--gc-muted);
 
     font-size: 10px;
 }
 
 
 /* =====================================================
-   DETALLE DE CAMPANYA
-   Detectamos el detalle por el botón "Volver"
+   FORMULARIO · LAYOUT
 ===================================================== */
 
-
-/* -----------------------------------------------------
-   CABECERA DETALLE
------------------------------------------------------ */
-
-.back-button
-+ .topbar {
-    margin-bottom: 18px;
-}
-
-
-.back-button
-+ .topbar h2 {
-    font-size: 24px;
-}
-
-
-.back-button
-+ .topbar p {
-    margin-top: 4px;
-
-    color:
-        var(--gc-muted);
-
-    font-size: 12px;
-}
-
-
-/* -----------------------------------------------------
-   TÍTULOS DE SECCIÓN
------------------------------------------------------ */
-
-.back-button
-~ div > h3 {
-    margin: 0;
-
-    color:
-        var(--gc-text);
-
-    font-size: 17px;
-
-    line-height: 1.2;
-}
-
-
-/* -----------------------------------------------------
-   KPI DEL DETALLE
------------------------------------------------------ */
-
-.back-button
-~ .stats {
+.campania-form-layout {
     display: grid;
 
     grid-template-columns:
-        repeat(
-            4,
-            minmax(0, 1fr)
-        );
+        minmax(520px, 1fr)
+        minmax(260px, 0.48fr);
 
-    gap: 12px;
+    gap: 15px;
 
-    margin-bottom: 20px;
+    align-items: start;
 }
 
 
-.back-button
-~ .stats
-.card {
-    min-height: 66px;
+.campania-form-panel {
+    max-width: none;
 
-    padding: 13px;
+    padding: 20px;
 
-    border-radius: 12px;
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
 
     box-shadow:
-        0 6px 18px
+        0 7px 21px
         rgba(
             18,
             55,
@@ -445,42 +1731,62 @@
 }
 
 
-.back-button
-~ .stats
-.card-icon {
+.campania-form-section-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 17px;
+}
+
+
+.campania-form-section-icon {
     width: 38px;
     height: 38px;
 
-    flex: 0 0 38px;
+    flex:
+        0
+        0
+        38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
     border-radius: 10px;
+
+    background: #eaf4ee;
 
     font-size: 18px;
 }
 
 
-.back-button
-~ .stats
-.card p {
-    font-size: 9px;
+.campania-form-section-title h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
 }
 
 
-.back-button
-~ .stats
-.card h3 {
-    margin-top: 2px;
+.campania-form-section-title p {
+    margin:
+        2px
+        0
+        0;
 
-    font-size: 14px;
+    color: var(--gc-muted);
+
+    font-size: 8px;
 }
 
 
-/* -----------------------------------------------------
-   PANELES INFERIORES DEL DETALLE
------------------------------------------------------ */
-
-.back-button
-~ .dashboard-grid {
+.campania-form-row {
     display: grid;
 
     grid-template-columns:
@@ -489,149 +1795,159 @@
             minmax(0, 1fr)
         );
 
-    gap: 14px;
-
-    align-items: stretch;
+    gap: 11px;
 }
 
 
-.back-button
-~ .dashboard-grid
-.panel {
-    min-width: 0;
+/* =====================================================
+   FORMULARIO · ASIDE
+===================================================== */
 
-    padding: 16px;
+.campania-form-aside {
+    display: grid;
 
-    border:
-        1px solid
-        var(--gc-border-soft);
+    gap: 12px;
+}
 
-    border-radius: 13px;
 
-    background: white;
+.campania-form-aside-image {
+    position: relative;
+
+    min-height: 240px;
+
+    display: flex;
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    padding: 19px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8, 40, 28, 0.02),
+            rgba(8, 40, 28, 0.62)
+        ),
+        url("../../assets/images/campania-2.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat;
 
     box-shadow:
-        0 6px 18px
+        0 8px 22px
         rgba(
             18,
             55,
             42,
-            0.04
+            0.07
         );
 }
 
 
-.back-button
-~ .dashboard-grid
-.panel-header {
-    margin-bottom: 10px;
+.campania-form-aside-image > div {
+    position: relative;
+
+    z-index: 2;
 }
 
 
-.back-button
-~ .dashboard-grid
-.panel-header h3 {
-    margin: 0;
+.campania-form-aside-image span {
+    display: block;
 
-    font-size: 13px;
-}
-
-
-/* -----------------------------------------------------
-   ELEMENTOS DE LISTA DEL DETALLE
------------------------------------------------------ */
-
-.back-button
-~ .dashboard-grid
-.task {
-    min-height: 42px;
-
-    padding:
-        9px
-        0;
-
-    border-bottom:
-        1px solid
-        var(--gc-border-soft);
-}
-
-
-.back-button
-~ .dashboard-grid
-.task:last-child {
-    border-bottom: 0;
-}
-
-
-.back-button
-~ .dashboard-grid
-.task strong {
-    font-size: 11px;
-}
-
-
-.back-button
-~ .dashboard-grid
-.task p {
-    margin:
-        3px
-        0
-        0;
+    margin-bottom: 5px;
 
     color:
-        var(--gc-muted);
+        rgba(
+            255,
+            255,
+            255,
+            0.76
+        );
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.campania-form-aside-image strong {
+    display: block;
+
+    max-width: 240px;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+
+    line-height: 1.06;
+}
+
+
+.campania-form-tip {
+    display: flex;
+
+    gap: 9px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        #dfebe4;
+
+    border-radius: 12px;
+
+    background:
+        #f5f9f6;
+}
+
+
+.campania-form-tip-icon {
+    width: 34px;
+    height: 34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #e2f1e8;
+}
+
+
+.campania-form-tip strong {
+    display: block;
+
+    color: #244d3c;
 
     font-size: 9px;
 }
 
 
-.back-button
-~ .dashboard-grid
-.text-muted {
+.campania-form-tip p {
     margin:
-        5px
+        3px
         0
         0;
 
-    color:
-        var(--gc-muted);
+    color: #718078;
 
-    font-size: 10px;
-}
-
-
-/* -----------------------------------------------------
-   PANEL DE NOTAS DEL DETALLE
------------------------------------------------------ */
-
-.back-button
-~ .panel {
-    border:
-        1px solid
-        var(--gc-border-soft);
-
-    border-radius: 13px;
-
-    background: white;
-
-    box-shadow:
-        0 6px 18px
-        rgba(
-            18,
-            55,
-            42,
-            0.04
-        );
-}
-
-
-.back-button
-~ .panel p {
-    color:
-        var(--gc-text);
-
-    font-size: 11px;
-
+    font-size: 8px;
     line-height: 1.45;
 }
 
@@ -640,43 +1956,66 @@
    TABLET
 ===================================================== */
 
-@media (max-width: 1250px) {
+@media (max-width: 1180px) {
 
-    .campanias-stats {
+    .campanias-hero {
+        grid-template-columns: 1fr;
+    }
+
+
+    .campanias-hero-content {
+        min-height: 0;
+    }
+
+
+    .campanias-hero-image {
+        min-height: 185px;
+    }
+
+
+    .campanias-stats,
+    .campania-detail-stats {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
-            );
+            ) !important;
     }
 
+
+    .campania-form-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .campania-form-aside {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .campania-form-aside-image {
+        min-height: 180px;
+    }
+
+}
+
+
+/* =====================================================
+   TABLET PEQUEÑA
+===================================================== */
+
+@media (max-width: 900px) {
 
     .campanias-grid {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
+        grid-template-columns: 1fr;
     }
 
 
-    .back-button
-    ~ .stats {
+    .campania-detail-grid {
         grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
-    }
-
-
-    .back-button
-    ~ .dashboard-grid {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
+            1fr !important;
     }
 
 }
@@ -688,123 +2027,222 @@
 
 @media (max-width: 760px) {
 
-    .campanias-stats {
+    .campanias-page,
+    .campania-detail-page,
+    .campania-form-page {
+        padding-bottom: 24px;
+    }
+
+
+    /* HERO */
+
+    .campanias-hero {
+        gap: 11px;
+
+        margin-bottom: 13px;
+    }
+
+
+    .campanias-hero-content {
+        padding:
+            0
+            2px;
+    }
+
+
+    .campanias-eyebrow {
+        margin-bottom: 6px;
+
+        font-size: 8px;
+    }
+
+
+    .campanias-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .campanias-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .campanias-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .campanias-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .campanias-hero-copy strong {
+        font-size: 18px;
+    }
+
+
+    .campanias-hero-badge {
+        top: 10px;
+        right: 10px;
+
+        min-width: 88px;
+
+        padding:
+            7px
+            9px;
+    }
+
+
+    /* KPIS */
+
+    .campanias-stats,
+    .campania-detail-stats {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
-            );
+            ) !important;
+
+        gap: 8px !important;
     }
 
+
+    /* CABECERA LISTA */
+
+    .campanias-list-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 8px;
+    }
+
+
+    .campanias-list-header h2 {
+        font-size: 18px;
+    }
+
+
+    /* TARJETAS */
 
     .campanias-grid {
-        grid-template-columns: 1fr;
-
         gap: 12px;
-
-        margin-top: 14px;
     }
 
 
-    .campania-card {
+    .campania-cover {
+        height: 130px;
+    }
+
+
+    .campania-cover-copy strong {
+        font-size: 18px;
+    }
+
+
+    .campania-card-body {
+        padding: 13px;
+    }
+
+
+    .campania-card h3 {
+        font-size: 16px;
+    }
+
+
+    .campania-info-grid {
+        gap: 6px;
+    }
+
+
+    .campania-mini-grid {
+        gap: 6px;
+    }
+
+
+    .campania-mini-dato {
+        padding: 7px;
+    }
+
+
+    .campania-bottom {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+
+    .campania-view-button,
+    .campania-state-button {
+        width: 100%;
+    }
+
+
+    /* DETALLE */
+
+    .campania-detail-hero {
+        min-height: 170px;
+
+        align-items: flex-start;
+        flex-direction: column;
+
+        justify-content: flex-end;
+
+        gap: 10px;
+
+        padding:
+            18px
+            16px;
+    }
+
+
+    .campania-detail-hero h1 {
+        font-size: 27px;
+    }
+
+
+    .campania-detail-hero-side {
+        width: 100%;
+
+        align-items: flex-start;
+
+        flex-direction: row;
+    }
+
+
+    /* FORM */
+
+    .campania-form-header h1 {
+        font-size: 25px;
+    }
+
+
+    .campania-form-panel {
         padding: 14px;
 
         border-radius: 12px;
     }
 
 
-    .campania-icon {
-        width: 38px;
-        height: 38px;
-
-        flex-basis: 38px;
-
-        border-radius: 9px;
-
-        font-size: 18px;
-    }
-
-
-    .campania-card h3 {
-        margin-top: 10px;
-
-        font-size: 15px;
-    }
-
-
-    .campania-finca {
-        margin-bottom: 12px;
-
-        font-size: 11px;
-    }
-
-
-    .campania-info-grid {
-        gap: 7px;
-    }
-
-
-    .campania-info-grid > div {
-        padding: 9px;
-    }
-
-
-    .campania-bottom {
-        align-items: flex-start;
-
-        flex-direction: column;
-    }
-
-
-    /* DETALLE */
-
-    .back-button
-    ~ .stats {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
-
-        gap: 8px;
-
-        margin-bottom: 17px;
-    }
-
-
-    .back-button
-    ~ .stats
-    .card {
-        min-height: 60px;
-
-        padding: 10px;
-    }
-
-
-    .back-button
-    ~ .stats
-    .card-icon {
-        width: 34px;
-        height: 34px;
-
-        flex-basis: 34px;
-
-        font-size: 16px;
-    }
-
-
-    .back-button
-    ~ .dashboard-grid {
+    .campania-form-row {
         grid-template-columns: 1fr;
-
-        gap: 10px;
     }
 
 
-    .back-button
-    ~ .dashboard-grid
-    .panel {
-        padding: 13px;
+    .campania-form-aside {
+        grid-template-columns: 1fr;
+    }
+
+
+    .campania-form-aside-image {
+        min-height: 155px;
     }
 
 }
@@ -816,23 +2254,27 @@
 
 @media (max-width: 420px) {
 
-    .campanias-stats {
-        grid-template-columns: 1fr;
-    }
-
-
     .campania-info-grid {
         grid-template-columns: 1fr;
     }
 
 
-    .back-button
-    ~ .stats {
+    .campania-mini-grid {
         grid-template-columns:
             repeat(
-                2,
+                3,
                 minmax(0, 1fr)
             );
+    }
+
+
+    .campania-mini-label {
+        font-size: 6px;
+    }
+
+
+    .campania-mini-value {
+        font-size: 9px;
     }
 
 }

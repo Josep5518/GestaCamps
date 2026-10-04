@@ -1,33 +1,112 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · INVENTARIO
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
-/* ==================================
-   INVENTARIO
-================================== */
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+.inventario-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
 
 .inventario-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
     gap: 22px;
+
     margin-top: 20px;
 }
 
 
+/* =====================================================
+   TARJETA
+===================================================== */
+
 .inventario-card {
-    background-color: white;
-    border-radius: 14px;
+    min-width: 0;
+
     padding: 22px;
-    box-shadow: var(--gc-shadow-card);
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background-color: white;
+
+    box-shadow:
+        var(--gc-shadow-card);
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
 
+@media (hover: hover) {
+
+    .inventario-card:hover {
+        transform:
+            translateY(-2px);
+
+        border-color:
+            #d7e3dc;
+
+        box-shadow:
+            0
+            12px
+            28px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
+    }
+
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
 .inventario-card-header {
     display: flex;
+
     justify-content: space-between;
+
     align-items: center;
+
+    gap: 12px;
+
     margin-bottom: 18px;
 }
 
@@ -35,122 +114,422 @@
 .inventario-icon {
     width: 48px;
     height: 48px;
-    background-color: var(--gc-green-soft);
-    border-radius: 12px;
+
+    flex:
+        0
+        0
+        48px;
+
     display: flex;
+
     justify-content: center;
+
     align-items: center;
+
+    border-radius: 12px;
+
+    background-color:
+        var(--gc-green-soft);
+
     font-size: 24px;
 }
 
 
 .inventario-actions {
     display: flex;
+
     gap: 8px;
+
     align-items: center;
+
+    flex:
+        0
+        0
+        auto;
 }
 
 
+.inventario-actions
+.secondary-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    font-size: 10px;
+}
+
+
+.inventario-actions
+.delete-button {
+    width: 34px;
+
+    min-width: 34px;
+
+    height: 34px;
+
+    padding: 0;
+}
+
+
+/* =====================================================
+   TÍTULO / CATEGORÍA
+===================================================== */
+
 .inventario-card h3 {
-    margin: 0 0 8px;
+    margin:
+        0
+        0
+        8px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 16px;
 }
 
 
 .inventario-categoria {
-    color: var(--gc-green);
+    margin:
+        0
+        0
+        14px;
+
+    color:
+        var(--gc-green);
+
+    font-size: 12px;
+
     font-weight: 600;
 }
 
 
+/* =====================================================
+   INFORMACIÓN DE STOCK
+===================================================== */
+
 .inventario-info {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
     gap: 10px;
-    margin: 18px 0;
+
+    margin:
+        18px
+        0;
 }
 
 
 .inventario-info div {
-    background-color: var(--gc-surface-soft);
-    border-radius: 9px;
+    min-width: 0;
+
     padding: 12px;
+
+    border-radius: 9px;
+
+    background-color:
+        var(--gc-surface-soft);
 }
 
 
 .inventario-info span {
     display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
+
     margin-bottom: 5px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 10px;
 }
 
 
-.stock-status {
-    display: inline-block;
-    padding: 7px 11px;
-    border-radius: 20px;
+.inventario-info strong {
+    display: block;
+
+    color:
+        var(--gc-text);
+
     font-size: 12px;
-    font-weight: 600;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =====================================================
+   ESTADO DEL STOCK
+===================================================== */
+
+.stock-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    width: fit-content;
+
     margin-bottom: 10px;
+
+    padding:
+        7px
+        11px;
+
+    border-radius: 20px;
+
+    font-size: 10px;
+
+    font-weight: 600;
 }
 
 
 .stock-ok {
-    background-color: #dff3e9;
-    color: var(--gc-green-success);
+    background-color:
+        #dff3e9;
+
+    color:
+        var(--gc-green-success);
 }
 
 
 .stock-low {
-    background-color: #fff4cf;
-    color: #896b00;
+    background-color:
+        #fff4cf;
+
+    color:
+        #896b00;
 }
 
 
 .stock-empty {
-    background-color: #ffe2e2;
-    color: #a33636;
+    background-color:
+        #ffe2e2;
+
+    color:
+        #a33636;
 }
 
+
+/* =====================================================
+   INFORMACIÓN ADICIONAL
+===================================================== */
 
 .inventario-card > p {
-    color: var(--gc-muted-strong);
-    font-size: 14px;
+    margin:
+        6px
+        0;
+
+    color:
+        var(--gc-muted-strong);
+
+    font-size: 11px;
+
+    line-height: 1.4;
 }
 
+
+/* =====================================================
+   NOTAS
+===================================================== */
 
 .inventario-notas {
     margin-top: 18px;
+
     padding-top: 14px;
-    border-top: 1px solid var(--gc-border-soft);
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
 }
 
 
 .inventario-notas span {
     display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
+
     margin-bottom: 5px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 10px;
 }
 
 
 .inventario-notas p {
     margin: 0;
+
+    color:
+        var(--gc-text);
+
+    font-size: 11px;
+
+    line-height: 1.4;
 }
 
 
-@media (max-width: 1100px) {
+/* =====================================================
+   FORMULARIO
+===================================================== */
+
+.inventario-form-panel {
+    max-width: 760px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .inventario-stats {
+        grid-template-columns:
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .inventario-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
 }
 
 
-@media (max-width: 650px) {
+/* =====================================================
+   TABLET PEQUEÑA
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .inventario-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .inventario-stats
+    .card:last-child {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .inventario-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+
+        margin-bottom: 14px;
+    }
+
 
     .inventario-grid {
+        grid-template-columns: 1fr;
+
+        gap: 12px;
+
+        margin-top: 14px;
+    }
+
+
+    .inventario-card {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .inventario-card-header {
+        gap: 8px;
+
+        margin-bottom: 14px;
+    }
+
+
+    .inventario-icon {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+
+        border-radius: 10px;
+
+        font-size: 20px;
+    }
+
+
+    .inventario-card h3 {
+        font-size: 15px;
+    }
+
+
+    .inventario-info {
+        gap: 7px;
+
+        margin:
+            14px
+            0;
+    }
+
+
+    .inventario-info div {
+        padding: 9px;
+    }
+
+
+    .inventario-form-panel {
+        max-width: none;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .inventario-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    .inventario-stats
+    .card:last-child {
+        grid-column: auto;
+    }
+
+
+    .inventario-info {
         grid-template-columns: 1fr;
     }
 

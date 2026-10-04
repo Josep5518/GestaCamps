@@ -37,146 +37,267 @@ export class BuscadorGlobalView {
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="buscador-page">
 
-                <div>
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
 
-                    <h2>
-                        Buscador global
-                    </h2>
+                <section class="buscador-hero">
 
-                    <p>
-                        Encuentra cualquier dato de GestaCamps
-                    </p>
+                    <div class="buscador-hero-contenido">
 
-                </div>
+                        <span class="buscador-eyebrow">
+                            🔎 BUSCADOR GLOBAL
+                        </span>
 
-            </header>
+                        <h1>
+                            Encuentra todo
+                            <span>en segundos.</span>
+                        </h1>
 
-
-            <section
-                class="
-                    panel
-                    buscador-global-filtros-panel
-                "
-            >
-
-                <div
-                    class="buscador-global-filtros-grid"
-                >
-
-                    <div class="form-group">
-
-                        <label>
-                            Buscar
-                        </label>
-
-
-                        <input
-                            id="buscadorGlobalInput"
-                            type="search"
-                            autocomplete="off"
-                            placeholder="Ej. Can Rovira, Josep, factura, tractor..."
-                            value="${this.escaparHTML(
-                                this.consulta
-                            )}"
-                        >
+                        <p>
+                            Busca en cualquier rincón de GestaCamps:
+                            fincas, trabajadores, facturas,
+                            maquinaria, tareas y mucho más.
+                        </p>
 
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="buscador-hero-imagen">
 
-                        <label>
-                            Módulo
-                        </label>
+                        <div class="buscador-hero-overlay">
+
+                            <small>
+                                GESTIÓN CENTRALIZADA
+                            </small>
+
+                            <strong>
+                                Toda la información<br>
+                                de tu explotación
+                            </strong>
+
+                            <em>
+                                al alcance de tu mano
+                            </em>
+
+                        </div>
+
+                    </div>
+
+                </section>
 
 
-                        <select
-                            id="buscadorGlobalModulo"
-                        >
+                <!-- ==========================================
+                     PANEL DE BÚSQUEDA
+                =========================================== -->
 
-                            <option value="">
-                                Todos los módulos
-                            </option>
+                <section class="buscador-panel">
+
+                    <div class="buscador-panel-head">
+
+                        <div>
+
+                            <span class="buscador-panel-icon">
+                                🔎
+                            </span>
+
+                            <div>
+
+                                <h2>
+                                    Buscar en GestaCamps
+                                </h2>
+
+                                <p>
+                                    Introduce un nombre, referencia o dato.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
 
-                            ${modulos.map(
-                                modulo => `
+                    <div class="buscador-filtros">
 
-                                    <option
-                                        value="${this.escaparHTML(modulo)}"
-                                        ${
-                                            this.modulo ===
-                                            modulo
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${this.escaparHTML(modulo)}
+                        <!-- BUSCAR -->
+
+                        <div class="buscador-form-group buscador-form-search">
+
+                            <label for="buscadorGlobalInput">
+                                Buscar
+                            </label>
+
+
+                            <div class="buscador-input-wrap">
+
+                                <span>
+                                    ⌕
+                                </span>
+
+                                <input
+                                    id="buscadorGlobalInput"
+                                    type="search"
+                                    autocomplete="off"
+                                    placeholder="Ej. Can Rovira, Josep, factura, tractor..."
+                                    value="${this.escaparHTML(
+                                        this.consulta
+                                    )}"
+                                >
+
+                                <button
+                                    id="limpiarBuscadorGlobal"
+                                    class="buscador-clear"
+                                    type="button"
+                                    title="Limpiar búsqueda"
+                                    ${
+                                        this.consulta
+                                            ? ""
+                                            : "hidden"
+                                    }
+                                >
+                                    ×
+                                </button>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- MÓDULO -->
+
+                        <div class="buscador-form-group buscador-form-module">
+
+                            <label for="buscadorGlobalModulo">
+                                Módulo
+                            </label>
+
+
+                            <div class="buscador-select-wrap">
+
+                                <span>
+                                    ▦
+                                </span>
+
+                                <select
+                                    id="buscadorGlobalModulo"
+                                >
+
+                                    <option value="">
+                                        Todos los módulos
                                     </option>
 
-                                `
-                            ).join("")}
+                                    ${modulos
+                                        .map(
+                                            modulo => `
 
-                        </select>
+                                                <option
+                                                    value="${this.escaparHTML(
+                                                        modulo
+                                                    )}"
+                                                    ${
+                                                        this.modulo ===
+                                                        modulo
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+                                                    ${this.escaparHTML(
+                                                        modulo
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+                        </div>
 
                     </div>
 
-                </div>
+
+                    <div class="buscador-ayuda-row">
+
+                        <p
+                            id="ayudaBuscadorGlobal"
+                            class="buscador-global-ayuda"
+                            ${
+                                this.consulta
+                                    .trim()
+                                    .length >= 2
+
+                                    ? "hidden"
+
+                                    : ""
+                            }
+                        >
+                            Escribe al menos 2 caracteres para comenzar.
+                        </p>
 
 
-                <p
-                    id="ayudaBuscadorGlobal"
-                    class="buscador-global-ayuda"
-                    ${
-                        this.consulta
-                            .trim()
-                            .length >= 2
+                        <span class="buscador-tip">
+                            ↵ Busca automáticamente mientras escribes
+                        </span>
 
-                            ? "hidden"
-                            : ""
-                    }
-                >
-                    Escribe al menos 2 caracteres.
-                </p>
+                    </div>
 
-            </section>
+                </section>
 
 
-            <section
-                class="
-                    panel
-                    buscador-global-resultados-panel
-                "
-            >
+                <!-- ==========================================
+                     RESULTADOS
+                =========================================== -->
 
-                <div class="panel-header buscador-global-resultados-header">
+                <section class="buscador-resultados-panel">
 
-                    <h3>
-                        Resultados
-                    </h3>
+                    <div class="buscador-resultados-header">
 
+                        <div>
 
-                    <span
-                        id="contadorResultadosGlobal"
-                        class="buscador-global-contador"
-                    >
-                        0 resultados
-                    </span>
+                            <span class="buscador-resultados-eyebrow">
+                                RESULTADOS
+                            </span>
 
-                </div>
+                            <h2>
+                                Coincidencias encontradas
+                            </h2>
+
+                        </div>
 
 
-                <div
-                    id="resultadosBuscadorGlobal"
-                    class="buscador-global-resultados"
-                ></div>
+                        <span
+                            id="contadorResultadosGlobal"
+                            class="buscador-global-contador"
+                        >
+                            0 resultados
+                        </span>
 
-            </section>
+                    </div>
+
+
+                    <div
+                        id="resultadosBuscadorGlobal"
+                        class="buscador-global-resultados"
+                    ></div>
+
+                </section>
+
+            </div>
 
         `;
 
+
+        // =================================================
+        // ELEMENTOS
+        // =================================================
 
         const input =
             document.getElementById(
@@ -190,6 +311,16 @@ export class BuscadorGlobalView {
             );
 
 
+        const botonLimpiar =
+            document.getElementById(
+                "limpiarBuscadorGlobal"
+            );
+
+
+        // =================================================
+        // INPUT
+        // =================================================
+
         input?.addEventListener(
             "input",
             () => {
@@ -198,11 +329,25 @@ export class BuscadorGlobalView {
                     input.value;
 
 
+                if (
+                    botonLimpiar
+                ) {
+
+                    botonLimpiar.hidden =
+                        !this.consulta;
+
+                }
+
+
                 this.actualizarResultados();
 
             }
         );
 
+
+        // =================================================
+        // SELECT
+        // =================================================
 
         filtroModulo?.addEventListener(
             "change",
@@ -217,6 +362,37 @@ export class BuscadorGlobalView {
             }
         );
 
+
+        // =================================================
+        // LIMPIAR
+        // =================================================
+
+        botonLimpiar?.addEventListener(
+            "click",
+            () => {
+
+                this.consulta =
+                    "";
+
+                input.value =
+                    "";
+
+                botonLimpiar.hidden =
+                    true;
+
+
+                this.actualizarResultados();
+
+
+                input.focus();
+
+            }
+        );
+
+
+        // =================================================
+        // PRIMER RENDER
+        // =================================================
 
         this.actualizarResultados();
 
@@ -302,10 +478,51 @@ export class BuscadorGlobalView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="buscador-empty">
 
-                    <div class="empty-icon">
-                        🔎
+                    <div class="buscador-empty-visual">
+
+                        <div class="buscador-empty-sun"></div>
+
+
+                        <div class="buscador-empty-document documento-1">
+
+                            <span>
+                                🌿
+                            </span>
+
+                            <i></i>
+                            <i></i>
+                            <i></i>
+
+                        </div>
+
+
+                        <div class="buscador-empty-document documento-2">
+
+                            <span>
+                                📄
+                            </span>
+
+                            <i></i>
+                            <i></i>
+
+                        </div>
+
+
+                        <div class="buscador-empty-search">
+                            🔍
+                        </div>
+
+
+                        <div class="buscador-empty-landscape">
+
+                            <span></span>
+                            <span></span>
+                            <span></span>
+
+                        </div>
+
                     </div>
 
 
@@ -319,6 +536,27 @@ export class BuscadorGlobalView {
                         tareas, facturas, incidencias,
                         maquinaria y mucho más.
                     </p>
+
+
+                    <div class="buscador-empty-tags">
+
+                        <span>
+                            🌾 Fincas
+                        </span>
+
+                        <span>
+                            👷 Personal
+                        </span>
+
+                        <span>
+                            🧾 Facturas
+                        </span>
+
+                        <span>
+                            🚜 Maquinaria
+                        </span>
+
+                    </div>
 
                 </div>
 
@@ -346,7 +584,9 @@ export class BuscadorGlobalView {
             `${resultados.length} ${
                 resultados.length ===
                 1
+
                     ? "resultado"
+
                     : "resultados"
             }`;
 
@@ -362,9 +602,9 @@ export class BuscadorGlobalView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="buscador-empty buscador-empty-no-results">
 
-                    <div class="empty-icon">
+                    <div class="buscador-empty-no-icon">
                         🔍
                     </div>
 
@@ -375,13 +615,81 @@ export class BuscadorGlobalView {
 
 
                     <p>
-                        Prueba con otro nombre, referencia,
-                        finca, trabajador o número.
+                        No hay coincidencias para
+                        <strong>
+                            “${this.escaparHTML(
+                                consulta
+                            )}”
+                        </strong>.
+                        Prueba con otro nombre,
+                        referencia, finca, trabajador
+                        o número.
                     </p>
+
+
+                    <button
+                        id="reiniciarBuscadorGlobal"
+                        class="buscador-empty-button"
+                        type="button"
+                    >
+                        Limpiar búsqueda
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "reiniciarBuscadorGlobal"
+                )
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        this.consulta =
+                            "";
+
+
+                        const input =
+                            document.getElementById(
+                                "buscadorGlobalInput"
+                            );
+
+
+                        const botonLimpiar =
+                            document.getElementById(
+                                "limpiarBuscadorGlobal"
+                            );
+
+
+                        if (
+                            input
+                        ) {
+
+                            input.value =
+                                "";
+
+                            input.focus();
+
+                        }
+
+
+                        if (
+                            botonLimpiar
+                        ) {
+
+                            botonLimpiar.hidden =
+                                true;
+
+                        }
+
+
+                        this.actualizarResultados();
+
+                    }
+                );
 
 
             return;
@@ -395,14 +703,61 @@ export class BuscadorGlobalView {
 
         contenedor.innerHTML = `
 
+            <div class="buscador-results-summary">
+
+                <div>
+
+                    <span>
+                        🔎
+                    </span>
+
+                    <p>
+                        Resultados para
+                        <strong>
+                            “${this.escaparHTML(
+                                consulta
+                            )}”
+                        </strong>
+                    </p>
+
+                </div>
+
+
+                ${
+                    this.modulo
+
+                        ? `
+
+                            <span class="buscador-active-filter">
+
+                                ${this.obtenerIconoModulo(
+                                    this.modulo
+                                )}
+
+                                ${this.escaparHTML(
+                                    this.modulo
+                                )}
+
+                            </span>
+
+                        `
+
+                        : ""
+                }
+
+            </div>
+
+
             <div class="buscador-global-resultados-grid">
 
-                ${resultados.map(
-                    resultado =>
-                        this.crearResultado(
-                            resultado
-                        )
-                ).join("")}
+                ${resultados
+                    .map(
+                        resultado =>
+                            this.crearResultado(
+                                resultado
+                            )
+                    )
+                    .join("")}
 
             </div>
 
@@ -451,6 +806,14 @@ export class BuscadorGlobalView {
         resultado
     ) {
 
+        const icono =
+            resultado.icono
+            ||
+            this.obtenerIconoModulo(
+                resultado.modulo
+            );
+
+
         return `
 
             <button
@@ -466,7 +829,7 @@ export class BuscadorGlobalView {
 
                 <div class="buscador-global-icono">
 
-                    ${resultado.icono}
+                    ${icono}
 
                 </div>
 
@@ -485,6 +848,10 @@ export class BuscadorGlobalView {
 
 
                         <span class="buscador-global-modulo">
+
+                            ${this.obtenerIconoModulo(
+                                resultado.modulo
+                            )}
 
                             ${this.escaparHTML(
                                 resultado.modulo
@@ -536,12 +903,85 @@ export class BuscadorGlobalView {
 
 
                 <span class="buscador-global-flecha">
-                    ›
+                    →
                 </span>
 
             </button>
 
         `;
+
+    }
+
+
+    // =====================================================
+    // ICONOS
+    // =====================================================
+
+    obtenerIconoModulo(
+        modulo
+    ) {
+
+        const iconos = {
+
+            "Fincas":
+                "🌾",
+
+            "Campanyas":
+                "🗓️",
+
+            "Cultivos":
+                "🌱",
+
+            "Cuaderno de campo":
+                "📖",
+
+            "Tratamientos":
+                "🧪",
+
+            "Trabajos":
+                "👨‍🌾",
+
+            "Trabajadores":
+                "👷",
+
+            "Fichajes":
+                "⏱️",
+
+            "Incidencias":
+                "⚠️",
+
+            "Maquinaria":
+                "🚜",
+
+            "Inventario":
+                "📦",
+
+            "Producción":
+                "🍎",
+
+            "Clientes y Proveedores":
+                "👥",
+
+            "Albaranes":
+                "🧾",
+
+            "Facturación":
+                "💶",
+
+            "Cobros y pagos":
+                "💳",
+
+            "Gastos":
+                "💰"
+
+        };
+
+
+        return (
+            iconos[modulo]
+            ||
+            "📄"
+        );
 
     }
 

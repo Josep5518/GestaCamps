@@ -1,7 +1,7 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · TRABAJADORES
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
 
@@ -40,11 +40,15 @@
 .trabajador-icon {
     width: 48px;
     height: 48px;
+
     background-color: var(--gc-green-soft);
+
     border-radius: 12px;
+
     display: flex;
     align-items: center;
     justify-content: center;
+
     font-size: 24px;
 }
 
@@ -85,8 +89,11 @@
 
 .trabajador-info span {
     display: block;
+
     color: var(--gc-muted);
+
     font-size: 12px;
+
     margin-bottom: 5px;
 }
 
@@ -99,15 +106,22 @@
 
 .trabajador-notas {
     margin-top: 18px;
+
     padding-top: 14px;
-    border-top: 1px solid var(--gc-border-soft);
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
 }
 
 
 .trabajador-notas span {
     display: block;
+
     color: var(--gc-muted);
+
     font-size: 12px;
+
     margin-bottom: 5px;
 }
 
@@ -120,7 +134,11 @@
 @media (max-width: 1100px) {
 
     .trabajadores-grid {
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns:
+            repeat(
+                2,
+                1fr
+            );
     }
 
 }
@@ -150,6 +168,16 @@
 ===================================================== */
 
 .trabajadores-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
     margin-bottom: 20px;
 }
 
@@ -188,7 +216,8 @@
 
     background: white;
 
-    box-shadow: var(--gc-shadow-card);
+    box-shadow:
+        var(--gc-shadow-card);
 }
 
 
@@ -211,6 +240,7 @@
 
 .trabajador-identity {
     display: flex;
+
     align-items: center;
 
     gap: 11px;
@@ -244,7 +274,8 @@
             #edf7f2
         );
 
-    color: var(--gc-green-text);
+    color:
+        var(--gc-green-text);
 
     font-size: 14px;
     font-weight: 800;
@@ -264,21 +295,28 @@
 
     overflow: hidden;
 
-    color: var(--gc-text);
+    color:
+        var(--gc-text);
 
     font-size: 15px;
 
     white-space: nowrap;
+
     text-overflow: ellipsis;
 }
 
 
 .trabajador-puesto {
-    margin: 4px 0 0 !important;
+    margin:
+        4px
+        0
+        0 !important;
 
-    color: var(--gc-muted);
+    color:
+        var(--gc-muted);
 
-    font-size: 10px !important;
+    font-size:
+        10px !important;
 }
 
 
@@ -293,7 +331,10 @@
 
     gap: 6px;
 
-    flex: 0 0 auto;
+    flex:
+        0
+        0
+        auto;
 }
 
 
@@ -312,7 +353,9 @@
 .trabajador-actions
 .delete-button {
     width: 34px;
+
     min-width: 34px;
+
     height: 34px;
 
     padding: 0;
@@ -351,28 +394,35 @@
     border-radius: 999px;
 
     font-size: 9px;
+
     font-weight: 700;
 }
 
 
 .trabajador-status.activo {
-    background: #e3f5ea;
+    background:
+        #e3f5ea;
 
-    color: #176044;
+    color:
+        #176044;
 }
 
 
 .trabajador-status.inactivo {
-    background: #fde8e8;
+    background:
+        #fde8e8;
 
-    color: #a42b2b;
+    color:
+        #a42b2b;
 }
 
 
 .trabajador-pin-status {
-    background: #f1f4f2;
+    background:
+        #f1f4f2;
 
-    color: var(--gc-muted-strong);
+    color:
+        var(--gc-muted-strong);
 }
 
 
@@ -400,14 +450,16 @@
 
     border-radius: 9px;
 
-    background: #f7f9f7;
+    background:
+        #f7f9f7;
 }
 
 
 .trabajador-info-premium span {
     display: block;
 
-    color: var(--gc-muted);
+    color:
+        var(--gc-muted);
 
     font-size: 9px;
 }
@@ -418,7 +470,8 @@
 
     margin-top: 3px;
 
-    color: var(--gc-text);
+    color:
+        var(--gc-text);
 
     font-size: 11px;
 }
@@ -442,11 +495,13 @@
 .trabajador-contact span {
     overflow: hidden;
 
-    color: var(--gc-muted-strong);
+    color:
+        var(--gc-muted-strong);
 
     font-size: 10px;
 
     white-space: nowrap;
+
     text-overflow: ellipsis;
 }
 
@@ -469,16 +524,21 @@
 .trabajador-notas span {
     display: block;
 
-    color: var(--gc-muted);
+    color:
+        var(--gc-muted);
 
     font-size: 9px;
 }
 
 
 .trabajador-notas p {
-    margin: 4px 0 0;
+    margin:
+        4px
+        0
+        0;
 
-    color: var(--gc-muted-strong);
+    color:
+        var(--gc-muted-strong);
 
     font-size: 10px;
 
@@ -599,7 +659,9 @@
     .trabajador-actions
     .delete-button {
         width: 32px;
+
         min-width: 32px;
+
         height: 32px;
     }
 
@@ -623,6 +685,19 @@
         grid-template-columns: 1fr;
 
         gap: 0;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .trabajadores-stats {
+        grid-template-columns: 1fr !important;
     }
 
 }

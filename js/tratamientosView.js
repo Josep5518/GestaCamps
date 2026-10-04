@@ -100,7 +100,7 @@ export class TratamientosView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats tratamientos-stats">
 
                 <div class="card">
 
@@ -207,20 +207,11 @@ export class TratamientosView {
 
 
             <section
-                class="panel"
-                style="
-                    margin-bottom: 22px;
-                "
+                class="panel tratamientos-filtros-panel"
             >
 
                 <div
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            minmax(220px, 1fr)
-                            minmax(190px, 300px);
-                        gap: 12px;
-                    "
+                    class="tratamientos-filtros-grid"
                 >
 
                     <div class="form-group">
@@ -290,15 +281,7 @@ export class TratamientosView {
 
                 <div
                     id="listaTratamientos"
-                    style="
-                        display: grid;
-                        grid-template-columns:
-                            repeat(
-                                auto-fit,
-                                minmax(340px, 1fr)
-                            );
-                        gap: 18px;
-                    "
+                    class="tratamientos-grid"
                 >
 
                     ${
@@ -425,23 +408,16 @@ export class TratamientosView {
 
         return `
 
-            <article class="panel">
+            <article class="panel tratamiento-card">
 
                 <div
-                    style="
-                        display: flex;
-                        justify-content: space-between;
-                        gap: 12px;
-                    "
+                    class="tratamiento-card-header"
                 >
 
                     <div>
 
                         <div
-                            style="
-                                font-size: 28px;
-                                margin-bottom: 8px;
-                            "
+                            class="tratamiento-card-icon"
                         >
                             🧪
                         </div>
@@ -453,9 +429,7 @@ export class TratamientosView {
                         </h3>
 
                         <strong
-                            style="
-                                color: #247354;
-                            "
+                            class="tratamiento-card-finca"
                         >
                             ${escaparHTML(
                                 tratamiento.fincaNombre
@@ -466,10 +440,7 @@ export class TratamientosView {
 
 
                     <div
-                        style="
-                            display: flex;
-                            gap: 7px;
-                        "
+                        class="tratamiento-card-actions"
                     >
 
                         <button
@@ -494,11 +465,7 @@ export class TratamientosView {
 
 
                 <div
-                    style="
-                        margin-top: 16px;
-                        display: grid;
-                        gap: 8px;
-                    "
+                    class="tratamiento-card-meta"
                 >
 
                     <p>
@@ -626,12 +593,7 @@ export class TratamientosView {
                         ? `
 
                             <div
-                                style="
-                                    margin-top: 14px;
-                                    padding: 12px;
-                                    border-radius: 10px;
-                                    background: #f5f7f5;
-                                "
+                                class="tratamiento-card-observaciones"
                             >
 
                                 <strong>
@@ -652,11 +614,7 @@ export class TratamientosView {
 
 
                 <p
-                    style="
-                        margin-top: 14px;
-                        font-size: 12px;
-                        color: #78837d;
-                    "
+                    class="tratamiento-card-author"
                 >
                     Registrado por
 
@@ -928,9 +886,7 @@ export class TratamientosView {
                         </select>
 
                     </div>
-
-
-                    <div class="form-group">
+                                        <div class="form-group">
 
                         <label>
                             Cultivo
@@ -1600,10 +1556,8 @@ export class TratamientosView {
         }
 
     }
-
-
-    // =====================================================
-    // EVENTOS
+        // =====================================================
+    // EVENTOS DE TARJETAS
     // =====================================================
 
     configurarEventos() {
@@ -1618,12 +1572,6 @@ export class TratamientosView {
                     boton.addEventListener(
                         "click",
                         () => {
-
-                            /*
-                             * IMPORTANTE:
-                             * el ID puede ser UUID.
-                             * No usar Number().
-                             */
 
                             this.mostrarFormulario(
                                 boton.dataset.id
@@ -1649,7 +1597,7 @@ export class TratamientosView {
 
                             const confirmar =
                                 window.confirm(
-                                    "¿Eliminar este tratamiento? El stock utilizado se devolverá automáticamente al inventario."
+                                    "¿Quieres eliminar este tratamiento?"
                                 );
 
 
@@ -1661,11 +1609,6 @@ export class TratamientosView {
 
                             }
 
-
-                            /*
-                             * También mantenemos aquí
-                             * el ID original.
-                             */
 
                             const resultado =
                                 this.tratamientoService
@@ -1699,7 +1642,7 @@ export class TratamientosView {
 
 
     // =====================================================
-    // FILTRADOS
+    // FILTROS
     // =====================================================
 
     obtenerFiltrados() {
@@ -1746,9 +1689,9 @@ export class TratamientosView {
                                     tratamiento.fincaNombre,
                                     tratamiento.campaniaNombre,
                                     tratamiento.cultivoNombre,
+                                    tratamiento.plagaObjetivo,
                                     tratamiento.trabajadorNombre,
                                     tratamiento.maquinariaNombre,
-                                    tratamiento.plagaObjetivo,
                                     tratamiento.dosis,
                                     tratamiento.observaciones
                                 ]
@@ -1773,7 +1716,7 @@ export class TratamientosView {
 
 
     // =====================================================
-    // VACÍO
+    // ESTADO VACÍO
     // =====================================================
 
     crearVacio() {
@@ -1781,9 +1724,10 @@ export class TratamientosView {
         return `
 
             <div
-                class="panel empty-state"
-                style="
-                    grid-column: 1 / -1;
+                class="
+                    panel
+                    empty-state
+                    tratamientos-empty-state
                 "
             >
 
@@ -1796,7 +1740,7 @@ export class TratamientosView {
                 </h3>
 
                 <p>
-                    Los tratamientos realizados aparecerán aquí.
+                    Los tratamientos agrícolas registrados aparecerán aquí.
                 </p>
 
             </div>

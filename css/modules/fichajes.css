@@ -1,7 +1,7 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · FICHAJES
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
 
@@ -20,6 +20,16 @@
 ===================================================== */
 
 .fichajes-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
     margin-bottom: 20px;
 }
 
@@ -55,6 +65,7 @@
 
 .fichajes-panel-header {
     display: flex;
+
     align-items: center;
     justify-content: space-between;
 
@@ -85,12 +96,15 @@
     height: 30px;
 
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
 
     flex: 0 0 auto;
 
-    padding: 0 9px;
+    padding:
+        0
+        9px;
 
     border-radius: 999px;
 
@@ -123,6 +137,7 @@
 
 .fichajes-pin-area {
     display: flex;
+
     align-items: center;
 
     gap: 12px;
@@ -138,6 +153,7 @@
     flex: 0 0 44px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -193,6 +209,8 @@
     letter-spacing: 0.32em;
 
     text-align: center;
+
+    box-sizing: border-box;
 }
 
 
@@ -252,6 +270,7 @@
 
 .fichajes-worker {
     display: flex;
+
     align-items: center;
 
     gap: 11px;
@@ -278,6 +297,7 @@
     flex: 0 0 38px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -345,6 +365,7 @@
 
 .fichajes-correction-header {
     display: flex;
+
     align-items: flex-start;
     justify-content: space-between;
 
@@ -372,6 +393,7 @@
     flex: 0 0 auto;
 
     display: inline-flex;
+
     align-items: center;
     justify-content: center;
 
@@ -526,6 +548,7 @@
 
 .fichajes-permission-warning {
     display: flex;
+
     align-items: center;
 
     gap: 11px;
@@ -570,6 +593,7 @@
 
 .fichajes-history-row {
     display: flex;
+
     align-items: center;
 
     gap: 11px;
@@ -596,6 +620,7 @@
     flex: 0 0 36px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -660,6 +685,7 @@
 
 .fichajes-empty {
     display: flex;
+
     align-items: center;
 
     gap: 12px;
@@ -677,6 +703,7 @@
     flex: 0 0 40px;
 
     display: flex;
+
     align-items: center;
     justify-content: center;
 
@@ -709,6 +736,15 @@
 ===================================================== */
 
 @media (max-width: 1050px) {
+
+    .fichajes-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .fichajes-main-grid {
         grid-template-columns: 1fr;
@@ -836,13 +872,16 @@
         padding: 13px;
     }
 
+
     .fichajes-register-card .panel-header {
         margin-bottom: 10px;
     }
 
+
     .fichajes-pin-area {
         margin-bottom: 10px;
     }
+
 
     .fichajes-pin-icon {
         width: 38px;
@@ -853,20 +892,57 @@
         font-size: 17px;
     }
 
+
     .fichajes-pin-input {
         min-height: 42px;
     }
+
 
     .fichajes-register-actions {
         margin-top: 10px;
     }
 
+
     .fichajes-working-card {
         padding: 13px;
     }
 
+
     .fichajes-empty {
         min-height: 72px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .fichajes-stats {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    .fichajes-register-actions {
+        grid-template-columns: 1fr;
+    }
+
+
+    .fichajes-correction-data {
+        grid-template-columns: 1fr;
+    }
+
+
+    .fichajes-correction-data > div:last-child {
+        grid-column: auto;
+    }
+
+
+    .fichajes-correction-actions {
+        grid-template-columns: 1fr;
     }
 
 }

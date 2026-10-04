@@ -58,7 +58,7 @@ export class CampaniasView {
 
 
     // =====================================================
-    // OBTENER CAMPANYA POR ID
+    // OBTENER CAMPAÑA POR ID
     // =====================================================
 
     obtenerCampaniaPorId(
@@ -117,71 +117,199 @@ export class CampaniasView {
 
         const fincasConCampania =
             new Set(
-                campanias.map(
-                    campania =>
-                        campania.fincaId
-                )
+                campanias
+                    .map(
+                        campania =>
+                            campania.fincaId
+                    )
+                    .filter(Boolean)
             ).size;
+
+
+        const produccionTotal =
+            campanias.reduce(
+                (
+                    total,
+                    campania
+                ) => {
+
+                    const resumen =
+                        this.obtenerResumenCampania(
+                            campania
+                        );
+
+
+                    return (
+                        total
+                        +
+                        Number(
+                            resumen.producido
+                            ||
+                            0
+                        )
+                    );
+
+                },
+                0
+            );
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="campanias-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Campanya
-                    </h2>
+                <section class="campanias-hero">
 
-                    <p>
-                        Organiza y analiza toda la actividad de cada campanya agrícola
-                    </p>
+                    <div class="campanias-hero-content">
+
+                        <span class="campanias-eyebrow">
+                            🌾 GESTIÓN AGRÍCOLA
+                        </span>
+
+
+                        <h1>
+                            Cada campaña,
+                            <span>
+                                bajo control.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Organiza cada ciclo agrícola, controla su
+                            producción y conoce su rentabilidad desde
+                            un único lugar.
+                        </p>
+
+
+                        <button
+                            id="nuevaCampania"
+                            class="
+                                primary-button
+                                campanias-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva campaña
+                        </button>
+
+                    </div>
+
+
+                    <div class="campanias-hero-image">
+
+                        <div class="campanias-hero-badge">
+
+                            <span>
+                                Campañas activas
+                            </span>
+
+                            <strong>
+                                ${activas}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="campanias-hero-copy">
+
+                            <small>
+                                PLANIFICA · PRODUCE · ANALIZA
+                            </small>
+
+                            <strong>
+                                Una visión completa<br>
+                                de cada cosecha
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats campanias-stats">
+
+                    ${this.crearTarjeta(
+                        "📅",
+                        "Campañas",
+                        campanias.length
+                    )}
+
+                    ${this.crearTarjeta(
+                        "✅",
+                        "Activas",
+                        activas
+                    )}
+
+                    ${this.crearTarjeta(
+                        "🍎",
+                        "Producción",
+                        `${this.formatearNumero(
+                            produccionTotal
+                        )} kg`
+                    )}
+
+                    ${this.crearTarjeta(
+                        "🌾",
+                        "Fincas vinculadas",
+                        fincasConCampania
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTA
+                =========================================== -->
+
+                <div class="campanias-list-header">
+
+                    <div>
+
+                        <span class="campanias-list-eyebrow">
+                            CAMPAÑAS
+                        </span>
+
+                        <h2>
+                            Ciclos agrícolas
+                        </h2>
+
+                        <p>
+                            Consulta producción, resultados y actividad
+                            de cada campaña.
+                        </p>
+
+                    </div>
+
+
+                    <div class="campanias-list-summary">
+
+                        <span>
+                            ${activas} activas
+                        </span>
+
+                        <span>
+                            ${cerradas} cerradas
+                        </span>
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevaCampania"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nueva campanya
-                </button>
+                <div id="listaCampanias"></div>
 
-            </header>
-
-
-            <section class="stats campanias-stats">
-
-                ${this.crearTarjeta(
-                    "📅",
-                    "Campanyas",
-                    campanias.length
-                )}
-
-                ${this.crearTarjeta(
-                    "✅",
-                    "Activas",
-                    activas
-                )}
-
-                ${this.crearTarjeta(
-                    "🔒",
-                    "Cerradas",
-                    cerradas
-                )}
-
-                ${this.crearTarjeta(
-                    "🌾",
-                    "Fincas con campanya",
-                    fincasConCampania
-                )}
-
-            </section>
-
-
-            <div id="listaCampanias"></div>
+            </div>
 
         `;
 
@@ -190,7 +318,7 @@ export class CampaniasView {
             .getElementById(
                 "nuevaCampania"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -204,6 +332,10 @@ export class CampaniasView {
 
     }
 
+
+    // =====================================================
+    // TARJETA KPI
+    // =====================================================
 
     crearTarjeta(
         icono,
@@ -285,23 +417,60 @@ export class CampaniasView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="campanias-empty">
 
-                    <div class="empty-icon">
-                        📅
+                    <div class="campanias-empty-illustration">
+
+                        <div class="campanias-empty-sun"></div>
+
+                        <div class="campanias-empty-hill campanias-empty-hill-1"></div>
+
+                        <div class="campanias-empty-hill campanias-empty-hill-2"></div>
+
+                        <div class="campanias-empty-calendar">
+                            📅
+                        </div>
+
                     </div>
 
+
                     <h3>
-                        Todavía no tienes campanyas
+                        Todavía no tienes campañas
                     </h3>
 
+
                     <p>
-                        Crea tu primera campanya agrícola para comenzar a organizar la explotación.
+                        Crea tu primera campaña agrícola para comenzar
+                        a organizar la producción de tu explotación.
                     </p>
+
+
+                    <button
+                        id="crearPrimeraCampania"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Crear primera campaña
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimeraCampania"
+                )
+                ?.addEventListener(
+                    "click",
+                    () => {
+
+                        this.mostrarFormulario();
+
+                    }
+                );
+
 
             return;
 
@@ -314,7 +483,10 @@ export class CampaniasView {
 
                 ${campanias
                     .map(
-                        campania => {
+                        (
+                            campania,
+                            index
+                        ) => {
 
                             const resumen =
                                 this.obtenerResumenCampania(
@@ -322,176 +494,285 @@ export class CampaniasView {
                                 );
 
 
+                            const progreso =
+                                this.calcularProgresoCampania(
+                                    campania
+                                );
+
+
+                            const numeroImagen =
+                                (
+                                    index %
+                                    3
+                                )
+                                +
+                                1;
+
+
                             return `
 
-                                <div class="campania-card">
+                                <article class="campania-card">
 
-                                    <div class="campania-card-header">
+                                    <!-- ==================================
+                                         FOTO
+                                    =================================== -->
 
-                                        <span class="campania-icon">
-                                            📅
-                                        </span>
+                                    <div
+                                        class="
+                                            campania-cover
+                                            campania-cover-${numeroImagen}
+                                        "
+                                    >
+
+                                        <div class="campania-cover-overlay"></div>
 
 
-                                        <div class="campania-actions">
+                                        <div class="campania-cover-top">
 
-                                            <button
+                                            <span
                                                 class="
-                                                    secondary-button
-                                                    editar-campania
+                                                    campania-status
+                                                    ${
+                                                        campania.estado ===
+                                                        "Activa"
+
+                                                            ? "campania-activa"
+
+                                                            : "campania-cerrada"
+                                                    }
                                                 "
-                                                data-id="${campania.id}"
-                                                type="button"
                                             >
-                                                Editar
-                                            </button>
+
+                                                ${
+                                                    campania.estado ===
+                                                    "Activa"
+
+                                                        ? "● Activa"
+
+                                                        : "🔒 Cerrada"
+                                                }
+
+                                            </span>
 
 
-                                            <button
-                                                class="
-                                                    delete-button
-                                                    eliminar-campania
-                                                "
-                                                data-id="${campania.id}"
-                                                type="button"
-                                            >
-                                                ×
-                                            </button>
+                                            <div class="campania-actions">
+
+                                                <button
+                                                    class="
+                                                        campania-action-button
+                                                        editar-campania
+                                                    "
+                                                    data-id="${campania.id}"
+                                                    type="button"
+                                                    title="Editar campaña"
+                                                >
+                                                    ✎
+                                                </button>
+
+
+                                                <button
+                                                    class="
+                                                        campania-action-button
+                                                        campania-action-delete
+                                                        eliminar-campania
+                                                    "
+                                                    data-id="${campania.id}"
+                                                    type="button"
+                                                    title="Eliminar campaña"
+                                                >
+                                                    ×
+                                                </button>
+
+                                            </div>
 
                                         </div>
 
-                                    </div>
 
-
-                                    <h3>
-                                        ${this.escapar(
-                                            campania.nombre
-                                        )}
-                                    </h3>
-
-
-                                    <p class="campania-finca">
-
-                                        🌾
-                                        ${this.escapar(
-                                            campania.fincaNombre
-                                        )}
-
-                                    </p>
-
-
-                                    <div class="campania-info-grid">
-
-                                        <div>
+                                        <div class="campania-cover-copy">
 
                                             <span>
-                                                Inicio
+                                                ${
+                                                    this.escapar(
+                                                        campania.fincaNombre
+                                                        ||
+                                                        "Explotación"
+                                                    )
+                                                }
                                             </span>
 
+
                                             <strong>
-                                                ${this.formatearFecha(
-                                                    campania.fechaInicio
+                                                ${this.escapar(
+                                                    campania.nombre
                                                 )}
                                             </strong>
 
                                         </div>
 
+                                    </div>
 
-                                        <div>
 
-                                            <span>
-                                                Fin
+                                    <!-- ==================================
+                                         CUERPO
+                                    =================================== -->
+
+                                    <div class="campania-card-body">
+
+                                        <div class="campania-card-title">
+
+                                            <span class="campania-card-kicker">
+                                                CAMPAÑA AGRÍCOLA
                                             </span>
 
-                                            <strong>
-                                                ${
-                                                    campania.fechaFin
 
-                                                        ? this.formatearFecha(
-                                                            campania.fechaFin
-                                                        )
+                                            <h3>
+                                                ${this.escapar(
+                                                    campania.nombre
+                                                )}
+                                            </h3>
 
-                                                        : "Sin definir"
-                                                }
-                                            </strong>
+
+                                            <p class="campania-finca">
+
+                                                🌾
+                                                ${this.escapar(
+                                                    campania.fincaNombre
+                                                )}
+
+                                            </p>
 
                                         </div>
 
-                                    </div>
+
+                                        <!-- ==============================
+                                             FECHAS
+                                        =============================== -->
+
+                                        <div class="campania-info-grid">
+
+                                            <div>
+
+                                                <span>
+                                                    Inicio
+                                                </span>
+
+                                                <strong>
+                                                    ${this.formatearFecha(
+                                                        campania.fechaInicio
+                                                    )}
+                                                </strong>
+
+                                            </div>
 
 
-                                    <div
-                                        style="
-                                            display:grid;
-                                            grid-template-columns:
-                                                repeat(3,minmax(0,1fr));
-                                            gap:8px;
-                                            margin-top:12px;
-                                        "
-                                    >
+                                            <div>
 
-                                        ${this.crearMiniDato(
-                                            "Producción",
-                                            `${this.formatearNumero(
-                                                resumen.producido
-                                            )} kg`
-                                        )}
+                                                <span>
+                                                    Fin previsto
+                                                </span>
 
-                                        ${this.crearMiniDato(
-                                            "Ingresos",
-                                            this.formatearDinero(
-                                                resumen.ingresos
-                                            )
-                                        )}
+                                                <strong>
 
-                                        ${this.crearMiniDato(
-                                            "Beneficio",
-                                            this.formatearDinero(
-                                                resumen.beneficio
-                                            )
-                                        )}
+                                                    ${
+                                                        campania.fechaFin
 
-                                    </div>
+                                                            ? this.formatearFecha(
+                                                                campania.fechaFin
+                                                            )
+
+                                                            : "Sin definir"
+                                                    }
+
+                                                </strong>
+
+                                            </div>
+
+                                        </div>
 
 
-                                    <div class="campania-bottom">
+                                        <!-- ==============================
+                                             PROGRESO
+                                        =============================== -->
 
-                                        <span
-                                            class="
-                                                campania-status
-                                                ${
-                                                    campania.estado ===
-                                                    "Activa"
+                                        <div class="campania-progress">
 
-                                                        ? "campania-activa"
+                                            <div class="campania-progress-head">
 
-                                                        : "campania-cerrada"
-                                                }
-                                            "
-                                        >
-                                            ${this.escapar(
-                                                campania.estado
+                                                <span>
+                                                    Progreso temporal
+                                                </span>
+
+                                                <strong>
+                                                    ${progreso} %
+                                                </strong>
+
+                                            </div>
+
+
+                                            <div class="campania-progress-track">
+
+                                                <span
+                                                    style="
+                                                        width:
+                                                        ${progreso}%;
+                                                    "
+                                                ></span>
+
+                                            </div>
+
+                                        </div>
+
+
+                                        <!-- ==============================
+                                             MÉTRICAS
+                                        =============================== -->
+
+                                        <div class="campania-mini-grid">
+
+                                            ${this.crearMiniDato(
+                                                "Producción",
+                                                `${this.formatearNumero(
+                                                    resumen.producido
+                                                )} kg`
                                             )}
-                                        </span>
+
+                                            ${this.crearMiniDato(
+                                                "Ingresos",
+                                                this.formatearDinero(
+                                                    resumen.ingresos
+                                                )
+                                            )}
+
+                                            ${this.crearMiniDato(
+                                                "Beneficio",
+                                                this.formatearDinero(
+                                                    resumen.beneficio
+                                                )
+                                            )}
+
+                                        </div>
 
 
-                                        <div
-                                            style="
-                                                display:flex;
-                                                gap:8px;
-                                                flex-wrap:wrap;
-                                            "
-                                        >
+                                        <!-- ==============================
+                                             ACCIONES
+                                        =============================== -->
+
+                                        <div class="campania-bottom">
 
                                             <button
                                                 class="
-                                                    primary-button
+                                                    campania-view-button
                                                     ver-campania
                                                 "
                                                 data-id="${campania.id}"
                                                 type="button"
                                             >
-                                                Ver campanya
+                                                Ver campaña
+
+                                                <span>
+                                                    →
+                                                </span>
+
                                             </button>
 
 
@@ -502,7 +783,7 @@ export class CampaniasView {
                                                     ? `
                                                         <button
                                                             class="
-                                                                task-state-button
+                                                                campania-state-button
                                                                 cerrar-campania
                                                             "
                                                             data-id="${campania.id}"
@@ -515,7 +796,7 @@ export class CampaniasView {
                                                     : `
                                                         <button
                                                             class="
-                                                                task-state-button
+                                                                campania-state-button
                                                                 reabrir-campania
                                                             "
                                                             data-id="${campania.id}"
@@ -528,24 +809,30 @@ export class CampaniasView {
 
                                         </div>
 
+
+                                        ${
+                                            campania.notas
+
+                                                ? `
+                                                    <p class="campania-notas">
+
+                                                        <span>
+                                                            Nota
+                                                        </span>
+
+                                                        ${this.escapar(
+                                                            campania.notas
+                                                        )}
+
+                                                    </p>
+                                                `
+
+                                                : ""
+                                        }
+
                                     </div>
 
-
-                                    ${
-                                        campania.notas
-
-                                            ? `
-                                                <p class="campania-notas">
-                                                    ${this.escapar(
-                                                        campania.notas
-                                                    )}
-                                                </p>
-                                            `
-
-                                            : ""
-                                    }
-
-                                </div>
+                                </article>
 
                             `;
 
@@ -563,44 +850,173 @@ export class CampaniasView {
     }
 
 
+    // =====================================================
+    // MINI DATO
+    // =====================================================
+
     crearMiniDato(
         titulo,
-        valor,
-        fondo = "#f5f7f5"
+        valor
     ) {
 
         return `
 
-            <div
-                style="
-                    background:${fondo};
-                    padding:10px;
-                    border-radius:9px;
-                "
-            >
+            <div class="campania-mini-dato">
 
-                <span
-                    style="
-                        display:block;
-                        font-size:10px;
-                        color:#78837d;
-                    "
-                >
+                <span class="campania-mini-label">
                     ${titulo}
                 </span>
 
-                <strong
-                    style="
-                        display:block;
-                        margin-top:3px;
-                    "
-                >
+                <strong class="campania-mini-value">
                     ${valor}
                 </strong>
 
             </div>
 
         `;
+
+    }
+
+
+    // =====================================================
+    // PROGRESO TEMPORAL
+    // =====================================================
+
+    calcularProgresoCampania(
+        campania
+    ) {
+
+        if (
+            !campania?.fechaInicio
+        ) {
+
+            return 0;
+
+        }
+
+
+        const inicio =
+            new Date(
+                `${campania.fechaInicio}T00:00:00`
+            );
+
+
+        if (
+            Number.isNaN(
+                inicio.getTime()
+            )
+        ) {
+
+            return 0;
+
+        }
+
+
+        if (
+            campania.estado ===
+            "Cerrada"
+        ) {
+
+            return 100;
+
+        }
+
+
+        const hoy =
+            new Date();
+
+
+        hoy.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        if (
+            hoy <
+            inicio
+        ) {
+
+            return 0;
+
+        }
+
+
+        if (
+            !campania.fechaFin
+        ) {
+
+            return 50;
+
+        }
+
+
+        const fin =
+            new Date(
+                `${campania.fechaFin}T00:00:00`
+            );
+
+
+        if (
+            Number.isNaN(
+                fin.getTime()
+            )
+        ) {
+
+            return 0;
+
+        }
+
+
+        if (
+            hoy >=
+            fin
+        ) {
+
+            return 100;
+
+        }
+
+
+        const duracion =
+            fin.getTime()
+            -
+            inicio.getTime();
+
+
+        if (
+            duracion <=
+            0
+        ) {
+
+            return 100;
+
+        }
+
+
+        const transcurrido =
+            hoy.getTime()
+            -
+            inicio.getTime();
+
+
+        return Math.min(
+            100,
+            Math.max(
+                0,
+                Math.round(
+                    (
+                        transcurrido
+                        /
+                        duracion
+                    )
+                    *
+                    100
+                )
+            )
+        );
 
     }
 
@@ -677,7 +1093,7 @@ export class CampaniasView {
                             ) {
 
                                 alert(
-                                    "No se ha podido encontrar la campanya."
+                                    "No se ha podido encontrar la campaña."
                                 );
 
                                 return;
@@ -737,7 +1153,7 @@ export class CampaniasView {
                             ) {
 
                                 alert(
-                                    "No se ha podido encontrar la campanya."
+                                    "No se ha podido encontrar la campaña."
                                 );
 
                                 return;
@@ -807,7 +1223,7 @@ export class CampaniasView {
 
                             if (
                                 !confirm(
-                                    `¿Quieres eliminar la campanya "${campania.nombre}"?`
+                                    `¿Quieres eliminar la campaña "${campania.nombre}"?`
                                 )
                             ) {
 
@@ -848,7 +1264,7 @@ export class CampaniasView {
 
 
     // =====================================================
-    // DETALLE CAMPANYA
+    // DETALLE CAMPAÑA
     // =====================================================
 
     mostrarDetalle(
@@ -876,353 +1292,448 @@ export class CampaniasView {
             );
 
 
+        const progreso =
+            this.calcularProgresoCampania(
+                campania
+            );
+
+
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverDetalleCampania"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="campania-detail-page">
+
+                <button
+                    id="volverDetalleCampania"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <!-- ==========================================
+                     HERO DETALLE
+                =========================================== -->
 
-                <div>
+                <section class="campania-detail-hero">
 
-                    <h2>
-                        ${this.escapar(
-                            campania.nombre
-                        )}
-                    </h2>
+                    <div class="campania-detail-hero-overlay"></div>
 
-                    <p>
-                        🌾
-                        ${this.escapar(
-                            campania.fincaNombre
-                        )}
-                        ·
-                        ${this.formatearFecha(
-                            campania.fechaInicio
-                        )}
-                        ${
-                            campania.fechaFin
 
-                                ? ` → ${this.formatearFecha(
-                                    campania.fechaFin
-                                )}`
+                    <div class="campania-detail-hero-content">
 
-                                : ""
-                        }
+                        <span class="campania-detail-kicker">
+                            CAMPAÑA AGRÍCOLA
+                        </span>
+
+
+                        <h1>
+                            ${this.escapar(
+                                campania.nombre
+                            )}
+                        </h1>
+
+
+                        <p>
+
+                            🌾
+                            ${this.escapar(
+                                campania.fincaNombre
+                            )}
+
+                            ·
+
+                            ${this.formatearFecha(
+                                campania.fechaInicio
+                            )}
+
+                            ${
+                                campania.fechaFin
+
+                                    ? ` → ${this.formatearFecha(
+                                        campania.fechaFin
+                                    )}`
+
+                                    : ""
+                            }
+
+                        </p>
+
+                    </div>
+
+
+                    <div class="campania-detail-hero-side">
+
+                        <span
+                            class="
+                                campania-status
+                                ${
+                                    campania.estado ===
+                                    "Activa"
+
+                                        ? "campania-activa"
+
+                                        : "campania-cerrada"
+                                }
+                            "
+                        >
+                            ${
+                                campania.estado ===
+                                "Activa"
+
+                                    ? "● Activa"
+
+                                    : "🔒 Cerrada"
+                            }
+                        </span>
+
+
+                        <div class="campania-detail-progress">
+
+                            <span>
+                                Progreso
+                            </span>
+
+                            <strong>
+                                ${progreso} %
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     PRODUCCIÓN
+                =========================================== -->
+
+                <div
+                    class="
+                        campania-detail-heading
+                        campania-detail-heading-first
+                    "
+                >
+
+                    <span class="campania-detail-section-kicker">
+                        PRODUCCIÓN
+                    </span>
+
+                    <h3>
+                        Estado productivo
+                    </h3>
+
+                    <p class="campania-detail-subtitle">
+                        Situación de la producción asociada a esta campaña.
                     </p>
 
                 </div>
 
 
-                <span
+                <section class="stats campania-detail-stats">
+
+                    ${this.crearTarjeta(
+                        "🍎",
+                        "Producido",
+                        `${this.formatearNumero(
+                            resumen.producido
+                        )} kg`
+                    )}
+
+                    ${this.crearTarjeta(
+                        "🕒",
+                        "Reservado",
+                        `${this.formatearNumero(
+                            resumen.reservado
+                        )} kg`
+                    )}
+
+                    ${this.crearTarjeta(
+                        "🚚",
+                        "Entregado",
+                        `${this.formatearNumero(
+                            resumen.entregado
+                        )} kg`
+                    )}
+
+                    ${this.crearTarjeta(
+                        "📦",
+                        "Disponible",
+                        `${this.formatearNumero(
+                            resumen.disponible
+                        )} kg`
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     RENTABILIDAD
+                =========================================== -->
+
+                <div class="campania-detail-heading">
+
+                    <span class="campania-detail-section-kicker">
+                        ECONOMÍA
+                    </span>
+
+                    <h3>
+                        Rentabilidad
+                    </h3>
+
+                    <p class="campania-detail-subtitle">
+                        Resultado económico de la campaña.
+                    </p>
+
+                </div>
+
+
+                <section class="stats campania-detail-stats">
+
+                    ${this.crearTarjeta(
+                        "💰",
+                        "Ingresos sin IVA",
+                        this.formatearDinero(
+                            resumen.ingresos
+                        )
+                    )}
+
+                    ${this.crearTarjeta(
+                        "💸",
+                        "Gastos",
+                        this.formatearDinero(
+                            resumen.gastos
+                        )
+                    )}
+
+                    ${this.crearTarjeta(
+                        "📈",
+                        "Beneficio",
+                        this.formatearDinero(
+                            resumen.beneficio
+                        )
+                    )}
+
+                    ${this.crearTarjeta(
+                        "📊",
+                        "Margen",
+                        `${this.formatearNumero(
+                            resumen.margen
+                        )} %`
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     ACTIVIDAD
+                =========================================== -->
+
+                <div class="campania-detail-heading">
+
+                    <span class="campania-detail-section-kicker">
+                        ACTIVIDAD
+                    </span>
+
+                    <h3>
+                        Actividad de la campaña
+                    </h3>
+
+                    <p class="campania-detail-subtitle">
+                        Elementos asociados durante el ciclo agrícola.
+                    </p>
+
+                </div>
+
+
+                <section class="stats campania-detail-stats">
+
+                    ${this.crearTarjeta(
+                        "🌱",
+                        "Cultivos",
+                        resumen.cultivos.length
+                    )}
+
+                    ${this.crearTarjeta(
+                        "🚜",
+                        "Trabajos",
+                        resumen.trabajos.length
+                    )}
+
+                    ${this.crearTarjeta(
+                        "📄",
+                        "Albaranes",
+                        resumen.albaranes.length
+                    )}
+
+                    ${this.crearTarjeta(
+                        "💶",
+                        "Facturas",
+                        resumen.facturas.length
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     LISTAS
+                =========================================== -->
+
+                <section
                     class="
-                        campania-status
-                        ${
-                            campania.estado ===
-                            "Activa"
-
-                                ? "campania-activa"
-
-                                : "campania-cerrada"
-                        }
+                        dashboard-grid
+                        campania-detail-grid
                     "
                 >
-                    ${this.escapar(
-                        campania.estado
-                    )}
-                </span>
 
-            </header>
-                        <!-- PRODUCCIÓN -->
+                    <div class="panel">
 
-            <div
-                style="
-                    margin-top:14px;
-                    margin-bottom:10px;
-                "
-            >
+                        <div class="panel-header">
 
-                <h3>
-                    Producción
-                </h3>
+                            <div>
 
-                <p
-                    style="
-                        color:#78837d;
-                        font-size:13px;
-                        margin:3px 0 0;
-                    "
-                >
-                    Situación de la producción asociada a esta campanya
-                </p>
-
-            </div>
-
-
-            <section class="stats">
-
-                ${this.crearTarjeta(
-                    "🍎",
-                    "Producido",
-                    `${this.formatearNumero(
-                        resumen.producido
-                    )} kg`
-                )}
-
-                ${this.crearTarjeta(
-                    "🕒",
-                    "Reservado",
-                    `${this.formatearNumero(
-                        resumen.reservado
-                    )} kg`
-                )}
-
-                ${this.crearTarjeta(
-                    "🚚",
-                    "Entregado",
-                    `${this.formatearNumero(
-                        resumen.entregado
-                    )} kg`
-                )}
-
-                ${this.crearTarjeta(
-                    "📦",
-                    "Disponible",
-                    `${this.formatearNumero(
-                        resumen.disponible
-                    )} kg`
-                )}
-
-            </section>
-
-
-            <!-- ECONOMÍA -->
-
-            <div
-                style="
-                    margin-top:22px;
-                    margin-bottom:10px;
-                "
-            >
-
-                <h3>
-                    Rentabilidad
-                </h3>
-
-                <p
-                    style="
-                        color:#78837d;
-                        font-size:13px;
-                        margin:3px 0 0;
-                    "
-                >
-                    Resultado económico de la campanya
-                </p>
-
-            </div>
-
-
-            <section class="stats">
-
-                ${this.crearTarjeta(
-                    "💰",
-                    "Ingresos sin IVA",
-                    this.formatearDinero(
-                        resumen.ingresos
-                    )
-                )}
-
-                ${this.crearTarjeta(
-                    "💸",
-                    "Gastos",
-                    this.formatearDinero(
-                        resumen.gastos
-                    )
-                )}
-
-                ${this.crearTarjeta(
-                    "📈",
-                    "Beneficio",
-                    this.formatearDinero(
-                        resumen.beneficio
-                    )
-                )}
-
-                ${this.crearTarjeta(
-                    "📊",
-                    "Margen",
-                    `${this.formatearNumero(
-                        resumen.margen
-                    )} %`
-                )}
-
-            </section>
-
-
-            <!-- ACTIVIDAD -->
-
-            <div
-                style="
-                    margin-top:22px;
-                    margin-bottom:10px;
-                "
-            >
-
-                <h3>
-                    Actividad de la campanya
-                </h3>
-
-            </div>
-
-
-            <section class="stats">
-
-                ${this.crearTarjeta(
-                    "🌱",
-                    "Cultivos",
-                    resumen.cultivos.length
-                )}
-
-                ${this.crearTarjeta(
-                    "🚜",
-                    "Trabajos",
-                    resumen.trabajos.length
-                )}
-
-                ${this.crearTarjeta(
-                    "📄",
-                    "Albaranes",
-                    resumen.albaranes.length
-                )}
-
-                ${this.crearTarjeta(
-                    "💶",
-                    "Facturas",
-                    resumen.facturas.length
-                )}
-
-            </section>
-
-
-            <!-- DETALLE -->
-
-            <section
-                class="dashboard-grid"
-                style="
-                    margin-top:22px;
-                "
-            >
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            🌱 Cultivos
-                        </h3>
-
-                    </div>
-
-
-                    ${this.crearListaCultivos(
-                        resumen.cultivos
-                    )}
-
-                </div>
-
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            🚜 Trabajos
-                        </h3>
-
-                    </div>
-
-
-                    ${this.crearListaTrabajos(
-                        resumen.trabajos
-                    )}
-
-                </div>
-
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            📄 Albaranes
-                        </h3>
-
-                    </div>
-
-
-                    ${this.crearListaAlbaranes(
-                        resumen.albaranes
-                    )}
-
-                </div>
-
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            💶 Facturas
-                        </h3>
-
-                    </div>
-
-
-                    ${this.crearListaFacturas(
-                        resumen.facturas
-                    )}
-
-                </div>
-
-            </section>
-
-
-            ${
-                campania.notas
-
-                    ? `
-                        <section
-                            class="panel"
-                            style="
-                                margin-top:20px;
-                            "
-                        >
-
-                            <div class="panel-header">
+                                <span class="campania-panel-kicker">
+                                    CAMPO
+                                </span>
 
                                 <h3>
-                                    Notas
+                                    🌱 Cultivos
                                 </h3>
 
                             </div>
 
-                            <p>
-                                ${this.escapar(
-                                    campania.notas
-                                )}
-                            </p>
+                        </div>
 
-                        </section>
-                    `
 
-                    : ""
-            }
+                        ${this.crearListaCultivos(
+                            resumen.cultivos
+                        )}
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="campania-panel-kicker">
+                                    OPERACIONES
+                                </span>
+
+                                <h3>
+                                    🚜 Trabajos
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        ${this.crearListaTrabajos(
+                            resumen.trabajos
+                        )}
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="campania-panel-kicker">
+                                    VENTAS
+                                </span>
+
+                                <h3>
+                                    📄 Albaranes
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        ${this.crearListaAlbaranes(
+                            resumen.albaranes
+                        )}
+
+                    </div>
+
+
+                    <div class="panel">
+
+                        <div class="panel-header">
+
+                            <div>
+
+                                <span class="campania-panel-kicker">
+                                    FACTURACIÓN
+                                </span>
+
+                                <h3>
+                                    💶 Facturas
+                                </h3>
+
+                            </div>
+
+                        </div>
+
+
+                        ${this.crearListaFacturas(
+                            resumen.facturas
+                        )}
+
+                    </div>
+
+                </section>
+
+
+                ${
+                    campania.notas
+
+                        ? `
+                            <section
+                                class="
+                                    panel
+                                    campania-notas-panel
+                                "
+                            >
+
+                                <div class="panel-header">
+
+                                    <div>
+
+                                        <span class="campania-panel-kicker">
+                                            INFORMACIÓN
+                                        </span>
+
+                                        <h3>
+                                            Notas
+                                        </h3>
+
+                                    </div>
+
+                                </div>
+
+
+                                <p>
+                                    ${this.escapar(
+                                        campania.notas
+                                    )}
+                                </p>
+
+                            </section>
+                        `
+
+                        : ""
+                }
+
+            </div>
 
         `;
 
@@ -1231,7 +1742,7 @@ export class CampaniasView {
             .getElementById(
                 "volverDetalleCampania"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -1244,7 +1755,7 @@ export class CampaniasView {
 
 
     // =====================================================
-    // RESUMEN CAMPANYA
+    // RESUMEN CAMPAÑA
     // =====================================================
 
     obtenerResumenCampania(
@@ -1738,8 +2249,10 @@ export class CampaniasView {
         };
 
     }
-        // =====================================================
-    // LISTAS DETALLE
+
+
+    // =====================================================
+    // LISTA CULTIVOS
     // =====================================================
 
     crearListaCultivos(
@@ -1752,9 +2265,19 @@ export class CampaniasView {
         ) {
 
             return `
-                <p class="text-muted">
-                    No hay cultivos en esta campanya.
-                </p>
+
+                <div class="campania-list-empty">
+
+                    <span>
+                        🌱
+                    </span>
+
+                    <p>
+                        No hay cultivos en esta campaña.
+                    </p>
+
+                </div>
+
             `;
 
         }
@@ -1769,6 +2292,7 @@ export class CampaniasView {
                         <div>
 
                             <strong>
+
                                 ${this.escapar(
                                     [
                                         cultivo.tipo,
@@ -1779,9 +2303,12 @@ export class CampaniasView {
                                             " · "
                                         )
                                 )}
+
                             </strong>
 
+
                             <p>
+
                                 ${this.escapar(
                                     cultivo.parcela
                                     ||
@@ -1789,6 +2316,7 @@ export class CampaniasView {
                                     ||
                                     ""
                                 )}
+
                             </p>
 
                         </div>
@@ -1802,6 +2330,10 @@ export class CampaniasView {
     }
 
 
+    // =====================================================
+    // LISTA TRABAJOS
+    // =====================================================
+
     crearListaTrabajos(
         trabajos
     ) {
@@ -1812,9 +2344,19 @@ export class CampaniasView {
         ) {
 
             return `
-                <p class="text-muted">
-                    No hay trabajos en esta campanya.
-                </p>
+
+                <div class="campania-list-empty">
+
+                    <span>
+                        🚜
+                    </span>
+
+                    <p>
+                        No hay trabajos en esta campaña.
+                    </p>
+
+                </div>
+
             `;
 
         }
@@ -1829,6 +2371,7 @@ export class CampaniasView {
                         <div>
 
                             <strong>
+
                                 ${this.escapar(
                                     trabajo.titulo
                                     ||
@@ -1836,14 +2379,18 @@ export class CampaniasView {
                                     ||
                                     "Trabajo"
                                 )}
+
                             </strong>
 
+
                             <p>
+
                                 ${this.escapar(
                                     trabajo.estado
                                     ||
                                     "Pendiente"
                                 )}
+
                             </p>
 
                         </div>
@@ -1857,6 +2404,10 @@ export class CampaniasView {
     }
 
 
+    // =====================================================
+    // LISTA ALBARANES
+    // =====================================================
+
     crearListaAlbaranes(
         albaranes
     ) {
@@ -1867,9 +2418,19 @@ export class CampaniasView {
         ) {
 
             return `
-                <p class="text-muted">
-                    No hay albaranes relacionados.
-                </p>
+
+                <div class="campania-list-empty">
+
+                    <span>
+                        📄
+                    </span>
+
+                    <p>
+                        No hay albaranes relacionados.
+                    </p>
+
+                </div>
+
             `;
 
         }
@@ -1889,7 +2450,9 @@ export class CampaniasView {
                                 )}
                             </strong>
 
+
                             <p>
+
                                 ${this.escapar(
                                     albaran.clienteNombre
                                     ||
@@ -1897,10 +2460,13 @@ export class CampaniasView {
                                     ||
                                     "Sin cliente"
                                 )}
+
                                 ·
+
                                 ${this.escapar(
                                     albaran.estado
                                 )}
+
                             </p>
 
                         </div>
@@ -1921,6 +2487,10 @@ export class CampaniasView {
     }
 
 
+    // =====================================================
+    // LISTA FACTURAS
+    // =====================================================
+
     crearListaFacturas(
         facturas
     ) {
@@ -1931,9 +2501,19 @@ export class CampaniasView {
         ) {
 
             return `
-                <p class="text-muted">
-                    No hay facturas activas relacionadas.
-                </p>
+
+                <div class="campania-list-empty">
+
+                    <span>
+                        💶
+                    </span>
+
+                    <p>
+                        No hay facturas activas relacionadas.
+                    </p>
+
+                </div>
+
             `;
 
         }
@@ -1952,6 +2532,7 @@ export class CampaniasView {
                                     factura.numero
                                 )}
                             </strong>
+
 
                             <p>
                                 ${this.escapar(
@@ -1980,7 +2561,7 @@ export class CampaniasView {
 
 
     // =====================================================
-    // PERTENECE CAMPANYA
+    // PERTENECE A CAMPAÑA
     // =====================================================
 
     perteneceCampania(
@@ -2190,7 +2771,7 @@ export class CampaniasView {
         ) {
 
             alert(
-                "No se ha podido encontrar la campanya que quieres editar."
+                "No se ha podido encontrar la campaña que quieres editar."
             );
 
             this.mostrar();
@@ -2220,225 +2801,327 @@ export class CampaniasView {
 
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverCampanias"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="campania-form-page">
+
+                <button
+                    id="volverCampanias"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="campania-form-header">
 
-                <div>
+                    <span class="campania-form-eyebrow">
+                        🌾 GESTIÓN AGRÍCOLA
+                    </span>
 
-                    <h2>
+
+                    <h1>
+
                         ${
                             editando
-                                ? "Editar campanya"
-                                : "Nueva campanya"
+
+                                ? "Editar campaña"
+
+                                : "Nueva campaña"
                         }
-                    </h2>
+
+                    </h1>
+
 
                     <p>
+
                         ${
                             editando
-                                ? "Modifica los datos de la campanya agrícola"
-                                : "Crea una nueva campanya para tu explotación"
+
+                                ? "Modifica la planificación y los datos principales de la campaña agrícola."
+
+                                : "Crea un nuevo ciclo agrícola y vincúlalo a una de tus fincas."
                         }
+
                     </p>
 
-                </div>
-
-            </header>
+                </header>
 
 
-            <div class="form-panel">
+                <div class="campania-form-layout">
 
-                <div class="form-group">
+                    <div class="form-panel campania-form-panel">
 
-                    <label>
-                        Nombre de la campanya *
-                    </label>
+                        <div class="campania-form-section-title">
 
-                    <input
-                        id="nombreCampania"
-                        type="text"
-                        placeholder="Ej. Campanya 2027"
-                        value="${this.escapar(
-                            campania?.nombre
-                            ||
-                            ""
-                        )}"
-                    >
-
-                </div>
+                            <span class="campania-form-section-icon">
+                                📅
+                            </span>
 
 
-                <div class="form-group">
+                            <div>
 
-                    <label>
-                        Finca *
-                    </label>
+                                <h3>
+                                    Información de campaña
+                                </h3>
 
-                    <select id="fincaCampania">
+                                <p>
+                                    Define el ciclo agrícola y su periodo.
+                                </p>
 
-                        ${fincas
-                            .map(
-                                finca => `
+                            </div>
 
-                                    <option
-                                        value="${finca.id}"
-
-                                        ${
-                                            this.mismoId(
-                                                campania?.fincaId,
-                                                finca.id
-                                            )
-
-                                                ? "selected"
-
-                                                : ""
-                                        }
-                                    >
-                                        ${this.escapar(
-                                            finca.nombre
-                                        )}
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
-
-                    </select>
-
-                </div>
+                        </div>
 
 
-                <div class="form-group">
+                        <div class="form-group">
 
-                    <label>
-                        Fecha de inicio *
-                    </label>
-
-                    <input
-                        id="inicioCampania"
-                        type="date"
-                        value="${
-                            campania?.fechaInicio
-                            ||
-                            this.obtenerFechaHoy()
-                        }"
-                    >
-
-                </div>
+                            <label>
+                                Nombre de la campaña *
+                            </label>
 
 
-                <div class="form-group">
+                            <input
+                                id="nombreCampania"
+                                type="text"
+                                placeholder="Ej. Campaña 2027"
+                                value="${this.escapar(
+                                    campania?.nombre
+                                    ||
+                                    ""
+                                )}"
+                            >
 
-                    <label>
-                        Fecha de fin
-                    </label>
-
-                    <input
-                        id="finCampania"
-                        type="date"
-                        value="${
-                            campania?.fechaFin
-                            ||
-                            ""
-                        }"
-                    >
-
-                </div>
+                        </div>
 
 
-                <div class="form-group">
+                        <div class="form-group">
 
-                    <label>
-                        Estado
-                    </label>
+                            <label>
+                                Finca *
+                            </label>
 
-                    <select id="estadoCampania">
 
-                        <option
-                            value="Activa"
-                            ${
-                                !campania
+                            <select id="fincaCampania">
+
+                                ${fincas
+                                    .map(
+                                        finca => `
+
+                                            <option
+                                                value="${finca.id}"
+
+                                                ${
+                                                    this.mismoId(
+                                                        campania?.fincaId,
+                                                        finca.id
+                                                    )
+
+                                                        ? "selected"
+
+                                                        : ""
+                                                }
+                                            >
+                                                ${this.escapar(
+                                                    finca.nombre
+                                                )}
+                                            </option>
+
+                                        `
+                                    )
+                                    .join("")}
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="campania-form-row">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha de inicio *
+                                </label>
+
+
+                                <input
+                                    id="inicioCampania"
+                                    type="date"
+                                    value="${
+                                        campania?.fechaInicio
+                                        ||
+                                        this.obtenerFechaHoy()
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha de fin
+                                </label>
+
+
+                                <input
+                                    id="finCampania"
+                                    type="date"
+                                    value="${
+                                        campania?.fechaFin
+                                        ||
+                                        ""
+                                    }"
+                                >
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Estado
+                            </label>
+
+
+                            <select id="estadoCampania">
+
+                                <option
+                                    value="Activa"
+
+                                    ${
+                                        !campania
+                                        ||
+                                        campania.estado ===
+                                        "Activa"
+
+                                            ? "selected"
+
+                                            : ""
+                                    }
+                                >
+                                    Activa
+                                </option>
+
+
+                                <option
+                                    value="Cerrada"
+
+                                    ${
+                                        campania?.estado ===
+                                        "Cerrada"
+
+                                            ? "selected"
+
+                                            : ""
+                                    }
+                                >
+                                    Cerrada
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Notas
+                            </label>
+
+
+                            <textarea
+                                id="notasCampania"
+                                rows="5"
+                                placeholder="Observaciones de la campaña..."
+                            >${this.escapar(
+                                campania?.notas
                                 ||
-                                campania.estado ===
-                                "Activa"
+                                ""
+                            )}</textarea>
 
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Activa
-                        </option>
+                        </div>
 
 
-                        <option
-                            value="Cerrada"
-                            ${
-                                campania?.estado ===
-                                "Cerrada"
+                        <div class="form-actions">
 
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Cerrada
-                        </option>
-
-                    </select>
-
-                </div>
+                            <button
+                                id="cancelarCampania"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
 
 
-                <div class="form-group">
+                            <button
+                                id="guardarCampania"
+                                class="primary-button"
+                                type="button"
+                            >
 
-                    <label>
-                        Notas
-                    </label>
+                                ${
+                                    editando
 
-                    <textarea
-                        id="notasCampania"
-                        rows="5"
-                        placeholder="Observaciones de la campanya..."
-                    >${this.escapar(
-                        campania?.notas
-                        ||
-                        ""
-                    )}</textarea>
+                                        ? "Guardar cambios"
 
-                </div>
+                                        : "Crear campaña"
+                                }
 
+                            </button>
 
-                <div class="form-actions">
+                        </div>
 
-                    <button
-                        id="cancelarCampania"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        Cancelar
-                    </button>
+                    </div>
 
 
-                    <button
-                        id="guardarCampania"
-                        class="primary-button"
-                        type="button"
-                    >
-                        ${
-                            editando
-                                ? "Guardar cambios"
-                                : "Crear campanya"
-                        }
-                    </button>
+                    <aside class="campania-form-aside">
+
+                        <div class="campania-form-aside-image">
+
+                            <div>
+
+                                <span>
+                                    GESTACAMPS
+                                </span>
+
+                                <strong>
+                                    Cada campaña cuenta
+                                    una historia diferente.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="campania-form-tip">
+
+                            <span class="campania-form-tip-icon">
+                                🌿
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Un ciclo, todos los datos
+                                </strong>
+
+                                <p>
+                                    Producción, trabajos, gastos,
+                                    albaranes y rentabilidad quedarán
+                                    relacionados con esta campaña.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
@@ -2451,7 +3134,7 @@ export class CampaniasView {
             .getElementById(
                 "volverCampanias"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -2465,7 +3148,7 @@ export class CampaniasView {
             .getElementById(
                 "cancelarCampania"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -2479,7 +3162,7 @@ export class CampaniasView {
             .getElementById(
                 "guardarCampania"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -2564,7 +3247,9 @@ export class CampaniasView {
             );
 
     }
-        // =====================================================
+
+
+    // =====================================================
     // FINCAS
     // =====================================================
 
@@ -2738,6 +3423,10 @@ export class CampaniasView {
 
     }
 
+
+    // =====================================================
+    // ESCAPAR HTML
+    // =====================================================
 
     escapar(
         valor

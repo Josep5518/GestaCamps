@@ -1,133 +1,541 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · CLIENTES Y PROVEEDORES
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
-/* ==================================
-   CLIENTES Y PROVEEDORES
-================================== */
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+.contactos-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
 
 .contactos-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
     gap: 22px;
+
     margin-top: 20px;
 }
 
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
 .contacto-card {
-    background-color: white;
-    border-radius: 14px;
+    min-width: 0;
+
     padding: 22px;
-    box-shadow: var(--gc-shadow-card);
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background-color: white;
+
+    box-shadow:
+        var(--gc-shadow-card);
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 }
 
-.contacto-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-}
 
-.contacto-icon {
-    width: 48px;
-    height: 48px;
-    background-color: var(--gc-green-soft);
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
+@media (hover: hover) {
 
-.contacto-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
+    .contacto-card:hover {
+        transform:
+            translateY(-2px);
 
-.contacto-card h3 {
-    margin: 0 0 8px;
-}
+        border-color:
+            #d7e3dc;
 
-.contacto-tipo {
-    color: var(--gc-green);
-    font-weight: 600;
-}
-
-.contacto-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 18px 0;
-}
-
-.contacto-info div {
-    background-color: var(--gc-surface-soft);
-    border-radius: 9px;
-    padding: 12px;
-}
-
-.contacto-info span {
-    display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.contacto-card > p {
-    color: var(--gc-muted-strong);
-    font-size: 14px;
-}
-
-.contacto-status {
-    display: inline-block;
-    padding: 7px 11px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-    margin-top: 8px;
-}
-
-.contacto-activo {
-    background-color: #dff3e9;
-    color: var(--gc-green-success);
-}
-
-.contacto-inactivo {
-    background-color: #ffe2e2;
-    color: #a33636;
-}
-
-.contacto-notas {
-    margin-top: 18px;
-    padding-top: 14px;
-    border-top: 1px solid var(--gc-border-soft);
-}
-
-.contacto-notas span {
-    display: block;
-    color: var(--gc-muted);
-    font-size: 12px;
-    margin-bottom: 5px;
-}
-
-.contacto-notas p {
-    margin: 0;
-}
-
-@media (max-width: 1100px) {
-
-    .contactos-grid {
-        grid-template-columns: repeat(2, 1fr);
+        box-shadow:
+            0
+            12px
+            28px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
     }
 
 }
 
-@media (max-width: 650px) {
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.contacto-card-header {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
+    gap: 12px;
+
+    margin-bottom:
+        18px;
+}
+
+
+.contacto-icon {
+    width: 48px;
+    height: 48px;
+
+    flex:
+        0
+        0
+        48px;
+
+    display: flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius:
+        12px;
+
+    background-color:
+        var(--gc-green-soft);
+
+    font-size:
+        24px;
+}
+
+
+.contacto-actions {
+    display: flex;
+
+    align-items:
+        center;
+
+    gap: 8px;
+
+    flex:
+        0
+        0
+        auto;
+}
+
+
+.contacto-actions
+.secondary-button {
+    min-height: 34px;
+
+    padding:
+        0
+        10px;
+
+    font-size:
+        10px;
+}
+
+
+.contacto-actions
+.delete-button {
+    width: 34px;
+
+    min-width: 34px;
+
+    height: 34px;
+
+    padding: 0;
+}
+
+
+/* =====================================================
+   TÍTULO / TIPO
+===================================================== */
+
+.contacto-card h3 {
+    margin:
+        0
+        0
+        8px;
+
+    color:
+        var(--gc-text);
+
+    font-size:
+        16px;
+}
+
+
+.contacto-tipo {
+    margin:
+        0
+        0
+        14px;
+
+    color:
+        var(--gc-green);
+
+    font-size:
+        12px;
+
+    font-weight:
+        600;
+}
+
+
+/* =====================================================
+   INFORMACIÓN
+===================================================== */
+
+.contacto-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 10px;
+
+    margin:
+        18px
+        0;
+}
+
+
+.contacto-info div {
+    min-width: 0;
+
+    padding: 12px;
+
+    border-radius: 9px;
+
+    background-color:
+        var(--gc-surface-soft);
+}
+
+
+.contacto-info span {
+    display: block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--gc-muted);
+
+    font-size:
+        10px;
+}
+
+
+.contacto-info strong {
+    display: block;
+
+    color:
+        var(--gc-text);
+
+    font-size:
+        12px;
+
+    overflow-wrap:
+        anywhere;
+}
+
+
+/* =====================================================
+   DATOS DE CONTACTO
+===================================================== */
+
+.contacto-card > p {
+    margin:
+        6px
+        0;
+
+    color:
+        var(--gc-muted-strong);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.45;
+
+    overflow-wrap:
+        anywhere;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.contacto-status {
+    display: inline-flex;
+
+    align-items:
+        center;
+
+    width:
+        fit-content;
+
+    margin-top:
+        8px;
+
+    padding:
+        7px
+        11px;
+
+    border-radius:
+        20px;
+
+    font-size:
+        10px;
+
+    font-weight:
+        600;
+}
+
+
+.contacto-activo {
+    background-color:
+        #dff3e9;
+
+    color:
+        var(--gc-green-success);
+}
+
+
+.contacto-inactivo {
+    background-color:
+        #ffe2e2;
+
+    color:
+        #a33636;
+}
+
+
+/* =====================================================
+   NOTAS
+===================================================== */
+
+.contacto-notas {
+    margin-top:
+        18px;
+
+    padding-top:
+        14px;
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.contacto-notas span {
+    display: block;
+
+    margin-bottom:
+        5px;
+
+    color:
+        var(--gc-muted);
+
+    font-size:
+        10px;
+}
+
+
+.contacto-notas p {
+    margin: 0;
+
+    color:
+        var(--gc-text);
+
+    font-size:
+        11px;
+
+    line-height:
+        1.4;
+}
+
+
+/* =====================================================
+   FORMULARIO
+===================================================== */
+
+.contacto-form-panel {
+    max-width:
+        760px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .contactos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 
     .contactos-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .contactos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+
+        margin-bottom:
+            14px;
+    }
+
+
+    .contactos-grid {
+        grid-template-columns:
+            1fr;
+
+        gap: 12px;
+
+        margin-top:
+            14px;
+    }
+
+
+    .contacto-card {
+        padding: 14px;
+
+        border-radius:
+            12px;
+    }
+
+
+    .contacto-card-header {
+        gap: 8px;
+
+        margin-bottom:
+            14px;
+    }
+
+
+    .contacto-icon {
+        width: 40px;
+        height: 40px;
+
+        flex-basis:
+            40px;
+
+        border-radius:
+            10px;
+
+        font-size:
+            20px;
+    }
+
+
+    .contacto-card h3 {
+        font-size:
+            15px;
+    }
+
+
+    .contacto-info {
+        gap: 7px;
+
+        margin:
+            14px
+            0;
+    }
+
+
+    .contacto-info div {
+        padding: 9px;
+    }
+
+
+    .contacto-form-panel {
+        max-width:
+            none;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .contactos-stats {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .contacto-info {
+        grid-template-columns:
+            1fr;
     }
 
 }

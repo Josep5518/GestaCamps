@@ -3,9 +3,11 @@ import {
     formatearDinero
 } from "./utils.js";
 
+
 import {
     crearGastosCardsHelper
 } from "./gastos/gastosCards.js";
+
 
 import {
     crearGastosFormHelper
@@ -26,17 +28,22 @@ export class GastosView {
         this.mainContent =
             mainContent;
 
+
         this.gastoService =
             gastoService;
+
 
         this.fincaService =
             fincaService;
 
+
         this.maquinariaService =
             maquinariaService;
 
+
         this.clienteProveedorService =
             clienteProveedorService;
+
 
         this.campaniaService =
             campaniaService;
@@ -194,13 +201,14 @@ export class GastosView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats gastos-stats">
 
                 ${this.crearTarjeta(
                     "💸",
                     "Gastos",
                     gastos.length
                 )}
+
 
                 ${this.crearTarjeta(
                     "💰",
@@ -210,6 +218,7 @@ export class GastosView {
                     )
                 )}
 
+
                 ${this.crearTarjeta(
                     "✅",
                     "Pagado",
@@ -217,6 +226,7 @@ export class GastosView {
                         pagado
                     )
                 )}
+
 
                 ${this.crearTarjeta(
                     "🕒",
@@ -234,22 +244,10 @@ export class GastosView {
                 0
 
                     ? `
-                        <div
-                            style="
-                                display:inline-block;
-                                margin:18px 0 4px;
-                                padding:8px 12px;
-                                border-radius:999px;
-                                background:#eaf1fb;
-                                color:#3d5d91;
-                                font-size:12px;
-                                font-weight:600;
-                            "
-                        >
 
-                            ◐
+                        <div class="gastos-parciales-badge">
 
-                            ${parciales}
+                            ◐ ${parciales}
 
                             ${
                                 parciales ===
@@ -260,6 +258,7 @@ export class GastosView {
                             }
 
                         </div>
+
                     `
 
                     : ""
@@ -393,6 +392,7 @@ export class GastosView {
                 </div>
 
             `;
+
 
             return;
 
@@ -541,6 +541,7 @@ export class GastosView {
             alert(
                 resultado.mensaje
             );
+
 
             return;
 

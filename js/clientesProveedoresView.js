@@ -14,6 +14,10 @@ export class ClientesProveedoresView {
     }
 
 
+    // =====================================================
+    // MOSTRAR
+    // =====================================================
+
     mostrar() {
 
         const contactos =
@@ -66,6 +70,7 @@ export class ClientesProveedoresView {
                 <button
                     id="nuevoContacto"
                     class="primary-button"
+                    type="button"
                 >
                     + Nuevo contacto
                 </button>
@@ -73,90 +78,34 @@ export class ClientesProveedoresView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats contactos-stats">
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        👥
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Contactos
-                        </p>
-
-                        <h3>
-                            ${contactos.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "👥",
+                    "Contactos",
+                    contactos.length
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🧑‍💼
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Clientes
-                        </p>
-
-                        <h3>
-                            ${clientes}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "🧑‍💼",
+                    "Clientes",
+                    clientes
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🚚
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Proveedores
-                        </p>
-
-                        <h3>
-                            ${proveedores}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "🚚",
+                    "Proveedores",
+                    proveedores
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        ✅
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Activos
-                        </p>
-
-                        <h3>
-                            ${activos}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "✅",
+                    "Activos",
+                    activos
+                )}
 
             </section>
 
@@ -170,7 +119,7 @@ export class ClientesProveedoresView {
             .getElementById(
                 "nuevoContacto"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrarFormularioCrear()
@@ -181,6 +130,47 @@ export class ClientesProveedoresView {
 
     }
 
+
+    // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <p>
+                        ${titulo}
+                    </p>
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // LISTA
+    // =====================================================
 
     mostrarLista() {
 
@@ -193,6 +183,15 @@ export class ClientesProveedoresView {
             document.getElementById(
                 "listaContactos"
             );
+
+
+        if (
+            !contenedor
+        ) {
+
+            return;
+
+        }
 
 
         if (
@@ -219,6 +218,7 @@ export class ClientesProveedoresView {
 
             `;
 
+
             return;
 
         }
@@ -228,166 +228,14 @@ export class ClientesProveedoresView {
 
             <div class="contactos-grid">
 
-                ${contactos.map(
-                    contacto => `
-
-                        <div class="contacto-card">
-
-                            <div class="contacto-card-header">
-
-                                <span class="contacto-icon">
-                                    ${this.obtenerIconoTipo(
-                                        contacto.tipo
-                                    )}
-                                </span>
-
-
-                                <div class="contacto-actions">
-
-                                    <button
-                                        class="secondary-button editar-contacto"
-                                        data-id="${contacto.id}"
-                                    >
-                                        Editar
-                                    </button>
-
-
-                                    <button
-                                        class="delete-button eliminar-contacto"
-                                        data-id="${contacto.id}"
-                                    >
-                                        ×
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-
-                            <h3>
-                                ${contacto.nombre}
-                            </h3>
-
-
-                            <p class="contacto-tipo">
-                                ${contacto.tipo}
-                            </p>
-
-
-                            <div class="contacto-info">
-
-                                <div>
-
-                                    <span>
-                                        Estado
-                                    </span>
-
-                                    <strong>
-                                        ${
-                                            contacto.activo
-                                                ? "Activo"
-                                                : "Inactivo"
-                                        }
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        NIF / CIF
-                                    </span>
-
-                                    <strong>
-                                        ${contacto.nif || "—"}
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            ${
-                                contacto.telefono
-                                    ? `
-                                        <p>
-                                            📞 ${contacto.telefono}
-                                        </p>
-                                    `
-                                    : ""
-                            }
-
-
-                            ${
-                                contacto.email
-                                    ? `
-                                        <p>
-                                            ✉️ ${contacto.email}
-                                        </p>
-                                    `
-                                    : ""
-                            }
-
-
-                            ${
-                                contacto.direccion
-                                ||
-                                contacto.localidad
-                                    ? `
-                                        <p>
-                                            📍
-                                            ${[
-                                                contacto.direccion,
-                                                contacto.localidad,
-                                                contacto.provincia,
-                                                contacto.codigoPostal
-                                            ]
-                                            .filter(Boolean)
-                                            .join(" · ")}
-                                        </p>
-                                    `
-                                    : ""
-                            }
-
-
-                            <span
-                                class="contacto-status ${
-                                    contacto.activo
-                                        ? "contacto-activo"
-                                        : "contacto-inactivo"
-                                }"
-                            >
-                                ${
-                                    contacto.activo
-                                        ? "Activo"
-                                        : "Inactivo"
-                                }
-                            </span>
-
-
-                            ${
-                                contacto.notas
-                                    ? `
-                                        <div class="contacto-notas">
-
-                                            <span>
-                                                Notas
-                                            </span>
-
-                                            <p>
-                                                ${contacto.notas}
-                                            </p>
-
-                                        </div>
-                                    `
-                                    : ""
-                            }
-
-                        </div>
-
-                    `
-                ).join("")}
+                ${contactos
+                    .map(
+                        contacto =>
+                            this.crearTarjetaContacto(
+                                contacto
+                            )
+                    )
+                    .join("")}
 
             </div>
 
@@ -398,6 +246,222 @@ export class ClientesProveedoresView {
 
     }
 
+
+    // =====================================================
+    // TARJETA
+    // =====================================================
+
+    crearTarjetaContacto(
+        contacto
+    ) {
+
+        return `
+
+            <article class="contacto-card">
+
+                <div class="contacto-card-header">
+
+                    <span class="contacto-icon">
+
+                        ${this.obtenerIconoTipo(
+                            contacto.tipo
+                        )}
+
+                    </span>
+
+
+                    <div class="contacto-actions">
+
+                        <button
+                            class="
+                                secondary-button
+                                editar-contacto
+                            "
+                            data-id="${contacto.id}"
+                            type="button"
+                        >
+                            Editar
+                        </button>
+
+
+                        <button
+                            class="
+                                delete-button
+                                eliminar-contacto
+                            "
+                            data-id="${contacto.id}"
+                            type="button"
+                            aria-label="Eliminar contacto"
+                        >
+                            ×
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <h3>
+                    ${contacto.nombre}
+                </h3>
+
+
+                <p class="contacto-tipo">
+                    ${contacto.tipo}
+                </p>
+
+
+                <div class="contacto-info">
+
+                    <div>
+
+                        <span>
+                            Estado
+                        </span>
+
+                        <strong>
+
+                            ${
+                                contacto.activo
+                                    ? "Activo"
+                                    : "Inactivo"
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            NIF / CIF
+                        </span>
+
+                        <strong>
+                            ${contacto.nif || "—"}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                ${
+                    contacto.telefono
+
+                        ? `
+
+                            <p>
+                                📞 ${contacto.telefono}
+                            </p>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    contacto.email
+
+                        ? `
+
+                            <p>
+                                ✉️ ${contacto.email}
+                            </p>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    contacto.direccion
+                    ||
+                    contacto.localidad
+
+                        ? `
+
+                            <p>
+
+                                📍
+
+                                ${[
+                                    contacto.direccion,
+                                    contacto.localidad,
+                                    contacto.provincia,
+                                    contacto.codigoPostal
+                                ]
+                                    .filter(
+                                        Boolean
+                                    )
+                                    .join(
+                                        " · "
+                                    )}
+
+                            </p>
+
+                        `
+
+                        : ""
+                }
+
+
+                <span
+                    class="
+                        contacto-status
+
+                        ${
+                            contacto.activo
+                                ? "contacto-activo"
+                                : "contacto-inactivo"
+                        }
+                    "
+                >
+
+                    ${
+                        contacto.activo
+                            ? "Activo"
+                            : "Inactivo"
+                    }
+
+                </span>
+
+
+                ${
+                    contacto.notas
+
+                        ? `
+
+                            <div class="contacto-notas">
+
+                                <span>
+                                    Notas
+                                </span>
+
+                                <p>
+                                    ${contacto.notas}
+                                </p>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // EVENTOS
+    // =====================================================
 
     configurarEventos() {
 
@@ -440,11 +504,17 @@ export class ClientesProveedoresView {
 
                             const contacto =
                                 this.clienteProveedorService
-                                    .obtenerPorId(id);
+                                    .obtenerPorId(
+                                        id
+                                    );
 
 
-                            if (!contacto) {
+                            if (
+                                !contacto
+                            ) {
+
                                 return;
+
                             }
 
 
@@ -453,13 +523,17 @@ export class ClientesProveedoresView {
                                     `¿Quieres eliminar "${contacto.nombre}"?`
                                 )
                             ) {
+
                                 return;
+
                             }
 
 
                             const resultado =
                                 this.clienteProveedorService
-                                    .eliminar(id);
+                                    .eliminar(
+                                        id
+                                    );
 
 
                             if (
@@ -473,6 +547,7 @@ export class ClientesProveedoresView {
                                     ||
                                     "No se ha podido eliminar el cliente o proveedor."
                                 );
+
 
                                 return;
 
@@ -489,6 +564,10 @@ export class ClientesProveedoresView {
 
     }
 
+
+    // =====================================================
+    // FORMULARIO CREAR
+    // =====================================================
 
     mostrarFormularioCrear() {
 
@@ -511,7 +590,9 @@ export class ClientesProveedoresView {
             </header>
 
 
-            ${this.crearFormulario(null)}
+            ${this.crearFormulario(
+                null
+            )}
 
         `;
 
@@ -520,7 +601,7 @@ export class ClientesProveedoresView {
             .getElementById(
                 "cancelarContacto"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -531,7 +612,7 @@ export class ClientesProveedoresView {
             .getElementById(
                 "guardarContacto"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.guardarNuevo()
@@ -540,15 +621,27 @@ export class ClientesProveedoresView {
     }
 
 
-    mostrarFormularioEditar(id) {
+    // =====================================================
+    // FORMULARIO EDITAR
+    // =====================================================
+
+    mostrarFormularioEditar(
+        id
+    ) {
 
         const contacto =
             this.clienteProveedorService
-                .obtenerPorId(id);
+                .obtenerPorId(
+                    id
+                );
 
 
-        if (!contacto) {
+        if (
+            !contacto
+        ) {
+
             return;
+
         }
 
 
@@ -571,7 +664,9 @@ export class ClientesProveedoresView {
             </header>
 
 
-            ${this.crearFormulario(contacto)}
+            ${this.crearFormulario(
+                contacto
+            )}
 
         `;
 
@@ -580,7 +675,7 @@ export class ClientesProveedoresView {
             .getElementById(
                 "cancelarContacto"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -591,7 +686,7 @@ export class ClientesProveedoresView {
             .getElementById(
                 "guardarContacto"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -599,8 +694,12 @@ export class ClientesProveedoresView {
                         this.obtenerDatosFormulario();
 
 
-                    if (!datos) {
+                    if (
+                        !datos
+                    ) {
+
                         return;
+
                     }
 
 
@@ -612,13 +711,17 @@ export class ClientesProveedoresView {
                             );
 
 
-                    if (!resultado.ok) {
+                    if (
+                        !resultado.ok
+                    ) {
 
                         alert(
                             resultado.mensaje
                         );
 
+
                         return;
+
                     }
 
 
@@ -630,29 +733,43 @@ export class ClientesProveedoresView {
     }
 
 
+    // =====================================================
+    // GUARDAR NUEVO
+    // =====================================================
+
     guardarNuevo() {
 
         const datos =
             this.obtenerDatosFormulario();
 
 
-        if (!datos) {
+        if (
+            !datos
+        ) {
+
             return;
+
         }
 
 
         const resultado =
             this.clienteProveedorService
-                .crear(datos);
+                .crear(
+                    datos
+                );
 
 
-        if (!resultado.ok) {
+        if (
+            !resultado.ok
+        ) {
 
             alert(
                 resultado.mensaje
             );
 
+
             return;
+
         }
 
 
@@ -661,11 +778,17 @@ export class ClientesProveedoresView {
     }
 
 
-    crearFormulario(contacto) {
+    // =====================================================
+    // FORMULARIO
+    // =====================================================
+
+    crearFormulario(
+        contacto
+    ) {
 
         return `
 
-            <div class="form-panel">
+            <div class="form-panel contacto-form-panel">
 
                 <div class="form-group">
 
@@ -673,36 +796,47 @@ export class ClientesProveedoresView {
                         Tipo *
                     </label>
 
-                    <select id="tipoContacto">
+                    <select
+                        id="tipoContacto"
+                    >
 
                         <option
                             value="Cliente"
                             ${
-                                !contacto ||
+                                !contacto
+                                ||
                                 contacto.tipo === "Cliente"
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
                             Cliente
                         </option>
 
+
                         <option
                             value="Proveedor"
                             ${
                                 contacto?.tipo === "Proveedor"
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
                             Proveedor
                         </option>
 
+
                         <option
                             value="Cliente y proveedor"
                             ${
                                 contacto?.tipo === "Cliente y proveedor"
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
@@ -860,25 +994,33 @@ export class ClientesProveedoresView {
                         Estado
                     </label>
 
-                    <select id="activoContacto">
+                    <select
+                        id="activoContacto"
+                    >
 
                         <option
                             value="true"
                             ${
-                                !contacto ||
+                                !contacto
+                                ||
                                 contacto.activo === true
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
                             Activo
                         </option>
 
+
                         <option
                             value="false"
                             ${
                                 contacto?.activo === false
+
                                     ? "selected"
+
                                     : ""
                             }
                         >
@@ -909,6 +1051,7 @@ export class ClientesProveedoresView {
                     <button
                         id="cancelarContacto"
                         class="secondary-button"
+                        type="button"
                     >
                         Cancelar
                     </button>
@@ -917,12 +1060,17 @@ export class ClientesProveedoresView {
                     <button
                         id="guardarContacto"
                         class="primary-button"
+                        type="button"
                     >
+
                         ${
                             contacto
+
                                 ? "Guardar cambios"
+
                                 : "Guardar contacto"
                         }
+
                     </button>
 
                 </div>
@@ -933,6 +1081,10 @@ export class ClientesProveedoresView {
 
     }
 
+
+    // =====================================================
+    // DATOS FORMULARIO
+    // =====================================================
 
     obtenerDatosFormulario() {
 
@@ -945,11 +1097,14 @@ export class ClientesProveedoresView {
                 .trim();
 
 
-        if (!nombre) {
+        if (
+            !nombre
+        ) {
 
             alert(
                 "Introduce el nombre o razón social."
             );
+
 
             return null;
 
@@ -1052,15 +1207,31 @@ export class ClientesProveedoresView {
     }
 
 
-    obtenerIconoTipo(tipo) {
+    // =====================================================
+    // ICONO TIPO
+    // =====================================================
 
-        if (tipo === "Cliente") {
+    obtenerIconoTipo(
+        tipo
+    ) {
+
+        if (
+            tipo === "Cliente"
+        ) {
+
             return "🧑‍💼";
+
         }
 
-        if (tipo === "Proveedor") {
+
+        if (
+            tipo === "Proveedor"
+        ) {
+
             return "🚚";
+
         }
+
 
         return "🤝";
 

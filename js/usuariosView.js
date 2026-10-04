@@ -11,6 +11,7 @@ import {
 // =====================================================
 // GESTACAMPS
 // USUARIOS VIEW
+// Día 26 · Refactorización 1
 // =====================================================
 
 export class UsuariosView {
@@ -135,7 +136,7 @@ export class UsuariosView {
 
         return `
 
-            <div class="stats">
+            <div class="stats usuarios-stats">
 
                 <div class="card">
 
@@ -242,7 +243,7 @@ export class UsuariosView {
 
             return `
 
-                <section class="empty-state">
+                <section class="empty-state usuarios-empty-state">
 
                     <div class="empty-icon">
                         👥
@@ -276,7 +277,7 @@ export class UsuariosView {
 
         return `
 
-            <div class="trabajadores-grid">
+            <div class="usuarios-grid">
 
                 ${tarjetas}
 
@@ -338,16 +339,38 @@ export class UsuariosView {
 
         return `
 
-            <article class="trabajador-card">
+            <article class="usuario-card">
 
-                <div class="trabajador-card-header">
+                <div class="usuario-card-header">
 
-                    <div class="trabajador-icon">
-                        ${icono}
+                    <div class="usuario-card-main">
+
+                        <div class="usuario-icon">
+                            ${icono}
+                        </div>
+
+
+                        <div class="usuario-card-identidad">
+
+                            <h3>
+                                ${escaparHTML(
+                                    nombreCompleto
+                                )}
+                            </h3>
+
+
+                            <p class="usuario-rol">
+                                ${escaparHTML(
+                                    nombreRol
+                                )}
+                            </p>
+
+                        </div>
+
                     </div>
 
 
-                    <div class="trabajador-actions">
+                    <div class="usuario-actions">
 
                         <button
                             type="button"
@@ -364,21 +387,7 @@ export class UsuariosView {
                 </div>
 
 
-                <h3>
-                    ${escaparHTML(
-                        nombreCompleto
-                    )}
-                </h3>
-
-
-                <p class="trabajador-puesto">
-                    ${escaparHTML(
-                        nombreRol
-                    )}
-                </p>
-
-
-                <div class="trabajador-info">
+                <div class="usuario-info">
 
                     <div>
 
@@ -412,50 +421,54 @@ export class UsuariosView {
                 </div>
 
 
-                <span
-                    class="status ${estadoClase}"
-                >
-                    ${escaparHTML(
-                        estadoTexto
-                    )}
-                </span>
+                <div class="usuario-status-row">
 
-
-                <div class="trabajo-state-actions">
-
-                    <button
-                        type="button"
-                        class="task-state-button cambiar-estado-usuario"
-                        data-id="${escaparHTML(
-                            usuario.id
-                        )}"
-                        data-activo="${
-                            usuario.activo !==
-                            false
-                                ? "false"
-                                : "true"
-                        }"
+                    <span
+                        class="status ${estadoClase}"
                     >
-                        ${
-                            usuario.activo !==
-                            false
-                                ? "Desactivar"
-                                : "Activar"
-                        }
-                    </button>
+                        ${escaparHTML(
+                            estadoTexto
+                        )}
+                    </span>
 
 
-                    <button
-                        type="button"
-                        class="delete-button eliminar-usuario"
-                        data-id="${escaparHTML(
-                            usuario.id
-                        )}"
-                        aria-label="Eliminar usuario"
-                        title="Eliminar usuario"
-                    >
-                        ×
-                    </button>
+                    <div class="usuario-state-actions">
+
+                        <button
+                            type="button"
+                            class="task-state-button cambiar-estado-usuario"
+                            data-id="${escaparHTML(
+                                usuario.id
+                            )}"
+                            data-activo="${
+                                usuario.activo !==
+                                false
+                                    ? "false"
+                                    : "true"
+                            }"
+                        >
+                            ${
+                                usuario.activo !==
+                                false
+                                    ? "Desactivar"
+                                    : "Activar"
+                            }
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="delete-button eliminar-usuario"
+                            data-id="${escaparHTML(
+                                usuario.id
+                            )}"
+                            aria-label="Eliminar usuario"
+                            title="Eliminar usuario"
+                        >
+                            ×
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -627,9 +640,7 @@ export class UsuariosView {
                 "El usuario no existe."
             );
 
-
             this.mostrar();
-
 
             return;
 
@@ -672,178 +683,184 @@ export class UsuariosView {
             </header>
 
 
-            <section class="form-panel">
+            <section class="form-panel usuarios-form-panel">
 
-                <div class="form-group">
-
-                    <label for="usuarioNombre">
-                        Nombre *
-                    </label>
-
-                    <input
-                        id="usuarioNombre"
-                        type="text"
-                        value="${escaparHTML(
-                            usuario?.nombre
-                            ??
-                            ""
-                        )}"
-                    >
-
-                </div>
+                <div class="usuarios-form-grid">
 
 
-                <div class="form-group">
+                    <div class="form-group">
 
-                    <label for="usuarioApellidos">
-                        Apellidos
-                    </label>
-
-                    <input
-                        id="usuarioApellidos"
-                        type="text"
-                        value="${escaparHTML(
-                            usuario?.apellidos
-                            ??
-                            ""
-                        )}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="usuarioLogin">
-                        Nombre de usuario *
-                    </label>
-
-                    <input
-                        id="usuarioLogin"
-                        type="text"
-                        autocomplete="username"
-                        value="${escaparHTML(
-                            usuario?.usuario
-                            ??
-                            ""
-                        )}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="usuarioRol">
-                        Rol *
-                    </label>
-
-                    <select
-                        id="usuarioRol"
-                    >
-
-                        ${this.crearOpcionesRol(
-                            usuario?.rol
-                        )}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="usuarioTrabajador">
-                        Trabajador vinculado
-                    </label>
-
-                    <select
-                        id="usuarioTrabajador"
-                    >
-
-                        <option value="">
-                            Sin vincular
-                        </option>
-
-                        ${this.crearOpcionesTrabajadores(
-                            trabajadores,
-                            usuario?.trabajadorId
-                        )}
-
-                    </select>
-
-                    <small class="form-help">
-                        Es opcional. Permite relacionar el usuario con un trabajador existente.
-                    </small>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="usuarioPin">
-                        ${
-                            editando
-                                ? "Nuevo PIN"
-                                : "PIN *"
-                        }
-                    </label>
-
-                    <input
-                        id="usuarioPin"
-                        type="password"
-                        inputmode="numeric"
-                        autocomplete="new-password"
-                        maxlength="8"
-                        placeholder="${
-                            editando
-                                ? "Déjalo vacío para mantener el actual"
-                                : "Entre 4 y 8 números"
-                        }"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label for="usuarioRepetirPin">
-                        ${
-                            editando
-                                ? "Repetir nuevo PIN"
-                                : "Repetir PIN *"
-                        }
-                    </label>
-
-                    <input
-                        id="usuarioRepetirPin"
-                        type="password"
-                        inputmode="numeric"
-                        autocomplete="new-password"
-                        maxlength="8"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
+                        <label for="usuarioNombre">
+                            Nombre *
+                        </label>
 
                         <input
-                            id="usuarioActivo"
-                            type="checkbox"
-                            ${
-                                usuario?.activo !==
-                                false
-                                    ? "checked"
-                                    : ""
-                            }
+                            id="usuarioNombre"
+                            type="text"
+                            value="${escaparHTML(
+                                usuario?.nombre
+                                ??
+                                ""
+                            )}"
                         >
 
-                        Usuario activo
+                    </div>
 
-                    </label>
+
+                    <div class="form-group">
+
+                        <label for="usuarioApellidos">
+                            Apellidos
+                        </label>
+
+                        <input
+                            id="usuarioApellidos"
+                            type="text"
+                            value="${escaparHTML(
+                                usuario?.apellidos
+                                ??
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="usuarioLogin">
+                            Nombre de usuario *
+                        </label>
+
+                        <input
+                            id="usuarioLogin"
+                            type="text"
+                            autocomplete="username"
+                            value="${escaparHTML(
+                                usuario?.usuario
+                                ??
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="usuarioRol">
+                            Rol *
+                        </label>
+
+                        <select
+                            id="usuarioRol"
+                        >
+
+                            ${this.crearOpcionesRol(
+                                usuario?.rol
+                            )}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="usuarioTrabajador">
+                            Trabajador vinculado
+                        </label>
+
+                        <select
+                            id="usuarioTrabajador"
+                        >
+
+                            <option value="">
+                                Sin vincular
+                            </option>
+
+                            ${this.crearOpcionesTrabajadores(
+                                trabajadores,
+                                usuario?.trabajadorId
+                            )}
+
+                        </select>
+
+                        <small class="form-help">
+                            Es opcional. Permite relacionar el usuario con un trabajador existente.
+                        </small>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="usuarioPin">
+                            ${
+                                editando
+                                    ? "Nuevo PIN"
+                                    : "PIN *"
+                            }
+                        </label>
+
+                        <input
+                            id="usuarioPin"
+                            type="password"
+                            inputmode="numeric"
+                            autocomplete="new-password"
+                            maxlength="8"
+                            placeholder="${
+                                editando
+                                    ? "Déjalo vacío para mantener el actual"
+                                    : "Entre 4 y 8 números"
+                            }"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label for="usuarioRepetirPin">
+                            ${
+                                editando
+                                    ? "Repetir nuevo PIN"
+                                    : "Repetir PIN *"
+                            }
+                        </label>
+
+                        <input
+                            id="usuarioRepetirPin"
+                            type="password"
+                            inputmode="numeric"
+                            autocomplete="new-password"
+                            maxlength="8"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group usuario-activo-box">
+
+                        <label>
+
+                            <input
+                                id="usuarioActivo"
+                                type="checkbox"
+                                ${
+                                    usuario?.activo !==
+                                    false
+                                        ? "checked"
+                                        : ""
+                                }
+                            >
+
+                            Usuario activo
+
+                        </label>
+
+                    </div>
+
 
                 </div>
 
@@ -1311,7 +1328,6 @@ export class UsuariosView {
                 "No se ha podido guardar el usuario."
             );
 
-
             return;
 
         }
@@ -1350,7 +1366,6 @@ export class UsuariosView {
                 ||
                 "No se ha podido cambiar el estado."
             );
-
 
             return;
 
@@ -1432,7 +1447,6 @@ export class UsuariosView {
                 ||
                 "No se ha podido eliminar el usuario."
             );
-
 
             return;
 

@@ -209,7 +209,7 @@ export class ProduccionView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats produccion-stats">
 
                 ${this.crearTarjetaEstadistica(
                     "🍎",
@@ -217,17 +217,20 @@ export class ProduccionView {
                     totalProducido
                 )}
 
+
                 ${this.crearTarjetaEstadistica(
                     "🕒",
                     "Reservado",
                     totalReservado
                 )}
 
+
                 ${this.crearTarjetaEstadistica(
                     "🚚",
                     "Entregado",
                     totalEntregado
                 )}
+
 
                 ${this.crearTarjetaEstadistica(
                     "📦",
@@ -238,17 +241,7 @@ export class ProduccionView {
             </section>
 
 
-            <div
-                style="
-                    margin:18px 0 22px;
-                    padding:13px 16px;
-                    border-radius:10px;
-                    background:#edf6f1;
-                    color:#315f4d;
-                    font-size:13px;
-                    line-height:1.5;
-                "
-            >
+            <div class="produccion-stock-info">
 
                 <strong>
                     Estado del stock:
@@ -390,6 +383,7 @@ export class ProduccionView {
                 </div>
 
             `;
+
 
             return;
 
@@ -577,6 +571,7 @@ export class ProduccionView {
                 mensaje
             );
 
+
             return;
 
         }
@@ -607,6 +602,7 @@ export class ProduccionView {
             alert(
                 resultado.mensaje
             );
+
 
             return;
 

@@ -1,0 +1,759 @@
+/* =====================================================
+   GESTACAMPS
+   MÓDULO · USUARIOS Y PERMISOS
+   Día 26 · Refactorización 1
+===================================================== */
+
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+.usuarios-stats {
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 16px;
+}
+
+
+/* =====================================================
+   GRID DE USUARIOS
+===================================================== */
+
+.usuarios-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-top: 18px;
+
+    min-width: 0;
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+.usuario-card {
+    min-width: 0;
+
+    padding: 18px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
+
+    transition:
+        transform 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+
+@media (hover: hover) {
+
+    .usuario-card:hover {
+        transform:
+            translateY(-2px);
+
+        border-color:
+            #d7e3dc;
+
+        box-shadow:
+            0 12px 28px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
+    }
+
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.usuario-card-header {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: flex-start;
+
+    gap: 12px;
+
+    margin-bottom: 14px;
+}
+
+
+.usuario-card-main {
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+}
+
+
+.usuario-icon {
+    width: 44px;
+    height: 44px;
+
+    flex:
+        0
+        0
+        44px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border:
+        1px solid
+        #cfe2d8;
+
+    background:
+        var(--gc-green-soft);
+
+    color:
+        var(--gc-green-text);
+
+    font-size: 20px;
+
+    line-height: 1;
+}
+
+
+.usuario-card-identidad {
+    min-width: 0;
+}
+
+
+.usuario-card h3 {
+    margin:
+        0
+        0
+        3px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 16px;
+
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
+}
+
+
+.usuario-rol {
+    margin: 0;
+
+    color:
+        var(--gc-muted-strong);
+
+    font-size: 11px;
+
+    line-height: 1.3;
+}
+
+
+/* =====================================================
+   ACCIONES SUPERIORES
+===================================================== */
+
+.usuario-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    flex:
+        0
+        0
+        auto;
+}
+
+
+.usuario-actions
+.editar-usuario {
+    width: auto !important;
+
+    min-width: 0 !important;
+
+    min-height: 32px !important;
+
+    height: 32px !important;
+
+    padding:
+        0
+        10px !important;
+
+    border-radius: 8px;
+
+    font-size: 10px !important;
+
+    line-height: 1;
+}
+
+
+/* =====================================================
+   INFORMACIÓN
+===================================================== */
+
+.usuario-info {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
+
+    margin-top: 14px;
+}
+
+
+.usuario-info > div {
+    min-width: 0;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    background:
+        var(--gc-surface-soft);
+}
+
+
+.usuario-info span {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 9px;
+
+    line-height: 1.2;
+}
+
+
+.usuario-info strong {
+    display: block;
+
+    color:
+        var(--gc-text);
+
+    font-size: 12px;
+
+    line-height: 1.25;
+
+    overflow-wrap: anywhere;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.usuario-status-row {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 13px;
+}
+
+
+.usuario-status-row
+.status {
+    margin: 0;
+}
+
+
+/* =====================================================
+   ACCIONES DE ESTADO
+===================================================== */
+
+.usuario-state-actions {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+}
+
+
+.usuario-state-actions
+.task-state-button {
+    width: auto;
+
+    min-height: 31px;
+
+    padding:
+        0
+        9px;
+
+    border-radius: 8px;
+
+    font-size: 9px;
+}
+
+
+.usuario-state-actions
+.eliminar-usuario {
+    width: 31px !important;
+
+    min-width: 31px !important;
+
+    max-width: 31px !important;
+
+    height: 31px !important;
+
+    min-height: 31px !important;
+
+    padding: 0 !important;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 8px;
+
+    color:
+        #b13b3b;
+
+    background:
+        #fdeaea;
+
+    font-size: 14px;
+
+    line-height: 1;
+}
+
+
+/* =====================================================
+   FORMULARIO
+===================================================== */
+
+#volverUsuarios
++ .topbar {
+    margin-bottom: 18px;
+}
+
+
+.usuarios-form-panel {
+    max-width: 980px;
+
+    margin:
+        0
+        auto;
+
+    padding: 24px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.usuarios-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap:
+        18px
+        16px;
+}
+
+
+.usuarios-form-grid
+.form-group {
+    margin: 0;
+}
+
+
+.usuarios-form-grid
+.form-group-full {
+    grid-column:
+        1
+        /
+        -1;
+}
+
+
+.usuarios-form-grid
+input,
+.usuarios-form-grid
+select {
+    width: 100%;
+
+    min-width: 0;
+
+    box-sizing: border-box;
+}
+
+
+/* =====================================================
+   CHECKBOX ACTIVO
+===================================================== */
+
+.usuario-activo-box {
+    display: flex;
+
+    align-items: center;
+
+    min-height: 100%;
+}
+
+
+.usuario-activo-box label {
+    width: 100%;
+
+    min-height: 45px;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin: 0;
+
+    padding:
+        0
+        12px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 9px;
+
+    background:
+        var(--gc-surface-soft);
+
+    cursor: pointer;
+}
+
+
+.usuario-activo-box input {
+    width: auto;
+
+    flex:
+        0
+        0
+        auto;
+}
+
+
+/* =====================================================
+   AYUDA
+===================================================== */
+
+.usuarios-form-panel
+.form-help {
+    display: block;
+
+    margin-top: 6px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 10px;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   ACCIONES FORMULARIO
+===================================================== */
+
+.usuarios-form-panel
+.form-actions {
+    margin-top: 22px;
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    gap: 8px;
+}
+
+
+/* =====================================================
+   ESTADO VACÍO
+===================================================== */
+
+.usuarios-empty-state {
+    grid-column:
+        1
+        /
+        -1;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .usuarios-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .usuarios-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =====================================================
+   TABLET PEQUEÑA
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .usuarios-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .usuarios-form-grid
+    .form-group-full {
+        grid-column: auto;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .usuarios-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px;
+    }
+
+
+    .usuarios-grid {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+
+        margin-top: 14px;
+    }
+
+
+    .usuario-card {
+        padding: 13px;
+
+        border-radius: 12px;
+    }
+
+
+    .usuario-card-header {
+        gap: 8px;
+
+        margin-bottom: 11px;
+    }
+
+
+    .usuario-icon {
+        width: 40px;
+        height: 40px;
+
+        flex-basis: 40px;
+
+        font-size: 18px;
+    }
+
+
+    .usuario-card h3 {
+        font-size: 14px;
+    }
+
+
+    .usuario-rol {
+        font-size: 10px;
+    }
+
+
+    .usuario-info {
+        gap: 7px;
+
+        margin-top: 11px;
+    }
+
+
+    .usuario-info > div {
+        padding: 9px;
+    }
+
+
+    .usuario-status-row {
+        margin-top: 11px;
+    }
+
+
+    .usuarios-form-panel {
+        max-width: none;
+
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .usuarios-form-grid {
+        grid-template-columns: 1fr;
+
+        gap: 14px;
+    }
+
+
+    .usuarios-form-panel
+    .form-actions {
+        display: grid;
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        gap: 8px;
+    }
+
+
+    .usuarios-form-panel
+    .form-actions
+    button {
+        width: 100%;
+
+        justify-content: center;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .usuarios-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .usuario-info {
+        grid-template-columns: 1fr;
+    }
+
+
+    .usuario-status-row {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .usuario-state-actions {
+        width: 100%;
+    }
+
+
+    .usuario-state-actions
+    .task-state-button {
+        flex: 1;
+    }
+
+}

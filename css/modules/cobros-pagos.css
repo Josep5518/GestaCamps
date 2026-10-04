@@ -1,100 +1,462 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · COBROS Y PAGOS
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
-/* ==================================
-   COBROS Y PAGOS
-================================== */
+
+/* =====================================================
+   ESTADÍSTICAS
+===================================================== */
+
+.cobros-pagos-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+
+    gap: 16px;
+
+    margin-bottom: 20px;
+}
+
+
+/* =====================================================
+   ACCIONES SUPERIORES
+===================================================== */
 
 .cobros-top-actions {
     display: flex;
+
     align-items: center;
+
     gap: 10px;
 }
 
-.cobros-movimientos-panel {
+
+/* =====================================================
+   FACTURAS POR COBRAR
+===================================================== */
+
+.cobros-facturas-panel {
     margin-top: 22px;
 }
 
+
+.cobros-panel-subtitle {
+    margin:
+        4px
+        0
+        0;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 11px;
+
+    line-height: 1.4;
+}
+
+
+/* =====================================================
+   BLOQUES DE RESUMEN
+===================================================== */
+
+.cobros-dashboard-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 18px;
+
+    margin-top: 20px;
+}
+
+
+.cobros-dashboard-grid
+.panel {
+    min-width: 0;
+}
+
+
+/* =====================================================
+   RESUMEN DE CAJA
+===================================================== */
+
+.cobros-resumen-list {
+    display: grid;
+
+    gap: 10px;
+}
+
+
+/* =====================================================
+   MOVIMIENTOS
+===================================================== */
+
+.cobros-movimientos-panel {
+    margin-top: 20px;
+}
+
+
 .movimientos-list {
     display: flex;
+
     flex-direction: column;
 }
 
+
 .movimiento-item {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        center;
+
     gap: 20px;
-    padding: 16px 0;
-    border-bottom: 1px solid var(--gc-border-soft);
+
+    padding:
+        16px
+        0;
+
+    border-bottom:
+        1px solid
+        var(--gc-border-soft);
 }
+
 
 .movimiento-item:last-child {
-    border-bottom: none;
+    border-bottom:
+        none;
 }
 
+
+/* =====================================================
+   PARTE IZQUIERDA DEL MOVIMIENTO
+===================================================== */
+
 .movimiento-main {
+    min-width: 0;
+
     display: flex;
-    align-items: center;
+
+    align-items:
+        center;
+
     gap: 12px;
 }
+
 
 .movimiento-icon {
     width: 42px;
     height: 42px;
-    border-radius: 10px;
-    background-color: var(--gc-green-soft);
+
+    flex:
+        0
+        0
+        42px;
+
     display: flex;
-    align-items: center;
-    justify-content: center;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    border-radius: 10px;
+
+    background-color:
+        var(--gc-green-soft);
+
     font-size: 20px;
-    flex-shrink: 0;
 }
+
+
+.movimiento-main
+> div {
+    min-width: 0;
+}
+
 
 .movimiento-main strong {
     display: block;
+
     margin-bottom: 4px;
+
+    color:
+        var(--gc-text);
+
+    overflow-wrap:
+        anywhere;
 }
+
 
 .movimiento-main p {
     margin: 0;
-    color: var(--gc-muted);
-    font-size: 13px;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 11px;
+
+    line-height: 1.4;
+
+    overflow-wrap:
+        anywhere;
 }
+
+
+/* =====================================================
+   PARTE DERECHA DEL MOVIMIENTO
+===================================================== */
 
 .movimiento-right {
     display: flex;
+
     align-items: center;
+
     gap: 14px;
+
+    flex:
+        0
+        0
+        auto;
 }
+
+
+.movimiento-right strong {
+    white-space: nowrap;
+}
+
 
 .movimiento-cobro {
-    color: var(--gc-green-success);
+    color:
+        var(--gc-green-success);
 }
+
 
 .movimiento-pago {
-    color: #b33d3d;
+    color:
+        #b33d3d;
 }
 
-@media (max-width: 700px) {
+
+/* =====================================================
+   ESTADO VACÍO
+===================================================== */
+
+.cobros-empty-text {
+    margin: 0;
+
+    padding:
+        10px
+        0;
+
+    color:
+        var(--gc-muted);
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .cobros-pagos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+
+    .cobros-dashboard-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
+}
+
+
+/* =====================================================
+   TABLET PEQUEÑA
+===================================================== */
+
+@media (max-width: 900px) {
+
+    .cobros-dashboard-grid {
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ---------------------------------------------
+       KPIs
+    ---------------------------------------------- */
+
+    .cobros-pagos-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+
+        margin-bottom: 14px;
+    }
+
+
+    /* ---------------------------------------------
+       CABECERA / BOTONES
+    ---------------------------------------------- */
 
     .cobros-top-actions {
-        flex-direction: column;
-        align-items: stretch;
+        display: grid;
+
+        grid-template-columns:
+            1fr
+            1fr;
+
+        width: 100%;
+
+        gap: 8px;
     }
 
-    .movimiento-item {
-        align-items: flex-start;
-        flex-direction: column;
+
+    .cobros-top-actions
+    button {
+        width: 100%;
+
+        min-height: 40px;
+
+        justify-content: center;
     }
+
+
+    /* ---------------------------------------------
+       PANELES
+    ---------------------------------------------- */
+
+    .cobros-facturas-panel {
+        margin-top: 14px;
+    }
+
+
+    .cobros-dashboard-grid {
+        grid-template-columns:
+            1fr;
+
+        gap: 12px;
+
+        margin-top: 12px;
+    }
+
+
+    .cobros-movimientos-panel {
+        margin-top: 12px;
+    }
+
+
+    .cobros-panel-subtitle {
+        font-size: 10px;
+    }
+
+
+    /* ---------------------------------------------
+       MOVIMIENTOS
+    ---------------------------------------------- */
+
+    .movimiento-item {
+        align-items:
+            flex-start;
+
+        flex-direction:
+            column;
+
+        gap: 10px;
+
+        padding:
+            13px
+            0;
+    }
+
+
+    .movimiento-icon {
+        width: 38px;
+        height: 38px;
+
+        flex-basis:
+            38px;
+
+        border-radius: 9px;
+
+        font-size: 18px;
+    }
+
+
+    .movimiento-main {
+        gap: 10px;
+    }
+
+
+    .movimiento-main p {
+        font-size: 10px;
+    }
+
 
     .movimiento-right {
         width: 100%;
-        justify-content: space-between;
+
+        justify-content:
+            space-between;
+
+        gap: 10px;
     }
 
 }
 
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .cobros-pagos-stats {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .cobros-top-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+}

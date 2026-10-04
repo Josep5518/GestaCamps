@@ -519,49 +519,28 @@ export class CuadernoCampoView {
         return `
 
             <article
-                class="panel"
-                style="margin: 0;"
+                class="panel cuaderno-card"
             >
 
-                <div
-                    style="
-                        display: flex;
-                        justify-content: space-between;
-                        align-items: flex-start;
-                        gap: 12px;
-                    "
-                >
+                <div class="cuaderno-card-header">
 
                     <div>
 
-                        <div
-                            style="
-                                font-size: 28px;
-                                margin-bottom: 8px;
-                            "
-                        >
+                        <div class="cuaderno-card-icon">
                             ${this.obtenerIcono(
                                 registro.tipoActuacion
                             )}
                         </div>
 
 
-                        <h3
-                            style="
-                                margin-bottom: 5px;
-                            "
-                        >
+                        <h3>
                             ${escaparHTML(
                                 registro.tipoActuacion
                             )}
                         </h3>
 
 
-                        <strong
-                            style="
-                                color: #247354;
-                            "
-                        >
+                        <strong class="cuaderno-card-finca">
                             ${escaparHTML(
                                 registro.fincaNombre
                             )}
@@ -570,12 +549,7 @@ export class CuadernoCampoView {
                     </div>
 
 
-                    <div
-                        style="
-                            display: flex;
-                            gap: 7px;
-                        "
-                    >
+                    <div class="cuaderno-card-actions">
 
                         <button
                             type="button"
@@ -605,13 +579,7 @@ export class CuadernoCampoView {
                 </div>
 
 
-                <div
-                    style="
-                        margin-top: 16px;
-                        display: grid;
-                        gap: 8px;
-                    "
-                >
+                <div class="cuaderno-card-meta">
 
                     <p>
                         📅
@@ -759,29 +727,20 @@ export class CuadernoCampoView {
                     }
 
                 </div>
-                                ${
+
+
+                ${
                     registro.descripcion
 
                         ? `
 
-                            <div
-                                style="
-                                    margin-top: 15px;
-                                    padding: 13px;
-                                    background: #f5f7f5;
-                                    border-radius: 10px;
-                                "
-                            >
+                            <div class="cuaderno-card-detail">
 
                                 <strong>
                                     Descripción
                                 </strong>
 
-                                <p
-                                    style="
-                                        margin: 5px 0 0;
-                                    "
-                                >
+                                <p>
                                     ${escaparHTML(
                                         registro.descripcion
                                     )}
@@ -800,24 +759,13 @@ export class CuadernoCampoView {
 
                         ? `
 
-                            <div
-                                style="
-                                    margin-top: 10px;
-                                    padding: 13px;
-                                    background: #f5f7f5;
-                                    border-radius: 10px;
-                                "
-                            >
+                            <div class="cuaderno-card-detail">
 
                                 <strong>
                                     Observaciones
                                 </strong>
 
-                                <p
-                                    style="
-                                        margin: 5px 0 0;
-                                    "
-                                >
+                                <p>
                                     ${escaparHTML(
                                         registro.observaciones
                                     )}
@@ -831,13 +779,7 @@ export class CuadernoCampoView {
                 }
 
 
-                <p
-                    style="
-                        margin: 14px 0 0;
-                        color: #78837d;
-                        font-size: 12px;
-                    "
-                >
+                <p class="cuaderno-card-author">
                     Registrado por
                     ${escaparHTML(
                         registro.creadoPorNombre
@@ -950,8 +892,6 @@ export class CuadernoCampoView {
 
         const horaAhora =
             obtenerHoraActual();
-
-
         this.mainContent.innerHTML = `
 
             <button
@@ -970,9 +910,7 @@ export class CuadernoCampoView {
                     <h2>
                         ${
                             registro
-
                                 ? "Editar actuación"
-
                                 : "Nueva actuación"
                         }
                     </h2>
@@ -987,7 +925,6 @@ export class CuadernoCampoView {
 
 
             <section class="form-panel">
-
 
                 <div class="form-grid">
 
@@ -1036,14 +973,11 @@ export class CuadernoCampoView {
                             Tipo de actuación *
                         </label>
 
-                        <select
-                            id="cuadernoTipo"
-                        >
+                        <select id="cuadernoTipo">
 
                             <option value="">
                                 Selecciona...
                             </option>
-
 
                             ${tipos
                                 .map(
@@ -1083,14 +1017,11 @@ export class CuadernoCampoView {
                             Finca *
                         </label>
 
-                        <select
-                            id="cuadernoFinca"
-                        >
+                        <select id="cuadernoFinca">
 
                             <option value="">
                                 Selecciona finca...
                             </option>
-
 
                             ${fincas
                                 .map(
@@ -1130,14 +1061,11 @@ export class CuadernoCampoView {
                             Campanya
                         </label>
 
-                        <select
-                            id="cuadernoCampania"
-                        >
+                        <select id="cuadernoCampania">
 
                             <option value="">
                                 Sin Campanya
                             </option>
-
 
                             ${campanias
                                 .map(
@@ -1178,14 +1106,11 @@ export class CuadernoCampoView {
                             Cultivo
                         </label>
 
-                        <select
-                            id="cuadernoCultivo"
-                        >
+                        <select id="cuadernoCultivo">
 
                             <option value="">
                                 Sin cultivo concreto
                             </option>
-
 
                             ${cultivos
                                 .map(
@@ -1233,14 +1158,11 @@ export class CuadernoCampoView {
                             Maquinaria
                         </label>
 
-                        <select
-                            id="cuadernoMaquinaria"
-                        >
+                        <select id="cuadernoMaquinaria">
 
                             <option value="">
                                 Sin maquinaria
                             </option>
-
 
                             ${maquinaria
                                 .map(
@@ -1282,14 +1204,11 @@ export class CuadernoCampoView {
                             Producto / material
                         </label>
 
-                        <select
-                            id="cuadernoProducto"
-                        >
+                        <select id="cuadernoProducto">
 
                             <option value="">
                                 Sin producto
                             </option>
-
 
                             ${inventario
                                 .map(
@@ -1352,47 +1271,43 @@ export class CuadernoCampoView {
                             Unidad
                         </label>
 
-                        <select
-                            id="cuadernoUnidad"
-                        >
+                        <select id="cuadernoUnidad">
 
-                            ${
-                                [
-                                    "",
-                                    "kg",
-                                    "g",
-                                    "L",
-                                    "ml",
-                                    "ud",
-                                    "ha",
-                                    "h"
-                                ]
-                                    .map(
-                                        unidad => `
+                            ${[
+                                "",
+                                "kg",
+                                "g",
+                                "L",
+                                "ml",
+                                "ud",
+                                "ha",
+                                "h"
+                            ]
+                                .map(
+                                    unidad => `
 
-                                            <option
-                                                value="${unidad}"
+                                        <option
+                                            value="${unidad}"
 
-                                                ${
-                                                    registro?.unidad ===
-                                                    unidad
+                                            ${
+                                                registro?.unidad ===
+                                                unidad
 
-                                                        ? "selected"
+                                                    ? "selected"
 
-                                                        : ""
-                                                }
-                                            >
-                                                ${
-                                                    unidad
-                                                    ||
-                                                    "Sin unidad"
-                                                }
-                                            </option>
+                                                    : ""
+                                            }
+                                        >
+                                            ${
+                                                unidad
+                                                ||
+                                                "Sin unidad"
+                                            }
+                                        </option>
 
-                                        `
-                                    )
-                                    .join("")
-                            }
+                                    `
+                                )
+                                .join("")}
 
                         </select>
 
@@ -1428,17 +1343,7 @@ export class CuadernoCampoView {
                     </label>
 
 
-                    <div
-                        style="
-                            display: grid;
-                            grid-template-columns:
-                                repeat(
-                                    auto-fit,
-                                    minmax(190px, 1fr)
-                                );
-                            gap: 8px;
-                        "
-                    >
+                    <div class="cuaderno-trabajadores-grid">
 
                         ${
                             trabajadores.length
@@ -1462,14 +1367,7 @@ export class CuadernoCampoView {
                                             return `
 
                                                 <label
-                                                    style="
-                                                        display: flex;
-                                                        gap: 8px;
-                                                        align-items: center;
-                                                        padding: 10px;
-                                                        border: 1px solid #e1e8e3;
-                                                        border-radius: 9px;
-                                                    "
+                                                    class="cuaderno-trabajador-option"
                                                 >
 
                                                     <input
@@ -1479,13 +1377,10 @@ export class CuadernoCampoView {
 
                                                         ${
                                                             marcado
-
                                                                 ? "checked"
-
                                                                 : ""
                                                         }
                                                     >
-
 
                                                     ${escaparHTML(
                                                         obtenerNombreTrabajador(
@@ -1502,11 +1397,9 @@ export class CuadernoCampoView {
                                     .join("")
 
                                 : `
-
                                     <p>
                                         No hay trabajadores activos.
                                     </p>
-
                                 `
                         }
 
@@ -1571,9 +1464,7 @@ export class CuadernoCampoView {
                     >
                         ${
                             registro
-
                                 ? "Guardar cambios"
-
                                 : "Registrar actuación"
                         }
                     </button>
@@ -1583,7 +1474,9 @@ export class CuadernoCampoView {
             </section>
 
         `;
-                document
+
+
+        document
             .getElementById(
                 "volverCuaderno"
             )
@@ -1799,9 +1692,6 @@ export class CuadernoCampoView {
         this.mostrar();
 
     }
-
-
-
     // =====================================================
     // FILTRAR CAMPANYA / CULTIVO POR FINCA
     // =====================================================
@@ -2163,6 +2053,9 @@ export class CuadernoCampoView {
         return registros;
 
     }
+
+
+
     // =====================================================
     // REGISTROS DE HOY
     // =====================================================
@@ -2185,9 +2078,6 @@ export class CuadernoCampoView {
         );
 
     }
-
-
-
     // =====================================================
     // ESTADO VACÍO
     // =====================================================
@@ -2200,9 +2090,7 @@ export class CuadernoCampoView {
                 class="
                     panel
                     empty-state
-                "
-                style="
-                    grid-column: 1 / -1;
+                    cuaderno-empty-state
                 "
             >
 
@@ -2210,11 +2098,9 @@ export class CuadernoCampoView {
                     📖
                 </div>
 
-
                 <h3>
                     No hay actuaciones registradas
                 </h3>
-
 
                 <p>
                     Las actuaciones realizadas en tus fincas aparecerán aquí.
@@ -2274,5 +2160,6 @@ export class CuadernoCampoView {
             "📖"
         );
 
-    }    
-}
+    }
+
+}                   

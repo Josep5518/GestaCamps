@@ -7,22 +7,11 @@ export class IncidenciasView {
         trabajoService,
         trabajadorService
     ) {
-
-        this.mainContent =
-            mainContent;
-
-        this.incidenciaService =
-            incidenciaService;
-
-        this.fincaService =
-            fincaService;
-
-        this.trabajoService =
-            trabajoService;
-
-        this.trabajadorService =
-            trabajadorService;
-
+        this.mainContent = mainContent;
+        this.incidenciaService = incidenciaService;
+        this.fincaService = fincaService;
+        this.trabajoService = trabajoService;
+        this.trabajadorService = trabajadorService;
     }
 
 
@@ -89,90 +78,34 @@ export class IncidenciasView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats incidencias-stats">
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        ⚠️
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Abiertas
-                        </p>
-
-                        <h3>
-                            ${abiertas}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "⚠️",
+                    "Abiertas",
+                    abiertas
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🔎
-                    </span>
-
-                    <div>
-
-                        <p>
-                            En revisión
-                        </p>
-
-                        <h3>
-                            ${revision}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "🔎",
+                    "En revisión",
+                    revision
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        ✅
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Resueltas
-                        </p>
-
-                        <h3>
-                            ${resueltas}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "✅",
+                    "Resueltas",
+                    resueltas
+                )}
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🚨
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Urgentes
-                        </p>
-
-                        <h3>
-                            ${urgentes}
-                        </h3>
-
-                    </div>
-
-                </div>
+                ${this.crearStat(
+                    "🚨",
+                    "Urgentes",
+                    urgentes
+                )}
 
             </section>
 
@@ -205,14 +138,16 @@ export class IncidenciasView {
 
                         : `
 
-                            <div class="trabajos-grid">
+                            <div class="incidencias-grid">
 
-                                ${incidencias.map(
-                                    incidencia =>
-                                        this.crearTarjeta(
-                                            incidencia
-                                        )
-                                ).join("")}
+                                ${incidencias
+                                    .map(
+                                        incidencia =>
+                                            this.crearTarjeta(
+                                                incidencia
+                                            )
+                                    )
+                                    .join("")}
 
                             </div>
 
@@ -228,7 +163,7 @@ export class IncidenciasView {
             .getElementById(
                 "nuevaIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrarFormulario()
@@ -236,7 +171,42 @@ export class IncidenciasView {
 
 
         this.configurarEventos();
+    }
 
+
+    // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+                <div>
+
+                    <p>
+                        ${titulo}
+                    </p>
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </article>
+
+        `;
     }
 
 
@@ -267,16 +237,16 @@ export class IncidenciasView {
 
         return `
 
-            <div class="trabajo-card">
+            <article class="incidencia-card">
 
-                <div class="trabajo-card-header">
+                <div class="incidencia-card-header">
 
-                    <span class="trabajo-icon">
+                    <span class="incidencia-icon">
                         ⚠️
                     </span>
 
 
-                    <div class="trabajo-actions">
+                    <div class="incidencia-actions">
 
                         ${
                             incidencia.estado !==
@@ -285,7 +255,10 @@ export class IncidenciasView {
                                 ? `
 
                                     <button
-                                        class="secondary-button incidencia-revision"
+                                        class="
+                                            secondary-button
+                                            incidencia-revision
+                                        "
                                         data-id="${incidencia.id}"
                                         type="button"
                                     >
@@ -294,7 +267,10 @@ export class IncidenciasView {
 
 
                                     <button
-                                        class="primary-button incidencia-resolver"
+                                        class="
+                                            primary-button
+                                            incidencia-resolver
+                                        "
                                         data-id="${incidencia.id}"
                                         type="button"
                                     >
@@ -306,7 +282,10 @@ export class IncidenciasView {
                                 : `
 
                                     <button
-                                        class="secondary-button incidencia-reabrir"
+                                        class="
+                                            secondary-button
+                                            incidencia-reabrir
+                                        "
                                         data-id="${incidencia.id}"
                                         type="button"
                                     >
@@ -326,107 +305,100 @@ export class IncidenciasView {
                 </h3>
 
 
-                <p class="trabajo-linea">
+                <div class="incidencia-meta">
+
+                    <p>
+
+                        ${
+                            iconoPrioridad[
+                                incidencia.prioridad
+                            ]
+                            ||
+                            "🟡"
+                        }
+
+                        Prioridad:
+
+                        <strong>
+                            ${incidencia.prioridad}
+                        </strong>
+
+                    </p>
+
+
+                    <p>
+
+                        📌 Estado:
+
+                        <strong>
+                            ${incidencia.estado}
+                        </strong>
+
+                    </p>
+
 
                     ${
-                        iconoPrioridad[
-                            incidencia.prioridad
-                        ]
-                        ||
-                        "🟡"
+                        incidencia.fincaNombre
+
+                            ? `
+
+                                <p>
+                                    📍 ${incidencia.fincaNombre}
+                                </p>
+
+                            `
+
+                            : ""
                     }
 
-                    Prioridad:
-                    <strong>
-                        ${incidencia.prioridad}
-                    </strong>
 
-                </p>
+                    ${
+                        incidencia.trabajoNombre
 
+                            ? `
 
-                <p class="trabajo-linea">
+                                <p>
+                                    📋 ${incidencia.trabajoNombre}
+                                </p>
 
-                    📌 Estado:
-                    <strong>
-                        ${incidencia.estado}
-                    </strong>
+                            `
 
-                </p>
+                            : ""
+                    }
 
 
-                ${
-                    incidencia.fincaNombre
+                    ${
+                        incidencia.trabajadorNombre
 
-                        ? `
+                            ? `
 
-                            <p class="trabajo-linea">
-                                📍 ${incidencia.fincaNombre}
-                            </p>
+                                <p>
+                                    👷 ${incidencia.trabajadorNombre}
+                                </p>
 
-                        `
+                            `
 
-                        : ""
-                }
-
-
-                ${
-                    incidencia.trabajoNombre
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                📋 ${incidencia.trabajoNombre}
-                            </p>
-
-                        `
-
-                        : ""
-                }
+                            : ""
+                    }
 
 
-                ${
-                    incidencia.trabajadorNombre
+                    <p>
+                        🕒
+                        ${this.formatearFechaHora(
+                            incidencia.fechaCreacion
+                        )}
+                    </p>
 
-                        ? `
-
-                            <p class="trabajo-linea">
-                                👷 ${incidencia.trabajadorNombre}
-                            </p>
-
-                        `
-
-                        : ""
-                }
+                </div>
 
 
-                <p class="trabajo-linea">
-
-                    🕒
-                    ${this.formatearFechaHora(
-                        incidencia.fechaCreacion
-                    )}
-
-                </p>
-
-
-                <div
-                    style="
-                        margin-top: 14px;
-                        padding: 12px;
-                        background: #f6f8f6;
-                        border-radius: 10px;
-                    "
-                >
+                <div class="incidencia-descripcion">
 
                     <strong>
                         Descripción
                     </strong>
 
-                    <p
-                        style="
-                            margin: 6px 0 0;
-                        "
-                    >
+                    <p>
                         ${incidencia.descripcion}
                     </p>
 
@@ -439,14 +411,7 @@ export class IncidenciasView {
 
                         ? `
 
-                            <div
-                                style="
-                                    margin-top: 12px;
-                                    padding: 12px;
-                                    background: #edf6f1;
-                                    border-radius: 10px;
-                                "
-                            >
+                            <div class="incidencia-resuelta">
 
                                 <strong>
                                     ✅ Resuelta
@@ -458,12 +423,13 @@ export class IncidenciasView {
                                     )}
                                 </p>
 
+
                                 ${
                                     incidencia.observacionesResolucion
 
                                         ? `
 
-                                            <p>
+                                            <p class="incidencia-resuelta-notas">
                                                 ${incidencia.observacionesResolucion}
                                             </p>
 
@@ -479,10 +445,9 @@ export class IncidenciasView {
                         : ""
                 }
 
-            </div>
+            </article>
 
         `;
-
     }
 
 
@@ -504,9 +469,7 @@ export class IncidenciasView {
                         () => {
 
                             this.cambiarEstado(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "En revisión"
                             );
 
@@ -537,9 +500,7 @@ export class IncidenciasView {
 
 
                             this.cambiarEstado(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "Resuelta",
                                 observaciones
                             );
@@ -563,9 +524,7 @@ export class IncidenciasView {
                         () => {
 
                             this.cambiarEstado(
-                                Number(
-                                    boton.dataset.id
-                                ),
+                                boton.dataset.id,
                                 "Abierta"
                             );
 
@@ -574,7 +533,6 @@ export class IncidenciasView {
 
                 }
             );
-
     }
 
 
@@ -606,12 +564,10 @@ export class IncidenciasView {
             );
 
             return;
-
         }
 
 
         this.mostrar();
-
     }
 
 
@@ -664,7 +620,7 @@ export class IncidenciasView {
             </header>
 
 
-            <div class="form-panel">
+            <div class="form-panel incidencia-form-panel">
 
                 <div class="form-group">
 
@@ -755,15 +711,18 @@ export class IncidenciasView {
                             Sin finca concreta
                         </option>
 
-                        ${fincas.map(
-                            finca => `
 
-                                <option value="${finca.id}">
-                                    ${finca.nombre}
-                                </option>
+                        ${fincas
+                            .map(
+                                finca => `
 
-                            `
-                        ).join("")}
+                                    <option value="${finca.id}">
+                                        ${finca.nombre}
+                                    </option>
+
+                                `
+                            )
+                            .join("")}
 
                     </select>
 
@@ -782,15 +741,18 @@ export class IncidenciasView {
                             Sin tarea relacionada
                         </option>
 
-                        ${trabajos.map(
-                            trabajo => `
 
-                                <option value="${trabajo.id}">
-                                    ${trabajo.titulo}
-                                </option>
+                        ${trabajos
+                            .map(
+                                trabajo => `
 
-                            `
-                        ).join("")}
+                                    <option value="${trabajo.id}">
+                                        ${trabajo.titulo}
+                                    </option>
+
+                                `
+                            )
+                            .join("")}
 
                     </select>
 
@@ -809,17 +771,23 @@ export class IncidenciasView {
                             Administración
                         </option>
 
-                        ${trabajadores.map(
-                            trabajador => `
 
-                                <option value="${trabajador.id}">
-                                    ${this.trabajadorService.obtenerNombreCompleto(
-                                        trabajador
-                                    )}
-                                </option>
+                        ${trabajadores
+                            .map(
+                                trabajador => `
 
-                            `
-                        ).join("")}
+                                    <option value="${trabajador.id}">
+
+                                        ${this.trabajadorService
+                                            .obtenerNombreCompleto(
+                                                trabajador
+                                            )}
+
+                                    </option>
+
+                                `
+                            )
+                            .join("")}
 
                     </select>
 
@@ -871,7 +839,7 @@ export class IncidenciasView {
             .getElementById(
                 "volverIncidencias"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -882,7 +850,7 @@ export class IncidenciasView {
             .getElementById(
                 "cancelarIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -893,12 +861,11 @@ export class IncidenciasView {
             .getElementById(
                 "guardarIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.guardarFormulario()
             );
-
     }
 
 
@@ -977,12 +944,10 @@ export class IncidenciasView {
             );
 
             return;
-
         }
 
 
         this.mostrar();
-
     }
 
 
@@ -997,18 +962,30 @@ export class IncidenciasView {
         if (
             !valor
         ) {
-
             return "—";
-
         }
 
 
-        return new Date(
-            valor
-        )
+        const fecha =
+            new Date(
+                valor
+            );
+
+
+        if (
+            Number.isNaN(
+                fecha.getTime()
+            )
+        ) {
+            return valor;
+        }
+
+
+        return fecha
             .toLocaleString(
                 "es-ES",
                 {
+
                     day:
                         "2-digit",
 
@@ -1023,9 +1000,8 @@ export class IncidenciasView {
 
                     minute:
                         "2-digit"
+
                 }
             );
-
     }
-
 }

@@ -1,6 +1,6 @@
 /* =====================================================
    GESTACAMPS
-   MÓDULO · MAQUINARIA
+   MÓDULO · INCIDENCIAS
    Día 26 · Cierre Refactorización 1
 ===================================================== */
 
@@ -9,7 +9,7 @@
    ESTADÍSTICAS
 ===================================================== */
 
-.maquinaria-stats {
+.incidencias-stats {
     display: grid;
 
     grid-template-columns:
@@ -25,21 +25,24 @@
 
 
 /* =====================================================
-   GRID
+   LISTADO
 ===================================================== */
 
-.maquinaria-grid {
+#listaIncidencias {
+    min-width: 0;
+}
+
+
+.incidencias-grid {
     display: grid;
 
     grid-template-columns:
         repeat(
-            3,
+            2,
             minmax(0, 1fr)
         );
 
-    gap: 22px;
-
-    margin-top: 20px;
+    gap: 16px;
 }
 
 
@@ -47,10 +50,10 @@
    TARJETA
 ===================================================== */
 
-.maquina-card {
+.incidencia-card {
     min-width: 0;
 
-    padding: 22px;
+    padding: 16px;
 
     border:
         1px solid
@@ -58,10 +61,18 @@
 
     border-radius: 14px;
 
-    background-color: white;
+    background: white;
 
     box-shadow:
-        var(--gc-shadow-card);
+        0
+        7px
+        20px
+        rgba(
+            18,
+            55,
+            42,
+            0.05
+        );
 
     transition:
         transform 0.15s ease,
@@ -72,7 +83,7 @@
 
 @media (hover: hover) {
 
-    .maquina-card:hover {
+    .incidencia-card:hover {
         transform:
             translateY(-2px);
 
@@ -98,27 +109,27 @@
    CABECERA
 ===================================================== */
 
-.maquina-card-header {
+.incidencia-card-header {
     display: flex;
+
+    align-items: flex-start;
 
     justify-content: space-between;
 
-    align-items: center;
+    gap: 10px;
 
-    gap: 12px;
-
-    margin-bottom: 18px;
+    margin-bottom: 10px;
 }
 
 
-.maquina-icon {
-    width: 48px;
-    height: 48px;
+.incidencia-icon {
+    width: 38px;
+    height: 38px;
 
     flex:
         0
         0
-        48px;
+        38px;
 
     display: flex;
 
@@ -126,21 +137,46 @@
 
     justify-content: center;
 
-    border-radius: 12px;
+    border-radius: 10px;
 
-    background-color:
+    background:
         var(--gc-green-soft);
 
-    font-size: 24px;
+    font-size: 18px;
+
+    line-height: 1;
 }
 
 
-.maquina-actions {
+.incidencia-card h3 {
+    margin:
+        0
+        0
+        8px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 15px;
+
+    line-height: 1.25;
+}
+
+
+/* =====================================================
+   ACCIONES
+===================================================== */
+
+.incidencia-actions {
     display: flex;
 
     align-items: center;
 
-    gap: 8px;
+    justify-content: flex-end;
+
+    gap: 7px;
+
+    flex-wrap: wrap;
 
     flex:
         0
@@ -149,8 +185,8 @@
 }
 
 
-.maquina-actions
-.secondary-button {
+.incidencia-actions
+button {
     min-height: 34px;
 
     padding:
@@ -161,171 +197,128 @@
 }
 
 
-.maquina-actions
-.delete-button {
-    width: 34px;
-
-    min-width: 34px;
-
-    height: 34px;
-
-    padding: 0;
-}
-
-
 /* =====================================================
-   TÍTULO / MODELO
+   DATOS
 ===================================================== */
 
-.maquina-card h3 {
-    margin:
-        0
-        0
-        8px;
-
-    color:
-        var(--gc-text);
-
-    font-size: 16px;
-}
-
-
-.maquina-tipo {
-    margin-bottom: 8px;
-
-    color:
-        var(--gc-green);
-
-    font-size: 12px;
-
-    font-weight: 600;
-}
-
-
-.maquina-modelo {
-    margin:
-        0
-        0
-        14px;
-
-    color:
-        var(--gc-muted);
-
-    font-size: 12px;
-}
-
-
-/* =====================================================
-   INFORMACIÓN
-===================================================== */
-
-.maquina-info {
+.incidencia-meta {
     display: grid;
 
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 10px;
-
-    margin:
-        18px
-        0;
+    gap: 4px;
 }
 
 
-.maquina-info div {
-    min-width: 0;
+.incidencia-meta p {
+    margin: 0;
+
+    color:
+        var(--gc-muted-strong);
+
+    font-size: 10px;
+
+    line-height: 1.4;
+}
+
+
+.incidencia-meta strong {
+    color:
+        var(--gc-text);
+}
+
+
+/* =====================================================
+   DESCRIPCIÓN
+===================================================== */
+
+.incidencia-descripcion {
+    margin-top: 14px;
 
     padding: 12px;
 
-    border-radius: 9px;
+    border-radius: 10px;
 
-    background-color:
-        var(--gc-surface-soft);
+    background:
+        #f6f8f6;
 }
 
 
-.maquina-info span {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color:
-        var(--gc-muted);
-
-    font-size: 10px;
-}
-
-
-.maquina-info strong {
+.incidencia-descripcion strong {
     display: block;
 
     color:
         var(--gc-text);
 
-    font-size: 12px;
+    font-size: 11px;
+}
 
-    overflow-wrap: anywhere;
+
+.incidencia-descripcion p {
+    margin:
+        6px
+        0
+        0;
+
+    color:
+        var(--gc-text);
+
+    font-size: 11px;
+
+    line-height: 1.45;
 }
 
 
 /* =====================================================
-   DATOS ADICIONALES
+   RESUELTA
 ===================================================== */
 
-.maquina-card > p {
+.incidencia-resuelta {
+    margin-top: 12px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background:
+        #edf6f1;
+}
+
+
+.incidencia-resuelta strong {
+    display: block;
+
+    color:
+        #176044;
+
+    font-size: 11px;
+}
+
+
+.incidencia-resuelta p {
     margin:
         6px
+        0
         0;
 
     color:
         var(--gc-muted-strong);
 
-    font-size: 11px;
+    font-size: 10px;
 
     line-height: 1.4;
 }
 
 
-/* =====================================================
-   NOTAS
-===================================================== */
-
-.maquina-notas {
-    margin-top: 18px;
-
-    padding-top: 14px;
+.incidencia-resuelta-notas {
+    padding-top: 7px;
 
     border-top:
         1px solid
-        var(--gc-border-soft);
-}
-
-
-.maquina-notas span {
-    display: block;
-
-    margin-bottom: 5px;
-
-    color:
-        var(--gc-muted);
-
-    font-size: 10px;
-}
-
-
-.maquina-notas p {
-    margin: 0;
-
-    color:
-        var(--gc-text);
-
-    font-size: 11px;
-
-    line-height: 1.4;
+        rgba(
+            23,
+            96,
+            68,
+            0.12
+        );
 }
 
 
@@ -333,8 +326,14 @@
    FORMULARIO
 ===================================================== */
 
-.maquina-form-panel {
-    max-width: 760px;
+.incidencia-form-panel {
+    max-width: 720px;
+}
+
+
+.incidencia-form-panel
+textarea {
+    resize: vertical;
 }
 
 
@@ -344,7 +343,7 @@
 
 @media (max-width: 1250px) {
 
-    .maquinaria-stats {
+    .incidencias-stats {
         grid-template-columns:
             repeat(
                 2,
@@ -353,7 +352,7 @@
     }
 
 
-    .maquinaria-grid {
+    .incidencias-grid {
         grid-template-columns:
             repeat(
                 2,
@@ -370,7 +369,7 @@
 
 @media (max-width: 760px) {
 
-    .maquinaria-stats {
+    .incidencias-stats {
         grid-template-columns:
             repeat(
                 2,
@@ -383,61 +382,69 @@
     }
 
 
-    .maquinaria-grid {
+    .incidencias-grid {
         grid-template-columns: 1fr;
 
-        gap: 12px;
-
-        margin-top: 14px;
+        gap: 11px;
     }
 
 
-    .maquina-card {
-        padding: 14px;
+    .incidencia-card {
+        padding: 13px;
 
         border-radius: 12px;
     }
 
 
-    .maquina-card-header {
+    .incidencia-card-header {
         gap: 8px;
-
-        margin-bottom: 14px;
     }
 
 
-    .maquina-icon {
-        width: 40px;
-        height: 40px;
+    .incidencia-icon {
+        width: 34px;
+        height: 34px;
 
-        flex-basis: 40px;
+        flex-basis: 34px;
 
-        border-radius: 10px;
-
-        font-size: 20px;
+        font-size: 16px;
     }
 
 
-    .maquina-card h3 {
-        font-size: 15px;
+    .incidencia-card h3 {
+        font-size: 14px;
     }
 
 
-    .maquina-info {
-        gap: 7px;
-
-        margin:
-            14px
-            0;
+    .incidencia-actions {
+        gap: 5px;
     }
 
 
-    .maquina-info div {
-        padding: 9px;
+    .incidencia-actions
+    button {
+        min-height: 32px;
+
+        padding:
+            0
+            8px;
+
+        font-size: 9px;
     }
 
 
-    .maquina-form-panel {
+    .incidencia-meta p {
+        font-size: 9px;
+    }
+
+
+    .incidencia-descripcion,
+    .incidencia-resuelta {
+        padding: 10px;
+    }
+
+
+    .incidencia-form-panel {
         max-width: none;
     }
 
@@ -450,13 +457,20 @@
 
 @media (max-width: 420px) {
 
-    .maquinaria-stats {
+    .incidencias-stats {
         grid-template-columns: 1fr;
     }
 
 
-    .maquina-info {
-        grid-template-columns: 1fr;
+    .incidencia-card-header {
+        flex-wrap: wrap;
+    }
+
+
+    .incidencia-actions {
+        width: 100%;
+
+        justify-content: flex-end;
     }
 
 }

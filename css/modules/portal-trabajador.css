@@ -1,22 +1,12 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · PORTAL DEL TRABAJADOR
-   Día 21 · Modularización CSS
+   Día 26 · Cierre Refactorización 1
 ===================================================== */
 
 
 /* =====================================================
-   PORTAL DEL TRABAJADOR
-===================================================== */
-
-/* =====================================================
-   GESTACAMPS
-   DÍA 18 - PORTAL DEL TRABAJADOR
-===================================================== */
-
-
-/* =====================================================
-   PORTAL - CONTENEDOR GENERAL
+   CONTENEDOR GENERAL
 ===================================================== */
 
 body.worker-portal-mode
@@ -27,8 +17,90 @@ body.worker-portal-mode
         0
         auto;
 
-    padding:
-        28px;
+    padding: 28px;
+}
+
+
+/* =====================================================
+   ACCESO POR PIN
+===================================================== */
+
+.portal-login-screen {
+    min-height:
+        calc(
+            100vh
+            -
+            40px
+        );
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    padding: 20px;
+}
+
+
+.portal-login-card {
+    width: 100%;
+
+    max-width: 480px;
+
+    padding: 30px;
+}
+
+
+.portal-login-header {
+    margin-bottom: 28px;
+
+    text-align: center;
+}
+
+
+.portal-login-icon {
+    margin-bottom: 12px;
+
+    font-size: 48px;
+
+    line-height: 1;
+}
+
+
+.portal-login-header h2 {
+    margin-bottom: 8px;
+}
+
+
+.portal-login-header p {
+    margin: 0;
+
+    color:
+        #78837d;
+}
+
+
+.portal-login-pin {
+    text-align: center;
+
+    font-size: 24px;
+
+    letter-spacing: 8px;
+}
+
+
+.portal-login-button {
+    width: 100%;
+
+    min-height: 50px;
+
+    justify-content: center;
+}
+
+
+.portal-login-back {
+    margin-top: 12px;
 }
 
 
@@ -37,7 +109,8 @@ body.worker-portal-mode
 ===================================================== */
 
 body.worker-portal-mode
-.topbar {
+.topbar,
+.portal-worker-hero {
     display: grid;
 
     grid-template-columns:
@@ -63,12 +136,15 @@ body.worker-portal-mode
 
     color: white;
 
-    box-shadow: var(--gc-shadow-card);
+    box-shadow:
+        var(--gc-shadow-card);
 }
 
 
 body.worker-portal-mode
-.topbar h2 {
+.topbar h2,
+.portal-worker-hero h2,
+.portal-form-header h2 {
     margin: 0;
 
     color: white;
@@ -76,7 +152,9 @@ body.worker-portal-mode
 
 
 body.worker-portal-mode
-.topbar p {
+.topbar p,
+.portal-worker-hero p,
+.portal-form-header p {
     color:
         rgba(
             255,
@@ -87,31 +165,41 @@ body.worker-portal-mode
 }
 
 
-body.worker-portal-mode
-.topbar > div:last-child {
-    display: flex !important;
+.portal-worker-kicker {
+    margin:
+        0
+        0
+        3px !important;
+}
 
-    gap: 8px !important;
+
+.portal-header-actions {
+    display: flex;
+
+    gap: 8px;
 
     flex-wrap: wrap;
 }
 
 
-/* =====================================================
-   BOTONES DE ACCIÓN
-===================================================== */
-
 body.worker-portal-mode
 #activarModoCampo,
 body.worker-portal-mode
+#comunicarIncidencia,
+.portal-worker-hero
+#activarModoCampo,
+.portal-worker-hero
 #comunicarIncidencia {
     background: white;
 
-    color: var(--gc-green-text);
+    color:
+        var(--gc-green-text);
 }
 
 
 body.worker-portal-mode
+#cerrarSesionTrabajador,
+.portal-worker-hero
 #cerrarSesionTrabajador {
     border-color:
         rgba(
@@ -138,11 +226,15 @@ body.worker-portal-mode
 ===================================================== */
 
 body.worker-portal-mode
-.stats {
+.stats,
+.portal-worker-stats {
     grid-template-columns:
         repeat(
             5,
-            minmax(0, 1fr)
+            minmax(
+                0,
+                1fr
+            )
         );
 
     gap: 12px;
@@ -152,7 +244,7 @@ body.worker-portal-mode
 
 
 /* =====================================================
-   SECCIONES DE TAREAS
+   PANELES Y SECCIONES
 ===================================================== */
 
 body.worker-portal-mode
@@ -163,7 +255,8 @@ body.worker-portal-mode
 
     border-radius: 15px;
 
-    box-shadow: var(--gc-shadow-card);
+    box-shadow:
+        var(--gc-shadow-card);
 }
 
 
@@ -179,26 +272,58 @@ body.worker-portal-mode
 .panel-header p {
     margin-top: 4px;
 
-    color: var(--gc-muted);
+    color:
+        var(--gc-muted);
 
     font-size: 10px;
 }
 
 
-/* =====================================================
-   TARJETAS DE TAREA
-===================================================== */
-
-body.worker-portal-mode
-.panel > div:not(.panel-header):not(.empty-state) {
-    border-color:
-        var(--gc-border-soft) !important;
-
-    border-radius: 12px !important;
+.portal-section {
+    margin-top: 24px;
 }
 
 
-body.worker-portal-mode
+.portal-task-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                280px,
+                1fr
+            )
+        );
+
+    gap: 18px;
+}
+
+
+.portal-task-card {
+    padding: 18px;
+
+    border:
+        1px solid
+        #e1e8e3;
+
+    border-radius: 14px;
+
+    background: white;
+}
+
+
+.portal-task-card h3 {
+    margin-top: 0;
+}
+
+
+.portal-task-type {
+    color:
+        #247354;
+}
+
+
 .trabajo-linea {
     margin:
         4px
@@ -210,19 +335,31 @@ body.worker-portal-mode
 }
 
 
-/* =====================================================
-   ACCIONES TAREA
-===================================================== */
+.portal-task-notes {
+    margin-top: 12px;
 
-body.worker-portal-mode
-.form-actions {
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background:
+        #f6f8f6;
+}
+
+
+.portal-task-actions {
+    justify-content:
+        flex-start;
+
+    flex-wrap: wrap;
+
+    margin-top: 16px;
+
     gap: 7px;
 }
 
 
-body.worker-portal-mode
 .portal-iniciar-tarea,
-body.worker-portal-mode
 .portal-completar-tarea {
     min-height: 36px;
 
@@ -235,23 +372,765 @@ body.worker-portal-mode
 
 
 /* =====================================================
+   FICHAJES DEL TRABAJADOR
+===================================================== */
+
+.portal-fichajes-list {
+    display: grid;
+}
+
+
+.portal-fichaje-item {
+    padding:
+        14px
+        0;
+
+    border-bottom:
+        1px solid
+        #edf0ed;
+}
+
+
+.portal-fichaje-item:last-child {
+    border-bottom: 0;
+}
+
+
+.portal-fichaje-head {
+    display: flex;
+
+    align-items:
+        flex-start;
+
+    justify-content:
+        space-between;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+
+.portal-fichaje-identity {
+    display: flex;
+
+    gap: 10px;
+
+    align-items:
+        flex-start;
+}
+
+
+.portal-fichaje-identity p {
+    margin:
+        4px
+        0
+        0;
+
+    color:
+        #65736c;
+}
+
+
+.portal-correction-status {
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    padding:
+        5px
+        9px;
+
+    border-radius:
+        999px;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.portal-correction-status.pendiente {
+    background:
+        #fff4d8;
+
+    color:
+        #745500;
+}
+
+
+.portal-correction-status.aprobada {
+    background:
+        #def5e8;
+
+    color:
+        #176044;
+}
+
+
+.portal-correction-status.rechazada {
+    background:
+        #fde8e8;
+
+    color:
+        #a42b2b;
+}
+
+
+.portal-correction-box {
+    margin-top: 10px;
+
+    padding: 11px;
+
+    border-radius: 10px;
+
+    background:
+        #f7f9f7;
+}
+
+
+.portal-correction-box p {
+    margin: 0;
+}
+
+
+.portal-correction-muted {
+    margin-top:
+        5px !important;
+
+    color:
+        #65736c;
+}
+
+
+.portal-correction-original {
+    margin-top:
+        5px !important;
+
+    color:
+        #65736c;
+
+    font-size: 12px;
+}
+
+
+.portal-corregir-fichaje {
+    margin-top: 10px;
+}
+
+
+.portal-correction-pending {
+    margin:
+        10px
+        0
+        0;
+
+    color:
+        #8a6b00;
+
+    font-size: 12px;
+}
+
+
+.portal-fichaje-summary {
+    margin-bottom: 18px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background:
+        #f5f8f6;
+}
+
+
+.portal-fichaje-summary p {
+    margin:
+        6px
+        0
+        0;
+}
+
+
+/* =====================================================
+   INCIDENCIAS DEL TRABAJADOR
+===================================================== */
+
+.portal-incidencias-list {
+    display: grid;
+}
+
+
+.portal-incidencia-content {
+    flex: 1;
+
+    min-width: 0;
+}
+
+
+/* =====================================================
+   FORMULARIOS DEL PORTAL
+===================================================== */
+
+.portal-form-header {
+    margin-bottom: 18px;
+}
+
+
+.portal-form-panel {
+    max-width: 720px;
+}
+
+
+/* =====================================================
+   MODO CAMPO
+===================================================== */
+
+.modo-campo-shell {
+    max-width: 900px;
+
+    margin:
+        0
+        auto;
+
+    padding-bottom: 40px;
+}
+
+
+.modo-campo-hero {
+    margin-bottom: 18px;
+
+    padding: 22px;
+
+    border-radius: 18px;
+
+    background:
+        #12372a;
+
+    color: white;
+}
+
+
+.modo-campo-hero-content {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+
+.modo-campo-kicker {
+    margin:
+        0
+        0
+        5px;
+
+    opacity: 0.8;
+
+    font-size: 14px;
+}
+
+
+.modo-campo-hero h2 {
+    margin: 0;
+
+    color: white;
+
+    font-size: 27px;
+}
+
+
+.modo-campo-role {
+    margin:
+        6px
+        0
+        0;
+
+    opacity: 0.85;
+}
+
+
+.modo-campo-vista-completa {
+    min-height: 46px;
+
+    padding:
+        0
+        16px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.14
+        );
+
+    color: white;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.modo-campo-stats {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                145px,
+                1fr
+            )
+        );
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+.modo-campo-stat-card {
+    padding: 16px;
+
+    border-radius: 16px;
+
+    background: white;
+
+    box-shadow:
+        0
+        4px
+        18px
+        rgba(
+            0,
+            0,
+            0,
+            0.05
+        );
+}
+
+
+.modo-campo-stat-icon {
+    margin-bottom: 8px;
+
+    font-size: 26px;
+}
+
+
+.modo-campo-stat-card p {
+    margin: 0;
+
+    color:
+        #78837d;
+
+    font-size: 13px;
+}
+
+
+.modo-campo-stat-card strong {
+    display: block;
+
+    margin-top: 3px;
+
+    font-size: 25px;
+}
+
+
+.modo-campo-panel {
+    margin-bottom: 18px;
+
+    padding: 20px;
+
+    border-radius: 18px;
+
+    background: white;
+
+    box-shadow:
+        0
+        4px
+        18px
+        rgba(
+            0,
+            0,
+            0,
+            0.06
+        );
+}
+
+
+.modo-campo-section-label {
+    margin:
+        0
+        0
+        12px;
+
+    color:
+        #78837d;
+
+    font-size: 13px;
+
+    font-weight: 600;
+
+    text-transform:
+        uppercase;
+
+    letter-spacing:
+        0.4px;
+}
+
+
+.modo-campo-empty {
+    padding:
+        20px
+        10px;
+
+    text-align: center;
+}
+
+
+.modo-campo-empty-icon {
+    margin-bottom: 10px;
+
+    font-size: 40px;
+}
+
+
+.modo-campo-empty strong {
+    font-size: 18px;
+}
+
+
+.modo-campo-empty p {
+    margin-bottom: 0;
+
+    color:
+        #78837d;
+}
+
+
+.modo-campo-quick-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            auto-fit,
+            minmax(
+                220px,
+                1fr
+            )
+        );
+
+    gap: 12px;
+
+    margin-bottom: 18px;
+}
+
+
+.modo-campo-action {
+    min-height: 82px;
+
+    padding: 16px;
+
+    border: 0;
+
+    border-radius: 16px;
+
+    font-size: 17px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.modo-campo-action-primary {
+    background:
+        #1f7255;
+
+    color: white;
+}
+
+
+.modo-campo-action-warning {
+    background:
+        #fff4cf;
+
+    color:
+        #6c5500;
+}
+
+
+.modo-campo-panel-title {
+    margin-top: 0;
+}
+
+
+.modo-campo-pending-list {
+    display: grid;
+
+    gap: 12px;
+}
+
+
+.modo-campo-pending-card {
+    padding: 16px;
+
+    border:
+        1px solid
+        #e4eae6;
+
+    border-radius: 14px;
+}
+
+
+.modo-campo-pending-card h3 {
+    margin:
+        0
+        0
+        6px;
+}
+
+
+.modo-campo-pending-card p {
+    margin:
+        5px
+        0;
+
+    color:
+        #5f6d66;
+}
+
+
+.modo-campo-start-button {
+    width: 100%;
+
+    min-height: 54px;
+
+    margin-top: 13px;
+
+    border: 0;
+
+    border-radius: 13px;
+
+    background:
+        #1f7255;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.modo-campo-current-head {
+    display: flex;
+
+    justify-content:
+        space-between;
+
+    align-items:
+        flex-start;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+
+.modo-campo-current-head h2 {
+    margin:
+        0
+        0
+        6px;
+
+    font-size: 24px;
+}
+
+
+.modo-campo-task-type {
+    color:
+        #247354;
+}
+
+
+.modo-campo-status {
+    padding:
+        7px
+        12px;
+
+    border-radius:
+        999px;
+
+    background:
+        #e3f3eb;
+
+    color:
+        #176044;
+
+    font-size: 13px;
+
+    font-weight: 600;
+}
+
+
+.modo-campo-current-meta {
+    display: grid;
+
+    gap: 10px;
+
+    margin-top: 18px;
+
+    font-size: 16px;
+}
+
+
+.modo-campo-task-notes {
+    margin-top: 16px;
+
+    padding: 14px;
+
+    border-radius: 12px;
+
+    background:
+        #f5f7f5;
+}
+
+
+.modo-campo-task-notes p {
+    margin:
+        6px
+        0
+        0;
+}
+
+
+.modo-campo-complete-button {
+    width: 100%;
+
+    min-height: 62px;
+
+    margin-top: 20px;
+
+    border: 0;
+
+    border-radius: 15px;
+
+    background:
+        #1f7255;
+
+    color: white;
+
+    font-size: 18px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.modo-campo-incidencias-list {
+    display: grid;
+}
+
+
+.modo-campo-incidencia-item {
+    padding:
+        14px
+        0;
+
+    border-bottom:
+        1px solid
+        #edf0ed;
+}
+
+
+.modo-campo-incidencia-item:last-child {
+    border-bottom: 0;
+}
+
+
+.modo-campo-incidencia-item p {
+    margin:
+        5px
+        0;
+
+    color:
+        #5f6d66;
+}
+
+
+.modo-campo-incidencia-item small {
+    color:
+        #78837d;
+}
+
+
+.modo-campo-logout {
+    width: 100%;
+
+    min-height: 56px;
+
+    border:
+        1px solid
+        #dce5df;
+
+    border-radius: 15px;
+
+    background: white;
+
+    color:
+        #34483e;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
    TABLET
 ===================================================== */
 
 @media (max-width: 900px) {
 
     body.worker-portal-mode
-    .stats {
+    .stats,
+    .portal-worker-stats {
         grid-template-columns:
             repeat(
                 2,
-                minmax(0, 1fr)
+                minmax(
+                    0,
+                    1fr
+                )
             );
     }
 
 
     body.worker-portal-mode
-    .stats .card:last-child {
+    .stats
+    .card:last-child,
+    .portal-worker-stats
+    .card:last-child {
         grid-column:
             1
             /
@@ -279,18 +1158,41 @@ body.worker-portal-mode
             calc(
                 22px
                 +
-                env(safe-area-inset-bottom)
+                env(
+                    safe-area-inset-bottom
+                )
             );
     }
 
 
-    /* ---------------------------------------------
-       HERO
-    ---------------------------------------------- */
+    .portal-login-screen {
+        min-height:
+            calc(
+                100vh
+                -
+                20px
+            );
+
+        padding: 12px;
+    }
+
+
+    .portal-login-card {
+        padding: 22px;
+    }
+
+
+    .portal-login-icon {
+        font-size: 42px;
+    }
+
 
     body.worker-portal-mode
-    .topbar {
-        grid-template-columns: 1fr;
+    .topbar,
+    .portal-worker-hero,
+    .portal-form-header {
+        grid-template-columns:
+            1fr;
 
         gap: 12px;
 
@@ -301,14 +1203,16 @@ body.worker-portal-mode
 
 
     body.worker-portal-mode
-    .topbar h2 {
+    .topbar h2,
+    .portal-worker-hero h2,
+    .portal-form-header h2 {
         font-size: 21px;
     }
 
 
-    body.worker-portal-mode
-    .topbar > div:first-child > p:first-child {
-        margin-bottom: 3px !important;
+    .portal-worker-kicker {
+        margin-bottom:
+            3px !important;
 
         color:
             rgba(
@@ -320,39 +1224,27 @@ body.worker-portal-mode
 
         font-size: 9px;
 
-        text-transform: uppercase;
+        text-transform:
+            uppercase;
 
-        letter-spacing: 0.06em;
+        letter-spacing:
+            0.06em;
 
         font-weight: 700;
     }
 
 
-    body.worker-portal-mode
-    .topbar > div:first-child > p:last-child {
-        margin-top: 4px;
-
-        font-size: 10px;
-    }
-
-
-    /* ---------------------------------------------
-       ACCIONES
-    ---------------------------------------------- */
-
-    body.worker-portal-mode
-    .topbar > div:last-child {
-        display: grid !important;
+    .portal-header-actions {
+        display: grid;
 
         grid-template-columns:
             1fr
-            1fr !important;
+            1fr;
 
-        gap: 7px !important;
+        gap: 7px;
     }
 
 
-    body.worker-portal-mode
     #activarModoCampo {
         grid-column:
             1
@@ -361,17 +1253,15 @@ body.worker-portal-mode
     }
 
 
-    body.worker-portal-mode
     #activarModoCampo,
-    body.worker-portal-mode
     #comunicarIncidencia,
-    body.worker-portal-mode
     #cerrarSesionTrabajador {
         width: 100%;
 
         min-height: 38px;
 
-        justify-content: center;
+        justify-content:
+            center;
 
         padding:
             0
@@ -381,16 +1271,16 @@ body.worker-portal-mode
     }
 
 
-    /* ---------------------------------------------
-       KPIs
-    ---------------------------------------------- */
-
     body.worker-portal-mode
-    .stats {
+    .stats,
+    .portal-worker-stats {
         grid-template-columns:
             repeat(
                 2,
-                minmax(0, 1fr)
+                minmax(
+                    0,
+                    1fr
+                )
             ) !important;
 
         gap: 8px;
@@ -400,117 +1290,18 @@ body.worker-portal-mode
 
 
     body.worker-portal-mode
-    .stats .card {
+    .stats
+    .card,
+    .portal-worker-stats
+    .card {
         padding: 10px;
     }
 
 
     body.worker-portal-mode
-    .stats .card:last-child {
-        grid-column:
-            1
-            /
-            -1;
-    }
-
-
-    /* ---------------------------------------------
-       SECCIONES
-    ---------------------------------------------- */
-
-    body.worker-portal-mode
-    .panel {
-        padding: 13px;
-
-        border-radius: 13px;
-    }
-
-
-    body.worker-portal-mode
-    .panel + .panel {
-        margin-top: 12px !important;
-    }
-
-
-    body.worker-portal-mode
-    .panel-header {
-        margin-bottom: 10px;
-    }
-
-
-    body.worker-portal-mode
-    .panel-header h3 {
-        font-size: 15px;
-    }
-
-
-    /* ---------------------------------------------
-       TAREAS
-    ---------------------------------------------- */
-
-    body.worker-portal-mode
-    .panel > div:not(.panel-header):not(.empty-state) {
-        padding: 11px !important;
-
-        margin-bottom: 8px !important;
-    }
-
-
-    body.worker-portal-mode
-    .panel > div:not(.panel-header):not(.empty-state) h3 {
-        margin-bottom: 4px;
-
-        font-size: 14px;
-    }
-
-
-    body.worker-portal-mode
-    .trabajo-linea {
-        margin:
-            3px
-            0;
-
-        font-size: 9px;
-    }
-
-
-    body.worker-portal-mode
-    .portal-iniciar-tarea,
-    body.worker-portal-mode
-    .portal-completar-tarea {
-        width: 100%;
-
-        justify-content: center;
-    }
-
-}
-
-
-/* =====================================================
-   MODO CAMPO
-===================================================== */
-
-/* =====================================================
-   GESTACAMPS
-   DÍA 18 - AJUSTE MODO CAMPO
-===================================================== */
-
-@media (max-width: 760px) {
-
-    body.worker-portal-mode
-    .modo-campo-stats {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            ) !important;
-
-        gap: 8px;
-    }
-
-
-    body.worker-portal-mode
-    .modo-campo-stats
+    .stats
+    .card:last-child,
+    .portal-worker-stats
     .card:last-child {
         grid-column:
             1
@@ -520,19 +1311,190 @@ body.worker-portal-mode
 
 
     body.worker-portal-mode
+    .panel {
+        padding: 13px;
+
+        border-radius: 13px;
+    }
+
+
+    .portal-section {
+        margin-top: 12px;
+    }
+
+
+    .portal-task-grid {
+        grid-template-columns:
+            1fr;
+
+        gap: 8px;
+    }
+
+
+    .portal-task-card {
+        padding: 11px;
+    }
+
+
+    .portal-task-card h3 {
+        margin-bottom: 4px;
+
+        font-size: 14px;
+    }
+
+
+    .trabajo-linea {
+        margin:
+            3px
+            0;
+
+        font-size: 9px;
+    }
+
+
+    .portal-iniciar-tarea,
+    .portal-completar-tarea {
+        width: 100%;
+
+        justify-content:
+            center;
+    }
+
+
+    .portal-form-panel {
+        max-width: none;
+    }
+
+
+    .modo-campo-shell {
+        max-width: none;
+
+        padding-bottom: 24px;
+    }
+
+
+    .modo-campo-hero {
+        padding: 16px;
+
+        border-radius: 15px;
+    }
+
+
+    .modo-campo-hero h2 {
+        font-size: 23px;
+    }
+
+
+    .modo-campo-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(
+                    0,
+                    1fr
+                )
+            ) !important;
+
+        gap: 8px;
+    }
+
+
+    .modo-campo-stats
+    .modo-campo-stat-card:last-child {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+
+    .modo-campo-panel,
     .modo-campo-trabajo-actual {
-        padding: 14px !important;
+        padding: 14px;
+
+        border-radius: 14px;
+    }
+
+
+    .modo-campo-empty {
+        min-height: 150px;
+
+        padding:
+            18px
+            10px;
+
+        display: flex;
+
+        flex-direction:
+            column;
+
+        align-items:
+            center;
+
+        justify-content:
+            center;
+    }
+
+
+    .modo-campo-quick-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .modo-campo-action {
+        min-height: 64px;
+    }
+
+
+    .modo-campo-current-head h2 {
+        font-size: 20px;
+    }
+
+
+    .modo-campo-current-meta {
+        font-size: 14px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    body.worker-portal-mode
+    .stats,
+    .portal-worker-stats,
+    .modo-campo-stats {
+        grid-template-columns:
+            1fr !important;
     }
 
 
     body.worker-portal-mode
-    .modo-campo-trabajo-actual
-    .empty-state {
-        min-height: 150px !important;
+    .stats
+    .card:last-child,
+    .portal-worker-stats
+    .card:last-child,
+    .modo-campo-stats
+    .modo-campo-stat-card:last-child {
+        grid-column:
+            auto;
+    }
 
-        padding:
-            18px
-            10px !important;
+
+    .portal-header-actions {
+        grid-template-columns:
+            1fr;
+    }
+
+
+    #activarModoCampo {
+        grid-column:
+            auto;
     }
 
 }

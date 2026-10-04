@@ -185,7 +185,7 @@ export class AlbaranesView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats albaranes-stats">
 
                 ${this.crearTarjetaEstadistica(
                     "📝",
@@ -193,17 +193,20 @@ export class AlbaranesView {
                     borradores
                 )}
 
+
                 ${this.crearTarjetaEstadistica(
                     "🕒",
                     "Pendientes",
                     pendientes
                 )}
 
+
                 ${this.crearTarjetaEstadistica(
                     "🚚",
                     "Entregados",
                     entregados
                 )}
+
 
                 ${this.crearTarjetaEstadistica(
                     "💶",
@@ -214,17 +217,7 @@ export class AlbaranesView {
             </section>
 
 
-            <div
-                style="
-                    margin:18px 0 22px;
-                    padding:13px 16px;
-                    border-radius:10px;
-                    background:#edf6f1;
-                    color:#315f4d;
-                    font-size:13px;
-                    line-height:1.5;
-                "
-            >
+            <div class="albaranes-stock-info">
 
                 <strong>
                     Control de stock:
@@ -368,6 +361,7 @@ export class AlbaranesView {
                 </div>
 
             `;
+
 
             return;
 
@@ -523,6 +517,7 @@ export class AlbaranesView {
                 resultado.mensaje
             );
 
+
             return;
 
         }
@@ -575,6 +570,7 @@ export class AlbaranesView {
             alert(
                 resultado.mensaje
             );
+
 
             return;
 

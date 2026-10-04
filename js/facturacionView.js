@@ -282,7 +282,7 @@ export class FacturacionView {
             </header>
 
 
-            <section class="stats">
+            <section class="stats facturacion-stats">
 
                 ${this.crearTarjetaResumen(
                     "💶",
@@ -290,11 +290,13 @@ export class FacturacionView {
                     facturas.length
                 )}
 
+
                 ${this.crearTarjetaResumen(
                     "🕒",
                     "Pendientes",
                     pendientes
                 )}
+
 
                 ${this.crearTarjetaResumen(
                     "◐",
@@ -302,19 +304,13 @@ export class FacturacionView {
                     parciales
                 )}
 
+
                 ${this.crearTarjetaResumen(
                     "✅",
                     "Cobradas",
                     cobradas
                 )}
 
-            </section>
-
-
-            <section
-                class="stats"
-                style="margin-top:14px;"
-            >
 
                 ${this.crearTarjetaResumen(
                     "💰",
@@ -323,6 +319,7 @@ export class FacturacionView {
                         totalFacturado
                     )
                 )}
+
 
                 ${
                     anuladas > 0
@@ -462,6 +459,7 @@ export class FacturacionView {
                 </div>
 
             `;
+
 
             return;
 
@@ -607,6 +605,7 @@ export class FacturacionView {
                 resultado.mensaje
             );
 
+
             return;
 
         }
@@ -651,6 +650,7 @@ export class FacturacionView {
             alert(
                 resultado.mensaje
             );
+
 
             return;
 
@@ -862,6 +862,7 @@ export class FacturacionView {
 
 
         return [
+
             {
 
                 produccionId:
@@ -901,6 +902,7 @@ export class FacturacionView {
                     albaran.total
 
             }
+
         ];
 
     }
@@ -1270,7 +1272,9 @@ export class FacturacionView {
 
         return clientes.length ===
             1
+
                 ? clientes[0]
+
                 : null;
 
     }
@@ -1416,7 +1420,9 @@ export class FacturacionView {
             &&
             iva <= 100
         )
+
             ? iva
+
             : 21;
 
     }

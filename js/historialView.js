@@ -4,19 +4,11 @@ export class HistorialView {
         mainContent,
         historialService
     ) {
+        this.mainContent = mainContent;
+        this.historialService = historialService;
 
-        this.mainContent =
-            mainContent;
-
-        this.historialService =
-            historialService;
-
-        this.filtroModulo =
-            "";
-
-        this.busqueda =
-            "";
-
+        this.filtroModulo = "";
+        this.busqueda = "";
     }
 
 
@@ -30,16 +22,13 @@ export class HistorialView {
             this.historialService
                 .obtenerTodos();
 
-
         const hoy =
             this.historialService
                 .obtenerHoy();
 
-
         const modulos =
             this.historialService
                 .obtenerModulos();
-
 
         const usuarios =
             new Set(
@@ -57,7 +46,6 @@ export class HistorialView {
             <header class="topbar">
 
                 <div>
-
                     <h2>
                         Historial
                     </h2>
@@ -65,13 +53,12 @@ export class HistorialView {
                     <p>
                         Registro de actividad y cambios de GestaCamps
                     </p>
-
                 </div>
 
             </header>
 
 
-            <section class="stats">
+            <section class="stats historial-stats">
 
                 <div class="card">
 
@@ -80,7 +67,6 @@ export class HistorialView {
                     </span>
 
                     <div>
-
                         <p>
                             Registros
                         </p>
@@ -88,7 +74,6 @@ export class HistorialView {
                         <h3>
                             ${todos.length}
                         </h3>
-
                     </div>
 
                 </div>
@@ -101,7 +86,6 @@ export class HistorialView {
                     </span>
 
                     <div>
-
                         <p>
                             Hoy
                         </p>
@@ -109,7 +93,6 @@ export class HistorialView {
                         <h3>
                             ${hoy.length}
                         </h3>
-
                     </div>
 
                 </div>
@@ -122,7 +105,6 @@ export class HistorialView {
                     </span>
 
                     <div>
-
                         <p>
                             Módulos
                         </p>
@@ -130,7 +112,6 @@ export class HistorialView {
                         <h3>
                             ${modulos.length}
                         </h3>
-
                     </div>
 
                 </div>
@@ -143,7 +124,6 @@ export class HistorialView {
                     </span>
 
                     <div>
-
                         <p>
                             Usuarios
                         </p>
@@ -151,7 +131,6 @@ export class HistorialView {
                         <h3>
                             ${usuarios}
                         </h3>
-
                     </div>
 
                 </div>
@@ -159,17 +138,13 @@ export class HistorialView {
             </section>
 
 
-            <section
-                class="panel historial-filtros-panel"
-            >
+            <section class="panel historial-filtros-panel">
 
-                <div
-                    class="historial-filtros-grid"
-                >
+                <div class="historial-filtros-grid">
 
                     <div class="form-group">
 
-                        <label>
+                        <label for="buscarHistorial">
                             Buscar
                         </label>
 
@@ -185,7 +160,7 @@ export class HistorialView {
 
                     <div class="form-group">
 
-                        <label>
+                        <label for="filtroModuloHistorial">
                             Módulo
                         </label>
 
@@ -197,24 +172,25 @@ export class HistorialView {
                                 Todos los módulos
                             </option>
 
+                            ${modulos
+                                .map(
+                                    modulo => `
 
-                            ${modulos.map(
-                                modulo => `
+                                        <option
+                                            value="${this.escaparHTML(modulo)}"
+                                            ${
+                                                this.filtroModulo === modulo
+                                                    ? "selected"
+                                                    : ""
+                                            }
+                                        >
+                                            ${this.escaparHTML(modulo)}
+                                        </option>
 
-                                    <option
-                                        value="${this.escaparHTML(modulo)}"
-                                        ${
-                                            this.filtroModulo ===
-                                            modulo
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${this.escaparHTML(modulo)}
-                                    </option>
-
-                                `
-                            ).join("")}
+                                    `
+                                )
+                                .join("")
+                            }
 
                         </select>
 
@@ -229,9 +205,15 @@ export class HistorialView {
 
                 <div class="panel-header historial-actividad-header">
 
-                    <h3>
-                        Actividad
-                    </h3>
+                    <div>
+                        <h3>
+                            Actividad
+                        </h3>
+
+                        <p>
+                            Últimos cambios realizados en GestaCamps
+                        </p>
+                    </div>
 
                     <span
                         id="contadorHistorial"
@@ -258,7 +240,6 @@ export class HistorialView {
                 "buscarHistorial"
             );
 
-
         const filtro =
             document.getElementById(
                 "filtroModuloHistorial"
@@ -271,7 +252,6 @@ export class HistorialView {
 
                 this.busqueda =
                     buscador.value;
-
 
                 this.mostrarRegistros();
 
@@ -286,7 +266,6 @@ export class HistorialView {
                 this.filtroModulo =
                     filtro.value;
 
-
                 this.mostrarRegistros();
 
             }
@@ -294,7 +273,6 @@ export class HistorialView {
 
 
         this.mostrarRegistros();
-
     }
 
 
@@ -309,7 +287,6 @@ export class HistorialView {
                 "contenidoHistorial"
             );
 
-
         const contador =
             document.getElementById(
                 "contadorHistorial"
@@ -321,9 +298,7 @@ export class HistorialView {
             ||
             !contador
         ) {
-
             return;
-
         }
 
 
@@ -386,21 +361,19 @@ export class HistorialView {
 
         contador.textContent =
             `${registros.length} ${
-                registros.length ===
-                1
+                registros.length === 1
                     ? "registro"
                     : "registros"
             }`;
 
 
         if (
-            registros.length ===
-            0
+            registros.length === 0
         ) {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="empty-state historial-empty-state">
 
                     <div class="empty-icon">
                         🕒
@@ -418,9 +391,7 @@ export class HistorialView {
 
             `;
 
-
             return;
-
         }
 
 
@@ -437,7 +408,6 @@ export class HistorialView {
                         )
                 )
                 .join("");
-
     }
 
 
@@ -454,7 +424,6 @@ export class HistorialView {
                 registro
             );
 
-
         const cambios =
             Array.isArray(
                 registro.cambios
@@ -468,9 +437,7 @@ export class HistorialView {
             <article class="historial-item">
 
                 <div class="historial-item-icono">
-
                     ${icono}
-
                 </div>
 
 
@@ -487,7 +454,6 @@ export class HistorialView {
                                     "Actividad"
                                 )}
                             </strong>
-
 
                             <span>
                                 ·
@@ -536,6 +502,7 @@ export class HistorialView {
                     <p class="historial-item-usuario">
 
                         👤
+
                         ${this.escaparHTML(
                             registro.usuarioNombre
                             ||
@@ -556,14 +523,16 @@ export class HistorialView {
 
 
                     ${
-                        cambios.length >
-                        0
+                        cambios.length > 0
 
                             ? `
 
                                 <p class="historial-item-cambios">
 
-                                    Campos modificados:
+                                    <strong>
+                                        Campos modificados:
+                                    </strong>
+
                                     ${cambios
                                         .map(
                                             cambio =>
@@ -571,7 +540,8 @@ export class HistorialView {
                                                     cambio
                                                 )
                                         )
-                                        .join(", ")}
+                                        .join(", ")
+                                    }
 
                                 </p>
 
@@ -585,7 +555,6 @@ export class HistorialView {
             </article>
 
         `;
-
     }
 
 
@@ -601,9 +570,7 @@ export class HistorialView {
             registro.accion ===
             "Creación"
         ) {
-
             return "➕";
-
         }
 
 
@@ -611,9 +578,7 @@ export class HistorialView {
             registro.accion ===
             "Eliminación"
         ) {
-
             return "🗑️";
-
         }
 
 
@@ -625,14 +590,11 @@ export class HistorialView {
                     "Estado:"
                 )
         ) {
-
             return "🔄";
-
         }
 
 
         return "✏️";
-
     }
 
 
@@ -647,9 +609,7 @@ export class HistorialView {
         if (
             !valor
         ) {
-
             return "—";
-
         }
 
 
@@ -664,9 +624,7 @@ export class HistorialView {
                 fecha.getTime()
             )
         ) {
-
             return valor;
-
         }
 
 
@@ -692,7 +650,6 @@ export class HistorialView {
                     "2-digit"
             }
         );
-
     }
 
 
@@ -729,7 +686,5 @@ export class HistorialView {
                 "'",
                 "&#039;"
             );
-
     }
-
 }

@@ -1,5 +1,6 @@
 import { StorageService } from "./storage.js";
 
+
 export class InicioView {
 
     constructor(
@@ -10,20 +11,11 @@ export class InicioView {
         explotacionService
     ) {
 
-        this.mainContent =
-            mainContent;
-
-        this.fincaService =
-            fincaService;
-
-        this.trabajoService =
-            trabajoService;
-
-        this.produccionService =
-            produccionService;
-
-        this.explotacionService =
-            explotacionService;
+        this.mainContent = mainContent;
+        this.fincaService = fincaService;
+        this.trabajoService = trabajoService;
+        this.produccionService = produccionService;
+        this.explotacionService = explotacionService;
 
     }
 
@@ -79,6 +71,8 @@ export class InicioView {
         const usuario =
             explotacion.nombreUsuario
             ||
+            explotacion.usuario
+            ||
             "Usuario";
 
 
@@ -87,7 +81,16 @@ export class InicioView {
             ||
             explotacion.nombreExplotacion
             ||
-            "Resumen general de tu explotación";
+            "Mi explotación";
+
+
+        const inicialUsuario =
+            String(usuario)
+                .trim()
+                .charAt(0)
+                .toUpperCase()
+            ||
+            "U";
 
 
         // =================================================
@@ -96,12 +99,20 @@ export class InicioView {
 
         const pendientes =
             trabajos.filter(
-                trabajo =>
-                    trabajo.estado !==
-                    "Completada"
-                    &&
-                    trabajo.estado !==
-                    "Completado"
+                trabajo => {
+
+                    const estado =
+                        this.normalizar(
+                            trabajo.estado
+                        );
+
+                    return (
+                        estado !== "completada"
+                        &&
+                        estado !== "completado"
+                    );
+
+                }
             );
 
 
@@ -145,36 +156,41 @@ export class InicioView {
 
 
         // =================================================
-        // FACTURAS
+        // FACTURACIÓN
         // =================================================
 
         const facturasActivas =
             facturas.filter(
                 factura =>
-                    factura.estado !==
-                    "Anulada"
+                    this.normalizar(
+                        factura.estado
+                    )
+                    !==
+                    "anulada"
             );
 
 
         const facturasParciales =
             facturasActivas.filter(
                 factura =>
-                    factura.estado ===
-                    "Parcialmente cobrada"
+                    this.normalizar(
+                        factura.estado
+                    )
+                    ===
+                    "parcialmente cobrada"
             );
 
 
         const facturasPendientes =
             facturasActivas.filter(
                 factura =>
-                    factura.estado ===
-                    "Pendiente"
+                    this.normalizar(
+                        factura.estado
+                    )
+                    ===
+                    "pendiente"
             );
 
-
-        // =================================================
-        // COBROS
-        // =================================================
 
         const totalFacturado =
             facturasActivas.reduce(
@@ -190,6 +206,10 @@ export class InicioView {
                 0
             );
 
+
+        // =================================================
+        // COBROS
+        // =================================================
 
         const totalCobrado =
             movimientos
@@ -282,10 +302,6 @@ export class InicioView {
             );
 
 
-        // =================================================
-        // CAJA
-        // =================================================
-
         const cajaReal =
             totalCobrado
             -
@@ -293,7 +309,7 @@ export class InicioView {
 
 
         // =================================================
-        // ACTIVIDAD RECIENTE
+        // ACTIVIDAD
         // =================================================
 
         const actividad =
@@ -311,369 +327,670 @@ export class InicioView {
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="inicio-page">
 
-                <div class="home-title-block">
+                <!-- ==========================================
+                     CABECERA SUPERIOR
+                =========================================== -->
 
-                    <h2>
-                        Inicio
-                    </h2>
+                <div class="inicio-toolbar">
 
-                    <p class="home-farm-name">
-                        ${this.escapar(
-                            nombreExplotacion
-                        )}
-                    </p>
+                    <div class="inicio-search">
+
+                        <span class="inicio-search-icon">
+                            ⌕
+                        </span>
+
+                        <input
+                            id="inicioBuscadorRapido"
+                            type="text"
+                            placeholder="Buscar en GestaCamps..."
+                            autocomplete="off"
+                        >
+
+                    </div>
+
+
+                    <div class="inicio-toolbar-actions">
+
+                        <button
+                            class="inicio-toolbar-icon"
+                            type="button"
+                            aria-label="Notificaciones"
+                        >
+                            🔔
+                            <span class="inicio-notification-dot"></span>
+                        </button>
+
+                        <button
+                            class="inicio-toolbar-icon"
+                            type="button"
+                            aria-label="Ayuda"
+                        >
+                            ?
+                        </button>
+
+                        <div class="inicio-user-pill">
+
+                            <span class="inicio-user-avatar">
+                                ${this.escapar(
+                                    inicialUsuario
+                                )}
+                            </span>
+
+                            <strong>
+                                ${this.escapar(
+                                    usuario
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
 
-                <div class="user">
-                    👤
-                    ${this.escapar(
-                        usuario
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
+
+                <section class="inicio-hero-layout">
+
+                    <div class="inicio-welcome">
+
+                        <p class="inicio-eyebrow">
+                            ${this.obtenerSaludo()}, ${this.escapar(usuario)} 👋
+                        </p>
+
+                        <h1>
+                            Tu campo,
+                            <span>en buenas manos.</span>
+                        </h1>
+
+                        <p class="inicio-welcome-text">
+                            Gestiona, produce y haz crecer
+                            ${this.escapar(nombreExplotacion)}
+                            con GestaCamps.
+                        </p>
+
+                    </div>
+
+
+                    <div class="inicio-hero-photo">
+
+                        <div class="inicio-campaign-pill">
+                            🌿 ${this.escapar(nombreExplotacion)}
+                        </div>
+
+                        <div class="inicio-hero-overlay">
+
+                            <span>
+                                Gestión agrícola inteligente
+                            </span>
+
+                            <strong>
+                                Tu campo,<br>
+                                nuestro compromiso
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs PRINCIPALES
+                =========================================== -->
+
+                <section class="inicio-main-kpis">
+
+                    ${this.crearKpiPrincipal(
+                        "🌿",
+                        "Fincas activas",
+                        this.formatearNumero(
+                            fincas.length
+                        ),
+                        "+0%",
+                        "green",
+                        "65,72 78,68 91,70 104,53 117,58 130,42"
                     )}
-                </div>
 
-            </header>
 
+                    ${this.crearKpiPrincipal(
+                        "🚜",
+                        "Tareas pendientes",
+                        this.formatearNumero(
+                            pendientes.length
+                        ),
+                        pendientes.length > 0
+                            ? "Pendientes"
+                            : "Al día",
+                        pendientes.length > 0
+                            ? "orange"
+                            : "green",
+                        "65,70 78,63 91,66 104,55 117,59 130,46"
+                    )}
+
+
+                    ${this.crearKpiPrincipal(
+                        "📦",
+                        "Producción disponible",
+                        `${this.formatearNumero(
+                            disponible
+                        )} kg`,
+                        "+0%",
+                        "orange",
+                        "65,72 78,67 91,72 104,60 117,64 130,50"
+                    )}
 
-            <!-- ==========================================
-                 BIENVENIDA
-            =========================================== -->
 
-            <section class="welcome">
+                    ${this.crearKpiPrincipal(
+                        "🏦",
+                        "Caja real",
+                        this.formatearDinero(
+                            cajaReal
+                        ),
+                        "+0%",
+                        "purple",
+                        "65,72 78,68 91,72 104,56 117,60 130,45"
+                    )}
 
-                <h2>
-                    ${this.obtenerSaludo()} 👋
-                </h2>
+                </section>
 
-                <p>
-                    Aquí tienes el estado actual de tu explotación.
-                </p>
 
-            </section>
+                <!-- ==========================================
+                     RESUMEN CENTRAL
+                =========================================== -->
 
+                <section class="inicio-summary-grid">
 
-            <!-- ==========================================
-                 RESUMEN PRINCIPAL
-            =========================================== -->
 
-            <section class="stats">
+                    <!-- FINANZAS -->
 
-                ${this.crearTarjeta(
-                    "🌾",
-                    "Fincas activas",
-                    fincas.length
-                )}
+                    <article class="inicio-summary-card">
 
+                        <div class="inicio-card-heading">
 
-                ${this.crearTarjeta(
-                    "🚜",
-                    "Tareas pendientes",
-                    pendientes.length
-                )}
+                            <div>
 
+                                <h2>
+                                    Situación financiera
+                                </h2>
 
-                ${this.crearTarjeta(
-                    "📦",
-                    "Producción disponible",
-                    `${this.formatearNumero(
-                        disponible
-                    )} kg`
-                )}
+                                <p>
+                                    Cobros y pagos reales de la explotación
+                                </p>
 
+                            </div>
 
-                ${this.crearTarjeta(
-                    "🏦",
-                    "Caja real",
-                    this.formatearDinero(
-                        cajaReal
-                    )
-                )}
-
-            </section>
-
-
-            <!-- ==========================================
-                 FINANZAS
-            =========================================== -->
-
-            <div
-                style="
-                    margin-top:22px;
-                    margin-bottom:10px;
-                "
-            >
+                            <span class="inicio-details-link">
+                                Resumen
+                                →
+                            </span>
+
+                        </div>
 
-                <h3
-                    style="
-                        margin:0;
-                    "
-                >
-                    Situación financiera
-                </h3>
 
-                <p
-                    style="
-                        margin:4px 0 0;
-                        color:#78837d;
-                        font-size:13px;
-                    "
-                >
-                    Cobros y pagos reales de la explotación
-                </p>
-
-            </div>
-
-
-            <section class="stats">
+                        <div class="inicio-mini-grid">
+
+                            ${this.crearMiniKpi(
+                                "📥",
+                                "Cobrado",
+                                this.formatearDinero(
+                                    totalCobrado
+                                ),
+                                "green"
+                            )}
+
+                            ${this.crearMiniKpi(
+                                "🕒",
+                                "Pendiente de cobro",
+                                this.formatearDinero(
+                                    pendienteCobro
+                                ),
+                                "orange"
+                            )}
 
-                ${this.crearTarjeta(
-                    "📥",
-                    "Cobrado",
-                    this.formatearDinero(
-                        totalCobrado
-                    )
-                )}
-
-
-                ${this.crearTarjeta(
-                    "🕒",
-                    "Pendiente de cobro",
-                    this.formatearDinero(
-                        pendienteCobro
-                    )
-                )}
-
-
-                ${this.crearTarjeta(
-                    "📤",
-                    "Pagado",
-                    this.formatearDinero(
-                        totalPagado
-                    )
-                )}
-
-
-                ${this.crearTarjeta(
-                    "⏳",
-                    "Pendiente de pago",
-                    this.formatearDinero(
-                        pendientePago
-                    )
-                )}
-
-            </section>
-
-
-            <!-- ==========================================
-                 PRODUCCIÓN
-            =========================================== -->
-
-            <div
-                style="
-                    margin-top:22px;
-                    margin-bottom:10px;
-                "
-            >
-
-                <h3
-                    style="
-                        margin:0;
-                    "
-                >
-                    Producción
-                </h3>
-
-                <p
-                    style="
-                        margin:4px 0 0;
-                        color:#78837d;
-                        font-size:13px;
-                    "
-                >
-                    Estado actual del producto registrado
-                </p>
-
-            </div>
-
-
-            <section class="stats">
-
-                ${this.crearTarjeta(
-                    "🍎",
-                    "Producido",
-                    `${this.formatearNumero(
-                        producido
-                    )} kg`
-                )}
-
-
-                ${this.crearTarjeta(
-                    "🕒",
-                    "Reservado",
-                    `${this.formatearNumero(
-                        reservado
-                    )} kg`
-                )}
-
-
-                ${this.crearTarjeta(
-                    "🚚",
-                    "Entregado",
-                    `${this.formatearNumero(
-                        entregado
-                    )} kg`
-                )}
-
-
-                ${this.crearTarjeta(
-                    "📦",
-                    "Disponible",
-                    `${this.formatearNumero(
-                        disponible
-                    )} kg`
-                )}
-
-            </section>
-
-
-            <!-- ==========================================
-                 ALERTAS
-            =========================================== -->
-
-            <div
-                style="
-                    margin-top:22px;
-                    margin-bottom:10px;
-                "
-            >
-
-                <h3
-                    style="
-                        margin:0;
-                    "
-                >
-                    Avisos
-                </h3>
-
-                <p
-                    style="
-                        margin:4px 0 0;
-                        color:#78837d;
-                        font-size:13px;
-                    "
-                >
-                    Información que puede necesitar tu atención
-                </p>
-
-            </div>
-
-
-            <section
-                style="
-                    display:grid;
-                    gap:10px;
-                    margin-bottom:22px;
-                "
-            >
-
-                ${this.crearAlertas({
-                    facturasParciales,
-                    facturasPendientes,
-                    pendienteCobro,
-                    pendientePago,
-                    disponible,
-                    pendientes
-                })}
-
-            </section>
-
-
-            <!-- ==========================================
-                 DASHBOARD INFERIOR
-            =========================================== -->
-
-            <section class="dashboard-grid">
-
-
-                <!-- TAREAS DE HOY -->
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            Tareas de hoy
-                        </h3>
+                            ${this.crearMiniKpi(
+                                "📤",
+                                "Pagado",
+                                this.formatearDinero(
+                                    totalPagado
+                                ),
+                                "rose"
+                            )}
+
+                            ${this.crearMiniKpi(
+                                "⌛",
+                                "Pendiente de pago",
+                                this.formatearDinero(
+                                    pendientePago
+                                ),
+                                "blue"
+                            )}
+
+                        </div>
+
+                    </article>
+
+
+                    <!-- PRODUCCIÓN -->
+
+                    <article class="inicio-summary-card">
+
+                        <div class="inicio-card-heading">
+
+                            <div>
+
+                                <h2>
+                                    Producción
+                                </h2>
+
+                                <p>
+                                    Estado actual del producto registrado
+                                </p>
+
+                            </div>
+
+                            <span class="inicio-details-link">
+                                Resumen
+                                →
+                            </span>
+
+                        </div>
+
+
+                        <div class="inicio-mini-grid">
+
+                            ${this.crearMiniKpi(
+                                "🍎",
+                                "Producido",
+                                `${this.formatearNumero(
+                                    producido
+                                )} kg`,
+                                "green"
+                            )}
+
+                            ${this.crearMiniKpi(
+                                "🕒",
+                                "Reservado",
+                                `${this.formatearNumero(
+                                    reservado
+                                )} kg`,
+                                "blue"
+                            )}
+
+                            ${this.crearMiniKpi(
+                                "🚚",
+                                "Entregado",
+                                `${this.formatearNumero(
+                                    entregado
+                                )} kg`,
+                                "orange"
+                            )}
+
+                            ${this.crearMiniKpi(
+                                "📦",
+                                "Disponible",
+                                `${this.formatearNumero(
+                                    disponible
+                                )} kg`,
+                                "green"
+                            )}
+
+                        </div>
+
+                    </article>
+
+                </section>
+
+
+                <!-- ==========================================
+                     AVISOS
+                =========================================== -->
+
+                <section class="inicio-alert-section">
+
+                    <div class="inicio-section-heading">
+
+                        <h2>
+                            Avisos
+                        </h2>
+
+                        <p>
+                            Información que puede necesitar tu atención
+                        </p>
 
                     </div>
 
 
-                    ${
-                        trabajosHoy.length ===
-                        0
+                    <div class="inicio-alerts">
 
-                            ? `
-                                <p class="text-muted">
-                                    Todavía no hay tareas para hoy.
-                                </p>
-                            `
+                        ${this.crearAlertas({
 
-                            : trabajosHoy
-                                .map(
-                                    trabajo =>
-                                        this.crearTrabajoHoy(
-                                            trabajo
-                                        )
-                                )
-                                .join("")
-                    }
+                            facturasParciales,
+                            facturasPendientes,
+                            pendienteCobro,
+                            pendientePago,
+                            disponible,
+                            pendientes
 
-                </div>
-
-
-                <!-- ACTIVIDAD RECIENTE -->
-
-                <div class="panel">
-
-                    <div class="panel-header">
-
-                        <h3>
-                            Actividad reciente
-                        </h3>
+                        })}
 
                     </div>
 
+                </section>
 
-                    ${
-                        actividad.length ===
-                        0
 
-                            ? `
-                                <p class="text-muted">
-                                    Todavía no hay actividad.
+                <!-- ==========================================
+                     PARTE INFERIOR
+                =========================================== -->
+
+                <section class="inicio-bottom-grid">
+
+
+                    <!-- TAREAS -->
+
+                    <article class="inicio-bottom-card">
+
+                        <div class="inicio-card-heading">
+
+                            <div>
+
+                                <h2>
+                                    Tareas de hoy
+                                </h2>
+
+                                <p>
+                                    Planificación diaria
                                 </p>
-                            `
 
-                            : actividad
-                                .slice(
-                                    0,
-                                    6
-                                )
-                                .map(
-                                    item =>
-                                        this.crearActividad(
-                                            item
-                                        )
-                                )
-                                .join("")
-                    }
+                            </div>
+
+                        </div>
+
+
+                        ${
+                            trabajosHoy.length === 0
+
+                                ? this.crearEstadoTareasVacio()
+
+                                : `
+
+                                    <div class="inicio-task-list">
+
+                                        ${trabajosHoy
+                                            .slice(
+                                                0,
+                                                5
+                                            )
+                                            .map(
+                                                trabajo =>
+                                                    this.crearTrabajoHoy(
+                                                        trabajo
+                                                    )
+                                            )
+                                            .join("")}
+
+                                    </div>
+
+                                `
+                        }
+
+                    </article>
+
+
+                    <!-- ACTIVIDAD -->
+
+                    <article class="inicio-bottom-card">
+
+                        <div class="inicio-card-heading">
+
+                            <div>
+
+                                <h2>
+                                    Actividad reciente
+                                </h2>
+
+                                <p>
+                                    Últimos movimientos en GestaCamps
+                                </p>
+
+                            </div>
+
+                            <span class="inicio-details-link">
+                                Últimos
+                                →
+                            </span>
+
+                        </div>
+
+
+                        ${
+                            actividad.length === 0
+
+                                ? `
+
+                                    <div class="inicio-empty-simple">
+
+                                        <span>
+                                            🌱
+                                        </span>
+
+                                        <p>
+                                            Todavía no hay actividad reciente.
+                                        </p>
+
+                                    </div>
+
+                                `
+
+                                : `
+
+                                    <div class="inicio-activity-list">
+
+                                        ${actividad
+                                            .slice(
+                                                0,
+                                                5
+                                            )
+                                            .map(
+                                                item =>
+                                                    this.crearActividad(
+                                                        item
+                                                    )
+                                            )
+                                            .join("")}
+
+                                    </div>
+
+                                `
+                        }
+
+                    </article>
+
+                </section>
+
+            </div>
+
+        `;
+
+
+        this.configurarBuscadorRapido();
+
+    }
+
+
+    // =====================================================
+    // BUSCADOR SUPERIOR
+    // =====================================================
+
+    configurarBuscadorRapido() {
+
+        const input =
+            document.getElementById(
+                "inicioBuscadorRapido"
+            );
+
+
+        if (
+            !input
+        ) {
+
+            return;
+
+        }
+
+
+        input.addEventListener(
+            "keydown",
+            evento => {
+
+                if (
+                    evento.key !== "Enter"
+                ) {
+
+                    return;
+
+                }
+
+
+                const termino =
+                    input.value.trim();
+
+
+                if (
+                    termino.length < 2
+                ) {
+
+                    return;
+
+                }
+
+
+                const enlace =
+                    document.querySelector(
+                        '[data-view="buscadorGlobal"], [data-view="buscador-global"]'
+                    );
+
+
+                if (
+                    enlace
+                ) {
+
+                    enlace.click();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // =====================================================
+    // KPI PRINCIPAL
+    // =====================================================
+
+    crearKpiPrincipal(
+        icono,
+        titulo,
+        valor,
+        tendencia,
+        tono,
+        puntos
+    ) {
+
+        return `
+
+            <article class="inicio-kpi inicio-kpi-${tono}">
+
+                <div class="inicio-kpi-top">
+
+                    <span class="inicio-kpi-icon">
+                        ${icono}
+                    </span>
+
+                    <span class="inicio-kpi-trend">
+                        ↗ ${this.escapar(
+                            tendencia
+                        )}
+                    </span>
 
                 </div>
 
-            </section>
+
+                <div class="inicio-kpi-content">
+
+                    <span>
+                        ${this.escapar(
+                            titulo
+                        )}
+                    </span>
+
+                    <strong>
+                        ${this.escapar(
+                            valor
+                        )}
+                    </strong>
+
+                </div>
+
+
+                <svg
+                    class="inicio-sparkline"
+                    viewBox="0 0 140 82"
+                    preserveAspectRatio="none"
+                    aria-hidden="true"
+                >
+
+                    <defs>
+
+                        <linearGradient
+                            id="spark-${tono}"
+                            x1="0"
+                            y1="0"
+                            x2="0"
+                            y2="1"
+                        >
+
+                            <stop
+                                offset="0%"
+                                stop-color="currentColor"
+                                stop-opacity=".22"
+                            />
+
+                            <stop
+                                offset="100%"
+                                stop-color="currentColor"
+                                stop-opacity="0"
+                            />
+
+                        </linearGradient>
+
+                    </defs>
+
+
+                    <polygon
+                        points="0,82 ${puntos} 140,82"
+                        fill="url(#spark-${tono})"
+                    />
+
+                    <polyline
+                        points="${puntos}"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                    />
+
+                </svg>
+
+            </article>
 
         `;
 
@@ -681,35 +998,41 @@ export class InicioView {
 
 
     // =====================================================
-    // TARJETA
+    // KPI PEQUEÑO
     // =====================================================
 
-    crearTarjeta(
+    crearMiniKpi(
         icono,
         titulo,
-        valor
+        valor,
+        tono
     ) {
 
         return `
 
-            <div class="card">
+            <div class="inicio-mini-kpi inicio-mini-${tono}">
 
-                <span class="card-icon">
-                    ${icono}
-                </span>
+                <div class="inicio-mini-header">
 
+                    <span class="inicio-mini-icon">
+                        ${icono}
+                    </span>
 
-                <div>
-
-                    <p>
-                        ${titulo}
-                    </p>
-
-                    <h3>
-                        ${valor}
-                    </h3>
+                    <span>
+                        ${this.escapar(
+                            titulo
+                        )}
+                    </span>
 
                 </div>
+
+                <strong>
+                    ${this.escapar(
+                        valor
+                    )}
+                </strong>
+
+                <div class="inicio-mini-wave"></div>
 
             </div>
 
@@ -722,19 +1045,23 @@ export class InicioView {
     // ALERTAS
     // =====================================================
 
-    crearAlertas(datos) {
+    crearAlertas(
+        datos
+    ) {
 
         const alertas = [];
 
 
         if (
-            datos.facturasParciales.length >
-            0
+            datos.facturasParciales.length > 0
         ) {
 
             alertas.push(
+
                 this.crearAlerta(
+
                     "◐",
+
                     `Tienes ${
                         datos.facturasParciales.length
                     } ${
@@ -742,22 +1069,26 @@ export class InicioView {
                             ? "factura parcialmente cobrada"
                             : "facturas parcialmente cobradas"
                     }.`,
-                    "#eaf1fb",
-                    "#3d5d91"
+
+                    "info"
+
                 )
+
             );
 
         }
 
 
         if (
-            datos.facturasPendientes.length >
-            0
+            datos.facturasPendientes.length > 0
         ) {
 
             alertas.push(
+
                 this.crearAlerta(
+
                     "🕒",
+
                     `Tienes ${
                         datos.facturasPendientes.length
                     } ${
@@ -765,60 +1096,72 @@ export class InicioView {
                             ? "factura pendiente de cobro"
                             : "facturas pendientes de cobro"
                     }.`,
-                    "#fff4dc",
-                    "#855d00"
+
+                    "warning"
+
                 )
+
             );
 
         }
 
 
         if (
-            datos.pendienteCobro >
-            0
+            datos.pendienteCobro > 0
         ) {
 
             alertas.push(
+
                 this.crearAlerta(
+
                     "📥",
+
                     `Quedan ${this.formatearDinero(
                         datos.pendienteCobro
                     )} pendientes de cobrar.`,
-                    "#fff4dc",
-                    "#855d00"
+
+                    "warning"
+
                 )
+
             );
 
         }
 
 
         if (
-            datos.pendientePago >
-            0
+            datos.pendientePago > 0
         ) {
 
             alertas.push(
+
                 this.crearAlerta(
+
                     "📤",
+
                     `Quedan ${this.formatearDinero(
                         datos.pendientePago
                     )} pendientes de pagar.`,
-                    "#fff4dc",
-                    "#855d00"
+
+                    "warning"
+
                 )
+
             );
 
         }
 
 
         if (
-            datos.pendientes.length >
-            0
+            datos.pendientes.length > 0
         ) {
 
             alertas.push(
+
                 this.crearAlerta(
+
                     "🚜",
+
                     `Hay ${
                         datos.pendientes.length
                     } ${
@@ -826,43 +1169,51 @@ export class InicioView {
                             ? "tarea pendiente"
                             : "tareas pendientes"
                     }.`,
-                    "#edf6f1",
-                    "#315f4d"
+
+                    "neutral"
+
                 )
+
             );
 
         }
 
 
         if (
-            datos.disponible >
-            0
+            datos.disponible > 0
         ) {
 
             alertas.push(
+
                 this.crearAlerta(
+
                     "📦",
+
                     `Tienes ${this.formatearNumero(
                         datos.disponible
                     )} kg disponibles.`,
-                    "#e8f5ed",
-                    "#176044"
+
+                    "success"
+
                 )
+
             );
 
         }
 
 
         if (
-            alertas.length ===
-            0
+            alertas.length === 0
         ) {
 
             return this.crearAlerta(
+
                 "✅",
+
                 "No hay avisos importantes en este momento.",
-                "#e8f5ed",
-                "#176044"
+
+                "success"
+
             );
 
         }
@@ -876,26 +1227,73 @@ export class InicioView {
     crearAlerta(
         icono,
         texto,
-        fondo,
-        color
+        tipo
     ) {
 
         return `
 
-            <div
-                style="
-                    padding:12px 15px;
-                    border-radius:10px;
-                    background:${fondo};
-                    color:${color};
-                    font-size:13px;
-                    font-weight:500;
-                "
-            >
-                ${icono}
-                ${this.escapar(
-                    texto
-                )}
+            <div class="inicio-alert inicio-alert-${tipo}">
+
+                <span class="inicio-alert-icon">
+                    ${icono}
+                </span>
+
+                <span>
+                    ${this.escapar(
+                        texto
+                    )}
+                </span>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ESTADO VACÍO TAREAS
+    // =====================================================
+
+    crearEstadoTareasVacio() {
+
+        return `
+
+            <div class="inicio-task-empty">
+
+                <div class="inicio-task-empty-illustration">
+
+                    <span class="inicio-empty-clipboard">
+                        📋
+                    </span>
+
+                    <span class="inicio-empty-leaf">
+                        🌿
+                    </span>
+
+                </div>
+
+
+                <strong>
+                    No hay tareas programadas
+                </strong>
+
+
+                <p>
+                    Cuando tengas tareas asignadas para hoy,
+                    aparecerán aquí.
+                </p>
+
+
+                <div class="inicio-landscape">
+
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                    <span></span>
+
+                </div>
+
             </div>
 
         `;
@@ -913,9 +1311,14 @@ export class InicioView {
 
         return `
 
-            <div class="task">
+            <div class="inicio-task">
 
-                <div>
+                <span class="inicio-task-icon">
+                    🚜
+                </span>
+
+
+                <div class="inicio-task-content">
 
                     <strong>
                         ${this.escapar(
@@ -926,7 +1329,6 @@ export class InicioView {
                             "Trabajo"
                         )}
                     </strong>
-
 
                     <p>
 
@@ -952,15 +1354,20 @@ export class InicioView {
 
 
                 <span
-                    class="status ${this.obtenerClaseEstado(
-                        trabajo.estado
-                    )}"
+                    class="
+                        inicio-task-status
+                        ${this.obtenerClaseEstado(
+                            trabajo.estado
+                        )}
+                    "
                 >
+
                     ${this.escapar(
                         trabajo.estado
                         ||
                         "Pendiente"
                     )}
+
                 </span>
 
             </div>
@@ -1027,13 +1434,18 @@ export class InicioView {
                 actividad.push({
 
                     icono:
-                        movimiento.tipo ===
-                        "Cobro"
+                        this.normalizar(
+                            movimiento.tipo
+                        )
+                        ===
+                        "cobro"
+
                             ? "💰"
+
                             : "💸",
 
                     titulo:
-                        `${movimiento.tipo} · ${
+                        `${movimiento.tipo || "Movimiento"} · ${
                             movimiento.referencia
                             ||
                             "Movimiento"
@@ -1042,10 +1454,10 @@ export class InicioView {
                     detalle:
                         `${this.formatearDinero(
                             movimiento.importe
-                        )} · ${
+                        )}${
                             movimiento.tercero
-                            ||
-                            ""
+                                ? ` · ${movimiento.tercero}`
+                                : ""
                         }`,
 
                     fecha:
@@ -1075,7 +1487,11 @@ export class InicioView {
                         "Factura",
 
                     detalle:
-                        `${factura.estado || "Pendiente"} · ${this.formatearDinero(
+                        `${
+                            factura.estado
+                            ||
+                            "Pendiente"
+                        } · ${this.formatearDinero(
                             this.obtenerTotalFactura(
                                 factura
                             )
@@ -1108,7 +1524,11 @@ export class InicioView {
                         "Gasto",
 
                     detalle:
-                        `${gasto.estado || "Pendiente"} · ${this.formatearDinero(
+                        `${
+                            gasto.estado
+                            ||
+                            "Pendiente"
+                        } · ${this.formatearDinero(
                             gasto.importe
                         )}`,
 
@@ -1125,20 +1545,19 @@ export class InicioView {
         );
 
 
-        return actividad
-            .sort(
-                (
-                    a,
-                    b
-                ) =>
-                    this.obtenerTimestamp(
-                        b.fecha
-                    )
-                    -
-                    this.obtenerTimestamp(
-                        a.fecha
-                    )
-            );
+        return actividad.sort(
+            (
+                a,
+                b
+            ) =>
+                this.obtenerTimestamp(
+                    b.fecha
+                )
+                -
+                this.obtenerTimestamp(
+                    a.fecha
+                )
+        );
 
     }
 
@@ -1149,14 +1568,14 @@ export class InicioView {
 
         return `
 
-            <div class="activity">
+            <div class="inicio-activity">
 
-                <span>
+                <span class="inicio-activity-icon">
                     ${item.icono}
                 </span>
 
 
-                <div>
+                <div class="inicio-activity-content">
 
                     <strong>
                         ${this.escapar(
@@ -1171,6 +1590,13 @@ export class InicioView {
                     </p>
 
                 </div>
+
+
+                <span class="inicio-activity-time">
+                    ${this.formatearFechaActividad(
+                        item.fecha
+                    )}
+                </span>
 
             </div>
 
@@ -1190,7 +1616,6 @@ export class InicioView {
             const datos =
                 StorageService
                     .obtenerFacturas();
-
 
             return Array.isArray(
                 datos
@@ -1217,7 +1642,6 @@ export class InicioView {
                 StorageService
                     .obtenerGastos();
 
-
             return Array.isArray(
                 datos
             )
@@ -1242,7 +1666,6 @@ export class InicioView {
             const datos =
                 StorageService
                     .obtenerCobrosPagos();
-
 
             return Array.isArray(
                 datos
@@ -1269,7 +1692,6 @@ export class InicioView {
                 StorageService
                     .obtenerAlbaranes();
 
-
             return Array.isArray(
                 datos
             )
@@ -1295,15 +1717,17 @@ export class InicioView {
         albaranes
     ) {
 
-        let total =
-            0;
+        let total = 0;
 
 
         albaranes
             .filter(
                 albaran =>
-                    albaran.estado ===
-                    "Pendiente"
+                    this.normalizar(
+                        albaran.estado
+                    )
+                    ===
+                    "pendiente"
             )
             .forEach(
                 albaran => {
@@ -1311,30 +1735,31 @@ export class InicioView {
                     this.obtenerLineasAlbaran(
                         albaran
                     )
-                    .forEach(
-                        linea => {
+                        .forEach(
+                            linea => {
 
-                            if (
-                                String(
-                                    linea.unidad
-                                    ||
-                                    "kg"
-                                )
-                                ===
-                                "kg"
-                            ) {
-
-                                total +=
-                                    Number(
-                                        linea.cantidad
+                                if (
+                                    String(
+                                        linea.unidad
                                         ||
-                                        0
-                                    );
+                                        "kg"
+                                    )
+                                    .toLowerCase()
+                                    ===
+                                    "kg"
+                                ) {
+
+                                    total +=
+                                        Number(
+                                            linea.cantidad
+                                            ||
+                                            0
+                                        );
+
+                                }
 
                             }
-
-                        }
-                    );
+                        );
 
                 }
             );
@@ -1353,21 +1778,28 @@ export class InicioView {
         albaranes
     ) {
 
-        let total =
-            0;
+        let total = 0;
 
 
         albaranes
             .filter(
-                albaran =>
-                    albaran.estado ===
-                    "Entregado"
-                    ||
-                    albaran.estado ===
-                    "Facturado"
-                    ||
-                    albaran.facturado ===
-                    true
+                albaran => {
+
+                    const estado =
+                        this.normalizar(
+                            albaran.estado
+                        );
+
+
+                    return (
+                        estado === "entregado"
+                        ||
+                        estado === "facturado"
+                        ||
+                        albaran.facturado === true
+                    );
+
+                }
             )
             .forEach(
                 albaran => {
@@ -1375,30 +1807,31 @@ export class InicioView {
                     this.obtenerLineasAlbaran(
                         albaran
                     )
-                    .forEach(
-                        linea => {
+                        .forEach(
+                            linea => {
 
-                            if (
-                                String(
-                                    linea.unidad
-                                    ||
-                                    "kg"
-                                )
-                                ===
-                                "kg"
-                            ) {
-
-                                total +=
-                                    Number(
-                                        linea.cantidad
+                                if (
+                                    String(
+                                        linea.unidad
                                         ||
-                                        0
-                                    );
+                                        "kg"
+                                    )
+                                    .toLowerCase()
+                                    ===
+                                    "kg"
+                                ) {
+
+                                    total +=
+                                        Number(
+                                            linea.cantidad
+                                            ||
+                                            0
+                                        );
+
+                                }
 
                             }
-
-                        }
-                    );
+                        );
 
                 }
             );
@@ -1418,8 +1851,7 @@ export class InicioView {
                 albaran?.lineas
             )
             &&
-            albaran.lineas.length >
-            0
+            albaran.lineas.length > 0
         ) {
 
             return albaran.lineas;
@@ -1432,6 +1864,7 @@ export class InicioView {
         ) {
 
             return [
+
                 {
 
                     produccionId:
@@ -1444,6 +1877,7 @@ export class InicioView {
                         albaran.unidad
 
                 }
+
             ];
 
         }
@@ -1463,8 +1897,7 @@ export class InicioView {
     ) {
 
         if (
-            factura.total !==
-            undefined
+            factura.total !== undefined
         ) {
 
             return Number(
@@ -1477,8 +1910,7 @@ export class InicioView {
 
 
         if (
-            factura.totalFactura !==
-            undefined
+            factura.totalFactura !== undefined
         ) {
 
             return Number(
@@ -1511,7 +1943,8 @@ export class InicioView {
 
 
         return (
-            base +
+            base
+            +
             iva
         );
 
@@ -1519,7 +1952,7 @@ export class InicioView {
 
 
     // =====================================================
-    // OBTENER LISTA SERVICIO
+    // LISTAS DE SERVICIOS
     // =====================================================
 
     obtenerLista(
@@ -1536,8 +1969,8 @@ export class InicioView {
 
 
         if (
-            typeof
-            servicio.obtenerTodos ===
+            typeof servicio.obtenerTodos
+            ===
             "function"
         ) {
 
@@ -1555,8 +1988,8 @@ export class InicioView {
 
 
         if (
-            typeof
-            servicio.obtenerTodas ===
+            typeof servicio.obtenerTodas
+            ===
             "function"
         ) {
 
@@ -1594,9 +2027,8 @@ export class InicioView {
 
 
         if (
-            typeof
-            this.explotacionService
-                .obtener ===
+            typeof this.explotacionService.obtener
+            ===
             "function"
         ) {
 
@@ -1611,9 +2043,8 @@ export class InicioView {
 
 
         if (
-            typeof
-            this.explotacionService
-                .obtenerDatos ===
+            typeof this.explotacionService.obtenerDatos
+            ===
             "function"
         ) {
 
@@ -1643,9 +2074,8 @@ export class InicioView {
         if (
             this.trabajoService
             &&
-            typeof
-            this.trabajoService
-                .obtenerDeHoy ===
+            typeof this.trabajoService.obtenerDeHoy
+            ===
             "function"
         ) {
 
@@ -1759,8 +2189,7 @@ export class InicioView {
 
 
         if (
-            hora <
-            12
+            hora < 12
         ) {
 
             return "Buenos días";
@@ -1769,8 +2198,7 @@ export class InicioView {
 
 
         if (
-            hora <
-            20
+            hora < 20
         ) {
 
             return "Buenas tardes";
@@ -1784,7 +2212,7 @@ export class InicioView {
 
 
     // =====================================================
-    // FECHA HOY
+    // FECHAS
     // =====================================================
 
     obtenerFechaHoy() {
@@ -1799,7 +2227,8 @@ export class InicioView {
 
         const mm =
             String(
-                hoy.getMonth() +
+                hoy.getMonth()
+                +
                 1
             )
                 .padStart(
@@ -1818,16 +2247,10 @@ export class InicioView {
                 );
 
 
-        return (
-            `${yyyy}-${mm}-${dd}`
-        );
+        return `${yyyy}-${mm}-${dd}`;
 
     }
 
-
-    // =====================================================
-    // TIMESTAMP
-    // =====================================================
 
     obtenerTimestamp(
         valor
@@ -1864,6 +2287,110 @@ export class InicioView {
     }
 
 
+    formatearFechaActividad(
+        valor
+    ) {
+
+        const timestamp =
+            this.obtenerTimestamp(
+                valor
+            );
+
+
+        if (
+            !timestamp
+        ) {
+
+            return "";
+
+        }
+
+
+        const diferencia =
+            Date.now()
+            -
+            timestamp;
+
+
+        const minutos =
+            Math.floor(
+                diferencia
+                /
+                60000
+            );
+
+
+        if (
+            minutos < 1
+        ) {
+
+            return "Ahora";
+
+        }
+
+
+        if (
+            minutos < 60
+        ) {
+
+            return `Hace ${minutos} min`;
+
+        }
+
+
+        const horas =
+            Math.floor(
+                minutos
+                /
+                60
+            );
+
+
+        if (
+            horas < 24
+        ) {
+
+            return `Hace ${horas} h`;
+
+        }
+
+
+        const dias =
+            Math.floor(
+                horas
+                /
+                24
+            );
+
+
+        if (
+            dias === 1
+        ) {
+
+            return "Hace 1 día";
+
+        }
+
+
+        if (
+            dias < 7
+        ) {
+
+            return `Hace ${dias} días`;
+
+        }
+
+
+        return new Date(
+            timestamp
+        )
+            .toLocaleDateString(
+                "es-ES"
+            );
+
+    }
+
+
     // =====================================================
     // ESTADO TRABAJO
     // =====================================================
@@ -1873,13 +2400,9 @@ export class InicioView {
     ) {
 
         const estadoNormalizado =
-            String(
+            this.normalizar(
                 estado
-                ||
-                ""
-            )
-                .toLowerCase()
-                .trim();
+            );
 
 
         if (
@@ -1926,8 +2449,7 @@ export class InicioView {
             .toLocaleString(
                 "es-ES",
                 {
-                    maximumFractionDigits:
-                        2
+                    maximumFractionDigits: 2
                 }
             );
 
@@ -1938,23 +2460,22 @@ export class InicioView {
         numero
     ) {
 
-        return Number(
-            numero
-            ||
-            0
-        )
-            .toLocaleString(
-                "es-ES",
-                {
-                    minimumFractionDigits:
-                        2,
-
-                    maximumFractionDigits:
-                        2
-                }
+        return (
+            Number(
+                numero
+                ||
+                0
             )
+                .toLocaleString(
+                    "es-ES",
+                    {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2
+                    }
+                )
             +
-            " €";
+            " €"
+        );
 
     }
 
