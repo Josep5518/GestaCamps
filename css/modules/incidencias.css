@@ -1,59 +1,304 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · INCIDENCIAS
-   Día 26 · Cierre Refactorización 1
+   DÍA 27 · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   ESTADÍSTICAS
+   PÁGINA
+===================================================== */
+
+.incidencias-page,
+.incidencia-form-page {
+    width: 100%;
+
+    padding-bottom: 40px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.incidencias-hero {
+    display: grid;
+
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+
+.incidencias-hero-content {
+    min-height: 215px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.incidencias-eyebrow {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #39725b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.incidencias-hero h1 {
+    max-width: 540px;
+
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.incidencias-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.incidencias-hero-content > p {
+    max-width: 510px;
+
+    margin:
+        14px
+        0
+        18px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+.incidencias-hero-button {
+    align-self: flex-start;
+
+    min-height: 39px;
+}
+
+
+/* =====================================================
+   HERO FOTO
+===================================================== */
+
+.incidencias-hero-image {
+    position: relative;
+
+    min-height: 215px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        url("../../assets/images/incidencias-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dce9df;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.incidencias-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0),
+            rgba(8,37,26,0.04) 40%,
+            rgba(8,37,26,0.55)
+        );
+}
+
+
+.incidencias-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 120px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.91
+        );
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.incidencias-hero-badge span {
+    display: block;
+
+    color: #687a71;
+
+    font-size: 8px;
+}
+
+
+.incidencias-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+}
+
+
+.incidencias-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(
+            0,
+            0,
+            0,
+            0.3
+        );
+}
+
+
+.incidencias-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.incidencias-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    line-height: 1.03;
+}
+
+
+/* =====================================================
+   KPIs
 ===================================================== */
 
 .incidencias-stats {
-    display: grid;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
             4,
             minmax(0, 1fr)
-        );
+        ) !important;
 
-    gap: 16px;
+    gap: 13px !important;
 
-    margin-bottom: 20px;
+    margin-bottom: 24px !important;
 }
 
 
-/* =====================================================
-   LISTADO
-===================================================== */
-
-#listaIncidencias {
+.incidencias-stats .card {
     min-width: 0;
-}
+    min-height: 76px;
 
-
-.incidencias-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 16px;
-}
-
-
-/* =====================================================
-   TARJETA
-===================================================== */
-
-.incidencia-card {
-    min-width: 0;
-
-    padding: 16px;
+    padding: 14px;
 
     border:
         1px solid
@@ -64,19 +309,135 @@
     background: white;
 
     box-shadow:
-        0
-        7px
-        20px
+        0 7px 21px
         rgba(
             18,
             55,
             42,
-            0.05
+            0.045
+        );
+}
+
+
+/* =====================================================
+   CABECERA
+===================================================== */
+
+.incidencias-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin:
+        7px
+        0
+        13px;
+}
+
+
+.incidencias-section-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.incidencias-section-header h2 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+}
+
+
+.incidencias-section-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.incidencias-count {
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
+
+/* =====================================================
+   GRID
+===================================================== */
+
+.incidencias-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 13px;
+}
+
+
+/* =====================================================
+   TARJETA
+===================================================== */
+
+.incidencia-card {
+    min-width: 0;
+
+    padding: 15px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
         );
 
     transition:
         transform 0.15s ease,
-        border-color 0.15s ease,
         box-shadow 0.15s ease;
 }
 
@@ -87,13 +448,8 @@
         transform:
             translateY(-2px);
 
-        border-color:
-            #d7e3dc;
-
         box-shadow:
-            0
-            12px
-            28px
+            0 12px 27px
             rgba(
                 18,
                 55,
@@ -106,60 +462,368 @@
 
 
 /* =====================================================
-   CABECERA
+   CABECERA TARJETA
 ===================================================== */
 
-.incidencia-card-header {
+.incidencia-card-top {
     display: flex;
-
     align-items: flex-start;
-
     justify-content: space-between;
 
-    gap: 10px;
-
-    margin-bottom: 10px;
+    gap: 12px;
 }
 
 
-.incidencia-icon {
-    width: 38px;
-    height: 38px;
+.incidencia-card-main {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    min-width: 0;
+}
+
+
+.incidencia-card-icon {
+    width: 42px;
+    height: 42px;
 
     flex:
         0
         0
-        38px;
+        42px;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    border-radius: 10px;
+    border-radius: 11px;
 
     background:
-        var(--gc-green-soft);
+        linear-gradient(
+            145deg,
+            #fff1d9,
+            #f6f5e8
+        );
 
-    font-size: 18px;
+    font-size: 20px;
+}
 
-    line-height: 1;
+
+.incidencia-card-kicker {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #63816f;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
 }
 
 
 .incidencia-card h3 {
-    margin:
-        0
-        0
-        8px;
+    margin: 0;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     font-size: 15px;
+}
 
-    line-height: 1.25;
+
+.incidencia-card-main p {
+    margin:
+        3px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   PRIORIDAD
+===================================================== */
+
+.incidencia-priority {
+    flex:
+        0
+        0
+        auto;
+
+    padding:
+        5px
+        7px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+    font-weight: 800;
+}
+
+
+.incidencia-priority.baja {
+    background: #e7f4ec;
+
+    color: #347058;
+}
+
+
+.incidencia-priority.media {
+    background: #fff2d8;
+
+    color: #875f1b;
+}
+
+
+.incidencia-priority.alta {
+    background: #fbe4d3;
+
+    color: #9b5428;
+}
+
+
+.incidencia-priority.urgente {
+    background: #f9dede;
+
+    color: #a43b3b;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.incidencia-status-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 11px;
+}
+
+
+.incidencia-status {
+    padding:
+        5px
+        7px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+    font-weight: 800;
+}
+
+
+.incidencia-status.abierta {
+    background: #fdeaea;
+
+    color: #a14141;
+}
+
+
+.incidencia-status.revision {
+    background: #e6f0f6;
+
+    color: #35647a;
+}
+
+
+.incidencia-status.resuelta {
+    background: #e4f4ea;
+
+    color: #276c50;
+}
+
+
+.incidencia-date {
+    color: var(--gc-muted);
+
+    font-size: 7px;
+}
+
+
+/* =====================================================
+   RELACIONES
+===================================================== */
+
+.incidencia-relations {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin-top: 9px;
+}
+
+
+.incidencia-relations > div {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    min-width: 0;
+
+    padding:
+        8px
+        9px;
+
+    border-radius: 8px;
+
+    background: #f8faf8;
+}
+
+
+.incidencia-relations > div > span {
+    flex:
+        0
+        0
+        22px;
+
+    text-align: center;
+}
+
+
+.incidencia-relations small {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 6px;
+}
+
+
+.incidencia-relations strong {
+    display: block;
+
+    margin-top: 1px;
+
+    overflow-wrap: anywhere;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   DESCRIPCIÓN
+===================================================== */
+
+.incidencia-description {
+    margin-top: 10px;
+
+    padding:
+        10px;
+
+    border-radius: 9px;
+
+    background: #f8faf8;
+}
+
+
+.incidencia-description > span {
+    display: block;
+
+    color: #587563;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+
+.incidencia-description p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   RESOLUCIÓN
+===================================================== */
+
+.incidencia-resolution {
+    margin-top: 9px;
+
+    padding: 10px;
+
+    border:
+        1px solid
+        #d8eadf;
+
+    border-radius: 9px;
+
+    background: #edf6f1;
+}
+
+
+.incidencia-resolution > div {
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+}
+
+
+.incidencia-resolution > div > span {
+    font-size: 17px;
+}
+
+
+.incidencia-resolution strong {
+    display: block;
+
+    color: #285e48;
+
+    font-size: 8px;
+}
+
+
+.incidencia-resolution p {
+    margin:
+        2px
+        0
+        0;
+
+    color: #6a7b71;
+
+    font-size: 7px;
+}
+
+
+.incidencia-resolution-notes {
+    margin-top: 8px !important;
+
+    padding-top: 8px;
+
+    border-top:
+        1px solid
+        #d5e7dd;
 }
 
 
@@ -170,155 +834,93 @@
 .incidencia-actions {
     display: flex;
 
-    align-items: center;
+    gap: 6px;
 
-    justify-content: flex-end;
-
-    gap: 7px;
-
-    flex-wrap: wrap;
-
-    flex:
-        0
-        0
-        auto;
+    margin-top: 11px;
 }
 
 
-.incidencia-actions
-button {
-    min-height: 34px;
+.incidencia-actions button {
+    flex: 1;
 
-    padding:
-        0
-        10px;
+    min-height: 33px;
 
-    font-size: 10px;
+    justify-content: center;
+
+    font-size: 7px;
 }
 
 
 /* =====================================================
-   DATOS
+   VACÍO
 ===================================================== */
 
-.incidencia-meta {
-    display: grid;
+.incidencias-empty {
+    grid-column:
+        1
+        /
+        -1;
 
-    gap: 4px;
+    min-height: 270px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    border:
+        1px dashed
+        #dbe5df;
+
+    border-radius: 15px;
+
+    background: white;
+
+    text-align: center;
 }
 
 
-.incidencia-meta p {
+.incidencias-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 16px;
+
+    background: #e8f3ed;
+
+    font-size: 26px;
+}
+
+
+.incidencias-empty h3 {
     margin: 0;
 
-    color:
-        var(--gc-muted-strong);
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    font-size: 10px;
-
-    line-height: 1.4;
+    font-size: 18px;
 }
 
 
-.incidencia-meta strong {
-    color:
-        var(--gc-text);
-}
-
-
-/* =====================================================
-   DESCRIPCIÓN
-===================================================== */
-
-.incidencia-descripcion {
-    margin-top: 14px;
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    background:
-        #f6f8f6;
-}
-
-
-.incidencia-descripcion strong {
-    display: block;
-
-    color:
-        var(--gc-text);
-
-    font-size: 11px;
-}
-
-
-.incidencia-descripcion p {
+.incidencias-empty p {
     margin:
         6px
         0
-        0;
+        14px;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-muted);
 
-    font-size: 11px;
-
-    line-height: 1.45;
-}
-
-
-/* =====================================================
-   RESUELTA
-===================================================== */
-
-.incidencia-resuelta {
-    margin-top: 12px;
-
-    padding: 12px;
-
-    border-radius: 10px;
-
-    background:
-        #edf6f1;
-}
-
-
-.incidencia-resuelta strong {
-    display: block;
-
-    color:
-        #176044;
-
-    font-size: 11px;
-}
-
-
-.incidencia-resuelta p {
-    margin:
-        6px
-        0
-        0;
-
-    color:
-        var(--gc-muted-strong);
-
-    font-size: 10px;
-
-    line-height: 1.4;
-}
-
-
-.incidencia-resuelta-notas {
-    padding-top: 7px;
-
-    border-top:
-        1px solid
-        rgba(
-            23,
-            96,
-            68,
-            0.12
-        );
+    font-size: 9px;
 }
 
 
@@ -326,14 +928,318 @@ button {
    FORMULARIO
 ===================================================== */
 
-.incidencia-form-panel {
-    max-width: 720px;
+.incidencia-form-page > .back-button {
+    margin-bottom: 10px;
 }
 
 
-.incidencia-form-panel
-textarea {
-    resize: vertical;
+.incidencia-form-header {
+    margin-bottom: 16px;
+}
+
+
+.incidencia-form-header > span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #41735d;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.incidencia-form-header h1 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 29px;
+}
+
+
+.incidencia-form-header p {
+    margin:
+        5px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   FORM LAYOUT
+===================================================== */
+
+.incidencia-form-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(600px, 1fr)
+        minmax(270px, 0.42fr);
+
+    gap: 15px;
+
+    align-items: start;
+}
+
+
+.incidencia-form-panel {
+    max-width: none;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+}
+
+
+.incidencia-form-section {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 17px;
+}
+
+
+.incidencia-form-section > span {
+    width: 38px;
+    height: 38px;
+
+    flex:
+        0
+        0
+        38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #fff0d9;
+
+    font-size: 18px;
+}
+
+
+.incidencia-form-section h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+}
+
+
+.incidencia-form-section p {
+    margin:
+        2px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.incidencia-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    column-gap: 12px;
+}
+
+
+.incidencia-form-wide {
+    grid-column:
+        1
+        /
+        -1;
+}
+
+
+/* =====================================================
+   ASIDE
+===================================================== */
+
+.incidencia-form-aside {
+    display: grid;
+
+    gap: 12px;
+}
+
+
+.incidencia-form-photo {
+    min-height: 330px;
+
+    display: flex;
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    padding: 19px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8,40,28,0.02),
+            rgba(8,40,28,0.72)
+        ),
+        url("../../assets/images/incidencias-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat;
+
+    box-shadow:
+        0 8px 22px
+        rgba(
+            18,
+            55,
+            42,
+            0.07
+        );
+}
+
+
+.incidencia-form-photo span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.78
+        );
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.incidencia-form-photo strong {
+    display: block;
+
+    max-width: 250px;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+
+    line-height: 1.06;
+}
+
+
+/* =====================================================
+   TIP
+===================================================== */
+
+.incidencia-form-tip {
+    display: flex;
+
+    gap: 9px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        #f0e1c9;
+
+    border-radius: 12px;
+
+    background: #fff9ef;
+}
+
+
+.incidencia-form-tip > span {
+    width: 34px;
+    height: 34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #ffeecf;
+}
+
+
+.incidencia-form-tip strong {
+    display: block;
+
+    color: #66522e;
+
+    font-size: 9px;
+}
+
+
+.incidencia-form-tip p {
+    margin:
+        3px
+        0
+        0;
+
+    color: #86765b;
+
+    font-size: 8px;
+
+    line-height: 1.45;
 }
 
 
@@ -341,23 +1247,46 @@ textarea {
    TABLET
 ===================================================== */
 
-@media (max-width: 1250px) {
+@media (max-width: 1100px) {
+
+    .incidencias-hero {
+        grid-template-columns: 1fr;
+    }
+
+
+    .incidencias-hero-content {
+        min-height: 0;
+    }
+
+
+    .incidencias-hero-image {
+        min-height: 185px;
+    }
+
 
     .incidencias-stats {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
-            );
+            ) !important;
     }
 
 
-    .incidencias-grid {
+    .incidencia-form-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .incidencia-form-aside {
         grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
+            1fr
+            1fr;
+    }
+
+
+    .incidencia-form-photo {
+        min-height: 180px;
     }
 
 }
@@ -369,108 +1298,142 @@ textarea {
 
 @media (max-width: 760px) {
 
+    .incidencias-page,
+    .incidencia-form-page {
+        padding-bottom: 24px;
+    }
+
+
+    .incidencias-hero {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+
+        margin-bottom: 13px;
+    }
+
+
+    .incidencias-hero-content {
+        min-height: 0;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .incidencias-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .incidencias-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .incidencias-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .incidencias-hero-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+
+    .incidencias-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .incidencias-hero-copy strong {
+        font-size: 18px;
+    }
+
+
     .incidencias-stats {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
-            );
+            ) !important;
+
+        gap: 8px !important;
+    }
+
+
+    .incidencias-section-header {
+        align-items: flex-start;
+        flex-direction: column;
 
         gap: 8px;
-
-        margin-bottom: 14px;
     }
 
 
     .incidencias-grid {
         grid-template-columns: 1fr;
 
-        gap: 11px;
+        gap: 10px;
     }
 
 
-    .incidencia-card {
-        padding: 13px;
+    .incidencia-form-header h1 {
+        font-size: 25px;
+    }
+
+
+    .incidencia-form-panel {
+        padding: 14px;
 
         border-radius: 12px;
     }
 
 
-    .incidencia-card-header {
-        gap: 8px;
+    .incidencia-form-grid {
+        grid-template-columns: 1fr;
     }
 
 
-    .incidencia-icon {
-        width: 34px;
-        height: 34px;
-
-        flex-basis: 34px;
-
-        font-size: 16px;
+    .incidencia-form-wide {
+        grid-column: auto;
     }
 
 
-    .incidencia-card h3 {
-        font-size: 14px;
+    .incidencia-form-aside {
+        grid-template-columns: 1fr;
     }
 
 
-    .incidencia-actions {
-        gap: 5px;
-    }
-
-
-    .incidencia-actions
-    button {
-        min-height: 32px;
-
-        padding:
-            0
-            8px;
-
-        font-size: 9px;
-    }
-
-
-    .incidencia-meta p {
-        font-size: 9px;
-    }
-
-
-    .incidencia-descripcion,
-    .incidencia-resuelta {
-        padding: 10px;
-    }
-
-
-    .incidencia-form-panel {
-        max-width: none;
+    .incidencia-form-photo {
+        min-height: 160px;
     }
 
 }
 
 
 /* =====================================================
-   MÓVIL ESTRECHO
+   MÓVIL PEQUEÑO
 ===================================================== */
 
 @media (max-width: 420px) {
 
-    .incidencias-stats {
+    .incidencia-relations {
         grid-template-columns: 1fr;
     }
 
 
-    .incidencia-card-header {
-        flex-wrap: wrap;
-    }
-
-
     .incidencia-actions {
-        width: 100%;
-
-        justify-content: flex-end;
+        flex-direction: column;
     }
 
 }

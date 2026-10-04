@@ -404,8 +404,8 @@ export class InicioView {
                         </p>
 
                         <h1>
-                            Tu campo,
-                            <span>en buenas manos.</span>
+                            Tu campo
+                            <span>en tus manos.</span>
                         </h1>
 
                         <p class="inicio-welcome-text">

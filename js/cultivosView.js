@@ -45,7 +45,8 @@ export class CultivosView {
                     total,
                     cultivo
                 ) =>
-                    total +
+                    total
+                    +
                     Number(
                         cultivo.superficie
                         ||
@@ -55,7 +56,7 @@ export class CultivosView {
             );
 
 
-        const campanyasUsadas =
+        const campaniasUsadas =
             new Set(
                 cultivos
                     .filter(
@@ -73,127 +74,165 @@ export class CultivosView {
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="cultivos-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Cultivos
-                    </h2>
+                <section class="cultivos-hero">
 
-                    <p>
-                        Gestiona los cultivos de tus parcelas
-                    </p>
+                    <div class="cultivos-hero-content">
 
-                </div>
-
-
-                <button
-                    id="nuevoCultivo"
-                    class="primary-button"
-                >
-                    + Nuevo cultivo
-                </button>
-
-            </header>
+                        <span class="cultivos-eyebrow">
+                            🌱 GESTIÓN AGRÍCOLA
+                        </span>
 
 
-            <section class="stats cultivos-stats">
+                        <h1>
+                            Cultiva con
+                            <span>
+                                una visión clara.
+                            </span>
+                        </h1>
 
 
-                <div class="card">
+                        <p>
+                            Organiza cada cultivo, controla su superficie
+                            y mantenlo conectado con la finca y campaña
+                            correspondiente.
+                        </p>
 
-                    <span class="card-icon">
-                        🌱
-                    </span>
+
+                        <button
+                            id="nuevoCultivo"
+                            class="
+                                primary-button
+                                cultivos-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo cultivo
+                        </button>
+
+                    </div>
+
+
+                    <div class="cultivos-hero-image">
+
+                        <div class="cultivos-hero-badge">
+
+                            <span>
+                                Cultivos activos
+                            </span>
+
+                            <strong>
+                                ${activos}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="cultivos-hero-copy">
+
+                            <small>
+                                CULTIVO · PRODUCCIÓN · TRAZABILIDAD
+                            </small>
+
+                            <strong>
+                                Cada cultivo cuenta<br>
+                                una parte de tu cosecha
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats cultivos-stats">
+
+                    ${this.crearStat(
+                        "🌱",
+                        "Cultivos",
+                        cultivos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "✅",
+                        "Activos",
+                        activos
+                    )}
+
+
+                    ${this.crearStat(
+                        "📐",
+                        "Superficie cultivada",
+                        `${this.formatearNumero(
+                            superficieTotal
+                        )} ha`
+                    )}
+
+
+                    ${this.crearStat(
+                        "📅",
+                        "Campañas vinculadas",
+                        campaniasUsadas
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTADO
+                =========================================== -->
+
+                <div class="cultivos-list-header">
 
                     <div>
 
+                        <span class="cultivos-list-eyebrow">
+                            PRODUCCIÓN AGRÍCOLA
+                        </span>
+
+
+                        <h2>
+                            Tus cultivos
+                        </h2>
+
+
                         <p>
-                            Cultivos
+                            Consulta variedades, superficies,
+                            campañas y estado de cada cultivo.
                         </p>
 
-                        <h3>
-                            ${cultivos.length}
-                        </h3>
+                    </div>
+
+
+                    <div class="cultivos-list-summary">
+
+                        <span>
+                            ${cultivos.length} cultivos
+                        </span>
+
+                        <span>
+                            ${activos} activos
+                        </span>
 
                     </div>
 
                 </div>
 
 
-                <div class="card">
+                <div id="listaCultivos"></div>
 
-                    <span class="card-icon">
-                        ✅
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Activos
-                        </p>
-
-                        <h3>
-                            ${activos}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        📐
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Superficie cultivada
-                        </p>
-
-                        <h3>
-                            ${this.formatearNumero(
-                                superficieTotal
-                            )}
-                            ha
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        📅
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Campanyas
-                        </p>
-
-                        <h3>
-                            ${campanyasUsadas}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-            </section>
-
-
-            <div
-                id="listaCultivos"
-            ></div>
+            </div>
 
         `;
 
@@ -202,7 +241,7 @@ export class CultivosView {
             .getElementById(
                 "nuevoCultivo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -213,6 +252,45 @@ export class CultivosView {
 
 
         this.mostrarLista();
+
+    }
+
+
+    // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <div class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+
+                <div>
+
+                    <p>
+                        ${titulo}
+                    </p>
+
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        `;
 
     }
 
@@ -235,29 +313,66 @@ export class CultivosView {
 
 
         if (
+            !contenedor
+        ) {
+
+            return;
+
+        }
+
+
+        if (
             cultivos.length ===
             0
         ) {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="cultivos-empty">
 
-                    <div class="empty-icon">
-                        🌱
+                    <div class="cultivos-empty-visual">
+
+                        <span>
+                            🌱
+                        </span>
+
                     </div>
+
 
                     <h3>
                         Todavía no tienes cultivos
                     </h3>
 
+
                     <p>
-                        Crea tu primer cultivo para comenzar a gestionar la producción.
+                        Crea tu primer cultivo para comenzar
+                        a gestionar la producción de la explotación.
                     </p>
+
+
+                    <button
+                        id="crearPrimerCultivo"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Crear primer cultivo
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimerCultivo"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormulario()
+                );
+
 
             return;
 
@@ -268,165 +383,18 @@ export class CultivosView {
 
             <div class="cultivos-grid">
 
-                ${cultivos.map(
-                    cultivo => `
-
-                        <div class="cultivo-card">
-
-                            <div class="cultivo-card-header">
-
-                                <span class="cultivo-icon">
-                                    🌱
-                                </span>
-
-
-                                <div class="cultivo-actions">
-
-                                    <button
-                                        class="secondary-button editar-cultivo"
-                                        data-id="${cultivo.id}"
-                                    >
-                                        Editar
-                                    </button>
-
-
-                                    <button
-                                        class="delete-button eliminar-cultivo"
-                                        data-id="${cultivo.id}"
-                                    >
-                                        ×
-                                    </button>
-
-                                </div>
-
-                            </div>
-
-
-                            <h3>
-
-                                ${cultivo.tipo}
-                                ·
-                                ${cultivo.variedad}
-
-                            </h3>
-
-
-                            <p class="cultivo-location">
-
-                                📍
-                                ${cultivo.fincaNombre}
-
-                                ${
-                                    cultivo.parcela
-
-                                        ? ` · ${cultivo.parcela}`
-
-                                        : ""
-                                }
-
-                            </p>
-
-
-                            ${
-                                cultivo.campaniaNombre
-
-                                    ? `
-
-                                        <p class="cultivo-campania">
-
-                                            📅
-                                            ${cultivo.campaniaNombre}
-
-                                        </p>
-
-                                    `
-
-                                    : `
-
-                                        <p class="cultivo-campania cultivo-sin-campania">
-
-                                            📅
-                                            Sin campanya asignada
-
-                                        </p>
-
-                                    `
-                            }
-
-
-                            <div class="cultivo-info-grid">
-
-                                <div>
-
-                                    <span>
-                                        Superficie
-                                    </span>
-
-                                    <strong>
-
-                                        ${this.formatearNumero(
-                                            cultivo.superficie
-                                        )}
-                                        ha
-
-                                    </strong>
-
-                                </div>
-
-
-                                <div>
-
-                                    <span>
-                                        Estado
-                                    </span>
-
-                                    <strong>
-                                        ${cultivo.estado}
-                                    </strong>
-
-                                </div>
-
-                            </div>
-
-
-                            ${
-                                cultivo.fechaInicio
-
-                                    ? `
-
-                                        <p class="cultivo-date">
-
-                                            📅 Inicio:
-                                            ${this.formatearFecha(
-                                                cultivo.fechaInicio
-                                            )}
-
-                                        </p>
-
-                                    `
-
-                                    : ""
-                            }
-
-
-                            ${
-                                cultivo.notas
-
-                                    ? `
-
-                                        <p class="cultivo-notas">
-                                            ${cultivo.notas}
-                                        </p>
-
-                                    `
-
-                                    : ""
-                            }
-
-                        </div>
-
-                    `
-                ).join("")}
+                ${cultivos
+                    .map(
+                        (
+                            cultivo,
+                            index
+                        ) =>
+                            this.crearTarjetaCultivo(
+                                cultivo,
+                                index
+                            )
+                    )
+                    .join("")}
 
             </div>
 
@@ -434,6 +402,318 @@ export class CultivosView {
 
 
         this.configurarEventos();
+
+    }
+
+
+    // =====================================================
+    // TARJETA CULTIVO
+    // =====================================================
+
+    crearTarjetaCultivo(
+        cultivo,
+        index = 0
+    ) {
+
+        const imagen =
+            (
+                index %
+                3
+            )
+            +
+            1;
+
+
+        const activo =
+            String(
+                cultivo.estado
+                ||
+                ""
+            )
+                .toLowerCase()
+            ===
+            "activo";
+
+
+        return `
+
+            <article class="cultivo-card">
+
+                <!-- ==================================
+                     FOTO
+                =================================== -->
+
+                <div
+                    class="
+                        cultivo-card-cover
+                        cultivo-card-cover-${imagen}
+                    "
+                >
+
+                    <div class="cultivo-card-overlay"></div>
+
+
+                    <div class="cultivo-card-cover-top">
+
+                        <span
+                            class="
+                                cultivo-status
+                                ${
+                                    activo
+                                        ? "activo"
+                                        : "inactivo"
+                                }
+                            "
+                        >
+
+                            ●
+                            ${
+                                cultivo.estado
+                                ||
+                                "Activo"
+                            }
+
+                        </span>
+
+
+                        <div class="cultivo-actions">
+
+                            <button
+                                class="
+                                    cultivo-action-button
+                                    editar-cultivo
+                                "
+                                data-id="${cultivo.id}"
+                                type="button"
+                                title="Editar cultivo"
+                            >
+                                ✎
+                            </button>
+
+
+                            <button
+                                class="
+                                    cultivo-action-button
+                                    cultivo-delete
+                                    eliminar-cultivo
+                                "
+                                data-id="${cultivo.id}"
+                                type="button"
+                                title="Eliminar cultivo"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="cultivo-card-cover-copy">
+
+                        <span>
+                            CULTIVO
+                        </span>
+
+
+                        <strong>
+                            ${cultivo.tipo}
+                        </strong>
+
+
+                        <p>
+                            ${cultivo.variedad}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================
+                     CUERPO
+                =================================== -->
+
+                <div class="cultivo-card-body">
+
+                    <span class="cultivo-card-kicker">
+                        PRODUCCIÓN AGRÍCOLA
+                    </span>
+
+
+                    <h3>
+
+                        ${cultivo.tipo}
+                        ·
+                        ${cultivo.variedad}
+
+                    </h3>
+
+
+                    <p class="cultivo-location">
+
+                        📍
+                        ${cultivo.fincaNombre}
+
+                        ${
+                            cultivo.parcela
+
+                                ? ` · ${cultivo.parcela}`
+
+                                : ""
+                        }
+
+                    </p>
+
+
+                    ${
+                        cultivo.campaniaNombre
+
+                            ? `
+
+                                <div class="cultivo-campania">
+
+                                    <span>
+                                        📅
+                                    </span>
+
+                                    <div>
+
+                                        <small>
+                                            Campaña
+                                        </small>
+
+                                        <strong>
+                                            ${cultivo.campaniaNombre}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : `
+
+                                <div
+                                    class="
+                                        cultivo-campania
+                                        cultivo-sin-campania
+                                    "
+                                >
+
+                                    <span>
+                                        📅
+                                    </span>
+
+                                    <div>
+
+                                        <small>
+                                            Campaña
+                                        </small>
+
+                                        <strong>
+                                            Sin campaña asignada
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+                    }
+
+
+                    <div class="cultivo-info-grid">
+
+                        <div>
+
+                            <span>
+                                Superficie
+                            </span>
+
+
+                            <strong>
+
+                                ${this.formatearNumero(
+                                    cultivo.superficie
+                                )}
+                                ha
+
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Inicio
+                            </span>
+
+
+                            <strong>
+
+                                ${
+                                    cultivo.fechaInicio
+
+                                        ? this.formatearFecha(
+                                            cultivo.fechaInicio
+                                        )
+
+                                        : "Sin definir"
+                                }
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        cultivo.notas
+
+                            ? `
+
+                                <p class="cultivo-notas">
+
+                                    <span>
+                                        Nota
+                                    </span>
+
+                                    ${cultivo.notas}
+
+                                </p>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    <button
+                        class="
+                            cultivo-edit-main
+                            editar-cultivo
+                        "
+                        data-id="${cultivo.id}"
+                        type="button"
+                    >
+
+                        Editar cultivo
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </article>
+
+        `;
 
     }
 
@@ -660,7 +940,7 @@ export class CultivosView {
                 .obtenerTodas();
 
 
-        const campanyas =
+        const campanias =
             this.campaniaService
                 .obtenerTodas();
 
@@ -681,19 +961,25 @@ export class CultivosView {
 
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverCultivos"
-                class="back-button"
-            >
-                ← Volver
-            </button>
+            <div class="cultivo-form-page">
+
+                <button
+                    id="volverCultivos"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="cultivo-form-header">
 
-                <div>
+                    <span class="cultivo-form-eyebrow">
+                        🌱 GESTIÓN AGRÍCOLA
+                    </span>
 
-                    <h2>
+
+                    <h1>
 
                         ${
                             editando
@@ -701,297 +987,410 @@ export class CultivosView {
                                 : "Nuevo cultivo"
                         }
 
-                    </h2>
+                    </h1>
 
 
                     <p>
 
                         ${
                             editando
-                                ? "Modifica los datos del cultivo"
-                                : "Registra un nuevo cultivo en la explotación"
+
+                                ? "Actualiza los datos del cultivo y mantén toda la información al día."
+
+                                : "Registra un nuevo cultivo y vincúlalo con su finca y campaña."
+
                         }
 
                     </p>
 
-                </div>
-
-            </header>
+                </header>
 
 
-            <div class="form-panel">
+                <div class="cultivo-form-layout">
 
+                    <!-- ==================================
+                         FORMULARIO
+                    =================================== -->
 
-                <div class="form-group">
-
-                    <label>
-                        Tipo de cultivo *
-                    </label>
-
-                    <input
-                        id="tipoCultivo"
-                        type="text"
-                        placeholder="Ej. Nectarina"
-                        value="${cultivo?.tipo || ""}"
+                    <div
+                        class="
+                            form-panel
+                            cultivo-form-panel
+                        "
                     >
 
-                </div>
+                        <div class="cultivo-form-section-title">
+
+                            <span>
+                                🌱
+                            </span>
 
 
-                <div class="form-group">
+                            <div>
 
-                    <label>
-                        Variedad *
-                    </label>
+                                <h3>
+                                    Información del cultivo
+                                </h3>
 
-                    <input
-                        id="variedadCultivo"
-                        type="text"
-                        placeholder="Ej. Nectalam"
-                        value="${cultivo?.variedad || ""}"
-                    >
+                                <p>
+                                    Datos principales de la plantación.
+                                </p>
 
-                </div>
+                            </div>
+
+                        </div>
 
 
-                <div class="form-group">
+                        <div class="cultivo-form-grid">
 
-                    <label>
-                        Finca *
-                    </label>
+                            <div class="form-group">
 
-                    <select
-                        id="fincaCultivo"
-                    >
+                                <label>
+                                    Tipo de cultivo *
+                                </label>
 
-                        ${fincas.map(
-                            finca => `
 
-                                <option
-                                    value="${finca.id}"
-
-                                    ${
-                                        cultivo
-                                        &&
-                                        String(
-                                            cultivo.fincaId
-                                        )
-                                        ===
-                                        String(
-                                            finca.id
-                                        )
-
-                                            ? "selected"
-
-                                            : ""
-                                    }
+                                <input
+                                    id="tipoCultivo"
+                                    type="text"
+                                    placeholder="Ej. Nectarina"
+                                    value="${cultivo?.tipo || ""}"
                                 >
 
-                                    ${finca.nombre}
-
-                                </option>
-
-                            `
-                        ).join("")}
-
-                    </select>
-
-                </div>
+                            </div>
 
 
-                <div class="form-group">
+                            <div class="form-group">
 
-                    <label>
-                        Parcela
-                    </label>
-
-                    <input
-                        id="parcelaCultivo"
-                        type="text"
-                        placeholder="Ej. Parcela Norte"
-                        value="${cultivo?.parcela || ""}"
-                    >
-
-                </div>
+                                <label>
+                                    Variedad *
+                                </label>
 
 
-                <div class="form-group">
-
-                    <label>
-                        Campanya
-                    </label>
-
-                    <select
-                        id="campaniaCultivo"
-                    >
-
-                        <option
-                            value=""
-                        >
-                            Sin campanya
-                        </option>
-
-
-                        ${campanyas.map(
-                            campania => `
-
-                                <option
-                                    value="${campania.id}"
-
-                                    data-finca-id="${campania.fincaId}"
-
-                                    ${
-                                        cultivo
-                                        &&
-                                        cultivo.campaniaId
-                                        &&
-                                        String(
-                                            cultivo.campaniaId
-                                        )
-                                        ===
-                                        String(
-                                            campania.id
-                                        )
-
-                                            ? "selected"
-
-                                            : ""
-                                    }
+                                <input
+                                    id="variedadCultivo"
+                                    type="text"
+                                    placeholder="Ej. Nectalam"
+                                    value="${cultivo?.variedad || ""}"
                                 >
 
-                                    ${campania.nombre}
-                                    ·
-                                    ${campania.fincaNombre}
-                                    ·
-                                    ${campania.estado}
-
-                                </option>
-
-                            `
-                        ).join("")}
-
-                    </select>
-
-                </div>
+                            </div>
 
 
-                <div class="form-group">
+                            <div class="form-group">
 
-                    <label>
-                        Superficie (ha)
-                    </label>
-
-                    <input
-                        id="superficieCultivo"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value="${cultivo?.superficie ?? ""}"
-                    >
-
-                </div>
+                                <label>
+                                    Finca *
+                                </label>
 
 
-                <div class="form-group">
+                                <select
+                                    id="fincaCultivo"
+                                >
 
-                    <label>
-                        Fecha de inicio
-                    </label>
+                                    ${fincas
+                                        .map(
+                                            finca => `
 
-                    <input
-                        id="fechaCultivo"
-                        type="date"
-                        value="${cultivo?.fechaInicio || ""}"
-                    >
+                                                <option
+                                                    value="${finca.id}"
 
-                </div>
+                                                    ${
+                                                        cultivo
+                                                        &&
+                                                        String(
+                                                            cultivo.fincaId
+                                                        )
+                                                        ===
+                                                        String(
+                                                            finca.id
+                                                        )
 
+                                                            ? "selected"
 
-                <div class="form-group">
+                                                            : ""
+                                                    }
+                                                >
 
-                    <label>
-                        Estado
-                    </label>
+                                                    ${finca.nombre}
 
-                    <select
-                        id="estadoCultivo"
-                    >
+                                                </option>
 
-                        <option
-                            value="Activo"
+                                            `
+                                        )
+                                        .join("")}
 
-                            ${
-                                !cultivo
-                                ||
-                                cultivo.estado ===
-                                "Activo"
+                                </select>
 
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Activo
-                        </option>
+                            </div>
 
 
-                        <option
-                            value="Inactivo"
+                            <div class="form-group">
 
-                            ${
-                                cultivo?.estado ===
-                                "Inactivo"
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Inactivo
-                        </option>
-
-                    </select>
-
-                </div>
+                                <label>
+                                    Parcela
+                                </label>
 
 
-                <div class="form-group">
+                                <input
+                                    id="parcelaCultivo"
+                                    type="text"
+                                    placeholder="Ej. Parcela Norte"
+                                    value="${cultivo?.parcela || ""}"
+                                >
 
-                    <label>
-                        Notas
-                    </label>
-
-                    <textarea
-                        id="notasCultivo"
-                        rows="5"
-                        placeholder="Observaciones..."
-                    >${cultivo?.notas || ""}</textarea>
-
-                </div>
+                            </div>
 
 
-                <div class="form-actions">
+                            <div class="form-group cultivo-form-wide">
 
-                    <button
-                        id="cancelarCultivo"
-                        class="secondary-button"
-                    >
-                        Cancelar
-                    </button>
+                                <label>
+                                    Campaña
+                                </label>
 
 
-                    <button
-                        id="guardarCultivo"
-                        class="primary-button"
-                    >
+                                <select
+                                    id="campaniaCultivo"
+                                >
 
-                        ${
-                            editando
-                                ? "Guardar cambios"
-                                : "Crear cultivo"
-                        }
+                                    <option
+                                        value=""
+                                    >
+                                        Sin campaña
+                                    </option>
 
-                    </button>
+
+                                    ${campanias
+                                        .map(
+                                            campania => `
+
+                                                <option
+                                                    value="${campania.id}"
+
+                                                    data-finca-id="${campania.fincaId}"
+
+                                                    ${
+                                                        cultivo
+                                                        &&
+                                                        cultivo.campaniaId
+                                                        &&
+                                                        String(
+                                                            cultivo.campaniaId
+                                                        )
+                                                        ===
+                                                        String(
+                                                            campania.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${campania.nombre}
+                                                    ·
+                                                    ${campania.fincaNombre}
+                                                    ·
+                                                    ${campania.estado}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Superficie (ha)
+                                </label>
+
+
+                                <input
+                                    id="superficieCultivo"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value="${cultivo?.superficie ?? ""}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha de inicio
+                                </label>
+
+
+                                <input
+                                    id="fechaCultivo"
+                                    type="date"
+                                    value="${cultivo?.fechaInicio || ""}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group cultivo-form-wide">
+
+                                <label>
+                                    Estado
+                                </label>
+
+
+                                <select
+                                    id="estadoCultivo"
+                                >
+
+                                    <option
+                                        value="Activo"
+
+                                        ${
+                                            !cultivo
+                                            ||
+                                            cultivo.estado ===
+                                            "Activo"
+
+                                                ? "selected"
+
+                                                : ""
+                                        }
+                                    >
+                                        Activo
+                                    </option>
+
+
+                                    <option
+                                        value="Inactivo"
+
+                                        ${
+                                            cultivo?.estado ===
+                                            "Inactivo"
+
+                                                ? "selected"
+
+                                                : ""
+                                        }
+                                    >
+                                        Inactivo
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    form-group
+                                    cultivo-form-wide
+                                "
+                            >
+
+                                <label>
+                                    Notas
+                                </label>
+
+
+                                <textarea
+                                    id="notasCultivo"
+                                    rows="5"
+                                    placeholder="Observaciones..."
+                                >${cultivo?.notas || ""}</textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarCultivo"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarCultivo"
+                                class="primary-button"
+                                type="button"
+                            >
+
+                                ${
+                                    editando
+                                        ? "Guardar cambios"
+                                        : "Crear cultivo"
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ==================================
+                         FOTO DERECHA
+                    =================================== -->
+
+                    <aside class="cultivo-form-aside">
+
+                        <div class="cultivo-form-photo">
+
+                            <div>
+
+                                <span>
+                                    GESTACAMPS
+                                </span>
+
+
+                                <strong>
+                                    Cada variedad,
+                                    una historia que cultivar.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="cultivo-form-tip">
+
+                            <span>
+                                🌾
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Todo conectado
+                                </strong>
+
+
+                                <p>
+                                    Vincula el cultivo a su finca y
+                                    campaña para mantener toda la
+                                    trazabilidad de la explotación.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
@@ -1008,7 +1407,7 @@ export class CultivosView {
             .getElementById(
                 "volverCultivos"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -1026,7 +1425,7 @@ export class CultivosView {
             .getElementById(
                 "cancelarCultivo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -1044,11 +1443,11 @@ export class CultivosView {
             .getElementById(
                 "fincaCultivo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "change",
                 () => {
 
-                    this.actualizarCampanyasPorFinca();
+                    this.actualizarCampaniasPorFinca();
 
                 }
             );
@@ -1058,7 +1457,7 @@ export class CultivosView {
          * Filtramos nada más abrir el formulario.
          */
 
-        this.actualizarCampanyasPorFinca();
+        this.actualizarCampaniasPorFinca();
 
 
         // =================================================
@@ -1069,7 +1468,7 @@ export class CultivosView {
             .getElementById(
                 "guardarCultivo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -1199,10 +1598,10 @@ export class CultivosView {
 
 
     // =====================================================
-    // FILTRAR CAMPANYAS SEGÚN FINCA
+    // FILTRAR CAMPAÑAS SEGÚN FINCA
     // =====================================================
 
-    actualizarCampanyasPorFinca() {
+    actualizarCampaniasPorFinca() {
 
         const fincaSelect =
             document
@@ -1247,7 +1646,7 @@ export class CultivosView {
             opcion => {
 
                 /*
-                 * "Sin campanya"
+                 * "Sin campaña"
                  */
 
                 if (
@@ -1310,6 +1709,17 @@ export class CultivosView {
                 "";
 
         }
+
+    }
+
+
+    // =====================================================
+    // COMPATIBILIDAD CON NOMBRE ANTERIOR
+    // =====================================================
+
+    actualizarCampanyasPorFinca() {
+
+        this.actualizarCampaniasPorFinca();
 
     }
 

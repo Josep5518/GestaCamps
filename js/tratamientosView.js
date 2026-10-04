@@ -72,158 +72,201 @@ export class TratamientosView {
                 .obtenerFincas();
 
 
+        const fincasUtilizadas =
+            new Set(
+                todos
+                    .map(
+                        tratamiento =>
+                            tratamiento.fincaId
+                    )
+                    .filter(Boolean)
+                    .map(String)
+            ).size;
+
+
+        const productosUtilizados =
+            new Set(
+                todos
+                    .map(
+                        tratamiento =>
+                            tratamiento.productoId
+                    )
+                    .filter(Boolean)
+                    .map(String)
+            ).size;
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="tratamientos-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Tratamientos
-                    </h2>
+                <section class="tratamientos-hero">
 
-                    <p>
-                        Registro y control de tratamientos agrícolas
-                    </p>
+                    <div class="tratamientos-hero-content">
 
-                </div>
-
-
-                <button
-                    id="nuevoTratamiento"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nuevo tratamiento
-                </button>
-
-            </header>
+                        <span class="tratamientos-eyebrow">
+                            🧪 GESTIÓN AGRÍCOLA
+                        </span>
 
 
-            <section class="stats tratamientos-stats">
+                        <h1>
+                            Protege tu campo
+                            <span>con cada decisión.</span>
+                        </h1>
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🧪
-                    </span>
-
-                    <div>
 
                         <p>
-                            Tratamientos
+                            Registra los tratamientos agrícolas,
+                            controla los productos utilizados y mantén
+                            toda la trazabilidad de cada aplicación.
                         </p>
 
-                        <h3>
-                            ${todos.length}
-                        </h3>
+
+                        <button
+                            id="nuevoTratamiento"
+                            class="
+                                primary-button
+                                tratamientos-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo tratamiento
+                        </button>
 
                     </div>
 
-                </div>
+
+                    <div class="tratamientos-hero-image">
+
+                        <div class="tratamientos-hero-badge">
+
+                            <span>
+                                Tratamientos
+                            </span>
+
+                            <strong>
+                                ${todos.length}
+                            </strong>
+
+                        </div>
 
 
-                <div class="card">
+                        <div class="tratamientos-hero-copy">
 
-                    <span class="card-icon">
-                        📅
-                    </span>
+                            <small>
+                                CONTROL · SEGURIDAD · TRAZABILIDAD
+                            </small>
 
-                    <div>
+                            <strong>
+                                Cada aplicación,<br>
+                                bajo control
+                            </strong>
 
-                        <p>
-                            Hoy
-                        </p>
-
-                        <h3>
-                            ${tratamientosHoy.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        🌾
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Fincas
-                        </p>
-
-                        <h3>
-                            ${
-                                new Set(
-                                    todos
-                                        .map(
-                                            tratamiento =>
-                                                tratamiento.fincaId
-                                        )
-                                        .filter(Boolean)
-                                ).size
-                            }
-                        </h3>
+                        </div>
 
                     </div>
 
-                </div>
+                </section>
 
 
-                <div class="card">
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
 
-                    <span class="card-icon">
-                        📦
-                    </span>
+                <section class="stats tratamientos-stats">
+
+                    ${this.crearStat(
+                        "🧪",
+                        "Tratamientos",
+                        todos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "📅",
+                        "Hoy",
+                        tratamientosHoy.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "🌾",
+                        "Fincas",
+                        fincasUtilizadas
+                    )}
+
+
+                    ${this.crearStat(
+                        "📦",
+                        "Productos utilizados",
+                        productosUtilizados
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTADO
+                =========================================== -->
+
+                <div class="tratamientos-section-header">
 
                     <div>
 
-                        <p>
-                            Productos
-                        </p>
+                        <span class="tratamientos-section-eyebrow">
+                            APLICACIONES AGRÍCOLAS
+                        </span>
 
-                        <h3>
-                            ${
-                                new Set(
-                                    todos
-                                        .map(
-                                            tratamiento =>
-                                                tratamiento.productoId
-                                        )
-                                        .filter(Boolean)
-                                ).size
-                            }
-                        </h3>
+
+                        <h2>
+                            Historial de tratamientos
+                        </h2>
+
+
+                        <p>
+                            Consulta aplicaciones, productos,
+                            dosis y superficies tratadas.
+                        </p>
 
                     </div>
 
+
+                    <span class="tratamientos-results-count">
+
+                        ${tratamientos.length}
+
+                        ${
+                            tratamientos.length === 1
+                                ? "tratamiento"
+                                : "tratamientos"
+                        }
+
+                    </span>
+
                 </div>
 
-            </section>
 
+                <!-- ==========================================
+                     FILTROS
+                =========================================== -->
 
-            <section
-                class="panel tratamientos-filtros-panel"
-            >
+                <section class="tratamientos-filtros-panel">
 
-                <div
-                    class="tratamientos-filtros-grid"
-                >
+                    <div class="tratamientos-search-wrap">
 
-                    <div class="form-group">
+                        <span>
+                            🔎
+                        </span>
 
-                        <label>
-                            Buscar
-                        </label>
 
                         <input
                             id="buscarTratamiento"
                             type="search"
-                            placeholder="Producto, finca, cultivo..."
+                            placeholder="Buscar producto, finca, cultivo..."
                             value="${escaparHTML(
                                 this.busqueda
                             )}"
@@ -232,11 +275,12 @@ export class TratamientosView {
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="tratamientos-filter-wrap">
 
                         <label>
                             Finca
                         </label>
+
 
                         <select
                             id="filtroFincaTratamiento"
@@ -246,38 +290,44 @@ export class TratamientosView {
                                 Todas las fincas
                             </option>
 
-                            ${fincas.map(
-                                finca => `
 
-                                    <option
-                                        value="${finca.id}"
-                                        ${
-                                            mismoId(
-                                                this.filtroFinca,
-                                                finca.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            finca.nombre
-                                        )}
-                                    </option>
+                            ${fincas
+                                .map(
+                                    finca => `
 
-                                `
-                            ).join("")}
+                                        <option
+                                            value="${finca.id}"
+
+                                            ${
+                                                mismoId(
+                                                    this.filtroFinca,
+                                                    finca.id
+                                                )
+
+                                                    ? "selected"
+
+                                                    : ""
+                                            }
+                                        >
+                                            ${escaparHTML(
+                                                finca.nombre
+                                            )}
+                                        </option>
+
+                                    `
+                                )
+                                .join("")}
 
                         </select>
 
                     </div>
 
-                </div>
-
-            </section>
+                </section>
 
 
-            <section>
+                <!-- ==========================================
+                     LISTA
+                =========================================== -->
 
                 <div
                     id="listaTratamientos"
@@ -286,6 +336,7 @@ export class TratamientosView {
 
                     ${
                         tratamientos.length
+
                             ? tratamientos
                                 .map(
                                     tratamiento =>
@@ -294,12 +345,13 @@ export class TratamientosView {
                                         )
                                 )
                                 .join("")
+
                             : this.crearVacio()
                     }
 
                 </div>
 
-            </section>
+            </div>
 
         `;
 
@@ -308,7 +360,7 @@ export class TratamientosView {
             .getElementById(
                 "nuevoTratamiento"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrarFormulario()
@@ -319,7 +371,7 @@ export class TratamientosView {
             .getElementById(
                 "buscarTratamiento"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "input",
                 event => {
 
@@ -336,7 +388,7 @@ export class TratamientosView {
             .getElementById(
                 "filtroFincaTratamiento"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "change",
                 event => {
 
@@ -355,7 +407,48 @@ export class TratamientosView {
 
 
     // =====================================================
-    // ACTUALIZAR SOLO LISTADO
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <div class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+
+                <div>
+
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
+
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ACTUALIZAR LISTA
     // =====================================================
 
     actualizarLista() {
@@ -381,7 +474,9 @@ export class TratamientosView {
 
 
         contenedor.innerHTML =
+
             tratamientos.length
+
                 ? tratamientos
                     .map(
                         tratamiento =>
@@ -390,7 +485,29 @@ export class TratamientosView {
                             )
                     )
                     .join("")
+
                 : this.crearVacio();
+
+
+        const contador =
+            document
+                .querySelector(
+                    ".tratamientos-results-count"
+                );
+
+
+        if (
+            contador
+        ) {
+
+            contador.textContent =
+                `${tratamientos.length} ${
+                    tratamientos.length === 1
+                        ? "tratamiento"
+                        : "tratamientos"
+                }`;
+
+        }
 
 
         this.configurarEventos();
@@ -408,53 +525,71 @@ export class TratamientosView {
 
         return `
 
-            <article class="panel tratamiento-card">
+            <article class="tratamiento-card">
 
-                <div
-                    class="tratamiento-card-header"
-                >
+                <div class="tratamiento-card-top">
 
-                    <div>
+                    <div class="tratamiento-card-main">
 
-                        <div
-                            class="tratamiento-card-icon"
-                        >
+                        <span class="tratamiento-card-icon">
                             🧪
+                        </span>
+
+
+                        <div>
+
+                            <span class="tratamiento-card-kicker">
+                                TRATAMIENTO AGRÍCOLA
+                            </span>
+
+
+                            <h3>
+                                ${escaparHTML(
+                                    tratamiento.productoNombre
+                                    ||
+                                    "Producto"
+                                )}
+                            </h3>
+
+
+                            <p>
+                                📍
+                                ${escaparHTML(
+                                    tratamiento.fincaNombre
+                                    ||
+                                    "Sin finca"
+                                )}
+                            </p>
+
                         </div>
-
-                        <h3>
-                            ${escaparHTML(
-                                tratamiento.productoNombre
-                            )}
-                        </h3>
-
-                        <strong
-                            class="tratamiento-card-finca"
-                        >
-                            ${escaparHTML(
-                                tratamiento.fincaNombre
-                            )}
-                        </strong>
 
                     </div>
 
 
-                    <div
-                        class="tratamiento-card-actions"
-                    >
+                    <div class="tratamiento-card-actions">
 
                         <button
-                            class="secondary-button editar-tratamiento"
+                            class="
+                                tratamiento-action-button
+                                editar-tratamiento
+                            "
                             type="button"
                             data-id="${tratamiento.id}"
+                            title="Editar"
                         >
-                            Editar
+                            ✎
                         </button>
 
+
                         <button
-                            class="secondary-button eliminar-tratamiento"
+                            class="
+                                tratamiento-action-button
+                                tratamiento-delete
+                                eliminar-tratamiento
+                            "
                             type="button"
                             data-id="${tratamiento.id}"
+                            title="Eliminar"
                         >
                             ×
                         </button>
@@ -464,141 +599,260 @@ export class TratamientosView {
                 </div>
 
 
-                <div
-                    class="tratamiento-card-meta"
-                >
+                <div class="tratamiento-card-date">
 
-                    <p>
-                        📅 ${formatearFecha(
-                            tratamiento.fecha
-                        )}
+                    <div>
 
-                        ${
-                            tratamiento.hora
-                                ? ` · ${escaparHTML(
-                                    tratamiento.hora
-                                )}`
-                                : ""
-                        }
-                    </p>
+                        <span>
+                            Fecha
+                        </span>
 
+                        <strong>
+                            ${formatearFecha(
+                                tratamiento.fecha
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Hora
+                        </span>
+
+                        <strong>
+                            ${escaparHTML(
+                                tratamiento.hora
+                                ||
+                                "—"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="tratamiento-tags">
 
                     ${
                         tratamiento.campaniaNombre
+
                             ? `
-                                <p>
+
+                                <span>
                                     🗓️
                                     ${escaparHTML(
                                         tratamiento.campaniaNombre
                                     )}
-                                </p>
+                                </span>
+
                             `
+
                             : ""
                     }
 
 
                     ${
                         tratamiento.cultivoNombre
+
                             ? `
-                                <p>
+
+                                <span>
                                     🌱
                                     ${escaparHTML(
                                         tratamiento.cultivoNombre
                                     )}
-                                </p>
+                                </span>
+
                             `
-                            : ""
-                    }
 
-
-                    <p>
-                        📦
-                        ${tratamiento.cantidadUsada}
-
-                        ${escaparHTML(
-                            tratamiento.productoUnidad
-                            ||
-                            ""
-                        )}
-                    </p>
-
-
-                    <p>
-                        🧪 Dosis:
-                        ${escaparHTML(
-                            tratamiento.dosis
-                        )}
-                    </p>
-
-
-                    ${
-                        tratamiento.superficieTratada
-                            ? `
-                                <p>
-                                    📐
-                                    ${tratamiento.superficieTratada}
-                                    ha
-                                </p>
-                            `
-                            : ""
-                    }
-
-
-                    ${
-                        tratamiento.plagaObjetivo
-                            ? `
-                                <p>
-                                    🐛
-                                    ${escaparHTML(
-                                        tratamiento.plagaObjetivo
-                                    )}
-                                </p>
-                            `
-                            : ""
-                    }
-
-
-                    ${
-                        tratamiento.trabajadorNombre
-                            ? `
-                                <p>
-                                    👷
-                                    ${escaparHTML(
-                                        tratamiento.trabajadorNombre
-                                    )}
-                                </p>
-                            `
-                            : ""
-                    }
-
-
-                    ${
-                        tratamiento.maquinariaNombre
-                            ? `
-                                <p>
-                                    🚜
-                                    ${escaparHTML(
-                                        tratamiento.maquinariaNombre
-                                    )}
-                                </p>
-                            `
                             : ""
                     }
 
                 </div>
 
 
+                <div class="tratamiento-data-grid">
+
+                    <div>
+
+                        <span>
+                            Cantidad
+                        </span>
+
+                        <strong>
+
+                            ${escaparHTML(
+                                tratamiento.cantidadUsada
+                                ??
+                                "—"
+                            )}
+
+                            ${escaparHTML(
+                                tratamiento.productoUnidad
+                                ||
+                                ""
+                            )}
+
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Dosis
+                        </span>
+
+                        <strong>
+                            ${escaparHTML(
+                                tratamiento.dosis
+                                ||
+                                "—"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Superficie
+                        </span>
+
+                        <strong>
+
+                            ${
+                                tratamiento.superficieTratada
+
+                                    ? `${escaparHTML(
+                                        tratamiento.superficieTratada
+                                    )} ha`
+
+                                    : "—"
+                            }
+
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Objetivo
+                        </span>
+
+                        <strong>
+                            ${escaparHTML(
+                                tratamiento.plagaObjetivo
+                                ||
+                                "Sin especificar"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
                 ${
-                    tratamiento.observaciones
+                    tratamiento.trabajadorNombre
+                    ||
+                    tratamiento.maquinariaNombre
+
                         ? `
 
-                            <div
-                                class="tratamiento-card-observaciones"
-                            >
+                            <div class="tratamiento-resources">
 
-                                <strong>
-                                    Observaciones
-                                </strong>
+                                ${
+                                    tratamiento.trabajadorNombre
+
+                                        ? `
+
+                                            <div>
+
+                                                <span>
+                                                    👷
+                                                </span>
+
+                                                <div>
+
+                                                    <small>
+                                                        Aplicador
+                                                    </small>
+
+                                                    <strong>
+                                                        ${escaparHTML(
+                                                            tratamiento.trabajadorNombre
+                                                        )}
+                                                    </strong>
+
+                                                </div>
+
+                                            </div>
+
+                                        `
+
+                                        : ""
+                                }
+
+
+                                ${
+                                    tratamiento.maquinariaNombre
+
+                                        ? `
+
+                                            <div>
+
+                                                <span>
+                                                    🚜
+                                                </span>
+
+                                                <div>
+
+                                                    <small>
+                                                        Maquinaria
+                                                    </small>
+
+                                                    <strong>
+                                                        ${escaparHTML(
+                                                            tratamiento.maquinariaNombre
+                                                        )}
+                                                    </strong>
+
+                                                </div>
+
+                                            </div>
+
+                                        `
+
+                                        : ""
+                                }
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    tratamiento.observaciones
+
+                        ? `
+
+                            <div class="tratamiento-observaciones">
+
+                                <span>
+                                    OBSERVACIONES
+                                </span>
 
                                 <p>
                                     ${escaparHTML(
@@ -609,21 +863,26 @@ export class TratamientosView {
                             </div>
 
                         `
+
                         : ""
                 }
 
 
-                <p
-                    class="tratamiento-card-author"
-                >
-                    Registrado por
+                <footer class="tratamiento-card-footer">
 
-                    ${escaparHTML(
-                        tratamiento.creadoPorNombre
-                        ||
-                        "Administración"
-                    )}
-                </p>
+                    <span>
+                        Registrado por
+                    </span>
+
+                    <strong>
+                        ${escaparHTML(
+                            tratamiento.creadoPorNombre
+                            ||
+                            "Administración"
+                        )}
+                    </strong>
+
+                </footer>
 
             </article>
 
@@ -647,10 +906,12 @@ export class TratamientosView {
 
         const tratamiento =
             editando
+
                 ? this.tratamientoService
                     .obtenerPorId(
                         tratamientoId
                     )
+
                 : null;
 
 
@@ -708,9 +969,7 @@ export class TratamientosView {
                     producto =>
                         Number(
                             producto.cantidad
-                        )
-                        >
-                        0
+                        ) > 0
                         ||
                         mismoId(
                             producto.id,
@@ -732,472 +991,611 @@ export class TratamientosView {
 
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverTratamientos"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="tratamiento-form-page">
+
+                <button
+                    id="volverTratamientos"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="tratamiento-form-header">
 
-                <div>
+                    <span class="tratamiento-form-eyebrow">
+                        🧪 TRATAMIENTOS
+                    </span>
 
-                    <h2>
+
+                    <h1>
+
                         ${
-                            tratamiento
+                            editando
                                 ? "Editar tratamiento"
                                 : "Nuevo tratamiento"
                         }
-                    </h2>
+
+                    </h1>
+
 
                     <p>
-                        Registro de aplicación agrícola
+
+                        ${
+                            editando
+
+                                ? "Actualiza los datos de esta aplicación agrícola."
+
+                                : "Registra una nueva aplicación y mantén el control de producto, dosis y superficie."
+                        }
+
                     </p>
 
-                </div>
+                </header>
 
-            </header>
 
+                <div class="tratamiento-form-layout">
 
-            <section class="form-panel">
-
-                <div class="form-grid">
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Fecha *
-                        </label>
-
-                        <input
-                            id="tratamientoFecha"
-                            type="date"
-                            value="${
-                                tratamiento?.fecha
-                                ||
-                                fechaHoy
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Hora
-                        </label>
-
-                        <input
-                            id="tratamientoHora"
-                            type="time"
-                            value="${
-                                tratamiento?.hora
-                                ||
-                                horaActual
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Finca *
-                        </label>
-
-                        <select
-                            id="tratamientoFinca"
-                        >
-
-                            <option value="">
-                                Selecciona finca...
-                            </option>
-
-                            ${fincas.map(
-                                finca => `
-
-                                    <option
-                                        value="${finca.id}"
-                                        ${
-                                            mismoId(
-                                                tratamiento?.fincaId,
-                                                finca.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            finca.nombre
-                                        )}
-                                    </option>
-
-                                `
-                            ).join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Campanya
-                        </label>
-
-                        <select
-                            id="tratamientoCampania"
-                        >
-
-                            <option value="">
-                                Sin Campanya
-                            </option>
-
-                            ${campanias.map(
-                                campania => `
-
-                                    <option
-                                        value="${campania.id}"
-                                        data-finca-id="${campania.fincaId}"
-                                        ${
-                                            mismoId(
-                                                tratamiento?.campaniaId,
-                                                campania.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            campania.nombre
-                                        )}
-                                    </option>
-
-                                `
-                            ).join("")}
-
-                        </select>
-
-                    </div>
-                                        <div class="form-group">
-
-                        <label>
-                            Cultivo
-                        </label>
-
-                        <select
-                            id="tratamientoCultivo"
-                        >
-
-                            <option value="">
-                                Sin cultivo concreto
-                            </option>
-
-                            ${cultivos.map(
-                                cultivo => `
-
-                                    <option
-                                        value="${cultivo.id}"
-                                        data-finca-id="${
-                                            cultivo.fincaId
-                                            ||
-                                            ""
-                                        }"
-                                        ${
-                                            mismoId(
-                                                tratamiento?.cultivoId,
-                                                cultivo.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            obtenerNombreCultivo(
-                                                cultivo
-                                            )
-                                        )}
-                                    </option>
-
-                                `
-                            ).join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Producto *
-                        </label>
-
-                        <select
-                            id="tratamientoProducto"
-                        >
-
-                            <option value="">
-                                Selecciona producto...
-                            </option>
-
-                            ${inventario.map(
-                                producto => `
-
-                                    <option
-                                        value="${producto.id}"
-                                        ${
-                                            mismoId(
-                                                tratamiento?.productoId,
-                                                producto.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            producto.nombre
-                                        )}
-
-                                        · ${producto.cantidad}
-
-                                        ${escaparHTML(
-                                            producto.unidad
-                                            ||
-                                            ""
-                                        )}
-                                    </option>
-
-                                `
-                            ).join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Cantidad utilizada *
-                        </label>
-
-                        <input
-                            id="tratamientoCantidad"
-                            type="number"
-                            min="0.01"
-                            step="0.01"
-                            value="${
-                                tratamiento?.cantidadUsada
-                                ??
-                                ""
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Dosis *
-                        </label>
-
-                        <input
-                            id="tratamientoDosis"
-                            type="text"
-                            placeholder="Ej. 2 L/ha"
-                            value="${escaparHTML(
-                                tratamiento?.dosis
-                                ||
-                                ""
-                            )}"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Superficie tratada (ha)
-                        </label>
-
-                        <input
-                            id="tratamientoSuperficie"
-                            type="number"
-                            min="0.01"
-                            step="0.01"
-                            value="${
-                                tratamiento?.superficieTratada
-                                ??
-                                ""
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Problema / objetivo
-                        </label>
-
-                        <input
-                            id="tratamientoObjetivo"
-                            type="text"
-                            placeholder="Ej. Oídio, pulgón..."
-                            value="${escaparHTML(
-                                tratamiento?.plagaObjetivo
-                                ||
-                                ""
-                            )}"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Aplicador
-                        </label>
-
-                        <select
-                            id="tratamientoTrabajador"
-                        >
-
-                            <option value="">
-                                Sin trabajador
-                            </option>
-
-                            ${trabajadores.map(
-                                trabajador => `
-
-                                    <option
-                                        value="${trabajador.id}"
-                                        ${
-                                            mismoId(
-                                                tratamiento?.trabajadorId,
-                                                trabajador.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            obtenerNombreTrabajador(
-                                                trabajador
-                                            )
-                                        )}
-                                    </option>
-
-                                `
-                            ).join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Maquinaria
-                        </label>
-
-                        <select
-                            id="tratamientoMaquinaria"
-                        >
-
-                            <option value="">
-                                Sin maquinaria
-                            </option>
-
-                            ${maquinaria.map(
-                                maquina => `
-
-                                    <option
-                                        value="${maquina.id}"
-                                        ${
-                                            mismoId(
-                                                tratamiento?.maquinariaId,
-                                                maquina.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${escaparHTML(
-                                            obtenerNombreMaquinaria(
-                                                maquina
-                                            )
-                                        )}
-                                    </option>
-
-                                `
-                            ).join("")}
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Observaciones
-                    </label>
-
-                    <textarea
-                        id="tratamientoObservaciones"
-                        rows="4"
-                        placeholder="Observaciones del tratamiento..."
-                    >${escaparHTML(
-                        tratamiento?.observaciones
-                        ||
-                        ""
-                    )}</textarea>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarTratamiento"
-                        class="secondary-button"
-                        type="button"
+                    <section
+                        class="
+                            form-panel
+                            tratamiento-form-panel
+                        "
                     >
-                        Cancelar
-                    </button>
+
+                        <div class="tratamiento-form-section">
+
+                            <span>
+                                🧪
+                            </span>
+
+                            <div>
+
+                                <h3>
+                                    Datos del tratamiento
+                                </h3>
+
+                                <p>
+                                    Información principal de la aplicación.
+                                </p>
+
+                            </div>
+
+                        </div>
 
 
-                    <button
-                        id="guardarTratamiento"
-                        class="primary-button"
-                        type="button"
-                    >
-                        ${
-                            tratamiento
-                                ? "Guardar cambios"
-                                : "Registrar tratamiento"
-                        }
-                    </button>
+                        <div class="tratamiento-form-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha *
+                                </label>
+
+                                <input
+                                    id="tratamientoFecha"
+                                    type="date"
+                                    value="${
+                                        tratamiento?.fecha
+                                        ||
+                                        fechaHoy
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Hora
+                                </label>
+
+                                <input
+                                    id="tratamientoHora"
+                                    type="time"
+                                    value="${
+                                        tratamiento?.hora
+                                        ||
+                                        horaActual
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Finca *
+                                </label>
+
+                                <select
+                                    id="tratamientoFinca"
+                                >
+
+                                    <option value="">
+                                        Selecciona finca...
+                                    </option>
+
+
+                                    ${fincas
+                                        .map(
+                                            finca => `
+
+                                                <option
+                                                    value="${finca.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            tratamiento?.fincaId,
+                                                            finca.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+                                                    ${escaparHTML(
+                                                        finca.nombre
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Campaña
+                                </label>
+
+                                <select
+                                    id="tratamientoCampania"
+                                >
+
+                                    <option value="">
+                                        Sin campaña
+                                    </option>
+
+
+                                    ${campanias
+                                        .map(
+                                            campania => `
+
+                                                <option
+                                                    value="${campania.id}"
+
+                                                    data-finca-id="${campania.fincaId}"
+
+                                                    ${
+                                                        mismoId(
+                                                            tratamiento?.campaniaId,
+                                                            campania.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+                                                    ${escaparHTML(
+                                                        campania.nombre
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Cultivo
+                                </label>
+
+                                <select
+                                    id="tratamientoCultivo"
+                                >
+
+                                    <option value="">
+                                        Sin cultivo
+                                    </option>
+
+
+                                    ${cultivos
+                                        .map(
+                                            cultivo => `
+
+                                                <option
+                                                    value="${cultivo.id}"
+
+                                                    data-finca-id="${cultivo.fincaId}"
+
+                                                    ${
+                                                        mismoId(
+                                                            tratamiento?.cultivoId,
+                                                            cultivo.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        obtenerNombreCultivo(
+                                                            cultivo
+                                                        )
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Producto *
+                                </label>
+
+                                <select
+                                    id="tratamientoProducto"
+                                >
+
+                                    <option value="">
+                                        Selecciona producto...
+                                    </option>
+
+
+                                    ${inventario
+                                        .map(
+                                            producto => `
+
+                                                <option
+                                                    value="${producto.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            tratamiento?.productoId,
+                                                            producto.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        producto.nombre
+                                                        ||
+                                                        "Producto"
+                                                    )}
+
+                                                    ·
+                                                    ${producto.cantidad}
+
+                                                    ${escaparHTML(
+                                                        producto.unidad
+                                                        ||
+                                                        ""
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Cantidad utilizada *
+                                </label>
+
+                                <input
+                                    id="tratamientoCantidad"
+                                    type="number"
+                                    min="0.01"
+                                    step="0.01"
+                                    value="${
+                                        tratamiento?.cantidadUsada
+                                        ??
+                                        ""
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Dosis *
+                                </label>
+
+                                <input
+                                    id="tratamientoDosis"
+                                    type="text"
+                                    placeholder="Ej. 2 L/ha"
+                                    value="${escaparHTML(
+                                        tratamiento?.dosis
+                                        ||
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Superficie tratada (ha)
+                                </label>
+
+                                <input
+                                    id="tratamientoSuperficie"
+                                    type="number"
+                                    min="0.01"
+                                    step="0.01"
+                                    value="${
+                                        tratamiento?.superficieTratada
+                                        ??
+                                        ""
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Problema / objetivo
+                                </label>
+
+                                <input
+                                    id="tratamientoObjetivo"
+                                    type="text"
+                                    placeholder="Ej. Oídio, pulgón..."
+                                    value="${escaparHTML(
+                                        tratamiento?.plagaObjetivo
+                                        ||
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Aplicador
+                                </label>
+
+                                <select
+                                    id="tratamientoTrabajador"
+                                >
+
+                                    <option value="">
+                                        Sin trabajador
+                                    </option>
+
+
+                                    ${trabajadores
+                                        .map(
+                                            trabajador => `
+
+                                                <option
+                                                    value="${trabajador.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            tratamiento?.trabajadorId,
+                                                            trabajador.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        obtenerNombreTrabajador(
+                                                            trabajador
+                                                        )
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Maquinaria
+                                </label>
+
+                                <select
+                                    id="tratamientoMaquinaria"
+                                >
+
+                                    <option value="">
+                                        Sin maquinaria
+                                    </option>
+
+
+                                    ${maquinaria
+                                        .map(
+                                            maquina => `
+
+                                                <option
+                                                    value="${maquina.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            tratamiento?.maquinariaId,
+                                                            maquina.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        obtenerNombreMaquinaria(
+                                                            maquina
+                                                        )
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group tratamiento-form-wide">
+
+                                <label>
+                                    Observaciones
+                                </label>
+
+                                <textarea
+                                    id="tratamientoObservaciones"
+                                    rows="4"
+                                    placeholder="Observaciones del tratamiento..."
+                                >${escaparHTML(
+                                    tratamiento?.observaciones
+                                    ||
+                                    ""
+                                )}</textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarTratamiento"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarTratamiento"
+                                class="primary-button"
+                                type="button"
+                            >
+
+                                ${
+                                    editando
+                                        ? "Guardar cambios"
+                                        : "Registrar tratamiento"
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <aside class="tratamiento-form-aside">
+
+                        <div class="tratamiento-form-photo">
+
+                            <div>
+
+                                <span>
+                                    GESTIÓN RESPONSABLE
+                                </span>
+
+                                <strong>
+                                    Aplicar bien,
+                                    registrar mejor.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="tratamiento-form-tip">
+
+                            <span>
+                                🛡️
+                            </span>
+
+                            <div>
+
+                                <strong>
+                                    Control de producto
+                                </strong>
+
+                                <p>
+                                    Cada tratamiento queda vinculado
+                                    al producto utilizado, finca, cultivo,
+                                    trabajador y maquinaria.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
-            </section>
+            </div>
 
         `;
 
@@ -1206,7 +1604,7 @@ export class TratamientosView {
             .getElementById(
                 "volverTratamientos"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -1217,7 +1615,7 @@ export class TratamientosView {
             .getElementById(
                 "cancelarTratamiento"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
@@ -1228,7 +1626,7 @@ export class TratamientosView {
             .getElementById(
                 "tratamientoFinca"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "change",
                 () =>
                     this.actualizarRelaciones()
@@ -1239,7 +1637,7 @@ export class TratamientosView {
             .getElementById(
                 "guardarTratamiento"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.guardarFormulario(
@@ -1359,11 +1757,13 @@ export class TratamientosView {
 
         const resultado =
             tratamiento
+
                 ? this.tratamientoService
                     .editar(
                         tratamiento.id,
                         datos
                     )
+
                 : this.tratamientoService
                     .crear(
                         datos
@@ -1513,7 +1913,8 @@ export class TratamientosView {
 
 
         const campaniaSeleccionada =
-            campania.selectedOptions[0];
+            campania
+                .selectedOptions[0];
 
 
         if (
@@ -1521,11 +1922,7 @@ export class TratamientosView {
             &&
             campaniaSeleccionada.value
             &&
-            (
-                campaniaSeleccionada.hidden
-                ||
-                campaniaSeleccionada.disabled
-            )
+            campaniaSeleccionada.disabled
         ) {
 
             campania.value =
@@ -1535,7 +1932,8 @@ export class TratamientosView {
 
 
         const cultivoSeleccionado =
-            cultivo.selectedOptions[0];
+            cultivo
+                .selectedOptions[0];
 
 
         if (
@@ -1543,11 +1941,7 @@ export class TratamientosView {
             &&
             cultivoSeleccionado.value
             &&
-            (
-                cultivoSeleccionado.hidden
-                ||
-                cultivoSeleccionado.disabled
-            )
+            cultivoSeleccionado.disabled
         ) {
 
             cultivo.value =
@@ -1556,8 +1950,10 @@ export class TratamientosView {
         }
 
     }
-        // =====================================================
-    // EVENTOS DE TARJETAS
+
+
+    // =====================================================
+    // EVENTOS
     // =====================================================
 
     configurarEventos() {
@@ -1571,13 +1967,10 @@ export class TratamientosView {
 
                     boton.addEventListener(
                         "click",
-                        () => {
-
+                        () =>
                             this.mostrarFormulario(
                                 boton.dataset.id
-                            );
-
-                        }
+                            )
                     );
 
                 }
@@ -1710,37 +2103,54 @@ export class TratamientosView {
         }
 
 
-        return tratamientos;
+        return tratamientos
+            .slice()
+            .sort(
+                (
+                    a,
+                    b
+                ) => {
+
+                    const fechaA =
+                        `${a.fecha || ""} ${a.hora || ""}`;
+
+                    const fechaB =
+                        `${b.fecha || ""} ${b.hora || ""}`;
+
+
+                    return fechaB.localeCompare(
+                        fechaA
+                    );
+
+                }
+            );
 
     }
 
 
     // =====================================================
-    // ESTADO VACÍO
+    // VACÍO
     // =====================================================
 
     crearVacio() {
 
         return `
 
-            <div
-                class="
-                    panel
-                    empty-state
-                    tratamientos-empty-state
-                "
-            >
+            <div class="tratamientos-empty">
 
-                <div class="empty-icon">
+                <div class="tratamientos-empty-icon">
                     🧪
                 </div>
+
 
                 <h3>
                     No hay tratamientos registrados
                 </h3>
 
+
                 <p>
-                    Los tratamientos agrícolas registrados aparecerán aquí.
+                    Los tratamientos agrícolas registrados
+                    aparecerán aquí.
                 </p>
 
             </div>

@@ -21,96 +21,205 @@ export class ClientesProveedoresView {
     mostrar() {
 
         const contactos =
-            this.clienteProveedorService
-                .obtenerTodos();
+            this.obtenerContactos();
 
 
         const clientes =
             contactos.filter(
                 contacto =>
-                    contacto.tipo === "Cliente"
+                    contacto.tipo ===
+                    "Cliente"
                     ||
-                    contacto.tipo === "Cliente y proveedor"
+                    contacto.tipo ===
+                    "Cliente y proveedor"
             ).length;
 
 
         const proveedores =
             contactos.filter(
                 contacto =>
-                    contacto.tipo === "Proveedor"
+                    contacto.tipo ===
+                    "Proveedor"
                     ||
-                    contacto.tipo === "Cliente y proveedor"
+                    contacto.tipo ===
+                    "Cliente y proveedor"
             ).length;
 
 
         const activos =
             contactos.filter(
                 contacto =>
-                    contacto.activo === true
+                    contacto.activo ===
+                    true
             ).length;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="contactos-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Clientes y proveedores
-                    </h2>
+                <section class="contactos-hero">
 
-                    <p>
-                        Gestiona tus clientes, proveedores y contactos
-                    </p>
+                    <div class="contactos-hero-content">
+
+                        <span class="contactos-eyebrow">
+                            🤝 COMERCIAL Y FINANZAS
+                        </span>
+
+
+                        <h1>
+                            Relaciones sólidas,
+                            <span>
+                                negocio que crece.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Gestiona clientes, proveedores y contactos
+                            desde un único lugar y mantén toda la información
+                            comercial siempre organizada.
+                        </p>
+
+
+                        <button
+                            id="nuevoContacto"
+                            class="
+                                primary-button
+                                contactos-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo contacto
+                        </button>
+
+                    </div>
+
+
+                    <div class="contactos-hero-image">
+
+                        <div class="contactos-hero-badge">
+
+                            <span>
+                                Contactos activos
+                            </span>
+
+
+                            <strong>
+                                ${activos}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="contactos-hero-copy">
+
+                            <small>
+                                CLIENTES · PROVEEDORES · NEGOCIO
+                            </small>
+
+
+                            <strong>
+                                Cada relación cuenta
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats contactos-stats">
+
+                    ${this.crearStat(
+                        "👥",
+                        "Contactos",
+                        contactos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "🧑‍💼",
+                        "Clientes",
+                        clientes
+                    )}
+
+
+                    ${this.crearStat(
+                        "🚚",
+                        "Proveedores",
+                        proveedores
+                    )}
+
+
+                    ${this.crearStat(
+                        "✅",
+                        "Activos",
+                        activos
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="contactos-section-header">
+
+                    <div>
+
+                        <span class="contactos-section-eyebrow">
+                            RED COMERCIAL
+                        </span>
+
+
+                        <h2>
+                            Clientes y proveedores
+                        </h2>
+
+
+                        <p>
+                            Consulta datos fiscales, contacto,
+                            ubicación y estado de cada relación comercial.
+                        </p>
+
+                    </div>
+
+
+                    <div class="contactos-summary">
+
+                        <span>
+                            ${contactos.length} contactos
+                        </span>
+
+
+                        <span>
+                            ${clientes} clientes
+                        </span>
+
+
+                        <span>
+                            ${proveedores} proveedores
+                        </span>
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevoContacto"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nuevo contacto
-                </button>
+                <div id="listaContactos"></div>
 
-            </header>
-
-
-            <section class="stats contactos-stats">
-
-                ${this.crearStat(
-                    "👥",
-                    "Contactos",
-                    contactos.length
-                )}
-
-
-                ${this.crearStat(
-                    "🧑‍💼",
-                    "Clientes",
-                    clientes
-                )}
-
-
-                ${this.crearStat(
-                    "🚚",
-                    "Proveedores",
-                    proveedores
-                )}
-
-
-                ${this.crearStat(
-                    "✅",
-                    "Activos",
-                    activos
-                )}
-
-            </section>
-
-
-            <div id="listaContactos"></div>
+            </div>
 
         `;
 
@@ -149,14 +258,20 @@ export class ClientesProveedoresView {
                     ${icono}
                 </span>
 
+
                 <div>
 
                     <p>
-                        ${titulo}
+                        ${this.escapar(
+                            titulo
+                        )}
                     </p>
 
+
                     <h3>
-                        ${valor}
+                        ${this.escapar(
+                            valor
+                        )}
                     </h3>
 
                 </div>
@@ -175,14 +290,14 @@ export class ClientesProveedoresView {
     mostrarLista() {
 
         const contactos =
-            this.clienteProveedorService
-                .obtenerTodos();
+            this.obtenerContactos();
 
 
         const contenedor =
-            document.getElementById(
-                "listaContactos"
-            );
+            document
+                .getElementById(
+                    "listaContactos"
+                );
 
 
         if (
@@ -195,28 +310,52 @@ export class ClientesProveedoresView {
 
 
         if (
-            contactos.length === 0
+            contactos.length ===
+            0
         ) {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="contactos-empty">
 
-                    <div class="empty-icon">
-                        👥
+                    <div class="contactos-empty-icon">
+                        🤝
                     </div>
 
+
                     <h3>
-                        Todavía no tienes clientes ni proveedores
+                        Todavía no tienes contactos
                     </h3>
 
+
                     <p>
-                        Añade el primer contacto de la explotación.
+                        Añade tu primer cliente o proveedor
+                        para empezar a organizar tu red comercial.
                     </p>
+
+
+                    <button
+                        id="crearPrimerContacto"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Añadir contacto
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimerContacto"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormularioCrear()
+                );
 
 
             return;
@@ -230,9 +369,13 @@ export class ClientesProveedoresView {
 
                 ${contactos
                     .map(
-                        contacto =>
+                        (
+                            contacto,
+                            index
+                        ) =>
                             this.crearTarjetaContacto(
-                                contacto
+                                contacto,
+                                index
                             )
                     )
                     .join("")}
@@ -252,94 +395,134 @@ export class ClientesProveedoresView {
     // =====================================================
 
     crearTarjetaContacto(
-        contacto
+        contacto,
+        index
     ) {
+
+        const imagen =
+            (
+                index %
+                3
+            )
+            +
+            1;
+
+
+        const activo =
+            contacto.activo ===
+            true;
+
+
+        const direccion =
+            [
+                contacto.direccion,
+                contacto.localidad,
+                contacto.provincia,
+                contacto.codigoPostal
+            ]
+                .filter(Boolean)
+                .join(" · ");
+
 
         return `
 
             <article class="contacto-card">
 
-                <div class="contacto-card-header">
+                <!-- ==================================
+                     COVER
+                =================================== -->
 
-                    <span class="contacto-icon">
+                <div
+                    class="
+                        contacto-cover
+                        contacto-cover-${imagen}
+                    "
+                >
 
-                        ${this.obtenerIconoTipo(
-                            contacto.tipo
-                        )}
-
-                    </span>
+                    <div class="contacto-cover-overlay"></div>
 
 
-                    <div class="contacto-actions">
+                    <div class="contacto-cover-top">
 
-                        <button
+                        <span
                             class="
-                                secondary-button
-                                editar-contacto
+                                contacto-status-pill
+                                ${
+                                    activo
+                                        ? "activo"
+                                        : "inactivo"
+                                }
                             "
-                            data-id="${contacto.id}"
-                            type="button"
                         >
-                            Editar
-                        </button>
 
-
-                        <button
-                            class="
-                                delete-button
-                                eliminar-contacto
-                            "
-                            data-id="${contacto.id}"
-                            type="button"
-                            aria-label="Eliminar contacto"
-                        >
-                            ×
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <h3>
-                    ${contacto.nombre}
-                </h3>
-
-
-                <p class="contacto-tipo">
-                    ${contacto.tipo}
-                </p>
-
-
-                <div class="contacto-info">
-
-                    <div>
-
-                        <span>
-                            Estado
-                        </span>
-
-                        <strong>
-
+                            ●
                             ${
-                                contacto.activo
+                                activo
                                     ? "Activo"
                                     : "Inactivo"
                             }
 
-                        </strong>
+                        </span>
+
+
+                        <div class="contacto-cover-actions">
+
+                            <button
+                                class="
+                                    contacto-icon-button
+                                    editar-contacto
+                                "
+                                data-id="${this.escapar(
+                                    contacto.id
+                                )}"
+                                type="button"
+                                title="Editar contacto"
+                            >
+                                ✎
+                            </button>
+
+
+                            <button
+                                class="
+                                    contacto-icon-button
+                                    contacto-delete
+                                    eliminar-contacto
+                                "
+                                data-id="${this.escapar(
+                                    contacto.id
+                                )}"
+                                type="button"
+                                title="Eliminar contacto"
+                            >
+                                ×
+                            </button>
+
+                        </div>
 
                     </div>
 
 
-                    <div>
+                    <div class="contacto-cover-copy">
 
                         <span>
-                            NIF / CIF
+                            ${this.obtenerIconoTipo(
+                                contacto.tipo
+                            )}
+
+                            ${this.escapar(
+                                contacto.tipo
+                                ||
+                                "CONTACTO"
+                            )}
                         </span>
 
+
                         <strong>
-                            ${contacto.nif || "—"}
+                            ${this.escapar(
+                                contacto.nombre
+                                ||
+                                "Contacto"
+                            )}
                         </strong>
 
                     </div>
@@ -347,110 +530,240 @@ export class ClientesProveedoresView {
                 </div>
 
 
-                ${
-                    contacto.telefono
+                <!-- ==================================
+                     CUERPO
+                =================================== -->
 
-                        ? `
+                <div class="contacto-card-body">
 
-                            <p>
-                                📞 ${contacto.telefono}
-                            </p>
+                    <div class="contacto-title-row">
 
-                        `
+                        <div>
 
-                        : ""
-                }
-
-
-                ${
-                    contacto.email
-
-                        ? `
-
-                            <p>
-                                ✉️ ${contacto.email}
-                            </p>
-
-                        `
-
-                        : ""
-                }
+                            <span class="contacto-kicker">
+                                RELACIÓN COMERCIAL
+                            </span>
 
 
-                ${
-                    contacto.direccion
-                    ||
-                    contacto.localidad
+                            <h3>
+                                ${this.escapar(
+                                    contacto.nombre
+                                    ||
+                                    "Contacto"
+                                )}
+                            </h3>
 
-                        ? `
-
-                            <p>
-
-                                📍
-
-                                ${[
-                                    contacto.direccion,
-                                    contacto.localidad,
-                                    contacto.provincia,
-                                    contacto.codigoPostal
-                                ]
-                                    .filter(
-                                        Boolean
-                                    )
-                                    .join(
-                                        " · "
-                                    )}
-
-                            </p>
-
-                        `
-
-                        : ""
-                }
+                        </div>
 
 
-                <span
-                    class="
-                        contacto-status
+                        <span class="contacto-type-chip">
 
-                        ${
-                            contacto.activo
-                                ? "contacto-activo"
-                                : "contacto-inactivo"
-                        }
-                    "
-                >
+                            ${this.obtenerIconoTipo(
+                                contacto.tipo
+                            )}
+
+                            ${this.escapar(
+                                contacto.tipo
+                                ||
+                                "Contacto"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="contacto-info-grid">
+
+                        <div>
+
+                            <span>
+                                Estado
+                            </span>
+
+
+                            <strong>
+                                ${
+                                    activo
+                                        ? "Activo"
+                                        : "Inactivo"
+                                }
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                NIF / CIF
+                            </span>
+
+
+                            <strong>
+                                ${this.escapar(
+                                    contacto.nif
+                                    ||
+                                    "—"
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
 
                     ${
-                        contacto.activo
-                            ? "Activo"
-                            : "Inactivo"
+                        contacto.telefono
+
+                            ? `
+
+                                <div class="contacto-detail-row">
+
+                                    <span>
+                                        📞
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Teléfono
+                                        </small>
+
+
+                                        <strong>
+                                            ${this.escapar(
+                                                contacto.telefono
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : ""
                     }
 
-                </span>
+
+                    ${
+                        contacto.email
+
+                            ? `
+
+                                <div class="contacto-detail-row">
+
+                                    <span>
+                                        ✉️
+                                    </span>
 
 
-                ${
-                    contacto.notas
+                                    <div>
 
-                        ? `
+                                        <small>
+                                            Email
+                                        </small>
 
-                            <div class="contacto-notas">
 
-                                <span>
-                                    Notas
-                                </span>
+                                        <strong>
+                                            ${this.escapar(
+                                                contacto.email
+                                            )}
+                                        </strong>
 
-                                <p>
-                                    ${contacto.notas}
-                                </p>
+                                    </div>
 
-                            </div>
+                                </div>
 
-                        `
+                            `
 
-                        : ""
-                }
+                            : ""
+                    }
+
+
+                    ${
+                        direccion
+
+                            ? `
+
+                                <div class="contacto-detail-row">
+
+                                    <span>
+                                        📍
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Dirección
+                                        </small>
+
+
+                                        <strong>
+                                            ${this.escapar(
+                                                direccion
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${
+                        contacto.notas
+
+                            ? `
+
+                                <div class="contacto-notas">
+
+                                    <span>
+                                        NOTAS
+                                    </span>
+
+
+                                    <p>
+                                        ${this.escapar(
+                                            contacto.notas
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    <button
+                        class="
+                            contacto-main-action
+                            editar-contacto
+                        "
+                        data-id="${this.escapar(
+                            contacto.id
+                        )}"
+                        type="button"
+                    >
+
+                        Ver y editar contacto
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
 
             </article>
 
@@ -470,14 +783,14 @@ export class ClientesProveedoresView {
                 ".editar-contacto"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
                             this.mostrarFormularioEditar(
-                                button.dataset.id
+                                boton.dataset.id
                             );
 
                         }
@@ -492,14 +805,14 @@ export class ClientesProveedoresView {
                 ".eliminar-contacto"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
                             const id =
-                                button.dataset.id;
+                                boton.dataset.id;
 
 
                             const contacto =
@@ -539,7 +852,8 @@ export class ClientesProveedoresView {
                             if (
                                 resultado
                                 &&
-                                resultado.ok === false
+                                resultado.ok ===
+                                false
                             ) {
 
                                 alert(
@@ -566,63 +880,20 @@ export class ClientesProveedoresView {
 
 
     // =====================================================
-    // FORMULARIO CREAR
+    // CREAR
     // =====================================================
 
     mostrarFormularioCrear() {
 
-        this.mainContent.innerHTML = `
-
-            <header class="topbar">
-
-                <div>
-
-                    <h2>
-                        Nuevo cliente o proveedor
-                    </h2>
-
-                    <p>
-                        Añade un nuevo contacto
-                    </p>
-
-                </div>
-
-            </header>
-
-
-            ${this.crearFormulario(
-                null
-            )}
-
-        `;
-
-
-        document
-            .getElementById(
-                "cancelarContacto"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.mostrar()
-            );
-
-
-        document
-            .getElementById(
-                "guardarContacto"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.guardarNuevo()
-            );
+        this.mostrarFormulario(
+            null
+        );
 
     }
 
 
     // =====================================================
-    // FORMULARIO EDITAR
+    // EDITAR
     // =====================================================
 
     mostrarFormularioEditar(
@@ -645,30 +916,141 @@ export class ClientesProveedoresView {
         }
 
 
+        this.mostrarFormulario(
+            contacto
+        );
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO
+    // =====================================================
+
+    mostrarFormulario(
+        contacto
+    ) {
+
+        const editando =
+            !!contacto;
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="contacto-form-page">
 
-                <div>
+                <button
+                    id="volverContactos"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
-                    <h2>
-                        Editar contacto
-                    </h2>
+
+                <header class="contacto-form-header">
+
+                    <span>
+                        🤝 COMERCIAL Y FINANZAS
+                    </span>
+
+
+                    <h1>
+
+                        ${
+                            editando
+                                ? "Editar contacto"
+                                : "Nuevo cliente o proveedor"
+                        }
+
+                    </h1>
+
 
                     <p>
-                        Modifica los datos del cliente o proveedor
+
+                        ${
+                            editando
+
+                                ? "Actualiza los datos comerciales y fiscales del contacto."
+
+                                : "Añade un nuevo cliente, proveedor o colaborador comercial."
+                        }
+
                     </p>
+
+                </header>
+
+
+                <div class="contacto-form-layout">
+
+                    ${this.crearFormulario(
+                        contacto
+                    )}
+
+
+                    <aside class="contacto-form-aside">
+
+                        <div class="contacto-form-photo">
+
+                            <div>
+
+                                <span>
+                                    RED COMERCIAL
+                                </span>
+
+
+                                <strong>
+                                    Buenas relaciones,
+                                    mejores oportunidades.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="contacto-form-tip">
+
+                            <span>
+                                🤝
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Información centralizada
+                                </strong>
+
+
+                                <p>
+                                    Mantén actualizados los datos fiscales
+                                    y de contacto para facilitar albaranes,
+                                    facturación y pagos.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
-            </header>
-
-
-            ${this.crearFormulario(
-                contacto
-            )}
+            </div>
 
         `;
+
+
+        document
+            .getElementById(
+                "volverContactos"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrar()
+            );
 
 
         document
@@ -690,45 +1072,436 @@ export class ClientesProveedoresView {
                 "click",
                 () => {
 
-                    const datos =
-                        this.obtenerDatosFormulario();
-
-
                     if (
-                        !datos
+                        editando
                     ) {
 
-                        return;
-
-                    }
-
-
-                    const resultado =
-                        this.clienteProveedorService
-                            .actualizar(
-                                id,
-                                datos
-                            );
-
-
-                    if (
-                        !resultado.ok
-                    ) {
-
-                        alert(
-                            resultado.mensaje
+                        this.guardarCambios(
+                            contacto.id
                         );
 
-
-                        return;
-
                     }
 
+                    else {
 
-                    this.mostrar();
+                        this.guardarNuevo();
+
+                    }
 
                 }
             );
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO HTML
+    // =====================================================
+
+    crearFormulario(
+        contacto
+    ) {
+
+        return `
+
+            <section
+                class="
+                    form-panel
+                    contacto-form-panel
+                "
+            >
+
+                <div class="contacto-form-section">
+
+                    <span>
+                        ${this.obtenerIconoTipo(
+                            contacto?.tipo
+                            ||
+                            "Cliente"
+                        )}
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Datos del contacto
+                        </h3>
+
+
+                        <p>
+                            Información comercial, fiscal y de contacto.
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <div class="contacto-form-grid">
+
+                    <div class="form-group">
+
+                        <label>
+                            Tipo *
+                        </label>
+
+
+                        <select id="tipoContacto">
+
+                            <option
+                                value="Cliente"
+                                ${
+                                    !contacto
+                                    ||
+                                    contacto.tipo ===
+                                    "Cliente"
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Cliente
+                            </option>
+
+
+                            <option
+                                value="Proveedor"
+                                ${
+                                    contacto?.tipo ===
+                                    "Proveedor"
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Proveedor
+                            </option>
+
+
+                            <option
+                                value="Cliente y proveedor"
+                                ${
+                                    contacto?.tipo ===
+                                    "Cliente y proveedor"
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Cliente y proveedor
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Estado
+                        </label>
+
+
+                        <select id="activoContacto">
+
+                            <option
+                                value="true"
+                                ${
+                                    !contacto
+                                    ||
+                                    contacto.activo ===
+                                    true
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Activo
+                            </option>
+
+
+                            <option
+                                value="false"
+                                ${
+                                    contacto?.activo ===
+                                    false
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Inactivo
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div
+                        class="
+                            form-group
+                            contacto-form-wide
+                        "
+                    >
+
+                        <label>
+                            Nombre / Razón social *
+                        </label>
+
+
+                        <input
+                            id="nombreContacto"
+                            type="text"
+                            placeholder="Ej. Cooperativa de Lleida"
+                            value="${this.escapar(
+                                contacto?.nombre
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            NIF / CIF
+                        </label>
+
+
+                        <input
+                            id="nifContacto"
+                            type="text"
+                            placeholder="Ej. B12345678"
+                            value="${this.escapar(
+                                contacto?.nif
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Teléfono
+                        </label>
+
+
+                        <input
+                            id="telefonoContacto"
+                            type="tel"
+                            placeholder="Ej. 973123456"
+                            value="${this.escapar(
+                                contacto?.telefono
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="
+                            form-group
+                            contacto-form-wide
+                        "
+                    >
+
+                        <label>
+                            Email
+                        </label>
+
+
+                        <input
+                            id="emailContacto"
+                            type="email"
+                            placeholder="correo@empresa.com"
+                            value="${this.escapar(
+                                contacto?.email
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="
+                            form-group
+                            contacto-form-wide
+                        "
+                    >
+
+                        <label>
+                            Dirección
+                        </label>
+
+
+                        <input
+                            id="direccionContacto"
+                            type="text"
+                            placeholder="Calle, número..."
+                            value="${this.escapar(
+                                contacto?.direccion
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Localidad
+                        </label>
+
+
+                        <input
+                            id="localidadContacto"
+                            type="text"
+                            value="${this.escapar(
+                                contacto?.localidad
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Provincia
+                        </label>
+
+
+                        <input
+                            id="provinciaContacto"
+                            type="text"
+                            value="${this.escapar(
+                                contacto?.provincia
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Código postal
+                        </label>
+
+
+                        <input
+                            id="cpContacto"
+                            type="text"
+                            value="${this.escapar(
+                                contacto?.codigoPostal
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            País
+                        </label>
+
+
+                        <input
+                            id="paisContacto"
+                            type="text"
+                            value="${this.escapar(
+                                contacto?.pais
+                                ||
+                                "España"
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="
+                            form-group
+                            contacto-form-wide
+                        "
+                    >
+
+                        <label>
+                            Notas
+                        </label>
+
+
+                        <textarea
+                            id="notasContacto"
+                            rows="5"
+                            placeholder="Observaciones sobre el contacto..."
+                        >${this.escapar(
+                            contacto?.notas
+                            ||
+                            ""
+                        )}</textarea>
+
+                    </div>
+
+                </div>
+
+
+                <div class="form-actions">
+
+                    <button
+                        id="cancelarContacto"
+                        class="secondary-button"
+                        type="button"
+                    >
+                        Cancelar
+                    </button>
+
+
+                    <button
+                        id="guardarContacto"
+                        class="primary-button"
+                        type="button"
+                    >
+
+                        ${
+                            contacto
+                                ? "Guardar cambios"
+                                : "Guardar contacto"
+                        }
+
+                    </button>
+
+                </div>
+
+            </section>
+
+        `;
 
     }
 
@@ -760,11 +1533,13 @@ export class ClientesProveedoresView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido crear el contacto."
             );
 
 
@@ -779,305 +1554,51 @@ export class ClientesProveedoresView {
 
 
     // =====================================================
-    // FORMULARIO
+    // GUARDAR CAMBIOS
     // =====================================================
 
-    crearFormulario(
-        contacto
+    guardarCambios(
+        id
     ) {
 
-        return `
+        const datos =
+            this.obtenerDatosFormulario();
 
-            <div class="form-panel contacto-form-panel">
 
-                <div class="form-group">
+        if (
+            !datos
+        ) {
 
-                    <label>
-                        Tipo *
-                    </label>
+            return;
 
-                    <select
-                        id="tipoContacto"
-                    >
+        }
 
-                        <option
-                            value="Cliente"
-                            ${
-                                !contacto
-                                ||
-                                contacto.tipo === "Cliente"
 
-                                    ? "selected"
+        const resultado =
+            this.clienteProveedorService
+                .actualizar(
+                    id,
+                    datos
+                );
 
-                                    : ""
-                            }
-                        >
-                            Cliente
-                        </option>
 
+        if (
+            !resultado?.ok
+        ) {
 
-                        <option
-                            value="Proveedor"
-                            ${
-                                contacto?.tipo === "Proveedor"
+            alert(
+                resultado?.mensaje
+                ||
+                "No se ha podido actualizar el contacto."
+            );
 
-                                    ? "selected"
 
-                                    : ""
-                            }
-                        >
-                            Proveedor
-                        </option>
+            return;
 
+        }
 
-                        <option
-                            value="Cliente y proveedor"
-                            ${
-                                contacto?.tipo === "Cliente y proveedor"
 
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Cliente y proveedor
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Nombre / Razón social *
-                    </label>
-
-                    <input
-                        id="nombreContacto"
-                        type="text"
-                        placeholder="Ej. Cooperativa de Lleida"
-                        value="${contacto?.nombre || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        NIF / CIF
-                    </label>
-
-                    <input
-                        id="nifContacto"
-                        type="text"
-                        placeholder="Ej. B12345678"
-                        value="${contacto?.nif || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Teléfono
-                    </label>
-
-                    <input
-                        id="telefonoContacto"
-                        type="tel"
-                        placeholder="Ej. 973123456"
-                        value="${contacto?.telefono || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Email
-                    </label>
-
-                    <input
-                        id="emailContacto"
-                        type="email"
-                        placeholder="correo@empresa.com"
-                        value="${contacto?.email || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Dirección
-                    </label>
-
-                    <input
-                        id="direccionContacto"
-                        type="text"
-                        placeholder="Calle, número..."
-                        value="${contacto?.direccion || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Localidad
-                    </label>
-
-                    <input
-                        id="localidadContacto"
-                        type="text"
-                        value="${contacto?.localidad || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Provincia
-                    </label>
-
-                    <input
-                        id="provinciaContacto"
-                        type="text"
-                        value="${contacto?.provincia || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Código postal
-                    </label>
-
-                    <input
-                        id="cpContacto"
-                        type="text"
-                        value="${contacto?.codigoPostal || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        País
-                    </label>
-
-                    <input
-                        id="paisContacto"
-                        type="text"
-                        value="${contacto?.pais || "España"}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Estado
-                    </label>
-
-                    <select
-                        id="activoContacto"
-                    >
-
-                        <option
-                            value="true"
-                            ${
-                                !contacto
-                                ||
-                                contacto.activo === true
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Activo
-                        </option>
-
-
-                        <option
-                            value="false"
-                            ${
-                                contacto?.activo === false
-
-                                    ? "selected"
-
-                                    : ""
-                            }
-                        >
-                            Inactivo
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Notas
-                    </label>
-
-                    <textarea
-                        id="notasContacto"
-                        rows="5"
-                    >${contacto?.notas || ""}</textarea>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarContacto"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        Cancelar
-                    </button>
-
-
-                    <button
-                        id="guardarContacto"
-                        class="primary-button"
-                        type="button"
-                    >
-
-                        ${
-                            contacto
-
-                                ? "Guardar cambios"
-
-                                : "Guardar contacto"
-                        }
-
-                    </button>
-
-                </div>
-
-            </div>
-
-        `;
+        this.mostrar();
 
     }
 
@@ -1089,12 +1610,9 @@ export class ClientesProveedoresView {
     obtenerDatosFormulario() {
 
         const nombre =
-            document
-                .getElementById(
-                    "nombreContacto"
-                )
-                .value
-                .trim();
+            this.obtenerValor(
+                "nombreContacto"
+            );
 
 
         if (
@@ -1114,93 +1632,62 @@ export class ClientesProveedoresView {
         return {
 
             tipo:
-                document
-                    .getElementById(
-                        "tipoContacto"
-                    )
-                    .value,
+                this.obtenerValor(
+                    "tipoContacto"
+                ),
 
-            nombre:
-                nombre,
+            nombre,
 
             nif:
-                document
-                    .getElementById(
-                        "nifContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "nifContacto"
+                ),
 
             telefono:
-                document
-                    .getElementById(
-                        "telefonoContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "telefonoContacto"
+                ),
 
             email:
-                document
-                    .getElementById(
-                        "emailContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "emailContacto"
+                ),
 
             direccion:
-                document
-                    .getElementById(
-                        "direccionContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "direccionContacto"
+                ),
 
             localidad:
-                document
-                    .getElementById(
-                        "localidadContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "localidadContacto"
+                ),
 
             provincia:
-                document
-                    .getElementById(
-                        "provinciaContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "provinciaContacto"
+                ),
 
             codigoPostal:
-                document
-                    .getElementById(
-                        "cpContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "cpContacto"
+                ),
 
             pais:
-                document
-                    .getElementById(
-                        "paisContacto"
-                    )
-                    .value
-                    .trim(),
+                this.obtenerValor(
+                    "paisContacto"
+                ),
 
             activo:
-                document
-                    .getElementById(
-                        "activoContacto"
-                    )
-                    .value === "true",
+                this.obtenerValor(
+                    "activoContacto"
+                ) ===
+                "true",
 
             notas:
-                document
-                    .getElementById(
-                        "notasContacto"
-                    )
-                    .value
-                    .trim()
+                this.obtenerValor(
+                    "notasContacto"
+                )
 
         };
 
@@ -1208,7 +1695,49 @@ export class ClientesProveedoresView {
 
 
     // =====================================================
-    // ICONO TIPO
+    // VALOR
+    // =====================================================
+
+    obtenerValor(
+        id
+    ) {
+
+        return (
+            document
+                .getElementById(
+                    id
+                )
+                ?.value
+                ?.trim()
+            ||
+            ""
+        );
+
+    }
+
+
+    // =====================================================
+    // CONTACTOS
+    // =====================================================
+
+    obtenerContactos() {
+
+        const contactos =
+            this.clienteProveedorService
+                ?.obtenerTodos?.();
+
+
+        return Array.isArray(
+            contactos
+        )
+            ? contactos
+            : [];
+
+    }
+
+
+    // =====================================================
+    // ICONO
     // =====================================================
 
     obtenerIconoTipo(
@@ -1216,7 +1745,8 @@ export class ClientesProveedoresView {
     ) {
 
         if (
-            tipo === "Cliente"
+            tipo ===
+            "Cliente"
         ) {
 
             return "🧑‍💼";
@@ -1225,7 +1755,8 @@ export class ClientesProveedoresView {
 
 
         if (
-            tipo === "Proveedor"
+            tipo ===
+            "Proveedor"
         ) {
 
             return "🚚";
@@ -1234,6 +1765,43 @@ export class ClientesProveedoresView {
 
 
         return "🤝";
+
+    }
+
+
+    // =====================================================
+    // ESCAPAR
+    // =====================================================
+
+    escapar(
+        valor
+    ) {
+
+        return String(
+            valor
+            ??
+            ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
 
     }
 

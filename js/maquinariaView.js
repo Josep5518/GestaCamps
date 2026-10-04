@@ -4,11 +4,13 @@ export class MaquinariaView {
         mainContent,
         maquinariaService
     ) {
+
         this.mainContent =
             mainContent;
 
         this.maquinariaService =
             maquinariaService;
+
     }
 
 
@@ -19,8 +21,7 @@ export class MaquinariaView {
     mostrar() {
 
         const maquinas =
-            this.maquinariaService
-                .obtenerTodas();
+            this.obtenerMaquinas();
 
 
         const activas =
@@ -47,67 +48,220 @@ export class MaquinariaView {
             ).length;
 
 
+        const horasTotales =
+            maquinas.reduce(
+                (
+                    total,
+                    maquina
+                ) =>
+                    total
+                    +
+                    Number(
+                        maquina.horasUso
+                        ||
+                        0
+                    ),
+                0
+            );
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="maquinaria-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Maquinaria
-                    </h2>
+                <section class="maquinaria-hero">
 
-                    <p>
-                        Gestiona vehículos y maquinaria de la explotación
-                    </p>
+                    <div class="maquinaria-hero-content">
+
+                        <span class="maquinaria-eyebrow">
+                            🚜 RECURSOS Y PRODUCCIÓN
+                        </span>
+
+
+                        <h1>
+                            La fuerza del campo,
+                            <span>
+                                siempre preparada.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Gestiona tractores, vehículos y equipos,
+                            controla sus horas de uso y mantén
+                            las revisiones siempre al día.
+                        </p>
+
+
+                        <button
+                            id="nuevaMaquina"
+                            class="
+                                primary-button
+                                maquinaria-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva máquina
+                        </button>
+
+                    </div>
+
+
+                    <div class="maquinaria-hero-image">
+
+                        <div class="maquinaria-hero-badge">
+
+                            <span>
+                                Máquinas activas
+                            </span>
+
+                            <strong>
+                                ${activas}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="maquinaria-hero-copy">
+
+                            <small>
+                                POTENCIA · CONTROL · MANTENIMIENTO
+                            </small>
+
+
+                            <strong>
+                                Tu maquinaria,<br>
+                                lista para trabajar
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats maquinaria-stats">
+
+                    ${this.crearStat(
+                        "🚜",
+                        "Maquinaria",
+                        maquinas.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "✅",
+                        "Activas",
+                        activas
+                    )}
+
+
+                    ${this.crearStat(
+                        "🔧",
+                        "Mantenimiento",
+                        mantenimiento
+                    )}
+
+
+                    ${this.crearStat(
+                        "⏱️",
+                        "Horas registradas",
+                        `${this.formatearNumero(
+                            horasTotales
+                        )} h`
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="maquinaria-section-header">
+
+                    <div>
+
+                        <span class="maquinaria-section-eyebrow">
+                            PARQUE DE MAQUINARIA
+                        </span>
+
+
+                        <h2>
+                            Vehículos y equipos
+                        </h2>
+
+
+                        <p>
+                            Consulta el estado, uso y mantenimiento
+                            de todos los recursos de la explotación.
+                        </p>
+
+                    </div>
+
+
+                    <div class="maquinaria-summary">
+
+                        <span>
+                            ${activas} activas
+                        </span>
+
+
+                        ${
+                            mantenimiento >
+                            0
+
+                                ? `
+
+                                    <span class="warning">
+                                        ${mantenimiento} en mantenimiento
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+
+                        ${
+                            inactivas >
+                            0
+
+                                ? `
+
+                                    <span>
+                                        ${inactivas} inactivas
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevaMaquina"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nueva máquina
-                </button>
+                <!-- ==========================================
+                     LISTA
+                =========================================== -->
 
-            </header>
+                <div
+                    id="listaMaquinaria"
+                    class="maquinaria-list"
+                ></div>
 
-
-            <section class="stats maquinaria-stats">
-
-                ${this.crearStat(
-                    "🚜",
-                    "Maquinaria",
-                    maquinas.length
-                )}
-
-
-                ${this.crearStat(
-                    "✅",
-                    "Activa",
-                    activas
-                )}
-
-
-                ${this.crearStat(
-                    "🔧",
-                    "Mantenimiento",
-                    mantenimiento
-                )}
-
-
-                ${this.crearStat(
-                    "⛔",
-                    "Inactiva",
-                    inactivas
-                )}
-
-            </section>
-
-
-            <div id="listaMaquinaria"></div>
+            </div>
 
         `;
 
@@ -124,6 +278,7 @@ export class MaquinariaView {
 
 
         this.mostrarLista();
+
     }
 
 
@@ -145,14 +300,20 @@ export class MaquinariaView {
                     ${icono}
                 </span>
 
+
                 <div>
 
                     <p>
-                        ${titulo}
+                        ${this.escapar(
+                            titulo
+                        )}
                     </p>
 
+
                     <h3>
-                        ${valor}
+                        ${this.escapar(
+                            valor
+                        )}
                     </h3>
 
                 </div>
@@ -160,6 +321,7 @@ export class MaquinariaView {
             </article>
 
         `;
+
     }
 
 
@@ -170,8 +332,7 @@ export class MaquinariaView {
     mostrarLista() {
 
         const maquinas =
-            this.maquinariaService
-                .obtenerTodas();
+            this.obtenerMaquinas();
 
 
         const contenedor =
@@ -184,7 +345,9 @@ export class MaquinariaView {
         if (
             !contenedor
         ) {
+
             return;
+
         }
 
 
@@ -193,28 +356,23 @@ export class MaquinariaView {
             0
         ) {
 
-            contenedor.innerHTML = `
+            contenedor.innerHTML =
+                this.crearVacio();
 
-                <div class="empty-state">
 
-                    <div class="empty-icon">
-                        🚜
-                    </div>
-
-                    <h3>
-                        Todavía no tienes maquinaria
-                    </h3>
-
-                    <p>
-                        Añade tu primera máquina o vehículo.
-                    </p>
-
-                </div>
-
-            `;
+            document
+                .getElementById(
+                    "crearPrimeraMaquina"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormularioCrear()
+                );
 
 
             return;
+
         }
 
 
@@ -224,9 +382,13 @@ export class MaquinariaView {
 
                 ${maquinas
                     .map(
-                        maquina =>
-                            this.crearTarjetaMaquina(
-                                maquina
+                        (
+                            maquina,
+                            index
+                        ) =>
+                            this.crearTarjeta(
+                                maquina,
+                                index
                             )
                     )
                     .join("")}
@@ -236,29 +398,457 @@ export class MaquinariaView {
         `;
 
 
-        // =================================================
-        // EDITAR
-        // =================================================
+        this.configurarEventos();
 
-        contenedor
+    }
+
+
+    // =====================================================
+    // TARJETA
+    // =====================================================
+
+    crearTarjeta(
+        maquina,
+        index
+    ) {
+
+        const imagen =
+            (
+                index %
+                3
+            )
+            +
+            1;
+
+
+        const estado =
+            maquina.estado
+            ||
+            "Activa";
+
+
+        const revision =
+            this.obtenerEstadoRevision(
+                maquina.proximaRevision
+            );
+
+
+        return `
+
+            <article class="maquina-card">
+
+                <!-- ==================================
+                     FOTO
+                =================================== -->
+
+                <div
+                    class="
+                        maquina-cover
+                        maquina-cover-${imagen}
+                    "
+                >
+
+                    <div class="maquina-cover-overlay"></div>
+
+
+                    <div class="maquina-cover-top">
+
+                        <span
+                            class="
+                                maquina-status
+                                ${this.obtenerClaseEstado(
+                                    estado
+                                )}
+                            "
+                        >
+
+                            ●
+                            ${this.escapar(
+                                estado
+                            )}
+
+                        </span>
+
+
+                        <div class="maquina-cover-actions">
+
+                            <button
+                                class="
+                                    maquina-icon-button
+                                    editar-maquina
+                                "
+                                data-id="${this.escapar(
+                                    maquina.id
+                                )}"
+                                type="button"
+                                title="Editar máquina"
+                            >
+                                ✎
+                            </button>
+
+
+                            <button
+                                class="
+                                    maquina-icon-button
+                                    maquina-delete
+                                    eliminar-maquina
+                                "
+                                data-id="${this.escapar(
+                                    maquina.id
+                                )}"
+                                type="button"
+                                title="Eliminar máquina"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="maquina-cover-copy">
+
+                        <span>
+                            ${this.obtenerIconoTipo(
+                                maquina.tipo
+                            )}
+
+                            ${this.escapar(
+                                maquina.tipo
+                                ||
+                                "MAQUINARIA"
+                            )}
+                        </span>
+
+
+                        <strong>
+                            ${this.escapar(
+                                maquina.nombre
+                                ||
+                                "Máquina"
+                            )}
+                        </strong>
+
+
+                        ${
+                            maquina.marca
+                            ||
+                            maquina.modelo
+
+                                ? `
+
+                                    <p>
+
+                                        ${this.escapar(
+                                            [
+                                                maquina.marca,
+                                                maquina.modelo
+                                            ]
+                                                .filter(Boolean)
+                                                .join(" · ")
+                                        )}
+
+                                    </p>
+
+                                `
+
+                                : ""
+                        }
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================
+                     CUERPO
+                =================================== -->
+
+                <div class="maquina-card-body">
+
+                    <div class="maquina-title-row">
+
+                        <div>
+
+                            <span class="maquina-kicker">
+                                RECURSO AGRÍCOLA
+                            </span>
+
+
+                            <h3>
+                                ${this.escapar(
+                                    maquina.nombre
+                                    ||
+                                    "Máquina"
+                                )}
+                            </h3>
+
+                        </div>
+
+
+                        <span class="maquina-type-chip">
+
+                            ${this.obtenerIconoTipo(
+                                maquina.tipo
+                            )}
+
+                            ${this.escapar(
+                                maquina.tipo
+                                ||
+                                "Otro"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    ${
+                        maquina.marca
+                        ||
+                        maquina.modelo
+
+                            ? `
+
+                                <p class="maquina-modelo">
+
+                                    ${this.escapar(
+                                        [
+                                            maquina.marca,
+                                            maquina.modelo
+                                        ]
+                                            .filter(Boolean)
+                                            .join(" · ")
+                                    )}
+
+                                </p>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    <div class="maquina-info-grid">
+
+                        <div>
+
+                            <span>
+                                Estado
+                            </span>
+
+
+                            <strong>
+                                ${this.escapar(
+                                    estado
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Horas de uso
+                            </span>
+
+
+                            <strong>
+
+                                ${this.formatearNumero(
+                                    maquina.horasUso
+                                    ||
+                                    0
+                                )} h
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        maquina.matricula
+
+                            ? `
+
+                                <div class="maquina-detail-row">
+
+                                    <span>
+                                        🪪
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Matrícula / identificador
+                                        </small>
+
+
+                                        <strong>
+                                            ${this.escapar(
+                                                maquina.matricula
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${
+                        maquina.proximaRevision
+
+                            ? `
+
+                                <div
+                                    class="
+                                        maquina-revision
+                                        ${revision.clase}
+                                    "
+                                >
+
+                                    <span>
+                                        🔧
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Próxima revisión
+                                        </small>
+
+
+                                        <strong>
+
+                                            ${this.formatearFecha(
+                                                maquina.proximaRevision
+                                            )}
+
+                                        </strong>
+
+
+                                        <p>
+                                            ${revision.texto}
+                                        </p>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : `
+
+                                <div class="maquina-revision neutral">
+
+                                    <span>
+                                        🔧
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Próxima revisión
+                                        </small>
+
+
+                                        <strong>
+                                            Sin programar
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+                    }
+
+
+                    ${
+                        maquina.notas
+
+                            ? `
+
+                                <div class="maquina-notas">
+
+                                    <span>
+                                        NOTAS
+                                    </span>
+
+
+                                    <p>
+                                        ${this.escapar(
+                                            maquina.notas
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    <button
+                        class="
+                            maquina-main-action
+                            editar-maquina
+                        "
+                        data-id="${this.escapar(
+                            maquina.id
+                        )}"
+                        type="button"
+                    >
+
+                        Ver y editar máquina
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // EVENTOS
+    // =====================================================
+
+    configurarEventos() {
+
+        document
             .querySelectorAll(
                 ".editar-maquina"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
-                            /*
-                             * IMPORTANTE:
-                             * El ID puede ser UUID.
-                             * No usar Number().
-                             */
-
                             this.mostrarFormularioEditar(
-                                button.dataset.id
+                                boton.dataset.id
                             );
 
                         }
@@ -268,27 +858,19 @@ export class MaquinariaView {
             );
 
 
-        // =================================================
-        // ELIMINAR
-        // =================================================
-
-        contenedor
+        document
             .querySelectorAll(
                 ".eliminar-maquina"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
-                            /*
-                             * Mantener el ID original.
-                             */
-
                             const id =
-                                button.dataset.id;
+                                boton.dataset.id;
 
 
                             const maquina =
@@ -307,6 +889,7 @@ export class MaquinariaView {
                                 );
 
                                 return;
+
                             }
 
 
@@ -317,6 +900,7 @@ export class MaquinariaView {
                             ) {
 
                                 return;
+
                             }
 
 
@@ -341,6 +925,7 @@ export class MaquinariaView {
                                 );
 
                                 return;
+
                             }
 
 
@@ -351,201 +936,7 @@ export class MaquinariaView {
 
                 }
             );
-    }
 
-
-    // =====================================================
-    // TARJETA
-    // =====================================================
-
-    crearTarjetaMaquina(
-        maquina
-    ) {
-
-        return `
-
-            <article class="maquina-card">
-
-                <div class="maquina-card-header">
-
-                    <span class="maquina-icon">
-
-                        ${this.obtenerIconoTipo(
-                            maquina.tipo
-                        )}
-
-                    </span>
-
-
-                    <div class="maquina-actions">
-
-                        <button
-                            class="
-                                secondary-button
-                                editar-maquina
-                            "
-                            data-id="${maquina.id}"
-                            type="button"
-                        >
-                            Editar
-                        </button>
-
-
-                        <button
-                            class="
-                                delete-button
-                                eliminar-maquina
-                            "
-                            data-id="${maquina.id}"
-                            type="button"
-                            aria-label="Eliminar máquina"
-                        >
-                            ×
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <h3>
-                    ${maquina.nombre}
-                </h3>
-
-
-                ${
-                    maquina.tipo
-
-                        ? `
-
-                            <p class="maquina-tipo">
-                                ${maquina.tipo}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    maquina.marca
-                    ||
-                    maquina.modelo
-
-                        ? `
-
-                            <p class="maquina-modelo">
-
-                                ${maquina.marca || ""}
-
-                                ${
-                                    maquina.modelo
-
-                                        ? ` · ${maquina.modelo}`
-
-                                        : ""
-                                }
-
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                <div class="maquina-info">
-
-                    <div>
-
-                        <span>
-                            Estado
-                        </span>
-
-                        <strong>
-                            ${maquina.estado}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Horas
-                        </span>
-
-                        <strong>
-                            ${maquina.horasUso} h
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                ${
-                    maquina.matricula
-
-                        ? `
-
-                            <p>
-                                🪪 ${maquina.matricula}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    maquina.proximaRevision
-
-                        ? `
-
-                            <p>
-
-                                🔧 Próxima revisión:
-
-                                ${this.formatearFecha(
-                                    maquina.proximaRevision
-                                )}
-
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    maquina.notas
-
-                        ? `
-
-                            <div class="maquina-notas">
-
-                                <span>
-                                    Notas
-                                </span>
-
-                                <p>
-                                    ${maquina.notas}
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
-            </article>
-
-        `;
     }
 
 
@@ -555,52 +946,10 @@ export class MaquinariaView {
 
     mostrarFormularioCrear() {
 
-        this.mainContent.innerHTML = `
+        this.mostrarFormulario(
+            null
+        );
 
-            <header class="topbar">
-
-                <div>
-
-                    <h2>
-                        Nueva máquina
-                    </h2>
-
-                    <p>
-                        Añade maquinaria a GestaCamps
-                    </p>
-
-                </div>
-
-            </header>
-
-
-            ${this.crearFormulario(
-                null
-            )}
-
-        `;
-
-
-        document
-            .getElementById(
-                "cancelarMaquina"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.mostrar()
-            );
-
-
-        document
-            .getElementById(
-                "guardarMaquina"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.guardarNueva()
-            );
     }
 
 
@@ -628,33 +977,145 @@ export class MaquinariaView {
             );
 
             return;
+
         }
+
+
+        this.mostrarFormulario(
+            maquina
+        );
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO
+    // =====================================================
+
+    mostrarFormulario(
+        maquina
+    ) {
+
+        const editando =
+            !!maquina;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="maquinaria-form-page">
 
-                <div>
+                <button
+                    id="volverMaquinaria"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
-                    <h2>
-                        Editar maquinaria
-                    </h2>
+
+                <header class="maquinaria-form-header">
+
+                    <span>
+                        🚜 RECURSOS Y PRODUCCIÓN
+                    </span>
+
+
+                    <h1>
+
+                        ${
+                            editando
+                                ? "Editar maquinaria"
+                                : "Nueva máquina"
+                        }
+
+                    </h1>
+
 
                     <p>
-                        Modifica los datos de la máquina
+
+                        ${
+                            editando
+
+                                ? "Actualiza los datos, uso y mantenimiento del equipo."
+
+                                : "Añade un nuevo vehículo o equipo a la explotación."
+                        }
+
                     </p>
+
+                </header>
+
+
+                <div class="maquinaria-form-layout">
+
+                    ${this.crearFormulario(
+                        maquina
+                    )}
+
+
+                    <aside class="maquinaria-form-aside">
+
+                        <div class="maquinaria-form-photo">
+
+                            <div>
+
+                                <span>
+                                    RECURSOS DE CAMPO
+                                </span>
+
+
+                                <strong>
+                                    Cuidar la máquina
+                                    es cuidar la campaña.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="maquinaria-form-tip">
+
+                            <span>
+                                🔧
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Mantenimiento preventivo
+                                </strong>
+
+
+                                <p>
+                                    Registra las horas de uso y la próxima
+                                    revisión para anticiparte a averías
+                                    durante la campaña.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
-            </header>
-
-
-            ${this.crearFormulario(
-                maquina
-            )}
+            </div>
 
         `;
+
+
+        document
+            .getElementById(
+                "volverMaquinaria"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrar()
+            );
 
 
         document
@@ -676,87 +1137,25 @@ export class MaquinariaView {
                 "click",
                 () => {
 
-                    const datos =
-                        this.obtenerDatosFormulario();
-
-
                     if (
-                        !datos
+                        editando
                     ) {
 
-                        return;
-                    }
-
-
-                    const resultado =
-                        this.maquinariaService
-                            .actualizar(
-                                id,
-                                datos
-                            );
-
-
-                    if (
-                        !resultado.ok
-                    ) {
-
-                        alert(
-                            resultado.mensaje
-                            ||
-                            "No se ha podido actualizar la máquina."
+                        this.guardarCambios(
+                            maquina.id
                         );
 
-                        return;
                     }
 
+                    else {
 
-                    this.mostrar();
+                        this.guardarNueva();
+
+                    }
 
                 }
             );
-    }
 
-
-    // =====================================================
-    // GUARDAR NUEVA
-    // =====================================================
-
-    guardarNueva() {
-
-        const datos =
-            this.obtenerDatosFormulario();
-
-
-        if (
-            !datos
-        ) {
-
-            return;
-        }
-
-
-        const resultado =
-            this.maquinariaService
-                .crear(
-                    datos
-                );
-
-
-        if (
-            !resultado.ok
-        ) {
-
-            alert(
-                resultado.mensaje
-                ||
-                "No se ha podido crear la máquina."
-            );
-
-            return;
-        }
-
-
-        this.mostrar();
     }
 
 
@@ -770,194 +1169,281 @@ export class MaquinariaView {
 
         return `
 
-            <div class="form-panel maquina-form-panel">
+            <section
+                class="
+                    form-panel
+                    maquinaria-form-panel
+                "
+            >
 
-                <div class="form-group">
+                <div class="maquinaria-form-section">
 
-                    <label>
-                        Nombre *
-                    </label>
-
-                    <input
-                        id="nombreMaquina"
-                        type="text"
-                        placeholder="Ej. Tractor principal"
-                        value="${maquina?.nombre || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Tipo
-                    </label>
-
-                    <select
-                        id="tipoMaquina"
-                    >
-
-                        ${this.crearOpcionesTipo(
+                    <span>
+                        ${this.obtenerIconoTipo(
                             maquina?.tipo
+                            ||
+                            "Tractor"
                         )}
-
-                    </select>
-
-                </div>
+                    </span>
 
 
-                <div class="form-group">
+                    <div>
 
-                    <label>
-                        Marca
-                    </label>
+                        <h3>
+                            Datos de la máquina
+                        </h3>
 
-                    <input
-                        id="marcaMaquina"
-                        type="text"
-                        placeholder="Ej. John Deere"
-                        value="${maquina?.marca || ""}"
-                    >
+
+                        <p>
+                            Información, estado y mantenimiento.
+                        </p>
+
+                    </div>
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="maquinaria-form-grid">
 
-                    <label>
-                        Modelo
-                    </label>
-
-                    <input
-                        id="modeloMaquina"
-                        type="text"
-                        placeholder="Ej. 6155R"
-                        value="${maquina?.modelo || ""}"
+                    <div
+                        class="
+                            form-group
+                            maquinaria-form-wide
+                        "
                     >
 
-                </div>
+                        <label>
+                            Nombre *
+                        </label>
 
 
-                <div class="form-group">
-
-                    <label>
-                        Matrícula / identificador
-                    </label>
-
-                    <input
-                        id="matriculaMaquina"
-                        type="text"
-                        placeholder="Ej. E-1234-BBB"
-                        value="${maquina?.matricula || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Estado
-                    </label>
-
-                    <select
-                        id="estadoMaquina"
-                    >
-
-                        <option
-                            value="Activa"
-                            ${
-                                !maquina
+                        <input
+                            id="nombreMaquina"
+                            type="text"
+                            placeholder="Ej. Tractor principal"
+                            value="${this.escapar(
+                                maquina?.nombre
                                 ||
-                                maquina.estado ===
-                                "Activa"
-
-                                    ? "selected"
-
-                                    : ""
-                            }
+                                ""
+                            )}"
                         >
-                            Activa
-                        </option>
+
+                    </div>
 
 
-                        <option
-                            value="Mantenimiento"
-                            ${
-                                maquina?.estado ===
-                                "Mantenimiento"
+                    <div class="form-group">
 
-                                    ? "selected"
+                        <label>
+                            Tipo
+                        </label>
 
-                                    : ""
-                            }
+
+                        <select id="tipoMaquina">
+
+                            ${this.crearOpcionesTipo(
+                                maquina?.tipo
+                            )}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Estado
+                        </label>
+
+
+                        <select id="estadoMaquina">
+
+                            <option
+                                value="Activa"
+                                ${
+                                    !maquina
+                                    ||
+                                    maquina.estado ===
+                                    "Activa"
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Activa
+                            </option>
+
+
+                            <option
+                                value="Mantenimiento"
+                                ${
+                                    maquina?.estado ===
+                                    "Mantenimiento"
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Mantenimiento
+                            </option>
+
+
+                            <option
+                                value="Inactiva"
+                                ${
+                                    maquina?.estado ===
+                                    "Inactiva"
+
+                                        ? "selected"
+
+                                        : ""
+                                }
+                            >
+                                Inactiva
+                            </option>
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Marca
+                        </label>
+
+
+                        <input
+                            id="marcaMaquina"
+                            type="text"
+                            placeholder="Ej. John Deere"
+                            value="${this.escapar(
+                                maquina?.marca
+                                ||
+                                ""
+                            )}"
                         >
-                            Mantenimiento
-                        </option>
+
+                    </div>
 
 
-                        <option
-                            value="Inactiva"
-                            ${
-                                maquina?.estado ===
-                                "Inactiva"
+                    <div class="form-group">
 
-                                    ? "selected"
+                        <label>
+                            Modelo
+                        </label>
 
-                                    : ""
-                            }
+
+                        <input
+                            id="modeloMaquina"
+                            type="text"
+                            placeholder="Ej. 6155R"
+                            value="${this.escapar(
+                                maquina?.modelo
+                                ||
+                                ""
+                            )}"
                         >
-                            Inactiva
-                        </option>
 
-                    </select>
-
-                </div>
+                    </div>
 
 
-                <div class="form-group">
+                    <div class="form-group">
 
-                    <label>
-                        Horas de uso
-                    </label>
+                        <label>
+                            Matrícula / identificador
+                        </label>
 
-                    <input
-                        id="horasMaquina"
-                        type="number"
-                        min="0"
-                        step="0.1"
-                        value="${maquina?.horasUso ?? 0}"
+
+                        <input
+                            id="matriculaMaquina"
+                            type="text"
+                            placeholder="Ej. E-1234-BBB"
+                            value="${this.escapar(
+                                maquina?.matricula
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Horas de uso
+                        </label>
+
+
+                        <input
+                            id="horasMaquina"
+                            type="number"
+                            min="0"
+                            step="0.1"
+                            value="${
+                                Number(
+                                    maquina?.horasUso
+                                    ??
+                                    0
+                                )
+                            }"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="
+                            form-group
+                            maquinaria-form-wide
+                        "
                     >
 
-                </div>
+                        <label>
+                            Próxima revisión
+                        </label>
 
 
-                <div class="form-group">
+                        <input
+                            id="revisionMaquina"
+                            type="date"
+                            value="${this.escapar(
+                                maquina?.proximaRevision
+                                ||
+                                ""
+                            )}"
+                        >
 
-                    <label>
-                        Próxima revisión
-                    </label>
+                    </div>
 
-                    <input
-                        id="revisionMaquina"
-                        type="date"
-                        value="${maquina?.proximaRevision || ""}"
+
+                    <div
+                        class="
+                            form-group
+                            maquinaria-form-wide
+                        "
                     >
 
-                </div>
+                        <label>
+                            Notas
+                        </label>
 
 
-                <div class="form-group">
+                        <textarea
+                            id="notasMaquina"
+                            rows="5"
+                            placeholder="Mantenimiento, averías, observaciones..."
+                        >${this.escapar(
+                            maquina?.notas
+                            ||
+                            ""
+                        )}</textarea>
 
-                    <label>
-                        Notas
-                    </label>
-
-                    <textarea
-                        id="notasMaquina"
-                        rows="5"
-                    >${maquina?.notas || ""}</textarea>
+                    </div>
 
                 </div>
 
@@ -981,9 +1467,7 @@ export class MaquinariaView {
 
                         ${
                             maquina
-
                                 ? "Guardar cambios"
-
                                 : "Guardar máquina"
                         }
 
@@ -991,14 +1475,110 @@ export class MaquinariaView {
 
                 </div>
 
-            </div>
+            </section>
 
         `;
+
     }
 
 
     // =====================================================
-    // OBTENER DATOS FORMULARIO
+    // GUARDAR NUEVA
+    // =====================================================
+
+    guardarNueva() {
+
+        const datos =
+            this.obtenerDatosFormulario();
+
+
+        if (
+            !datos
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.maquinariaService
+                .crear(
+                    datos
+                );
+
+
+        if (
+            !resultado?.ok
+        ) {
+
+            alert(
+                resultado?.mensaje
+                ||
+                "No se ha podido crear la máquina."
+            );
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // GUARDAR CAMBIOS
+    // =====================================================
+
+    guardarCambios(
+        id
+    ) {
+
+        const datos =
+            this.obtenerDatosFormulario();
+
+
+        if (
+            !datos
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.maquinariaService
+                .actualizar(
+                    id,
+                    datos
+                );
+
+
+        if (
+            !resultado?.ok
+        ) {
+
+            alert(
+                resultado?.mensaje
+                ||
+                "No se ha podido actualizar la máquina."
+            );
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // DATOS FORMULARIO
     // =====================================================
 
     obtenerDatosFormulario() {
@@ -1023,35 +1603,7 @@ export class MaquinariaView {
             );
 
             return null;
-        }
 
-
-        const horas =
-            Number(
-                document
-                    .getElementById(
-                        "horasMaquina"
-                    )
-                    ?.value
-                ||
-                0
-            );
-
-
-        if (
-            Number.isNaN(
-                horas
-            )
-            ||
-            horas <
-            0
-        ) {
-
-            alert(
-                "Las horas de uso deben ser un número válido."
-            );
-
-            return null;
         }
 
 
@@ -1060,80 +1612,106 @@ export class MaquinariaView {
             nombre,
 
             tipo:
-                document
-                    .getElementById(
-                        "tipoMaquina"
-                    )
-                    ?.value
-                ||
-                "Tractor",
+                this.obtenerValor(
+                    "tipoMaquina"
+                ),
 
             marca:
-                document
-                    .getElementById(
-                        "marcaMaquina"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                "",
+                this.obtenerValor(
+                    "marcaMaquina"
+                ),
 
             modelo:
-                document
-                    .getElementById(
-                        "modeloMaquina"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                "",
+                this.obtenerValor(
+                    "modeloMaquina"
+                ),
 
             matricula:
-                document
-                    .getElementById(
-                        "matriculaMaquina"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                "",
+                this.obtenerValor(
+                    "matriculaMaquina"
+                ),
 
             estado:
-                document
-                    .getElementById(
-                        "estadoMaquina"
-                    )
-                    ?.value
+                this.obtenerValor(
+                    "estadoMaquina"
+                )
                 ||
                 "Activa",
 
-            /*
-             * Aquí Number() sí es correcto,
-             * porque son horas, no un ID.
-             */
             horasUso:
-                horas,
+                Number(
+                    this.obtenerValor(
+                        "horasMaquina"
+                    )
+                    ||
+                    0
+                ),
 
             proximaRevision:
-                document
-                    .getElementById(
-                        "revisionMaquina"
-                    )
-                    ?.value
-                ||
-                "",
+                this.obtenerValor(
+                    "revisionMaquina"
+                ),
 
             notas:
-                document
-                    .getElementById(
-                        "notasMaquina"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                ""
+                this.obtenerValor(
+                    "notasMaquina"
+                )
 
         };
+
+    }
+
+
+    // =====================================================
+    // VALOR
+    // =====================================================
+
+    obtenerValor(
+        id
+    ) {
+
+        return (
+            document
+                .getElementById(
+                    id
+                )
+                ?.value
+                ?.trim()
+            ||
+            ""
+        );
+
+    }
+
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    obtenerMaquinas() {
+
+        if (
+            typeof this.maquinariaService
+                ?.obtenerTodas !==
+            "function"
+        ) {
+
+            return [];
+
+        }
+
+
+        const maquinas =
+            this.maquinariaService
+                .obtenerTodas();
+
+
+        return Array.isArray(
+            maquinas
+        )
+            ? maquinas
+            : [];
+
     }
 
 
@@ -1166,7 +1744,9 @@ export class MaquinariaView {
                 tipo => `
 
                     <option
-                        value="${tipo}"
+                        value="${this.escapar(
+                            tipo
+                        )}"
                         ${
                             tipo ===
                             tipoActual
@@ -1176,12 +1756,15 @@ export class MaquinariaView {
                                 : ""
                         }
                     >
-                        ${tipo}
+                        ${this.escapar(
+                            tipo
+                        )}
                     </option>
 
                 `
             )
             .join("");
+
     }
 
 
@@ -1207,7 +1790,7 @@ export class MaquinariaView {
                 return "💨";
 
             case "Pulverizador":
-                return "💦";
+                return "💧";
 
             case "Cosechadora":
                 return "🌾";
@@ -1215,23 +1798,199 @@ export class MaquinariaView {
             case "Desbrozadora":
                 return "🌿";
 
-            case "Carretilla elevadora":
-                return "🏗️";
-
             case "Vehículo":
                 return "🚙";
+
+            case "Carretilla elevadora":
+                return "🏗️";
 
             case "Implemento":
                 return "⚙️";
 
             default:
                 return "⚙️";
+
         }
+
     }
 
 
     // =====================================================
-    // FORMATEAR FECHA
+    // ESTADO
+    // =====================================================
+
+    obtenerClaseEstado(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "Mantenimiento"
+        ) {
+
+            return "mantenimiento";
+
+        }
+
+
+        if (
+            estado ===
+            "Inactiva"
+        ) {
+
+            return "inactiva";
+
+        }
+
+
+        return "activa";
+
+    }
+
+
+    // =====================================================
+    // ESTADO REVISIÓN
+    // =====================================================
+
+    obtenerEstadoRevision(
+        fechaRevision
+    ) {
+
+        if (
+            !fechaRevision
+        ) {
+
+            return {
+
+                clase:
+                    "neutral",
+
+                texto:
+                    "Sin revisión programada"
+
+            };
+
+        }
+
+
+        const revision =
+            new Date(
+                `${fechaRevision}T00:00:00`
+            );
+
+
+        const hoy =
+            new Date();
+
+
+        hoy.setHours(
+            0,
+            0,
+            0,
+            0
+        );
+
+
+        if (
+            Number.isNaN(
+                revision.getTime()
+            )
+        ) {
+
+            return {
+
+                clase:
+                    "neutral",
+
+                texto:
+                    ""
+
+            };
+
+        }
+
+
+        const diferencia =
+            Math.ceil(
+                (
+                    revision
+                    -
+                    hoy
+                )
+                /
+                86400000
+            );
+
+
+        if (
+            diferencia <
+            0
+        ) {
+
+            return {
+
+                clase:
+                    "overdue",
+
+                texto:
+                    "Revisión vencida"
+
+            };
+
+        }
+
+
+        if (
+            diferencia ===
+            0
+        ) {
+
+            return {
+
+                clase:
+                    "soon",
+
+                texto:
+                    "Revisión hoy"
+
+            };
+
+        }
+
+
+        if (
+            diferencia <=
+            30
+        ) {
+
+            return {
+
+                clase:
+                    "soon",
+
+                texto:
+                    `Dentro de ${diferencia} días`
+
+            };
+
+        }
+
+
+        return {
+
+            clase:
+                "ok",
+
+            texto:
+                "Revisión programada"
+
+        };
+
+    }
+
+
+    // =====================================================
+    // FECHA
     // =====================================================
 
     formatearFecha(
@@ -1242,14 +2001,16 @@ export class MaquinariaView {
             !fecha
         ) {
 
-            return "";
+            return "—";
+
         }
 
 
         const partes =
-            fecha.split(
-                "-"
-            );
+            String(
+                fecha
+            )
+                .split("-");
 
 
         if (
@@ -1257,20 +2018,123 @@ export class MaquinariaView {
             3
         ) {
 
-            return fecha;
+            return String(
+                fecha
+            );
+
         }
 
 
-        return (
-            partes[2]
-            +
-            "/"
-            +
-            partes[1]
-            +
-            "/"
-            +
-            partes[0]
-        );
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
+
     }
+
+
+    // =====================================================
+    // NÚMERO
+    // =====================================================
+
+    formatearNumero(
+        valor
+    ) {
+
+        const numero =
+            Number(
+                valor
+                ||
+                0
+            );
+
+
+        return numero
+            .toLocaleString(
+                "es-ES",
+                {
+
+                    maximumFractionDigits:
+                        1
+
+                }
+            );
+
+    }
+
+
+    // =====================================================
+    // VACÍO
+    // =====================================================
+
+    crearVacio() {
+
+        return `
+
+            <div class="maquinaria-empty">
+
+                <div class="maquinaria-empty-icon">
+                    🚜
+                </div>
+
+
+                <h3>
+                    Todavía no tienes maquinaria
+                </h3>
+
+
+                <p>
+                    Añade tu primer tractor, vehículo
+                    o equipo agrícola.
+                </p>
+
+
+                <button
+                    id="crearPrimeraMaquina"
+                    class="primary-button"
+                    type="button"
+                >
+                    + Añadir maquinaria
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ESCAPAR HTML
+    // =====================================================
+
+    escapar(
+        valor
+    ) {
+
+        return String(
+            valor
+            ??
+            ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
+
+    }
+
 }

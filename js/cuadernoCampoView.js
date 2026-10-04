@@ -1,37 +1,22 @@
 import { StorageService } from "./storage.js";
 
-
 import {
-
     escaparHTML,
-
     normalizarTexto,
-
     formatearFecha,
-
     obtenerHoraActual,
-
     mismoId
-
 } from "./utils.js";
 
-
 import {
-
     obtenerNombreTrabajador,
-
     obtenerNombreCultivo,
-
     obtenerNombreMaquinaria,
-
     obtenerNombreProducto
-
 } from "./entityHelpers.js";
 
 
-
 export class CuadernoCampoView {
-
 
     constructor(
         mainContent,
@@ -41,24 +26,19 @@ export class CuadernoCampoView {
         this.mainContent =
             mainContent;
 
-
         this.cuadernoCampoService =
             cuadernoCampoService;
-
 
         this.filtroFinca =
             "";
 
-
         this.filtroTipo =
             "";
-
 
         this.busqueda =
             "";
 
     }
-
 
 
     // =====================================================
@@ -67,13 +47,13 @@ export class CuadernoCampoView {
 
     mostrar() {
 
-        const registros =
-            this.obtenerRegistrosFiltrados();
-
-
         const todos =
             this.cuadernoCampoService
                 .obtenerTodos();
+
+
+        const registros =
+            this.obtenerRegistrosFiltrados();
 
 
         const hoy =
@@ -92,166 +72,200 @@ export class CuadernoCampoView {
                 .obtenerTiposActuacion();
 
 
+        const fincasUtilizadas =
+            new Set(
+                todos
+                    .map(
+                        registro =>
+                            registro.fincaId
+                    )
+                    .filter(Boolean)
+                    .map(String)
+            ).size;
+
+
+        const actuacionesDiferentes =
+            new Set(
+                todos
+                    .map(
+                        registro =>
+                            registro.tipoActuacion
+                    )
+                    .filter(Boolean)
+            ).size;
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="cuaderno-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Cuaderno de campo
-                    </h2>
+                <section class="cuaderno-hero">
 
-                    <p>
-                        Registro de actuaciones agrícolas de la explotación
-                    </p>
+                    <div class="cuaderno-hero-content">
 
-                </div>
-
-
-                <button
-                    id="nuevoRegistroCuaderno"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nueva actuación
-                </button>
-
-            </header>
+                        <span class="cuaderno-eyebrow">
+                            📖 GESTIÓN AGRÍCOLA
+                        </span>
 
 
-            <section class="stats cuaderno-stats">
+                        <h1>
+                            Todo lo que pasa
+                            <span>en tu campo.</span>
+                        </h1>
 
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        📖
-                    </span>
-
-                    <div>
 
                         <p>
-                            Registros
+                            Registra cada actuación agrícola y conserva
+                            un historial claro de los trabajos realizados
+                            en tu explotación.
                         </p>
 
-                        <h3>
-                            ${todos.length}
-                        </h3>
+
+                        <button
+                            id="nuevoRegistroCuaderno"
+                            class="
+                                primary-button
+                                cuaderno-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva actuación
+                        </button>
 
                     </div>
 
-                </div>
+
+                    <div class="cuaderno-hero-image">
+
+                        <div class="cuaderno-hero-badge">
+
+                            <span>
+                                Registros
+                            </span>
+
+                            <strong>
+                                ${todos.length}
+                            </strong>
+
+                        </div>
 
 
-                <div class="card">
+                        <div class="cuaderno-hero-copy">
 
-                    <span class="card-icon">
-                        📅
-                    </span>
+                            <small>
+                                REGISTRA · CONTROLA · CONSULTA
+                            </small>
 
-                    <div>
+                            <strong>
+                                La memoria de<br>
+                                tu explotación
+                            </strong>
 
-                        <p>
-                            Hoy
-                        </p>
-
-                        <h3>
-                            ${hoy.length}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        🌾
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Fincas
-                        </p>
-
-                        <h3>
-
-                            ${
-                                new Set(
-                                    todos
-                                        .map(
-                                            registro =>
-                                                registro.fincaId
-                                        )
-                                        .filter(Boolean)
-                                ).size
-                            }
-
-                        </h3>
+                        </div>
 
                     </div>
 
-                </div>
+                </section>
 
 
-                <div class="card">
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
 
-                    <span class="card-icon">
-                        🚜
-                    </span>
+                <section class="stats cuaderno-stats">
+
+                    ${this.crearStat(
+                        "📖",
+                        "Registros",
+                        todos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "📅",
+                        "Actuaciones hoy",
+                        hoy.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "🌾",
+                        "Fincas",
+                        fincasUtilizadas
+                    )}
+
+
+                    ${this.crearStat(
+                        "🚜",
+                        "Tipos de actuación",
+                        actuacionesDiferentes
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="cuaderno-section-header">
 
                     <div>
 
+                        <span class="cuaderno-section-eyebrow">
+                            HISTORIAL AGRÍCOLA
+                        </span>
+
+
+                        <h2>
+                            Actuaciones registradas
+                        </h2>
+
+
                         <p>
-                            Actuaciones
+                            Consulta y filtra toda la actividad
+                            realizada en el campo.
                         </p>
-
-                        <h3>
-
-                            ${
-                                new Set(
-                                    todos
-                                        .map(
-                                            registro =>
-                                                registro.tipoActuacion
-                                        )
-                                        .filter(Boolean)
-                                ).size
-                            }
-
-                        </h3>
 
                     </div>
 
+
+                    <span class="cuaderno-results-count">
+
+                        ${registros.length}
+
+                        ${
+                            registros.length === 1
+                                ? "registro"
+                                : "registros"
+                        }
+
+                    </span>
+
                 </div>
 
-            </section>
 
+                <!-- ==========================================
+                     FILTROS
+                =========================================== -->
 
-            <section
-                class="
-                    panel
-                    cuaderno-filtros-panel
-                "
-            >
+                <section class="cuaderno-filtros-panel">
 
-                <div
-                    class="cuaderno-filtros-grid"
-                >
+                    <div class="cuaderno-search-wrap">
 
-                    <div class="form-group">
+                        <span>
+                            🔎
+                        </span>
 
-                        <label>
-                            Buscar
-                        </label>
 
                         <input
                             id="buscarCuaderno"
                             type="search"
-                            placeholder="Finca, actuación, cultivo..."
+                            placeholder="Buscar finca, actuación, cultivo..."
                             value="${escaparHTML(
                                 this.busqueda
                             )}"
@@ -260,11 +274,12 @@ export class CuadernoCampoView {
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="cuaderno-filter-wrap">
 
                         <label>
                             Finca
                         </label>
+
 
                         <select
                             id="filtroFincaCuaderno"
@@ -307,18 +322,19 @@ export class CuadernoCampoView {
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="cuaderno-filter-wrap">
 
                         <label>
                             Actuación
                         </label>
+
 
                         <select
                             id="filtroTipoCuaderno"
                         >
 
                             <option value="">
-                                Todas
+                                Todas las actuaciones
                             </option>
 
 
@@ -353,12 +369,12 @@ export class CuadernoCampoView {
 
                     </div>
 
-                </div>
-
-            </section>
+                </section>
 
 
-            <section>
+                <!-- ==========================================
+                     LISTA
+                =========================================== -->
 
                 <div
                     id="listaCuadernoCampo"
@@ -382,7 +398,7 @@ export class CuadernoCampoView {
 
                 </div>
 
-            </section>
+            </div>
 
         `;
 
@@ -391,13 +407,10 @@ export class CuadernoCampoView {
             .getElementById(
                 "nuevoRegistroCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormulario();
-
-                }
+                () =>
+                    this.mostrarFormulario()
             );
 
 
@@ -405,13 +418,12 @@ export class CuadernoCampoView {
             .getElementById(
                 "buscarCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "input",
                 event => {
 
                     this.busqueda =
                         event.target.value;
-
 
                     this.actualizarLista();
 
@@ -423,13 +435,12 @@ export class CuadernoCampoView {
             .getElementById(
                 "filtroFincaCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "change",
                 event => {
 
                     this.filtroFinca =
                         event.target.value;
-
 
                     this.actualizarLista();
 
@@ -441,13 +452,12 @@ export class CuadernoCampoView {
             .getElementById(
                 "filtroTipoCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "change",
                 event => {
 
                     this.filtroTipo =
                         event.target.value;
-
 
                     this.actualizarLista();
 
@@ -460,9 +470,49 @@ export class CuadernoCampoView {
     }
 
 
+    // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <div class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+
+                <div>
+
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
+
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
 
     // =====================================================
-    // ACTUALIZAR SOLO EL LISTADO
+    // ACTUALIZAR LISTADO
     // =====================================================
 
     actualizarLista() {
@@ -488,6 +538,7 @@ export class CuadernoCampoView {
 
 
         contenedor.innerHTML =
+
             registros.length
 
                 ? registros
@@ -502,10 +553,30 @@ export class CuadernoCampoView {
                 : this.crearVacio();
 
 
+        const contador =
+            document
+                .querySelector(
+                    ".cuaderno-results-count"
+                );
+
+
+        if (
+            contador
+        ) {
+
+            contador.textContent =
+                `${registros.length} ${
+                    registros.length === 1
+                        ? "registro"
+                        : "registros"
+                }`;
+
+        }
+
+
         this.configurarEventos();
 
     }
-
 
 
     // =====================================================
@@ -518,33 +589,49 @@ export class CuadernoCampoView {
 
         return `
 
-            <article
-                class="panel cuaderno-card"
-            >
+            <article class="cuaderno-card">
 
-                <div class="cuaderno-card-header">
+                <div class="cuaderno-card-top">
 
-                    <div>
+                    <div class="cuaderno-card-type">
 
-                        <div class="cuaderno-card-icon">
+                        <span class="cuaderno-card-icon">
+
                             ${this.obtenerIcono(
                                 registro.tipoActuacion
                             )}
+
+                        </span>
+
+
+                        <div>
+
+                            <span class="cuaderno-card-kicker">
+                                ACTUACIÓN AGRÍCOLA
+                            </span>
+
+
+                            <h3>
+                                ${escaparHTML(
+                                    registro.tipoActuacion
+                                    ||
+                                    "Actuación"
+                                )}
+                            </h3>
+
+
+                            <p class="cuaderno-card-finca">
+
+                                📍
+                                ${escaparHTML(
+                                    registro.fincaNombre
+                                    ||
+                                    "Sin finca"
+                                )}
+
+                            </p>
+
                         </div>
-
-
-                        <h3>
-                            ${escaparHTML(
-                                registro.tipoActuacion
-                            )}
-                        </h3>
-
-
-                        <strong class="cuaderno-card-finca">
-                            ${escaparHTML(
-                                registro.fincaNombre
-                            )}
-                        </strong>
 
                     </div>
 
@@ -554,22 +641,25 @@ export class CuadernoCampoView {
                         <button
                             type="button"
                             class="
-                                secondary-button
+                                cuaderno-action-button
                                 editar-cuaderno
                             "
                             data-id="${registro.id}"
+                            title="Editar"
                         >
-                            Editar
+                            ✎
                         </button>
 
 
                         <button
                             type="button"
                             class="
-                                secondary-button
+                                cuaderno-action-button
+                                cuaderno-delete
                                 eliminar-cuaderno
                             "
                             data-id="${registro.id}"
+                            title="Eliminar"
                         >
                             ×
                         </button>
@@ -579,36 +669,58 @@ export class CuadernoCampoView {
                 </div>
 
 
-                <div class="cuaderno-card-meta">
+                <div class="cuaderno-card-date">
 
-                    <p>
-                        📅
-                        ${formatearFecha(
-                            registro.fecha
-                        )}
+                    <div>
 
-                        ${
-                            registro.hora
+                        <span>
+                            Fecha
+                        </span>
 
-                                ? ` · ${escaparHTML(
-                                    registro.hora
-                                )}`
 
-                                : ""
-                        }
-                    </p>
+                        <strong>
+                            ${formatearFecha(
+                                registro.fecha
+                            )}
+                        </strong>
 
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Hora
+                        </span>
+
+
+                        <strong>
+                            ${escaparHTML(
+                                registro.hora
+                                ||
+                                "—"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <div class="cuaderno-card-tags">
 
                     ${
                         registro.campaniaNombre
 
                             ? `
-                                <p>
+
+                                <span>
                                     🗓️
                                     ${escaparHTML(
                                         registro.campaniaNombre
                                     )}
-                                </p>
+                                </span>
+
                             `
 
                             : ""
@@ -619,108 +731,14 @@ export class CuadernoCampoView {
                         registro.cultivoNombre
 
                             ? `
-                                <p>
+
+                                <span>
                                     🌱
                                     ${escaparHTML(
                                         registro.cultivoNombre
                                     )}
-                                </p>
-                            `
+                                </span>
 
-                            : ""
-                    }
-
-
-                    ${
-                        registro.trabajadorNombres
-                            ?.length
-
-                            ? `
-                                <p>
-                                    👷
-                                    ${
-                                        registro
-                                            .trabajadorNombres
-                                            .map(
-                                                nombre =>
-                                                    escaparHTML(
-                                                        nombre
-                                                    )
-                                            )
-                                            .join(", ")
-                                    }
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        registro.maquinariaNombre
-
-                            ? `
-                                <p>
-                                    🚜
-                                    ${escaparHTML(
-                                        registro.maquinariaNombre
-                                    )}
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        registro.productoNombre
-
-                            ? `
-                                <p>
-                                    📦
-                                    ${escaparHTML(
-                                        registro.productoNombre
-                                    )}
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        registro.cantidad !==
-                        null
-                        &&
-                        registro.cantidad !==
-                        undefined
-
-                            ? `
-                                <p>
-                                    ⚖️
-                                    ${registro.cantidad}
-                                    ${escaparHTML(
-                                        registro.unidad
-                                        ||
-                                        ""
-                                    )}
-                                </p>
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        registro.dosis
-
-                            ? `
-                                <p>
-                                    🧪 Dosis:
-                                    ${escaparHTML(
-                                        registro.dosis
-                                    )}
-                                </p>
                             `
 
                             : ""
@@ -730,15 +748,186 @@ export class CuadernoCampoView {
 
 
                 ${
+                    registro.trabajadorNombres
+                        ?.length
+
+                        ? `
+
+                            <div class="cuaderno-info-line">
+
+                                <span>
+                                    👷
+                                </span>
+
+                                <div>
+
+                                    <small>
+                                        Trabajadores
+                                    </small>
+
+
+                                    <strong>
+
+                                        ${registro
+                                            .trabajadorNombres
+                                            .map(
+                                                nombre =>
+                                                    escaparHTML(
+                                                        nombre
+                                                    )
+                                            )
+                                            .join(", ")}
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    registro.maquinariaNombre
+
+                        ? `
+
+                            <div class="cuaderno-info-line">
+
+                                <span>
+                                    🚜
+                                </span>
+
+
+                                <div>
+
+                                    <small>
+                                        Maquinaria
+                                    </small>
+
+
+                                    <strong>
+                                        ${escaparHTML(
+                                            registro.maquinariaNombre
+                                        )}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    registro.productoNombre
+
+                        ? `
+
+                            <div class="cuaderno-info-line">
+
+                                <span>
+                                    📦
+                                </span>
+
+
+                                <div>
+
+                                    <small>
+                                        Producto
+                                    </small>
+
+
+                                    <strong>
+
+                                        ${escaparHTML(
+                                            registro.productoNombre
+                                        )}
+
+                                        ${
+                                            registro.cantidad !==
+                                            null
+                                            &&
+                                            registro.cantidad !==
+                                            undefined
+                                            &&
+                                            registro.cantidad !== ""
+
+                                                ? ` · ${escaparHTML(
+                                                    registro.cantidad
+                                                )} ${escaparHTML(
+                                                    registro.unidad
+                                                    ||
+                                                    ""
+                                                )}`
+
+                                                : ""
+                                        }
+
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
+                    registro.dosis
+
+                        ? `
+
+                            <div class="cuaderno-info-line">
+
+                                <span>
+                                    🧪
+                                </span>
+
+
+                                <div>
+
+                                    <small>
+                                        Dosis
+                                    </small>
+
+
+                                    <strong>
+                                        ${escaparHTML(
+                                            registro.dosis
+                                        )}
+                                    </strong>
+
+                                </div>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                ${
                     registro.descripcion
 
                         ? `
 
                             <div class="cuaderno-card-detail">
 
-                                <strong>
-                                    Descripción
-                                </strong>
+                                <span>
+                                    DESCRIPCIÓN
+                                </span>
+
 
                                 <p>
                                     ${escaparHTML(
@@ -761,9 +950,10 @@ export class CuadernoCampoView {
 
                             <div class="cuaderno-card-detail">
 
-                                <strong>
-                                    Observaciones
-                                </strong>
+                                <span>
+                                    OBSERVACIONES
+                                </span>
+
 
                                 <p>
                                     ${escaparHTML(
@@ -779,21 +969,28 @@ export class CuadernoCampoView {
                 }
 
 
-                <p class="cuaderno-card-author">
-                    Registrado por
-                    ${escaparHTML(
-                        registro.creadoPorNombre
-                        ||
-                        "Administración"
-                    )}
-                </p>
+                <footer class="cuaderno-card-footer">
+
+                    <span>
+                        Registrado por
+                    </span>
+
+
+                    <strong>
+                        ${escaparHTML(
+                            registro.creadoPorNombre
+                            ||
+                            "Administración"
+                        )}
+                    </strong>
+
+                </footer>
 
             </article>
 
         `;
 
     }
-
 
 
     // =====================================================
@@ -830,9 +1027,7 @@ export class CuadernoCampoView {
                 "El registro del cuaderno no existe."
             );
 
-
             this.mostrar();
-
 
             return;
 
@@ -892,586 +1087,690 @@ export class CuadernoCampoView {
 
         const horaAhora =
             obtenerHoraActual();
+
+
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverCuaderno"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="cuaderno-form-page">
+
+                <button
+                    id="volverCuaderno"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="cuaderno-form-header">
 
-                <div>
+                    <span class="cuaderno-form-eyebrow">
+                        📖 CUADERNO DE CAMPO
+                    </span>
 
-                    <h2>
+
+                    <h1>
+
                         ${
-                            registro
+                            editando
                                 ? "Editar actuación"
                                 : "Nueva actuación"
                         }
-                    </h2>
+
+                    </h1>
+
 
                     <p>
-                        Cuaderno de campo
-                    </p>
-
-                </div>
-
-            </header>
-
-
-            <section class="form-panel">
-
-                <div class="form-grid">
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Fecha *
-                        </label>
-
-                        <input
-                            id="cuadernoFecha"
-                            type="date"
-                            value="${
-                                registro?.fecha
-                                ||
-                                fechaHoy
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Hora
-                        </label>
-
-                        <input
-                            id="cuadernoHora"
-                            type="time"
-                            value="${
-                                registro?.hora
-                                ||
-                                horaAhora
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Tipo de actuación *
-                        </label>
-
-                        <select id="cuadernoTipo">
-
-                            <option value="">
-                                Selecciona...
-                            </option>
-
-                            ${tipos
-                                .map(
-                                    tipo => `
-
-                                        <option
-                                            value="${escaparHTML(
-                                                tipo
-                                            )}"
-
-                                            ${
-                                                registro?.tipoActuacion ===
-                                                tipo
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${escaparHTML(
-                                                tipo
-                                            )}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Finca *
-                        </label>
-
-                        <select id="cuadernoFinca">
-
-                            <option value="">
-                                Selecciona finca...
-                            </option>
-
-                            ${fincas
-                                .map(
-                                    finca => `
-
-                                        <option
-                                            value="${finca.id}"
-
-                                            ${
-                                                mismoId(
-                                                    registro?.fincaId,
-                                                    finca.id
-                                                )
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${escaparHTML(
-                                                finca.nombre
-                                            )}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Campanya
-                        </label>
-
-                        <select id="cuadernoCampania">
-
-                            <option value="">
-                                Sin Campanya
-                            </option>
-
-                            ${campanias
-                                .map(
-                                    campania => `
-
-                                        <option
-                                            value="${campania.id}"
-                                            data-finca-id="${campania.fincaId}"
-
-                                            ${
-                                                mismoId(
-                                                    registro?.campaniaId,
-                                                    campania.id
-                                                )
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${escaparHTML(
-                                                campania.nombre
-                                            )}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Cultivo
-                        </label>
-
-                        <select id="cuadernoCultivo">
-
-                            <option value="">
-                                Sin cultivo concreto
-                            </option>
-
-                            ${cultivos
-                                .map(
-                                    cultivo => `
-
-                                        <option
-                                            value="${cultivo.id}"
-
-                                            data-finca-id="${
-                                                cultivo.fincaId
-                                                ||
-                                                ""
-                                            }"
-
-                                            ${
-                                                mismoId(
-                                                    registro?.cultivoId,
-                                                    cultivo.id
-                                                )
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${escaparHTML(
-                                                obtenerNombreCultivo(
-                                                    cultivo
-                                                )
-                                            )}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Maquinaria
-                        </label>
-
-                        <select id="cuadernoMaquinaria">
-
-                            <option value="">
-                                Sin maquinaria
-                            </option>
-
-                            ${maquinaria
-                                .map(
-                                    maquina => `
-
-                                        <option
-                                            value="${maquina.id}"
-
-                                            ${
-                                                mismoId(
-                                                    registro?.maquinariaId,
-                                                    maquina.id
-                                                )
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${escaparHTML(
-                                                obtenerNombreMaquinaria(
-                                                    maquina
-                                                )
-                                            )}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Producto / material
-                        </label>
-
-                        <select id="cuadernoProducto">
-
-                            <option value="">
-                                Sin producto
-                            </option>
-
-                            ${inventario
-                                .map(
-                                    producto => `
-
-                                        <option
-                                            value="${producto.id}"
-
-                                            ${
-                                                mismoId(
-                                                    registro?.productoInventarioId,
-                                                    producto.id
-                                                )
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${escaparHTML(
-                                                obtenerNombreProducto(
-                                                    producto
-                                                )
-                                            )}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Cantidad
-                        </label>
-
-                        <input
-                            id="cuadernoCantidad"
-                            type="number"
-                            min="0"
-                            step="0.01"
-                            value="${
-                                registro?.cantidad
-                                ??
-                                ""
-                            }"
-                        >
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Unidad
-                        </label>
-
-                        <select id="cuadernoUnidad">
-
-                            ${[
-                                "",
-                                "kg",
-                                "g",
-                                "L",
-                                "ml",
-                                "ud",
-                                "ha",
-                                "h"
-                            ]
-                                .map(
-                                    unidad => `
-
-                                        <option
-                                            value="${unidad}"
-
-                                            ${
-                                                registro?.unidad ===
-                                                unidad
-
-                                                    ? "selected"
-
-                                                    : ""
-                                            }
-                                        >
-                                            ${
-                                                unidad
-                                                ||
-                                                "Sin unidad"
-                                            }
-                                        </option>
-
-                                    `
-                                )
-                                .join("")}
-
-                        </select>
-
-                    </div>
-
-
-                    <div class="form-group">
-
-                        <label>
-                            Dosis
-                        </label>
-
-                        <input
-                            id="cuadernoDosis"
-                            type="text"
-                            placeholder="Ej. 2 L/ha"
-                            value="${escaparHTML(
-                                registro?.dosis
-                                ||
-                                ""
-                            )}"
-                        >
-
-                    </div>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Trabajadores
-                    </label>
-
-
-                    <div class="cuaderno-trabajadores-grid">
 
                         ${
-                            trabajadores.length
+                            editando
 
-                                ? trabajadores
-                                    .map(
-                                        trabajador => {
+                                ? "Actualiza los datos de esta actuación agrícola."
 
-                                            const marcado =
-                                                registro
-                                                    ?.trabajadorIds
-                                                    ?.some(
-                                                        id =>
-                                                            mismoId(
-                                                                id,
-                                                                trabajador.id
-                                                            )
-                                                    );
+                                : "Registra todo lo realizado en el campo para mantener una trazabilidad completa."
+                        }
+
+                    </p>
+
+                </header>
 
 
-                                            return `
+                <div class="cuaderno-form-layout">
 
-                                                <label
-                                                    class="cuaderno-trabajador-option"
+                    <section
+                        class="
+                            form-panel
+                            cuaderno-form-panel
+                        "
+                    >
+
+                        <div class="cuaderno-form-section">
+
+                            <span>
+                                📅
+                            </span>
+
+
+                            <div>
+
+                                <h3>
+                                    Datos de la actuación
+                                </h3>
+
+                                <p>
+                                    Información principal del trabajo realizado.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="cuaderno-form-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha *
+                                </label>
+
+
+                                <input
+                                    id="cuadernoFecha"
+                                    type="date"
+                                    value="${
+                                        registro?.fecha
+                                        ||
+                                        fechaHoy
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Hora
+                                </label>
+
+
+                                <input
+                                    id="cuadernoHora"
+                                    type="time"
+                                    value="${
+                                        registro?.hora
+                                        ||
+                                        horaAhora
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Tipo de actuación *
+                                </label>
+
+
+                                <select id="cuadernoTipo">
+
+                                    <option value="">
+                                        Selecciona...
+                                    </option>
+
+
+                                    ${tipos
+                                        .map(
+                                            tipo => `
+
+                                                <option
+                                                    value="${escaparHTML(
+                                                        tipo
+                                                    )}"
+
+                                                    ${
+                                                        registro?.tipoActuacion ===
+                                                        tipo
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+                                                    ${escaparHTML(
+                                                        tipo
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Finca *
+                                </label>
+
+
+                                <select id="cuadernoFinca">
+
+                                    <option value="">
+                                        Selecciona finca...
+                                    </option>
+
+
+                                    ${fincas
+                                        .map(
+                                            finca => `
+
+                                                <option
+                                                    value="${finca.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            registro?.fincaId,
+                                                            finca.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+                                                    ${escaparHTML(
+                                                        finca.nombre
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Campaña
+                                </label>
+
+
+                                <select id="cuadernoCampania">
+
+                                    <option value="">
+                                        Sin campaña
+                                    </option>
+
+
+                                    ${campanias
+                                        .map(
+                                            campania => `
+
+                                                <option
+                                                    value="${campania.id}"
+
+                                                    data-finca-id="${campania.fincaId}"
+
+                                                    ${
+                                                        mismoId(
+                                                            registro?.campaniaId,
+                                                            campania.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+                                                    ${escaparHTML(
+                                                        campania.nombre
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Cultivo
+                                </label>
+
+
+                                <select id="cuadernoCultivo">
+
+                                    <option value="">
+                                        Sin cultivo
+                                    </option>
+
+
+                                    ${cultivos
+                                        .map(
+                                            cultivo => `
+
+                                                <option
+                                                    value="${cultivo.id}"
+
+                                                    data-finca-id="${cultivo.fincaId}"
+
+                                                    ${
+                                                        mismoId(
+                                                            registro?.cultivoId,
+                                                            cultivo.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
                                                 >
 
-                                                    <input
-                                                        type="checkbox"
-                                                        class="cuaderno-trabajador"
-                                                        value="${trabajador.id}"
-
-                                                        ${
-                                                            marcado
-                                                                ? "checked"
-                                                                : ""
-                                                        }
-                                                    >
-
                                                     ${escaparHTML(
-                                                        obtenerNombreTrabajador(
-                                                            trabajador
+                                                        obtenerNombreCultivo(
+                                                            cultivo
                                                         )
                                                     )}
 
-                                                </label>
+                                                </option>
 
-                                            `;
+                                            `
+                                        )
+                                        .join("")}
 
-                                        }
-                                    )
-                                    .join("")
+                                </select>
 
-                                : `
-                                    <p>
-                                        No hay trabajadores activos.
-                                    </p>
-                                `
-                        }
+                            </div>
 
-                    </div>
+
+                            <div class="form-group">
+
+                                <label>
+                                    Maquinaria
+                                </label>
+
+
+                                <select id="cuadernoMaquinaria">
+
+                                    <option value="">
+                                        Sin maquinaria
+                                    </option>
+
+
+                                    ${maquinaria
+                                        .map(
+                                            maquina => `
+
+                                                <option
+                                                    value="${maquina.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            registro?.maquinariaId,
+                                                            maquina.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        obtenerNombreMaquinaria(
+                                                            maquina
+                                                        )
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Producto
+                                </label>
+
+
+                                <select id="cuadernoProducto">
+
+                                    <option value="">
+                                        Sin producto
+                                    </option>
+
+
+                                    ${inventario
+                                        .map(
+                                            producto => `
+
+                                                <option
+                                                    value="${producto.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            registro?.productoInventarioId,
+                                                            producto.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        obtenerNombreProducto(
+                                                            producto
+                                                        )
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Cantidad
+                                </label>
+
+
+                                <input
+                                    id="cuadernoCantidad"
+                                    type="number"
+                                    min="0"
+                                    step="0.01"
+                                    value="${
+                                        registro?.cantidad
+                                        ??
+                                        ""
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Unidad
+                                </label>
+
+
+                                <input
+                                    id="cuadernoUnidad"
+                                    type="text"
+                                    placeholder="kg, L, unidades..."
+                                    value="${escaparHTML(
+                                        registro?.unidad
+                                        ||
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group cuaderno-form-wide">
+
+                                <label>
+                                    Dosis
+                                </label>
+
+
+                                <input
+                                    id="cuadernoDosis"
+                                    type="text"
+                                    placeholder="Ej. 2 L/ha"
+                                    value="${escaparHTML(
+                                        registro?.dosis
+                                        ||
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group cuaderno-form-wide">
+
+                                <label>
+                                    Trabajadores
+                                </label>
+
+
+                                <div class="cuaderno-trabajadores">
+
+                                    ${
+                                        trabajadores.length
+
+                                            ? trabajadores
+                                                .map(
+                                                    trabajador => {
+
+                                                        const marcado =
+                                                            (
+                                                                registro
+                                                                    ?.trabajadorIds
+                                                                ||
+                                                                []
+                                                            )
+                                                                .some(
+                                                                    id =>
+                                                                        mismoId(
+                                                                            id,
+                                                                            trabajador.id
+                                                                        )
+                                                                );
+
+
+                                                        return `
+
+                                                            <label
+                                                                class="
+                                                                    cuaderno-trabajador-option
+                                                                "
+                                                            >
+
+                                                                <input
+                                                                    type="checkbox"
+                                                                    class="cuaderno-trabajador"
+                                                                    value="${trabajador.id}"
+
+                                                                    ${
+                                                                        marcado
+                                                                            ? "checked"
+                                                                            : ""
+                                                                    }
+                                                                >
+
+
+                                                                <span>
+
+                                                                    ${escaparHTML(
+                                                                        obtenerNombreTrabajador(
+                                                                            trabajador
+                                                                        )
+                                                                    )}
+
+                                                                </span>
+
+                                                            </label>
+
+                                                        `;
+
+                                                    }
+                                                )
+                                                .join("")
+
+                                            : `
+
+                                                <p class="cuaderno-no-workers">
+                                                    No hay trabajadores activos.
+                                                </p>
+
+                                            `
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group cuaderno-form-wide">
+
+                                <label>
+                                    Descripción
+                                </label>
+
+
+                                <textarea
+                                    id="cuadernoDescripcion"
+                                    rows="4"
+                                    placeholder="Describe el trabajo realizado..."
+                                >${escaparHTML(
+                                    registro?.descripcion
+                                    ||
+                                    ""
+                                )}</textarea>
+
+                            </div>
+
+
+                            <div class="form-group cuaderno-form-wide">
+
+                                <label>
+                                    Observaciones
+                                </label>
+
+
+                                <textarea
+                                    id="cuadernoObservaciones"
+                                    rows="3"
+                                    placeholder="Observaciones adicionales..."
+                                >${escaparHTML(
+                                    registro?.observaciones
+                                    ||
+                                    ""
+                                )}</textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarCuaderno"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarCuaderno"
+                                class="primary-button"
+                                type="button"
+                            >
+
+                                ${
+                                    editando
+                                        ? "Guardar cambios"
+                                        : "Registrar actuación"
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <aside class="cuaderno-form-aside">
+
+                        <div class="cuaderno-form-photo">
+
+                            <div>
+
+                                <span>
+                                    TRAZABILIDAD AGRÍCOLA
+                                </span>
+
+
+                                <strong>
+                                    Lo que registras hoy,
+                                    te ayuda mañana.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="cuaderno-form-tip">
+
+                            <span>
+                                📖
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Historial completo
+                                </strong>
+
+
+                                <p>
+                                    Cada actuación queda relacionada con
+                                    finca, campaña, cultivo, personal y
+                                    recursos utilizados.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
-
-                <div class="form-group">
-
-                    <label>
-                        Descripción
-                    </label>
-
-                    <textarea
-                        id="cuadernoDescripcion"
-                        rows="4"
-                        placeholder="Describe el trabajo realizado..."
-                    >${escaparHTML(
-                        registro?.descripcion
-                        ||
-                        ""
-                    )}</textarea>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Observaciones
-                    </label>
-
-                    <textarea
-                        id="cuadernoObservaciones"
-                        rows="3"
-                        placeholder="Observaciones adicionales..."
-                    >${escaparHTML(
-                        registro?.observaciones
-                        ||
-                        ""
-                    )}</textarea>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarCuaderno"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        Cancelar
-                    </button>
-
-
-                    <button
-                        id="guardarCuaderno"
-                        class="primary-button"
-                        type="button"
-                    >
-                        ${
-                            registro
-                                ? "Guardar cambios"
-                                : "Registrar actuación"
-                        }
-                    </button>
-
-                </div>
-
-            </section>
+            </div>
 
         `;
 
@@ -1480,13 +1779,10 @@ export class CuadernoCampoView {
             .getElementById(
                 "volverCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrar();
-
-                }
+                () =>
+                    this.mostrar()
             );
 
 
@@ -1494,13 +1790,10 @@ export class CuadernoCampoView {
             .getElementById(
                 "cancelarCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrar();
-
-                }
+                () =>
+                    this.mostrar()
             );
 
 
@@ -1508,13 +1801,10 @@ export class CuadernoCampoView {
             .getElementById(
                 "cuadernoFinca"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "change",
-                () => {
-
-                    this.actualizarRelacionesFormulario();
-
-                }
+                () =>
+                    this.actualizarRelacionesFormulario()
             );
 
 
@@ -1522,15 +1812,12 @@ export class CuadernoCampoView {
             .getElementById(
                 "guardarCuaderno"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
+                () =>
                     this.guardarFormulario(
                         registro
-                    );
-
-                }
+                    )
             );
 
 
@@ -1539,9 +1826,8 @@ export class CuadernoCampoView {
     }
 
 
-
     // =====================================================
-    // GUARDAR FORMULARIO
+    // GUARDAR
     // =====================================================
 
     guardarFormulario(
@@ -1605,8 +1891,7 @@ export class CuadernoCampoView {
                     )
                     .value,
 
-            trabajadorIds:
-                trabajadorIds,
+            trabajadorIds,
 
             maquinariaId:
                 document
@@ -1683,7 +1968,6 @@ export class CuadernoCampoView {
                 resultado.mensaje
             );
 
-
             return;
 
         }
@@ -1692,8 +1976,10 @@ export class CuadernoCampoView {
         this.mostrar();
 
     }
+
+
     // =====================================================
-    // FILTRAR CAMPANYA / CULTIVO POR FINCA
+    // FILTRAR CAMPAÑA / CULTIVO POR FINCA
     // =====================================================
 
     actualizarRelacionesFormulario() {
@@ -1749,10 +2035,8 @@ export class CuadernoCampoView {
                         opcion.hidden =
                             false;
 
-
                         opcion.disabled =
                             false;
-
 
                         return;
 
@@ -1770,7 +2054,6 @@ export class CuadernoCampoView {
 
                     opcion.hidden =
                         !pertenece;
-
 
                     opcion.disabled =
                         !pertenece;
@@ -1792,32 +2075,25 @@ export class CuadernoCampoView {
                         opcion.hidden =
                             false;
 
-
                         opcion.disabled =
                             false;
-
 
                         return;
 
                     }
 
 
-                    const fincaCultivo =
-                        opcion.dataset.fincaId;
-
-
                     const pertenece =
                         !!fincaId
                         &&
                         mismoId(
-                            fincaCultivo,
+                            opcion.dataset.fincaId,
                             fincaId
                         );
 
 
                     opcion.hidden =
                         !pertenece;
-
 
                     opcion.disabled =
                         !pertenece;
@@ -1836,11 +2112,7 @@ export class CuadernoCampoView {
             &&
             campaniaSeleccionada.value
             &&
-            (
-                campaniaSeleccionada.hidden
-                ||
-                campaniaSeleccionada.disabled
-            )
+            campaniaSeleccionada.disabled
         ) {
 
             campania.value =
@@ -1859,11 +2131,7 @@ export class CuadernoCampoView {
             &&
             cultivoSeleccionado.value
             &&
-            (
-                cultivoSeleccionado.hidden
-                ||
-                cultivoSeleccionado.disabled
-            )
+            cultivoSeleccionado.disabled
         ) {
 
             cultivo.value =
@@ -1874,9 +2142,8 @@ export class CuadernoCampoView {
     }
 
 
-
     // =====================================================
-    // EVENTOS TARJETAS
+    // EVENTOS
     // =====================================================
 
     configurarEventos() {
@@ -1890,13 +2157,10 @@ export class CuadernoCampoView {
 
                     boton.addEventListener(
                         "click",
-                        () => {
-
+                        () =>
                             this.mostrarFormulario(
                                 boton.dataset.id
-                            );
-
-                        }
+                            )
                     );
 
                 }
@@ -1944,7 +2208,6 @@ export class CuadernoCampoView {
                                     resultado.mensaje
                                 );
 
-
                                 return;
 
                             }
@@ -1959,7 +2222,6 @@ export class CuadernoCampoView {
             );
 
     }
-
 
 
     // =====================================================
@@ -2025,8 +2287,7 @@ export class CuadernoCampoView {
                                     registro.campaniaNombre,
                                     registro.cultivoNombre,
                                     ...(
-                                        registro
-                                            .trabajadorNombres
+                                        registro.trabajadorNombres
                                         ||
                                         []
                                     ),
@@ -2050,14 +2311,33 @@ export class CuadernoCampoView {
         }
 
 
-        return registros;
+        return registros
+            .slice()
+            .sort(
+                (
+                    a,
+                    b
+                ) => {
+
+                    const fechaA =
+                        `${a.fecha || ""} ${a.hora || ""}`;
+
+                    const fechaB =
+                        `${b.fecha || ""} ${b.hora || ""}`;
+
+
+                    return fechaB.localeCompare(
+                        fechaA
+                    );
+
+                }
+            );
 
     }
 
 
-
     // =====================================================
-    // REGISTROS DE HOY
+    // HOY
     // =====================================================
 
     obtenerRegistrosHoy(
@@ -2078,32 +2358,31 @@ export class CuadernoCampoView {
         );
 
     }
+
+
     // =====================================================
-    // ESTADO VACÍO
+    // VACÍO
     // =====================================================
 
     crearVacio() {
 
         return `
 
-            <div
-                class="
-                    panel
-                    empty-state
-                    cuaderno-empty-state
-                "
-            >
+            <div class="cuaderno-empty">
 
-                <div class="empty-icon">
+                <div class="cuaderno-empty-icon">
                     📖
                 </div>
+
 
                 <h3>
                     No hay actuaciones registradas
                 </h3>
 
+
                 <p>
-                    Las actuaciones realizadas en tus fincas aparecerán aquí.
+                    Las actuaciones realizadas en tus fincas
+                    aparecerán aquí.
                 </p>
 
             </div>
@@ -2113,9 +2392,8 @@ export class CuadernoCampoView {
     }
 
 
-
     // =====================================================
-    // ICONOS
+    // ICONO
     // =====================================================
 
     obtenerIcono(
@@ -2162,4 +2440,4 @@ export class CuadernoCampoView {
 
     }
 
-}                   
+}

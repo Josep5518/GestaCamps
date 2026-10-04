@@ -1,64 +1,522 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · PRODUCCIÓN
-   Día 26 · Cierre Refactorización 1
+   DÍA 27 · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   ESTADÍSTICAS
+   PÁGINA
+===================================================== */
+
+.produccion-page {
+    width: 100%;
+
+    padding-bottom: 40px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.produccion-hero {
+    display: grid;
+
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+
+.produccion-hero-content {
+    min-height: 215px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.produccion-eyebrow {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #39725b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.produccion-hero h1 {
+    max-width: 530px;
+
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.produccion-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.produccion-hero-content > p {
+    max-width: 510px;
+
+    margin:
+        14px
+        0
+        18px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+.produccion-hero-button {
+    align-self: flex-start;
+
+    min-height: 39px;
+}
+
+
+/* =====================================================
+   HERO IMAGEN
+===================================================== */
+
+.produccion-hero-image {
+    position: relative;
+
+    min-height: 215px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        url("../../assets/images/produccion-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dce9df;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.produccion-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0),
+            rgba(8,37,26,0.04) 40%,
+            rgba(8,37,26,0.55)
+        );
+}
+
+
+.produccion-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 125px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,0.91);
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.produccion-hero-badge span {
+    display: block;
+
+    color: #687a71;
+
+    font-size: 8px;
+}
+
+
+.produccion-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+}
+
+
+.produccion-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(0,0,0,0.32);
+}
+
+
+.produccion-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.produccion-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    line-height: 1.03;
+}
+
+
+/* =====================================================
+   KPIs
 ===================================================== */
 
 .produccion-stats {
-    display: grid;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
             4,
             minmax(0, 1fr)
-        );
+        ) !important;
 
-    gap: 16px;
+    gap: 13px !important;
 
-    margin-bottom: 20px;
+    margin-bottom: 16px !important;
+}
+
+
+.produccion-stats .card {
+    min-width: 0;
+
+    min-height: 76px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(18,55,42,0.045);
 }
 
 
 /* =====================================================
-   INFORMACIÓN DE STOCK
+   LEYENDA STOCK
 ===================================================== */
 
-.produccion-stock-info {
-    margin:
-        18px
-        0
-        22px;
+.produccion-stock-legend {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
+
+    margin-bottom: 23px;
 
     padding:
-        13px
-        16px;
+        12px
+        14px;
 
     border:
         1px solid
-        #dfeee7;
+        #dce9e2;
 
-    border-radius: 10px;
+    border-radius: 12px;
 
     background:
-        #edf6f1;
-
-    color:
-        #315f4d;
-
-    font-size: 12px;
-
-    line-height: 1.5;
+        linear-gradient(
+            90deg,
+            #eef7f2,
+            #f8faf8
+        );
 }
 
 
-.produccion-stock-info strong {
-    color:
-        #245540;
+.produccion-stock-legend-title {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+}
+
+
+.produccion-stock-legend-title > span {
+    width: 34px;
+    height: 34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: white;
+
+    font-size: 16px;
+}
+
+
+.produccion-stock-legend-title strong {
+    display: block;
+
+    color: #285c46;
+
+    font-size: 9px;
+}
+
+
+.produccion-stock-legend-title p {
+    margin:
+        2px
+        0
+        0;
+
+    color: #718078;
+
+    font-size: 7px;
+}
+
+
+.produccion-stock-legend-items {
+    display: flex;
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+    gap: 7px;
+}
+
+
+.produccion-stock-legend-items span {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 5px;
+
+    padding:
+        5px
+        7px;
+
+    border-radius: 999px;
+
+    background: white;
+
+    color: #627169;
+
+    font-size: 7px;
+}
+
+
+.produccion-stock-legend-items i {
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+}
+
+
+.produccion-stock-legend-items .reservado i {
+    background: #d6a84d;
+}
+
+
+.produccion-stock-legend-items .entregado i {
+    background: #4d9b70;
+}
+
+
+.produccion-stock-legend-items .neutro i {
+    background: #aab4ae;
+}
+
+
+/* =====================================================
+   CABECERA LISTADO
+===================================================== */
+
+.produccion-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin:
+        7px
+        0
+        13px;
+}
+
+
+.produccion-section-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.produccion-section-header h2 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+}
+
+
+.produccion-section-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.produccion-summary {
+    display: flex;
+
+    gap: 6px;
+}
+
+
+.produccion-summary span {
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 8px;
+    font-weight: 700;
 }
 
 
@@ -75,9 +533,9 @@
             minmax(0, 1fr)
         );
 
-    gap: 22px;
+    gap: 16px;
 
-    margin-top: 20px;
+    margin-top: 0;
 }
 
 
@@ -86,26 +544,84 @@
 ===================================================== */
 
 .produccion-card {
+    position: relative;
+
     min-width: 0;
 
-    padding: 22px;
+    overflow: hidden;
+
+    padding:
+        0
+        15px
+        15px;
 
     border:
         1px solid
         var(--gc-border-soft);
 
-    border-radius: 14px;
+    border-radius: 16px;
 
-    background-color:
-        white;
+    background: white;
 
     box-shadow:
-        var(--gc-shadow-card);
+        0 8px 22px
+        rgba(18,55,42,0.055);
 
     transition:
-        transform 0.15s ease,
-        border-color 0.15s ease,
-        box-shadow 0.15s ease;
+        transform 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+
+/* FOTO GENÉRICA TEMPORAL */
+
+.produccion-card::before {
+    content: "";
+
+    display: block;
+
+    height: 140px;
+
+    margin:
+        0
+        -15px
+        14px;
+
+    background-position:
+        center;
+
+    background-size:
+        cover;
+}
+
+
+.produccion-card:nth-child(3n + 1)::before {
+    background-image:
+        linear-gradient(
+            rgba(11,44,31,0.04),
+            rgba(11,44,31,0.2)
+        ),
+        url("../../assets/images/produccion-1.jpg");
+}
+
+
+.produccion-card:nth-child(3n + 2)::before {
+    background-image:
+        linear-gradient(
+            rgba(11,44,31,0.04),
+            rgba(11,44,31,0.2)
+        ),
+        url("../../assets/images/produccion-2.jpg");
+}
+
+
+.produccion-card:nth-child(3n + 3)::before {
+    background-image:
+        linear-gradient(
+            rgba(11,44,31,0.04),
+            rgba(11,44,31,0.2)
+        ),
+        url("../../assets/images/produccion-3.jpg");
 }
 
 
@@ -113,182 +629,266 @@
 
     .produccion-card:hover {
         transform:
-            translateY(-2px);
-
-        border-color:
-            #d7e3dc;
+            translateY(-3px);
 
         box-shadow:
-            0
-            12px
-            28px
-            rgba(
-                18,
-                55,
-                42,
-                0.075
-            );
+            0 14px 32px
+            rgba(18,55,42,0.09);
     }
 
 }
 
 
 /* =====================================================
-   CABECERA
+   HEADER TARJETA
 ===================================================== */
 
 .produccion-card-header {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    justify-content:
-        space-between;
+    gap: 10px;
 
-    align-items:
-        center;
-
-    gap: 12px;
-
-    margin-bottom:
-        18px;
+    margin-bottom: 9px;
 }
 
 
 .produccion-icon {
-    width: 48px;
-    height: 48px;
+    width: 35px;
+    height: 35px;
 
     flex:
         0
         0
-        48px;
+        35px;
 
     display: flex;
+    align-items: center;
+    justify-content: center;
 
-    justify-content:
-        center;
+    border-radius: 10px;
 
-    align-items:
-        center;
+    background: #e8f3ed;
 
-    border-radius:
-        12px;
-
-    background-color:
-        var(--gc-green-soft);
-
-    font-size:
-        24px;
+    font-size: 17px;
 }
 
 
 .produccion-actions {
     display: flex;
+    align-items: center;
 
-    gap: 8px;
-
-    align-items:
-        center;
-
-    flex:
-        0
-        0
-        auto;
+    gap: 5px;
 }
 
 
 .produccion-actions
-.edit-button,
+.secondary-button,
 .produccion-actions
-.secondary-button {
-    min-height: 34px;
+.edit-button {
+    min-height: 30px;
 
     padding:
         0
-        10px;
+        9px;
 
-    font-size: 10px;
+    border-radius: 8px;
+
+    font-size: 7px;
 }
 
 
 .produccion-actions
 .delete-button {
-    width: 34px;
-
-    min-width: 34px;
-
-    height: 34px;
+    width: 30px;
+    min-width: 30px;
+    height: 30px;
 
     padding: 0;
+
+    border-radius: 8px;
 }
 
 
 /* =====================================================
-   TÍTULO
+   TITULO TARJETA
 ===================================================== */
 
-.produccion-card h3 {
+.produccion-card > h3 {
     margin:
         0
         0
-        8px;
+        6px;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size:
-        16px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    line-height:
-        1.3;
+    font-size: 17px;
+
+    line-height: 1.2;
 }
 
-
-/* =====================================================
-   UBICACIÓN / CULTIVO
-===================================================== */
 
 .produccion-location,
-.produccion-cultivo,
 .produccion-finca,
+.produccion-cultivo,
+.produccion-campania,
 .produccion-fecha {
-    color:
-        var(--gc-muted);
-
-    font-size:
-        11px;
-
-    line-height:
-        1.4;
-}
-
-
-/* =====================================================
-   CAMPAÑA
-===================================================== */
-
-.produccion-campania {
     margin:
-        10px
-        0
-        14px;
+        4px
+        0;
 
-    color:
-        var(--gc-green-success);
+    color: var(--gc-muted);
 
-    font-size:
-        11px;
-
-    font-weight:
-        600;
+    font-size: 8px;
 }
 
 
 .produccion-sin-campania {
-    color:
-        #8a928e;
+    opacity: 0.7;
+}
 
-    font-weight:
-        400;
+
+/* =====================================================
+   DATOS INTERNOS
+===================================================== */
+
+.produccion-info,
+.produccion-info-grid,
+.produccion-pesos,
+.produccion-stock {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
+    margin-top: 10px;
+}
+
+
+.produccion-pesos,
+.produccion-stock {
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        );
+}
+
+
+.produccion-info > div,
+.produccion-info-grid > div,
+.produccion-pesos > div,
+.produccion-stock > div {
+    min-width: 0;
+
+    padding:
+        8px
+        9px;
+
+    border-radius: 8px;
+
+    background: #f7f9f7;
+}
+
+
+.produccion-info span,
+.produccion-info-grid span,
+.produccion-pesos span,
+.produccion-stock span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 6px;
+}
+
+
+.produccion-info strong,
+.produccion-info-grid strong,
+.produccion-pesos strong,
+.produccion-stock strong {
+    display: block;
+
+    margin-top: 2px;
+
+    overflow-wrap: anywhere;
+
+    color: var(--gc-text);
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   STOCK COLORES
+===================================================== */
+
+.produccion-stock
+.stock-reservado,
+.produccion-pesos
+.stock-reservado {
+    background: #fff4de;
+}
+
+
+.produccion-stock
+.stock-entregado,
+.produccion-pesos
+.stock-entregado {
+    background: #e7f4ec;
+}
+
+
+.produccion-stock
+.stock-disponible,
+.produccion-pesos
+.stock-disponible {
+    background: #eaf5ef;
+}
+
+
+/* =====================================================
+   ALERTAS PRODUCCIÓN
+===================================================== */
+
+.produccion-agotada,
+.produccion-sobreasignada {
+    margin-top: 9px;
+
+    padding:
+        8px
+        9px;
+
+    border-radius: 8px;
+
+    font-size: 7px;
+
+    line-height: 1.4;
+}
+
+
+.produccion-agotada {
+    background: #f4f6f4;
+
+    color: #627068;
+}
+
+
+.produccion-sobreasignada {
+    background: #fbe8e8;
+
+    color: #9c4141;
 }
 
 
@@ -297,377 +897,21 @@
 ===================================================== */
 
 .produccion-pasada {
-    display:
-        inline-flex;
-
-    align-items:
-        center;
-
-    width:
-        fit-content;
-
     margin:
-        10px
-        0;
-
-    padding:
-        6px
-        9px;
-
-    border-radius:
-        999px;
-
-    background:
-        var(--gc-green-soft);
-
-    color:
-        var(--gc-green-success);
-
-    font-size:
-        10px;
-
-    font-weight:
-        700;
-}
-
-
-/* =====================================================
-   INFORMACIÓN GENERAL
-===================================================== */
-
-.produccion-info {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 10px;
-
-    margin:
-        18px
-        0;
-}
-
-
-.produccion-info div {
-    min-width: 0;
-
-    padding: 12px;
-
-    border-radius:
-        9px;
-
-    background-color:
-        var(--gc-surface-soft);
-}
-
-
-.produccion-info span {
-    display: block;
-
-    margin-bottom:
-        5px;
-
-    color:
-        var(--gc-muted);
-
-    font-size:
-        10px;
-}
-
-
-.produccion-info strong {
-    display: block;
-
-    color:
-        var(--gc-text);
-
-    font-size:
-        12px;
-
-    overflow-wrap:
-        anywhere;
-}
-
-
-/* =====================================================
-   PESOS
-===================================================== */
-
-.produccion-pesos {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            3,
-            minmax(0, 1fr)
-        );
-
-    gap: 8px;
-
-    margin-top:
-        12px;
-}
-
-
-.produccion-pesos > div {
-    min-width: 0;
-
-    padding: 10px;
-
-    border-radius:
-        9px;
-
-    background:
-        var(--gc-surface-soft);
-}
-
-
-.produccion-pesos span {
-    display: block;
-
-    margin-bottom:
-        3px;
-
-    color:
-        var(--gc-muted);
-
-    font-size:
-        9px;
-}
-
-
-.produccion-pesos strong {
-    display: block;
-
-    color:
-        var(--gc-text);
-
-    font-size:
-        12px;
-}
-
-
-.produccion-pesos
-> div:last-child {
-    background:
-        #eaf5ef;
-}
-
-
-/* =====================================================
-   STOCK
-===================================================== */
-
-.produccion-stock {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            4,
-            minmax(0, 1fr)
-        );
-
-    gap: 7px;
-
-    margin-top:
-        12px;
-}
-
-
-.produccion-stock > div {
-    min-width: 0;
-
-    padding: 10px;
-
-    border-radius:
-        9px;
-
-    background:
-        var(--gc-surface-soft);
-}
-
-
-.produccion-stock span {
-    display: block;
-
-    margin-bottom:
-        3px;
-
-    color:
-        var(--gc-muted);
-
-    font-size:
-        9px;
-}
-
-
-.produccion-stock strong {
-    display: block;
-
-    color:
-        var(--gc-text);
-
-    font-size:
-        11px;
-
-    overflow-wrap:
-        anywhere;
-}
-
-
-/* =====================================================
-   COLORES DE STOCK
-===================================================== */
-
-.produccion-stock
-.stock-reservado {
-    background:
-        #f4f4f1;
-}
-
-
-.produccion-stock
-.stock-entregado {
-    background:
-        #edf0fa;
-}
-
-
-.produccion-stock
-.stock-disponible {
-    background:
-        #eaf6ef;
-}
-
-
-.produccion-stock
-.stock-agotado {
-    background:
-        #f7eeee;
-}
-
-
-/* =====================================================
-   ESTADO / AVISO
-===================================================== */
-
-.produccion-agotada,
-.produccion-disponibilidad {
-    margin-top:
-        10px;
-
-    padding:
         8px
-        10px;
-
-    border-radius:
-        9px;
-
-    font-size:
-        10px;
-
-    line-height:
-        1.35;
-}
-
-
-.produccion-agotada {
-    background:
-        #f7eeee;
-
-    color:
-        #943f3f;
-}
-
-
-.produccion-disponibilidad {
-    background:
-        #eaf6ef;
-
-    color:
-        #176044;
-}
-
-
-/* =====================================================
-   INFORMACIÓN EN GRID
-===================================================== */
-
-.produccion-info-grid {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    gap: 10px;
-
-    margin-top:
-        14px;
-}
-
-
-.produccion-info-grid > div {
-    min-width: 0;
-
-    padding: 12px;
-
-    border-radius:
-        10px;
-
-    background-color:
-        #f5f7f5;
-}
-
-
-.produccion-info-grid span {
-    display: block;
-
-    margin-bottom:
-        4px;
-
-    color:
-        var(--gc-muted);
-
-    font-size:
-        10px;
-}
-
-
-.produccion-info-grid strong {
-    display: block;
-
-    font-size:
-        12px;
-
-    overflow-wrap:
-        anywhere;
-}
-
-
-/* =====================================================
-   DATOS ADICIONALES
-===================================================== */
-
-.produccion-card > p {
-    margin:
-        6px
         0;
 
-    color:
-        var(--gc-muted-strong);
+    padding:
+        7px
+        8px;
 
-    font-size:
-        11px;
+    border-radius: 8px;
 
-    line-height:
-        1.4;
+    background: #eef5f1;
+
+    color: #456c58;
+
+    font-size: 7px;
 }
 
 
@@ -676,63 +920,247 @@
 ===================================================== */
 
 .produccion-notas {
-    margin-top:
-        15px;
+    margin-top: 9px;
 
-    padding-top:
-        15px;
+    padding-top: 9px;
 
     border-top:
         1px solid
         var(--gc-border-soft);
-
-    color:
-        #68756f;
-
-    font-size:
-        11px;
-
-    line-height:
-        1.4;
 }
 
 
 .produccion-notas span {
     display: block;
 
-    margin-bottom:
-        5px;
+    color: #587563;
 
-    color:
-        var(--gc-muted);
+    font-size: 6px;
+    font-weight: 800;
 
-    font-size:
-        10px;
+    letter-spacing: 0.08em;
 }
 
 
 .produccion-notas p {
-    margin: 0;
+    margin:
+        4px
+        0
+        0;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-muted);
+
+    font-size: 8px;
+
+    line-height: 1.45;
 }
 
 
 /* =====================================================
-   TABLET
+   EMPTY
+===================================================== */
+
+.produccion-empty {
+    min-height: 290px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    border:
+        1px dashed
+        #dbe5df;
+
+    border-radius: 16px;
+
+    background: white;
+
+    text-align: center;
+}
+
+
+.produccion-empty-icon {
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 11px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e1f1e7,
+            #f2f6e9
+        );
+
+    font-size: 29px;
+}
+
+
+.produccion-empty h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 19px;
+}
+
+
+.produccion-empty p {
+    max-width: 390px;
+
+    margin:
+        7px
+        0
+        15px;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   FORMULARIO PRODUCCIÓN EXISTENTE
+===================================================== */
+
+#volverProduccion {
+    margin-bottom: 10px;
+}
+
+
+#volverProduccion
++
+.topbar {
+    margin-bottom: 16px;
+}
+
+
+#volverProduccion
++
+.topbar
+h2 {
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 29px;
+}
+
+
+#volverProduccion
++
+.topbar
+p {
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+#volverProduccion
+~
+.form-panel {
+    max-width: 900px;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(18,55,42,0.045);
+}
+
+
+#volverProduccion
+~
+.form-panel
+.form-group {
+    margin-bottom: 14px;
+}
+
+
+#volverProduccion
+~
+.form-panel
+label {
+    color: #40544a;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+#volverProduccion
+~
+.form-panel
+input,
+#volverProduccion
+~
+.form-panel
+select,
+#volverProduccion
+~
+.form-panel
+textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border-color: #dce6e0;
+
+    background: #fbfcfb;
+}
+
+
+#volverProduccion
+~
+.form-panel
+input:focus,
+#volverProduccion
+~
+.form-panel
+select:focus,
+#volverProduccion
+~
+.form-panel
+textarea:focus {
+    border-color: #4d8b6e;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(49,119,84,0.08);
+}
+
+
+/* =====================================================
+   TABLET GRANDE
 ===================================================== */
 
 @media (max-width: 1250px) {
-
-    .produccion-stats {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
-    }
-
 
     .produccion-grid {
         grid-template-columns:
@@ -740,6 +1168,50 @@
                 2,
                 minmax(0, 1fr)
             );
+    }
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .produccion-hero {
+        grid-template-columns: 1fr;
+    }
+
+
+    .produccion-hero-content {
+        min-height: 0;
+    }
+
+
+    .produccion-hero-image {
+        min-height: 185px;
+    }
+
+
+    .produccion-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .produccion-stock-legend {
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .produccion-stock-legend-items {
+        justify-content: flex-start;
     }
 
 }
@@ -751,6 +1223,68 @@
 
 @media (max-width: 760px) {
 
+    .produccion-page {
+        padding-bottom: 24px;
+    }
+
+
+    .produccion-hero {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+
+        margin-bottom: 13px;
+    }
+
+
+    .produccion-hero-content {
+        min-height: 0;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .produccion-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .produccion-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .produccion-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .produccion-hero-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+
+    .produccion-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .produccion-hero-copy strong {
+        font-size: 18px;
+    }
+
+
     .produccion-stats {
         grid-template-columns:
             repeat(
@@ -758,265 +1292,45 @@
                 minmax(0, 1fr)
             ) !important;
 
-        gap: 9px;
-
-        margin-bottom:
-            16px;
+        gap: 8px !important;
     }
 
 
-    .produccion-stats
-    .card {
-        min-width: 0;
-
-        min-height:
-            72px;
-
-        padding:
-            12px;
-
-        gap:
-            10px;
-
-        border-radius:
-            13px;
+    .produccion-stock-legend {
+        padding: 11px;
     }
 
 
-    .produccion-stats
-    .card-icon {
-        width:
-            38px;
+    .produccion-stock-legend-items {
+        display: grid;
 
-        height:
-            38px;
+        width: 100%;
 
-        flex:
-            0
-            0
-            38px;
-
-        border-radius:
-            10px;
-
-        font-size:
-            18px;
+        grid-template-columns: 1fr;
     }
 
 
-    .produccion-stats
-    .card p {
-        margin-bottom:
-            2px;
+    .produccion-section-header {
+        align-items: flex-start;
+        flex-direction: column;
 
-        font-size:
-            10px;
-
-        line-height:
-            1.2;
-    }
-
-
-    .produccion-stats
-    .card h3 {
-        font-size:
-            16px;
-
-        line-height:
-            1.2;
-    }
-
-
-    .produccion-stock-info {
-        margin:
-            14px
-            0
-            16px;
-
-        padding:
-            11px
-            12px;
-
-        border-radius:
-            11px;
-
-        font-size:
-            10px;
-
-        line-height:
-            1.45;
+        gap: 8px;
     }
 
 
     .produccion-grid {
-        grid-template-columns:
-            1fr !important;
+        grid-template-columns: 1fr;
 
-        gap:
-            12px;
-
-        margin-top:
-            14px;
+        gap: 12px;
     }
 
 
-    .produccion-card {
-        padding:
-            13px;
-
-        border-radius:
-            14px;
-    }
-
-
-    .produccion-card-header {
-        align-items:
-            flex-start;
-
-        margin-bottom:
-            10px;
-    }
-
-
-    .produccion-icon {
-        width:
-            42px;
-
-        height:
-            42px;
-
-        flex:
-            0
-            0
-            42px;
-
-        border-radius:
-            11px;
-
-        font-size:
-            21px;
-    }
-
-
-    .produccion-actions {
-        gap:
-            6px;
-    }
-
-
-    .produccion-actions
-    .edit-button,
-    .produccion-actions
-    .secondary-button {
-        min-height:
-            34px;
-
-        padding:
-            0
-            9px;
-
-        font-size:
-            9px;
-    }
-
-
-    .produccion-actions
-    .delete-button {
-        width:
-            34px;
-
-        min-width:
-            34px;
-
-        height:
-            34px;
-    }
-
-
-    .produccion-card h3 {
-        margin-top:
-            2px;
-
-        margin-bottom:
-            6px;
-
-        font-size:
-            16px;
-    }
-
-
-    .produccion-finca,
-    .produccion-campania,
-    .produccion-fecha {
-        font-size:
-            11px;
-    }
-
-
-    .produccion-pasada {
-        margin:
-            9px
-            0;
+    .produccion-card::before {
+        height: 135px;
     }
 
 
     .produccion-pesos,
-    .produccion-stock {
-        gap:
-            7px;
-
-        margin-top:
-            8px;
-    }
-
-
-    .produccion-info div,
-    .produccion-pesos div,
-    .produccion-stock div {
-        min-width:
-            0;
-
-        padding:
-            8px;
-    }
-
-
-    .produccion-info span,
-    .produccion-pesos span,
-    .produccion-stock span {
-        font-size:
-            9px;
-    }
-
-
-    .produccion-info strong,
-    .produccion-pesos strong,
-    .produccion-stock strong {
-        font-size:
-            11px;
-    }
-
-}
-
-
-/* =====================================================
-   TELÉFONOS MUY ESTRECHOS
-===================================================== */
-
-@media (max-width: 420px) {
-
-    .produccion-stats {
-        grid-template-columns:
-            1fr !important;
-    }
-
-
-    .produccion-pesos {
-        grid-template-columns:
-            1fr;
-    }
-
-
     .produccion-stock {
         grid-template-columns:
             repeat(
@@ -1026,10 +1340,31 @@
     }
 
 
+    #volverProduccion
+    ~
+    .form-panel {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL PEQUEÑO
+===================================================== */
+
+@media (max-width: 420px) {
+
     .produccion-info,
     .produccion-info-grid {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
+    }
+
+
+    .produccion-summary {
+        flex-wrap: wrap;
     }
 
 }

@@ -9,16 +9,36 @@ export class TrabajadorPortalView {
         fichajeService,
         onSalirPortal = null
     ) {
-        this.mainContent = mainContent;
-        this.trabajadorService = trabajadorService;
-        this.trabajoService = trabajoService;
-        this.incidenciaService = incidenciaService;
-        this.fincaService = fincaService;
-        this.fichajeService = fichajeService;
-        this.onSalirPortal = onSalirPortal;
 
-        this.claveSesion = "gestacamps_trabajador_sesion";
-        this.claveModoCampo = "gestacamps_modo_campo";
+        this.mainContent =
+            mainContent;
+
+        this.trabajadorService =
+            trabajadorService;
+
+        this.trabajoService =
+            trabajoService;
+
+        this.incidenciaService =
+            incidenciaService;
+
+        this.fincaService =
+            fincaService;
+
+        this.fichajeService =
+            fichajeService;
+
+        this.onSalirPortal =
+            onSalirPortal;
+
+
+        this.claveSesion =
+            "gestacamps_trabajador_sesion";
+
+
+        this.claveModoCampo =
+            "gestacamps_modo_campo";
+
     }
 
 
@@ -27,93 +47,153 @@ export class TrabajadorPortalView {
     // =====================================================
 
     mostrar() {
-        const trabajador = this.obtenerTrabajadorSesion();
 
-        if (trabajador) {
+        const trabajador =
+            this.obtenerTrabajadorSesion();
 
-            if (this.estaModoCampoActivo()) {
+
+        if (
+            trabajador
+        ) {
+
+            if (
+                this.estaModoCampoActivo()
+            ) {
+
                 this.mostrarModoCampo(
                     trabajador
                 );
+
             }
 
             else {
+
                 this.mostrarPanel(
                     trabajador
                 );
+
             }
 
+
             return;
+
         }
 
+
         this.mostrarAcceso();
+
     }
 
 
     // =====================================================
-    // ACCESO POR PIN
+    // ACCESO
     // =====================================================
 
     mostrarAcceso() {
+
         this.mainContent.innerHTML = `
 
-            <div class="portal-login-screen">
+            <div class="portal-access-page">
 
-                <div class="panel portal-login-card">
+                <div class="portal-access-layout">
 
-                    <div class="portal-login-header">
+                    <section class="portal-access-photo">
 
-                        <div class="portal-login-icon">
+                        <div class="portal-access-brand">
+
+                            <span>
+                                🌿 GESTACAMPS
+                            </span>
+
+
+                            <strong>
+                                Tu jornada,<br>
+                                en tus manos.
+                            </strong>
+
+
+                            <p>
+                                Consulta tus tareas, registra tu actividad
+                                y mantente conectado con la explotación.
+                            </p>
+
+                        </div>
+
+                    </section>
+
+
+                    <section class="portal-access-card">
+
+                        <div class="portal-access-icon">
                             👷
                         </div>
 
-                        <h2>
-                            Portal del trabajador
-                        </h2>
 
-                        <p>
-                            Introduce tu PIN personal para acceder.
+                        <span class="portal-access-eyebrow">
+                            PORTAL DEL TRABAJADOR
+                        </span>
+
+
+                        <h1>
+                            Bienvenido
+                        </h1>
+
+
+                        <p class="portal-access-subtitle">
+                            Introduce tu PIN personal para acceder
+                            a tu espacio de trabajo.
                         </p>
 
-                    </div>
+
+                        <div class="portal-pin-group">
+
+                            <label for="pinPortalTrabajador">
+                                PIN personal
+                            </label>
 
 
-                    <div class="form-group">
+                            <input
+                                id="pinPortalTrabajador"
+                                type="password"
+                                inputmode="numeric"
+                                pattern="[0-9]*"
+                                maxlength="4"
+                                autocomplete="off"
+                                placeholder="••••"
+                            >
 
-                        <label>
-                            PIN
-                        </label>
 
-                        <input
-                            id="pinPortalTrabajador"
-                            class="portal-login-pin"
-                            type="password"
-                            inputmode="numeric"
-                            pattern="[0-9]*"
-                            maxlength="4"
-                            autocomplete="off"
-                            placeholder="••••"
+                            <small>
+                                Introduce los 4 números de tu PIN.
+                            </small>
+
+                        </div>
+
+
+                        <button
+                            id="entrarPortalTrabajador"
+                            class="
+                                primary-button
+                                portal-access-main-button
+                            "
+                            type="button"
                         >
-
-                    </div>
-
-
-                    <button
-                        id="entrarPortalTrabajador"
-                        class="primary-button portal-login-button"
-                        type="button"
-                    >
-                        Entrar
-                    </button>
+                            Entrar al portal
+                        </button>
 
 
-                    <button
-                        id="volverAdministracionPortal"
-                        class="secondary-button portal-login-button portal-login-back"
-                        type="button"
-                    >
-                        ← Volver a administración
-                    </button>
+                        <button
+                            id="volverAdministracionPortal"
+                            class="
+                                secondary-button
+                                portal-access-back-button
+                            "
+                            type="button"
+                        >
+                            ← Volver a administración
+                        </button>
+
+                    </section>
 
                 </div>
 
@@ -128,47 +208,49 @@ export class TrabajadorPortalView {
             );
 
 
-        input.addEventListener(
-            "input",
-            () => {
+        input
+            ?.addEventListener(
+                "input",
+                () => {
 
-                input.value =
-                    input.value
-                        .replace(
-                            /\D/g,
-                            ""
-                        )
-                        .slice(
-                            0,
-                            4
-                        );
-
-            }
-        );
-
-
-        input.addEventListener(
-            "keydown",
-            event => {
-
-                if (
-                    event.key ===
-                    "Enter"
-                ) {
-
-                    this.iniciarSesion();
+                    input.value =
+                        input.value
+                            .replace(
+                                /\D/g,
+                                ""
+                            )
+                            .slice(
+                                0,
+                                4
+                            );
 
                 }
+            );
 
-            }
-        );
+
+        input
+            ?.addEventListener(
+                "keydown",
+                event => {
+
+                    if (
+                        event.key ===
+                        "Enter"
+                    ) {
+
+                        this.iniciarSesion();
+
+                    }
+
+                }
+            );
 
 
         document
             .getElementById(
                 "entrarPortalTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.iniciarSesion()
@@ -179,18 +261,24 @@ export class TrabajadorPortalView {
             .getElementById(
                 "volverAdministracionPortal"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.volverAdministracion()
             );
 
 
-        input.focus();
+        input?.focus();
+
     }
 
 
+    // =====================================================
+    // INICIAR SESIÓN
+    // =====================================================
+
     iniciarSesion() {
+
         const input =
             document.getElementById(
                 "pinPortalTrabajador"
@@ -200,7 +288,9 @@ export class TrabajadorPortalView {
         if (
             !input
         ) {
+
             return;
+
         }
 
 
@@ -218,7 +308,10 @@ export class TrabajadorPortalView {
                 "Introduce un PIN de 4 números."
             );
 
+            input.focus();
+
             return;
+
         }
 
 
@@ -237,12 +330,15 @@ export class TrabajadorPortalView {
                 "PIN incorrecto."
             );
 
+
             input.value =
                 "";
+
 
             input.focus();
 
             return;
+
         }
 
 
@@ -256,6 +352,7 @@ export class TrabajadorPortalView {
             );
 
             return;
+
         }
 
 
@@ -275,10 +372,16 @@ export class TrabajadorPortalView {
         this.mostrarPanel(
             trabajador
         );
+
     }
 
 
+    // =====================================================
+    // TRABAJADOR SESIÓN
+    // =====================================================
+
     obtenerTrabajadorSesion() {
+
         const id =
             sessionStorage.getItem(
                 this.claveSesion
@@ -288,7 +391,9 @@ export class TrabajadorPortalView {
         if (
             !id
         ) {
+
             return null;
+
         }
 
 
@@ -310,28 +415,40 @@ export class TrabajadorPortalView {
                 this.claveSesion
             );
 
+
             sessionStorage.removeItem(
                 this.claveModoCampo
             );
 
+
             return null;
+
         }
 
 
         return trabajador;
+
     }
 
 
+    // =====================================================
+    // CERRAR SESIÓN
+    // =====================================================
+
     cerrarSesion() {
+
         sessionStorage.removeItem(
             this.claveSesion
         );
+
 
         sessionStorage.removeItem(
             this.claveModoCampo
         );
 
+
         this.mostrarAcceso();
+
     }
 
 
@@ -340,12 +457,14 @@ export class TrabajadorPortalView {
     // =====================================================
 
     estaModoCampoActivo() {
+
         return (
             sessionStorage.getItem(
                 this.claveModoCampo
             ) ===
             "true"
         );
+
     }
 
 
@@ -362,6 +481,7 @@ export class TrabajadorPortalView {
         this.mostrarModoCampo(
             trabajador
         );
+
     }
 
 
@@ -377,11 +497,12 @@ export class TrabajadorPortalView {
         this.mostrarPanel(
             trabajador
         );
+
     }
 
 
     // =====================================================
-    // PANEL COMPLETO
+    // PANEL PRINCIPAL
     // =====================================================
 
     mostrarPanel(
@@ -415,14 +536,16 @@ export class TrabajadorPortalView {
                 tarea =>
                     tarea.estado ===
                     "Completada"
+                    ||
+                    tarea.estado ===
+                    "Completado"
             );
 
 
         const incidencias =
-            this.incidenciaService
-                .obtenerPorTrabajador(
-                    trabajador.id
-                );
+            this.obtenerIncidenciasTrabajador(
+                trabajador.id
+            );
 
 
         const incidenciasActivas =
@@ -434,18 +557,13 @@ export class TrabajadorPortalView {
 
 
         const fichajes =
-            this.fichajeService
-
-                ? this.fichajeService
-                    .obtenerPorTrabajador(
-                        trabajador.id
-                    )
-                    .slice(
-                        0,
-                        30
-                    )
-
-                : [];
+            this.obtenerFichajesTrabajador(
+                trabajador.id
+            )
+                .slice(
+                    0,
+                    20
+                );
 
 
         const correccionesPendientes =
@@ -455,143 +573,217 @@ export class TrabajadorPortalView {
                     &&
                     fichaje.correccion.estado ===
                     "Pendiente"
-            ).length;
+            );
+
+
+        const nombre =
+            this.obtenerNombreTrabajador(
+                trabajador
+            );
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar portal-worker-hero">
+            <div class="portal-worker-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <p class="portal-worker-kicker">
-                        Portal del trabajador
-                    </p>
+                <section class="portal-worker-hero">
 
-                    <h2>
-                        Hola, ${this.obtenerNombreTrabajador(
-                            trabajador
-                        )}
-                    </h2>
+                    <div class="portal-worker-hero-content">
 
-                    <p>
-                        ${trabajador.puesto || "Trabajador"}
-                    </p>
-
-                </div>
+                        <span class="portal-worker-eyebrow">
+                            👷 PORTAL DEL TRABAJADOR
+                        </span>
 
 
-                <div class="portal-header-actions">
-
-                    <button
-                        id="activarModoCampo"
-                        class="primary-button"
-                        type="button"
-                    >
-                        🌾 Modo campo
-                    </button>
-
-
-                    <button
-                        id="comunicarIncidencia"
-                        class="primary-button"
-                        type="button"
-                    >
-                        ⚠️ Comunicar incidencia
-                    </button>
+                        <h1>
+                            Hola,
+                            <span>
+                                ${this.escapar(
+                                    nombre
+                                )}
+                            </span>
+                        </h1>
 
 
-                    <button
-                        id="cerrarSesionTrabajador"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        Cerrar sesión
-                    </button>
-
-                </div>
-
-            </header>
+                        <p>
+                            ${this.escapar(
+                                trabajador.puesto
+                                ||
+                                "Trabajador"
+                            )}
+                            · Consulta tu jornada y tus tareas.
+                        </p>
 
 
-            <section class="stats portal-worker-stats">
+                        <div class="portal-worker-actions">
 
-                ${this.crearStatPortal(
-                    "📋",
-                    "Mis tareas",
-                    tareas.length
-                )}
-
-
-                ${this.crearStatPortal(
-                    "🕒",
-                    "Pendientes",
-                    pendientes.length
-                )}
+                            <button
+                                id="activarModoCampo"
+                                class="primary-button"
+                                type="button"
+                            >
+                                🌾 Modo campo
+                            </button>
 
 
-                ${this.crearStatPortal(
+                            <button
+                                id="comunicarIncidencia"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                ⚠️ Comunicar incidencia
+                            </button>
+
+
+                            <button
+                                id="cerrarSesionTrabajador"
+                                class="portal-logout-button"
+                                type="button"
+                            >
+                                Cerrar sesión
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="portal-worker-hero-image">
+
+                        <div class="portal-worker-avatar">
+
+                            ${
+                                trabajador.foto
+
+                                    ? `
+
+                                        <img
+                                            src="${this.escapar(
+                                                trabajador.foto
+                                            )}"
+                                            alt=""
+                                        >
+
+                                    `
+
+                                    : `
+
+                                        ${this.obtenerIniciales(
+                                            trabajador
+                                        )}
+
+                                    `
+                            }
+
+                        </div>
+
+
+                        <div class="portal-worker-hero-copy">
+
+                            <small>
+                                TU JORNADA · TUS TAREAS
+                            </small>
+
+                            <strong>
+                                Todo lo que necesitas<br>
+                                para trabajar hoy
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats portal-worker-stats">
+
+                    ${this.crearStat(
+                        "📋",
+                        "Mis tareas",
+                        tareas.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "🕒",
+                        "Pendientes",
+                        pendientes.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "🚜",
+                        "En curso",
+                        enCurso.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "⚠️",
+                        "Incidencias",
+                        incidenciasActivas.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "✏️",
+                        "Correcciones",
+                        correccionesPendientes.length
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     TAREAS
+                =========================================== -->
+
+                ${this.crearSeccionTareas(
                     "🚜",
                     "En curso",
-                    enCurso.length
-                )}
-
-
-                ${this.crearStatPortal(
-                    "⚠️",
-                    "Incidencias abiertas",
-                    incidenciasActivas.length
-                )}
-
-
-                ${this.crearStatPortal(
-                    "✏️",
-                    "Correcciones pendientes",
-                    correccionesPendientes
-                )}
-
-            </section>
-
-
-            ${
-                this.crearSeccionTareas(
-                    "🚜 En curso",
+                    "Tareas que estás realizando ahora.",
                     enCurso,
                     "enCurso"
-                )
-            }
+                )}
 
 
-            ${
-                this.crearSeccionTareas(
-                    "🕒 Pendientes",
+                ${this.crearSeccionTareas(
+                    "🕒",
+                    "Pendientes",
+                    "Próximos trabajos asignados.",
                     pendientes,
                     "pendientes"
-                )
-            }
+                )}
 
 
-            ${
-                this.crearSeccionTareas(
-                    "✅ Completadas",
+                ${this.crearSeccionTareas(
+                    "✅",
+                    "Completadas",
+                    "Trabajos que ya has finalizado.",
                     completadas,
                     "completadas"
-                )
-            }
+                )}
 
 
-            ${
-                this.crearSeccionFichajes(
+                ${this.crearSeccionFichajes(
                     fichajes
-                )
-            }
+                )}
 
 
-            ${
-                this.crearSeccionIncidencias(
+                ${this.crearSeccionIncidencias(
                     incidencias
-                )
-            }
+                )}
+
+            </div>
 
         `;
 
@@ -600,7 +792,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "cerrarSesionTrabajador"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.cerrarSesion()
@@ -611,7 +803,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "activarModoCampo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.activarModoCampo(
@@ -624,7 +816,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "comunicarIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrarFormularioIncidencia(
@@ -641,10 +833,15 @@ export class TrabajadorPortalView {
         this.configurarEventosFichajes(
             trabajador
         );
+
     }
 
 
-    crearStatPortal(
+    // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
         icono,
         titulo,
         valor
@@ -652,17 +849,21 @@ export class TrabajadorPortalView {
 
         return `
 
-            <div class="card">
+            <article class="card">
 
                 <span class="card-icon">
                     ${icono}
                 </span>
 
+
                 <div>
 
                     <p>
-                        ${titulo}
+                        ${this.escapar(
+                            titulo
+                        )}
                     </p>
+
 
                     <h3>
                         ${valor}
@@ -670,736 +871,96 @@ export class TrabajadorPortalView {
 
                 </div>
 
-            </div>
-
-        `;
-    }
-
-
-    // =====================================================
-    // VISTA MODO CAMPO
-    // =====================================================
-
-    mostrarModoCampo(
-        trabajador
-    ) {
-
-        const tareas =
-            this.obtenerTareasTrabajador(
-                trabajador.id
-            );
-
-
-        const pendientes =
-            tareas.filter(
-                tarea =>
-                    tarea.estado ===
-                    "Pendiente"
-            );
-
-
-        const enCurso =
-            tareas.filter(
-                tarea =>
-                    tarea.estado ===
-                    "En curso"
-            );
-
-
-        const incidencias =
-            this.incidenciaService
-                .obtenerPorTrabajador(
-                    trabajador.id
-                );
-
-
-        const incidenciasActivas =
-            incidencias.filter(
-                incidencia =>
-                    incidencia.estado !==
-                    "Resuelta"
-            );
-
-
-        const tareaActual =
-            enCurso.length >
-            0
-
-                ? enCurso[0]
-
-                : null;
-
-
-        this.mainContent.innerHTML = `
-
-            <div class="modo-campo-shell">
-
-                <section class="modo-campo-hero">
-
-                    <div class="modo-campo-hero-content">
-
-                        <div>
-
-                            <p class="modo-campo-kicker">
-                                🌾 GestaCamps · Modo campo
-                            </p>
-
-                            <h2>
-                                ${this.obtenerNombreTrabajador(
-                                    trabajador
-                                )}
-                            </h2>
-
-                            <p class="modo-campo-role">
-                                ${trabajador.puesto || "Trabajador"}
-                            </p>
-
-                        </div>
-
-
-                        <button
-                            id="salirModoCampo"
-                            class="modo-campo-vista-completa"
-                            type="button"
-                        >
-                            Vista completa
-                        </button>
-
-                    </div>
-
-                </section>
-
-
-                <section class="modo-campo-stats">
-
-                    ${this.crearTarjetaCampoResumen(
-                        "🚜",
-                        "En curso",
-                        enCurso.length
-                    )}
-
-
-                    ${this.crearTarjetaCampoResumen(
-                        "🕒",
-                        "Pendientes",
-                        pendientes.length
-                    )}
-
-
-                    ${this.crearTarjetaCampoResumen(
-                        "⚠️",
-                        "Incidencias",
-                        incidenciasActivas.length
-                    )}
-
-                </section>
-
-
-                <section
-                    class="
-                        modo-campo-panel
-                        modo-campo-trabajo-actual
-                    "
-                >
-
-                    <p class="modo-campo-section-label">
-                        Trabajo actual
-                    </p>
-
-
-                    ${
-                        tareaActual
-
-                            ? this.crearTareaActualCampo(
-                                tareaActual
-                            )
-
-                            : `
-
-                                <div class="modo-campo-empty">
-
-                                    <div class="modo-campo-empty-icon">
-                                        🌱
-                                    </div>
-
-                                    <strong>
-                                        No tienes ninguna tarea en curso
-                                    </strong>
-
-                                    <p>
-                                        Puedes iniciar una de tus tareas pendientes.
-                                    </p>
-
-                                </div>
-
-                            `
-                    }
-
-                </section>
-
-
-                <div class="modo-campo-quick-actions">
-
-                    <button
-                        id="campoVerTareas"
-                        class="
-                            modo-campo-action
-                            modo-campo-action-primary
-                        "
-                        type="button"
-                    >
-                        📋 Mis tareas
-                    </button>
-
-
-                    <button
-                        id="campoIncidencia"
-                        class="
-                            modo-campo-action
-                            modo-campo-action-warning
-                        "
-                        type="button"
-                    >
-                        ⚠️ Comunicar incidencia
-                    </button>
-
-                </div>
-
-
-                ${
-                    pendientes.length >
-                    0
-
-                        ? `
-
-                            <section class="modo-campo-panel">
-
-                                <h3 class="modo-campo-panel-title">
-                                    🕒 Próximas tareas
-                                </h3>
-
-
-                                <div class="modo-campo-pending-list">
-
-                                    ${pendientes
-                                        .map(
-                                            tarea =>
-                                                this.crearTarjetaPendienteCampo(
-                                                    tarea
-                                                )
-                                        )
-                                        .join("")}
-
-                                </div>
-
-                            </section>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    incidenciasActivas.length >
-                    0
-
-                        ? `
-
-                            <section class="modo-campo-panel">
-
-                                <h3 class="modo-campo-panel-title">
-                                    ⚠️ Mis incidencias activas
-                                </h3>
-
-
-                                <div class="modo-campo-incidencias-list">
-
-                                    ${incidenciasActivas
-                                        .map(
-                                            incidencia => `
-
-                                                <div class="modo-campo-incidencia-item">
-
-                                                    <strong>
-                                                        ${incidencia.tipo}
-                                                    </strong>
-
-                                                    <p>
-                                                        ${incidencia.descripcion}
-                                                    </p>
-
-                                                    <small>
-                                                        ${incidencia.estado}
-                                                        ·
-                                                        ${incidencia.prioridad}
-                                                    </small>
-
-                                                </div>
-
-                                            `
-                                        )
-                                        .join("")}
-
-                                </div>
-
-                            </section>
-
-                        `
-
-                        : ""
-                }
-
-
-                <button
-                    id="campoCerrarSesion"
-                    class="modo-campo-logout"
-                    type="button"
-                >
-                    Cerrar sesión
-                </button>
-
-            </div>
-
-        `;
-
-
-        document
-            .getElementById(
-                "salirModoCampo"
-            )
-            .addEventListener(
-                "click",
-                () =>
-                    this.desactivarModoCampo(
-                        trabajador
-                    )
-            );
-
-
-        document
-            .getElementById(
-                "campoVerTareas"
-            )
-            .addEventListener(
-                "click",
-                () =>
-                    this.desactivarModoCampo(
-                        trabajador
-                    )
-            );
-
-
-        document
-            .getElementById(
-                "campoIncidencia"
-            )
-            .addEventListener(
-                "click",
-                () =>
-                    this.mostrarFormularioIncidencia(
-                        trabajador,
-                        true
-                    )
-            );
-
-
-        document
-            .getElementById(
-                "campoCerrarSesion"
-            )
-            .addEventListener(
-                "click",
-                () =>
-                    this.cerrarSesion()
-            );
-
-
-        document
-            .querySelectorAll(
-                ".campo-iniciar-tarea"
-            )
-            .forEach(
-                boton => {
-
-                    boton.addEventListener(
-                        "click",
-                        () => {
-
-                            this.cambiarEstadoTareaCampo(
-                                boton.dataset.id,
-                                "En curso",
-                                trabajador
-                            );
-
-                        }
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelectorAll(
-                ".campo-completar-tarea"
-            )
-            .forEach(
-                boton => {
-
-                    boton.addEventListener(
-                        "click",
-                        () => {
-
-                            this.cambiarEstadoTareaCampo(
-                                boton.dataset.id,
-                                "Completada",
-                                trabajador
-                            );
-
-                        }
-                    );
-
-                }
-            );
-    }
-
-
-    crearTarjetaCampoResumen(
-        icono,
-        titulo,
-        valor
-    ) {
-
-        return `
-
-            <div class="modo-campo-stat-card">
-
-                <div class="modo-campo-stat-icon">
-                    ${icono}
-                </div>
-
-                <p>
-                    ${titulo}
-                </p>
-
-                <strong>
-                    ${valor}
-                </strong>
-
-            </div>
-
-        `;
-    }
-
-
-    crearTareaActualCampo(
-        tarea
-    ) {
-
-        return `
-
-            <div class="modo-campo-current-task">
-
-                <div class="modo-campo-current-head">
-
-                    <div>
-
-                        <h2>
-                            ${tarea.titulo}
-                        </h2>
-
-                        <strong class="modo-campo-task-type">
-                            ${tarea.tipo || "Trabajo"}
-                        </strong>
-
-                    </div>
-
-
-                    <span class="modo-campo-status">
-                        En curso
-                    </span>
-
-                </div>
-
-
-                <div class="modo-campo-current-meta">
-
-                    <div>
-                        📍
-                        <strong>
-                            ${tarea.fincaNombre || "Sin finca"}
-                        </strong>
-                    </div>
-
-
-                    ${
-                        tarea.parcela
-
-                            ? `
-
-                                <div>
-                                    🗺️ ${tarea.parcela}
-                                </div>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        tarea.campaniaNombre
-
-                            ? `
-
-                                <div>
-                                    🗓️ ${tarea.campaniaNombre}
-                                </div>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        tarea.cultivo
-
-                            ? `
-
-                                <div>
-                                    🌱 ${tarea.cultivo}
-                                </div>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        tarea.maquinariaNombre
-
-                            ? `
-
-                                <div>
-                                    🚜 ${tarea.maquinariaNombre}
-                                </div>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    <div>
-                        ⚠️ Prioridad:
-                        <strong>
-                            ${tarea.prioridad || "Media"}
-                        </strong>
-                    </div>
-
-                </div>
-
-
-                ${
-                    tarea.notas
-
-                        ? `
-
-                            <div class="modo-campo-task-notes">
-
-                                <strong>
-                                    Notas
-                                </strong>
-
-                                <p>
-                                    ${tarea.notas}
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
-
-                <button
-                    type="button"
-                    class="
-                        campo-completar-tarea
-                        modo-campo-complete-button
-                    "
-                    data-id="${tarea.id}"
-                >
-                    ✅ Completar tarea
-                </button>
-
-            </div>
-
-        `;
-    }
-
-
-    crearTarjetaPendienteCampo(
-        tarea
-    ) {
-
-        return `
-
-            <article class="modo-campo-pending-card">
-
-                <h3>
-                    ${tarea.titulo}
-                </h3>
-
-                <p>
-                    📍 ${tarea.fincaNombre || "Sin finca"}
-                </p>
-
-
-                ${
-                    tarea.campaniaNombre
-
-                        ? `
-
-                            <p>
-                                🗓️ ${tarea.campaniaNombre}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                <p>
-                    📅 ${this.formatearFecha(
-                        tarea.fecha
-                    )}
-                </p>
-
-
-                <button
-                    type="button"
-                    class="
-                        campo-iniciar-tarea
-                        modo-campo-start-button
-                    "
-                    data-id="${tarea.id}"
-                >
-                    ▶️ Iniciar tarea
-                </button>
-
             </article>
 
         `;
-    }
 
-
-    cambiarEstadoTareaCampo(
-        tareaId,
-        estado,
-        trabajador
-    ) {
-
-        const resultado =
-            this.cambiarEstadoTarea(
-                tareaId,
-                estado,
-                trabajador,
-                false
-            );
-
-
-        if (
-            resultado
-        ) {
-
-            this.mostrarModoCampo(
-                trabajador
-            );
-
-        }
     }
 
 
     // =====================================================
-    // TAREAS
+    // SECCIÓN TAREAS
     // =====================================================
-
-    obtenerTareasTrabajador(
-        trabajadorId
-    ) {
-
-        return this.trabajoService
-            .obtenerPorTrabajador(
-                trabajadorId
-            )
-            .slice()
-            .sort(
-                (
-                    a,
-                    b
-                ) =>
-                    new Date(
-                        a.fecha
-                    )
-                    -
-                    new Date(
-                        b.fecha
-                    )
-            );
-    }
-
 
     crearSeccionTareas(
+        icono,
         titulo,
+        descripcion,
         tareas,
         tipo
     ) {
 
-        if (
-            tareas.length ===
-            0
-        ) {
-            return "";
-        }
-
-
         return `
 
-            <section class="panel portal-section">
+            <section class="portal-section">
 
-                <div class="panel-header">
+                <div class="portal-section-header">
 
-                    <h3>
-                        ${titulo}
-                    </h3>
+                    <div>
+
+                        <span class="portal-section-eyebrow">
+                            MIS TAREAS
+                        </span>
+
+
+                        <h2>
+                            ${icono}
+                            ${this.escapar(
+                                titulo
+                            )}
+                        </h2>
+
+
+                        <p>
+                            ${this.escapar(
+                                descripcion
+                            )}
+                        </p>
+
+                    </div>
+
+
+                    <span class="portal-section-count">
+                        ${tareas.length}
+                    </span>
 
                 </div>
 
 
                 <div class="portal-task-grid">
 
-                    ${tareas
-                        .map(
-                            tarea =>
-                                this.crearTarjetaTarea(
-                                    tarea,
-                                    tipo
+                    ${
+                        tareas.length
+
+                            ? tareas
+                                .map(
+                                    tarea =>
+                                        this.crearTarjetaTarea(
+                                            tarea,
+                                            tipo
+                                        )
                                 )
-                        )
-                        .join("")}
+                                .join("")
+
+                            : this.crearEstadoVacio(
+                                "🌱",
+                                `No hay tareas ${titulo.toLowerCase()}`,
+                                "Cuando tengas nuevas tareas aparecerán aquí."
+                            )
+                    }
 
                 </div>
 
             </section>
 
         `;
+
     }
 
+
+    // =====================================================
+    // TARJETA TAREA
+    // =====================================================
 
     crearTarjetaTarea(
         tarea,
@@ -1410,29 +971,117 @@ export class TrabajadorPortalView {
 
             <article class="portal-task-card">
 
-                <h3>
-                    ${tarea.titulo}
-                </h3>
+                <div class="portal-task-top">
+
+                    <div>
+
+                        <span class="portal-task-kicker">
+                            ${this.escapar(
+                                tarea.tipo
+                                ||
+                                "TRABAJO"
+                            )}
+                        </span>
 
 
-                <strong class="portal-task-type">
-                    ${tarea.tipo || "Trabajo"}
-                </strong>
+                        <h3>
+                            ${this.escapar(
+                                tarea.titulo
+                                ||
+                                "Tarea"
+                            )}
+                        </h3>
+
+                    </div>
 
 
-                <p class="trabajo-linea">
-                    📍 ${tarea.fincaNombre || "Sin finca"}
-                </p>
+                    <span
+                        class="
+                            portal-task-status
+                            ${this.obtenerClaseEstado(
+                                tarea.estado
+                            )}
+                        "
+                    >
+                        ${this.escapar(
+                            tarea.estado
+                            ||
+                            "Pendiente"
+                        )}
+                    </span>
+
+                </div>
+
+
+                <div class="portal-task-location">
+
+                    📍
+                    ${this.escapar(
+                        tarea.fincaNombre
+                        ||
+                        "Sin finca"
+                    )}
+
+                    ${
+                        tarea.parcela
+
+                            ? ` · ${this.escapar(
+                                tarea.parcela
+                            )}`
+
+                            : ""
+                    }
+
+                </div>
+
+
+                <div class="portal-task-data">
+
+                    <div>
+
+                        <span>
+                            Fecha
+                        </span>
+
+                        <strong>
+                            ${this.formatearFecha(
+                                tarea.fecha
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            Prioridad
+                        </span>
+
+                        <strong>
+                            ${this.escapar(
+                                tarea.prioridad
+                                ||
+                                "Media"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
 
 
                 ${
-                    tarea.parcela
+                    tarea.campaniaNombre
 
                         ? `
 
-                            <p class="trabajo-linea">
-                                🗺️ ${tarea.parcela}
-                            </p>
+                            <span class="portal-task-chip">
+                                🗓️
+                                ${this.escapar(
+                                    tarea.campaniaNombre
+                                )}
+                            </span>
 
                         `
 
@@ -1445,44 +1094,17 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <p class="trabajo-linea">
-                                🌱 ${tarea.cultivo}
-                            </p>
+                            <span class="portal-task-chip">
+                                🌱
+                                ${this.escapar(
+                                    tarea.cultivo
+                                )}
+                            </span>
 
                         `
 
                         : ""
                 }
-
-
-                ${
-                    tarea.campaniaNombre
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                🗓️ ${tarea.campaniaNombre}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                <p class="trabajo-linea">
-                    📅 ${this.formatearFecha(
-                        tarea.fecha
-                    )}
-                </p>
-
-
-                <p class="trabajo-linea">
-                    ⚠️ Prioridad:
-                    <strong>
-                        ${tarea.prioridad || "Media"}
-                    </strong>
-                </p>
 
 
                 ${
@@ -1490,45 +1112,14 @@ export class TrabajadorPortalView {
 
                         ? `
 
-                            <p class="trabajo-linea">
-                                🚜 ${tarea.maquinariaNombre}
-                            </p>
+                            <div class="portal-task-resource">
 
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    tarea.fechaInicio
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                ▶️ Iniciada:
-                                ${this.formatearFechaHora(
-                                    tarea.fechaInicio
+                                🚜
+                                ${this.escapar(
+                                    tarea.maquinariaNombre
                                 )}
-                            </p>
 
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    tarea.fechaCompletada
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                ✅ Finalizada:
-                                ${this.formatearFechaHora(
-                                    tarea.fechaCompletada
-                                )}
-                            </p>
+                            </div>
 
                         `
 
@@ -1542,7 +1133,17 @@ export class TrabajadorPortalView {
                         ? `
 
                             <div class="portal-task-notes">
-                                ${tarea.notas}
+
+                                <span>
+                                    NOTAS
+                                </span>
+
+                                <p>
+                                    ${this.escapar(
+                                        tarea.notas
+                                    )}
+                                </p>
+
                             </div>
 
                         `
@@ -1551,65 +1152,61 @@ export class TrabajadorPortalView {
                 }
 
 
-                <div
-                    class="
-                        form-actions
-                        portal-task-actions
-                    "
-                >
+                ${
+                    tipo ===
+                    "pendientes"
 
-                    ${
-                        tipo ===
-                        "pendientes"
+                        ? `
 
-                            ? `
+                            <button
+                                class="
+                                    primary-button
+                                    portal-iniciar-tarea
+                                "
+                                data-id="${tarea.id}"
+                                type="button"
+                            >
+                                ▶ Iniciar tarea
+                            </button>
 
-                                <button
-                                    class="
-                                        primary-button
-                                        portal-iniciar-tarea
-                                    "
-                                    data-id="${tarea.id}"
-                                    type="button"
-                                >
-                                    ▶️ Iniciar tarea
-                                </button>
+                        `
 
-                            `
-
-                            : ""
-                    }
+                        : ""
+                }
 
 
-                    ${
-                        tipo ===
-                        "enCurso"
+                ${
+                    tipo ===
+                    "enCurso"
 
-                            ? `
+                        ? `
 
-                                <button
-                                    class="
-                                        primary-button
-                                        portal-completar-tarea
-                                    "
-                                    data-id="${tarea.id}"
-                                    type="button"
-                                >
-                                    ✅ Completar
-                                </button>
+                            <button
+                                class="
+                                    primary-button
+                                    portal-completar-tarea
+                                "
+                                data-id="${tarea.id}"
+                                type="button"
+                            >
+                                ✓ Completar tarea
+                            </button>
 
-                            `
+                        `
 
-                            : ""
-                    }
-
-                </div>
+                        : ""
+                }
 
             </article>
 
         `;
+
     }
 
+
+    // =====================================================
+    // EVENTOS TAREAS
+    // =====================================================
 
     configurarEventosTareas(
         trabajador
@@ -1624,12 +1221,15 @@ export class TrabajadorPortalView {
 
                     boton.addEventListener(
                         "click",
-                        () =>
+                        () => {
+
                             this.cambiarEstadoTarea(
                                 boton.dataset.id,
                                 "En curso",
                                 trabajador
-                            )
+                            );
+
+                        }
                     );
 
                 }
@@ -1645,106 +1245,63 @@ export class TrabajadorPortalView {
 
                     boton.addEventListener(
                         "click",
-                        () =>
+                        () => {
+
                             this.cambiarEstadoTarea(
                                 boton.dataset.id,
                                 "Completada",
                                 trabajador
-                            )
+                            );
+
+                        }
                     );
 
                 }
             );
+
     }
 
 
+    // =====================================================
+    // CAMBIAR ESTADO TAREA
+    // =====================================================
+
     cambiarEstadoTarea(
-        tareaId,
+        id,
         estado,
-        trabajador,
-        repintar = true
+        trabajador
     ) {
-
-        const tarea =
-            this.trabajoService
-                .obtenerPorId(
-                    tareaId
-                );
-
-
-        if (
-            !tarea
-        ) {
-
-            alert(
-                "La tarea no existe."
-            );
-
-            return false;
-        }
-
-
-        const asignado =
-            Array.isArray(
-                tarea.trabajadorIds
-            )
-            &&
-            tarea.trabajadorIds
-                .some(
-                    id =>
-                        String(
-                            id
-                        ) ===
-                        String(
-                            trabajador.id
-                        )
-                );
-
-
-        if (
-            !asignado
-        ) {
-
-            alert(
-                "Esta tarea no está asignada a este trabajador."
-            );
-
-            return false;
-        }
-
 
         const resultado =
             this.trabajoService
                 .cambiarEstado(
-                    tareaId,
+                    id,
                     estado
                 );
 
 
         if (
-            !resultado.ok
+            resultado
+            &&
+            resultado.ok ===
+            false
         ) {
 
             alert(
                 resultado.mensaje
+                ||
+                "No se ha podido actualizar la tarea."
             );
 
-            return false;
-        }
-
-
-        if (
-            repintar
-        ) {
-
-            this.mostrarPanel(
-                trabajador
-            );
+            return;
 
         }
 
 
-        return true;
+        this.mostrarPanel(
+            trabajador
+        );
+
     }
 
 
@@ -1756,72 +1313,82 @@ export class TrabajadorPortalView {
         fichajes
     ) {
 
+        if (
+            !this.fichajeService
+        ) {
+
+            return "";
+
+        }
+
+
         return `
 
-            <section class="panel portal-section">
+            <section class="portal-section">
 
-                <div class="panel-header">
+                <div class="portal-section-header">
 
-                    <h3>
-                        🕒 Mis fichajes
-                    </h3>
+                    <div>
 
-                    <p>
-                        Consulta tus entradas y salidas y solicita una corrección si detectas una hora incorrecta.
-                    </p>
+                        <span class="portal-section-eyebrow">
+                            JORNADA
+                        </span>
+
+
+                        <h2>
+                            ⏱️ Mis fichajes
+                        </h2>
+
+
+                        <p>
+                            Entradas, salidas y solicitudes de corrección.
+                        </p>
+
+                    </div>
+
+
+                    <span class="portal-section-count">
+                        ${fichajes.length}
+                    </span>
 
                 </div>
 
 
-                ${
-                    fichajes.length ===
-                    0
+                <div class="portal-fichajes-list">
 
-                        ? `
+                    ${
+                        fichajes.length
 
-                            <div class="empty-state">
+                            ? fichajes
+                                .map(
+                                    fichaje =>
+                                        this.crearFilaFichajePortal(
+                                            fichaje
+                                        )
+                                )
+                                .join("")
 
-                                <div class="empty-icon">
-                                    🕒
-                                </div>
+                            : this.crearEstadoVacio(
+                                "⏱️",
+                                "Todavía no hay fichajes",
+                                "Tus entradas y salidas aparecerán aquí."
+                            )
+                    }
 
-                                <h3>
-                                    Todavía no tienes fichajes
-                                </h3>
-
-                                <p>
-                                    Tus entradas y salidas aparecerán aquí.
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : `
-
-                            <div class="portal-fichajes-list">
-
-                                ${fichajes
-                                    .map(
-                                        fichaje =>
-                                            this.crearTarjetaFichaje(
-                                                fichaje
-                                            )
-                                    )
-                                    .join("")}
-
-                            </div>
-
-                        `
-                }
+                </div>
 
             </section>
 
         `;
+
     }
 
 
-    crearTarjetaFichaje(
+    // =====================================================
+    // FILA FICHAJE
+    // =====================================================
+
+    crearFilaFichajePortal(
         fichaje
     ) {
 
@@ -1831,76 +1398,82 @@ export class TrabajadorPortalView {
             null;
 
 
-        const estadoCorreccion =
-            correccion?.estado
-            ||
-            "";
-
-
-        const puedeSolicitar =
-            estadoCorreccion !==
+        const pendiente =
+            correccion
+            &&
+            correccion.estado ===
             "Pendiente";
-
-
-        const claseEstado =
-            this.obtenerClaseCorreccion(
-                estadoCorreccion
-            );
 
 
         return `
 
-            <article class="portal-fichaje-item">
+            <div class="portal-fichaje-row">
 
-                <div class="portal-fichaje-head">
+                <span
+                    class="
+                        portal-fichaje-icon
+                        ${
+                            fichaje.tipo ===
+                            "Entrada"
 
-                    <div class="portal-fichaje-identity">
+                                ? "entrada"
 
-                        <span>
+                                : "salida"
+                        }
+                    "
+                >
 
-                            ${
-                                fichaje.tipo ===
-                                "Entrada"
+                    ${
+                        fichaje.tipo ===
+                        "Entrada"
+                            ? "↗"
+                            : "↙"
+                    }
 
-                                    ? "🟢"
-
-                                    : "🔴"
-                            }
-
-                        </span>
+                </span>
 
 
-                        <div>
+                <div class="portal-fichaje-main">
 
-                            <strong>
-                                ${fichaje.tipo}
-                            </strong>
+                    <strong>
+                        ${this.escapar(
+                            fichaje.tipo
+                            ||
+                            "Fichaje"
+                        )}
+                    </strong>
 
-                            <p>
-                                ${this.formatearFecha(
-                                    fichaje.fecha
-                                )}
-                                ·
-                                ${fichaje.hora}
-                            </p>
 
-                        </div>
-
-                    </div>
+                    <p>
+                        ${this.formatearFecha(
+                            fichaje.fecha
+                        )}
+                        ·
+                        ${this.escapar(
+                            fichaje.hora
+                            ||
+                            "—"
+                        )}
+                    </p>
 
 
                     ${
-                        estadoCorreccion
+                        correccion
 
                             ? `
 
                                 <span
                                     class="
-                                        portal-correction-status
-                                        ${claseEstado}
+                                        portal-correction-pill
+                                        ${this.obtenerClaseCorreccion(
+                                            correccion.estado
+                                        )}
                                     "
                                 >
-                                    Corrección ${estadoCorreccion}
+                                    ✏️ Corrección
+                                    ${this.escapar(
+                                        correccion.estado
+                                    )}
                                 </span>
 
                             `
@@ -1911,109 +1484,34 @@ export class TrabajadorPortalView {
                 </div>
 
 
-                ${
-                    correccion
+                <button
+                    type="button"
+                    class="
+                        secondary-button
+                        portal-solicitar-correccion
+                    "
+                    data-fichaje-id="${fichaje.id}"
+                    ${pendiente ? "disabled" : ""}
+                >
 
-                        ? `
+                    ${
+                        pendiente
+                            ? "⌛ Pendiente"
+                            : "✏️ Corregir"
+                    }
 
-                            <div class="portal-correction-box">
+                </button>
 
-                                <p>
-
-                                    <strong>
-                                        Hora solicitada:
-                                    </strong>
-
-                                    ${correccion.nuevaHora || "—"}
-
-                                </p>
-
-
-                                <p class="portal-correction-muted">
-                                    ${correccion.motivo || "Sin motivo"}
-                                </p>
-
-
-                                ${
-                                    estadoCorreccion ===
-                                    "Aprobada"
-
-                                        ? `
-
-                                            <p class="portal-correction-original">
-                                                Hora original:
-                                                ${correccion.horaOriginal || "—"}
-                                            </p>
-
-                                        `
-
-                                        : ""
-                                }
-
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    puedeSolicitar
-
-                        ? `
-
-                            <button
-                                type="button"
-                                class="
-                                    secondary-button
-                                    portal-corregir-fichaje
-                                "
-                                data-id="${fichaje.id}"
-                            >
-                                ✏️ Solicitar corrección
-                            </button>
-
-                        `
-
-                        : `
-
-                            <p class="portal-correction-pending">
-                                ⏳ Esta solicitud está pendiente de revisión.
-                            </p>
-
-                        `
-                }
-
-            </article>
+            </div>
 
         `;
+
     }
 
 
-    obtenerClaseCorreccion(
-        estado
-    ) {
-
-        if (
-            estado ===
-            "Aprobada"
-        ) {
-            return "aprobada";
-        }
-
-
-        if (
-            estado ===
-            "Rechazada"
-        ) {
-            return "rechazada";
-        }
-
-
-        return "pendiente";
-    }
-
+    // =====================================================
+    // EVENTOS FICHAJES
+    // =====================================================
 
     configurarEventosFichajes(
         trabajador
@@ -2021,7 +1519,7 @@ export class TrabajadorPortalView {
 
         document
             .querySelectorAll(
-                ".portal-corregir-fichaje"
+                ".portal-solicitar-correccion"
             )
             .forEach(
                 boton => {
@@ -2030,9 +1528,18 @@ export class TrabajadorPortalView {
                         "click",
                         () => {
 
+                            if (
+                                boton.disabled
+                            ) {
+
+                                return;
+
+                            }
+
+
                             this.mostrarFormularioCorreccion(
                                 trabajador,
-                                boton.dataset.id
+                                boton.dataset.fichajeId
                             );
 
                         }
@@ -2040,13 +1547,31 @@ export class TrabajadorPortalView {
 
                 }
             );
+
     }
 
+
+    // =====================================================
+    // CORRECCIÓN
+    // =====================================================
 
     mostrarFormularioCorreccion(
         trabajador,
         fichajeId
     ) {
+
+        if (
+            !this.fichajeService
+        ) {
+
+            alert(
+                "El servicio de fichajes no está disponible."
+            );
+
+            return;
+
+        }
+
 
         const fichaje =
             this.fichajeService
@@ -2067,16 +1592,11 @@ export class TrabajadorPortalView {
         ) {
 
             alert(
-                "El fichaje seleccionado no existe o no pertenece a este trabajador."
+                "No se ha podido encontrar el fichaje."
             );
-
-
-            this.mostrarPanel(
-                trabajador
-            );
-
 
             return;
+
         }
 
 
@@ -2088,124 +1608,157 @@ export class TrabajadorPortalView {
         ) {
 
             alert(
-                "Este fichaje ya tiene una solicitud de corrección pendiente."
+                "Este fichaje ya tiene una corrección pendiente."
             );
-
-
-            this.mostrarPanel(
-                trabajador
-            );
-
 
             return;
+
         }
+
+
+        const horaActual =
+            String(
+                fichaje.hora
+                ||
+                ""
+            )
+                .slice(
+                    0,
+                    5
+                );
 
 
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverCorreccionFichaje"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="portal-form-page">
+
+                <button
+                    id="volverCorreccionFichaje"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar portal-form-header">
+                <header class="portal-form-header">
 
-                <div>
+                    <span>
+                        ✏️ PORTAL DEL TRABAJADOR
+                    </span>
 
-                    <h2>
+
+                    <h1>
                         Solicitar corrección
-                    </h2>
+                    </h1>
+
 
                     <p>
-                        Solicita un cambio de hora para este fichaje.
+                        Envía la hora correcta para que administración
+                        pueda revisarla.
                     </p>
 
-                </div>
-
-            </header>
+                </header>
 
 
-            <div class="form-panel portal-form-panel">
+                <div class="portal-form-layout">
 
-                <div class="portal-fichaje-summary">
-
-                    <strong>
-                        ${fichaje.tipo}
-                    </strong>
-
-                    <p>
-                        ${this.formatearFecha(
-                            fichaje.fecha
-                        )}
-                        ·
-                        Hora actual:
-                        <strong>
-                            ${fichaje.hora}
-                        </strong>
-                    </p>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Nueva hora *
-                    </label>
-
-                    <input
-                        id="portalNuevaHoraFichaje"
-                        type="time"
-                        value="${String(
-                            fichaje.hora
-                            ||
-                            ""
-                        ).slice(
-                            0,
-                            5
-                        )}"
+                    <section
+                        class="
+                            form-panel
+                            portal-form-panel
+                        "
                     >
 
-                </div>
+                        <div class="portal-current-record">
+
+                            <span>
+                                ${
+                                    fichaje.tipo ===
+                                    "Entrada"
+                                        ? "🟢"
+                                        : "🔴"
+                                }
+                            </span>
 
 
-                <div class="form-group">
+                            <div>
 
-                    <label>
-                        Motivo de la corrección *
-                    </label>
+                                <strong>
+                                    ${this.escapar(
+                                        fichaje.tipo
+                                    )}
+                                </strong>
 
-                    <textarea
-                        id="portalMotivoCorreccionFichaje"
-                        rows="5"
-                        placeholder="Ej. Olvidé fichar a la hora correcta..."
-                    ></textarea>
+                                <p>
+                                    ${this.formatearFecha(
+                                        fichaje.fecha
+                                    )}
+                                    · Hora actual:
+                                    ${this.escapar(
+                                        fichaje.hora
+                                    )}
+                                </p>
 
-                </div>
+                            </div>
 
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarCorreccionFichaje"
-                        class="secondary-button"
-                        type="button"
-                    >
-                        Cancelar
-                    </button>
+                        </div>
 
 
-                    <button
-                        id="enviarCorreccionFichaje"
-                        class="primary-button"
-                        type="button"
-                    >
-                        Enviar solicitud
-                    </button>
+                        <div class="form-group">
+
+                            <label>
+                                Nueva hora *
+                            </label>
+
+
+                            <input
+                                id="portalNuevaHoraFichaje"
+                                type="time"
+                                value="${horaActual}"
+                            >
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Motivo *
+                            </label>
+
+
+                            <textarea
+                                id="portalMotivoCorreccionFichaje"
+                                rows="5"
+                                placeholder="Ej. Olvidé fichar a la hora correcta..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarCorreccionFichaje"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="enviarCorreccionFichaje"
+                                class="primary-button"
+                                type="button"
+                            >
+                                Enviar solicitud
+                            </button>
+
+                        </div>
+
+                    </section>
 
                 </div>
 
@@ -2225,7 +1778,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "volverCorreccionFichaje"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 volver
             );
@@ -2235,7 +1788,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "cancelarCorreccionFichaje"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 volver
             );
@@ -2245,7 +1798,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "enviarCorreccionFichaje"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
 
@@ -2262,7 +1815,23 @@ export class TrabajadorPortalView {
                             .getElementById(
                                 "portalMotivoCorreccionFichaje"
                             )
-                            .value;
+                            .value
+                            .trim();
+
+
+                    if (
+                        !nuevaHora
+                        ||
+                        !motivo
+                    ) {
+
+                        alert(
+                            "Indica la nueva hora y el motivo."
+                        );
+
+                        return;
+
+                    }
 
 
                     const resultado =
@@ -2284,11 +1853,14 @@ export class TrabajadorPortalView {
                         );
 
                         return;
+
                     }
 
 
                     alert(
                         resultado.mensaje
+                        ||
+                        "Solicitud enviada."
                     );
 
 
@@ -2298,6 +1870,7 @@ export class TrabajadorPortalView {
 
                 }
             );
+
     }
 
 
@@ -2313,71 +1886,114 @@ export class TrabajadorPortalView {
             incidencias.length ===
             0
         ) {
+
             return "";
+
         }
 
 
         return `
 
-            <section class="panel portal-section">
+            <section class="portal-section">
 
-                <div class="panel-header">
+                <div class="portal-section-header">
 
-                    <h3>
-                        ⚠️ Mis incidencias
-                    </h3>
+                    <div>
+
+                        <span class="portal-section-eyebrow">
+                            COMUNICACIONES
+                        </span>
+
+
+                        <h2>
+                            ⚠️ Mis incidencias
+                        </h2>
+
+
+                        <p>
+                            Incidencias comunicadas a administración.
+                        </p>
+
+                    </div>
+
+
+                    <span class="portal-section-count">
+                        ${incidencias.length}
+                    </span>
 
                 </div>
 
 
-                <div class="portal-incidencias-list">
+                <div class="portal-incidencias-grid">
 
                     ${incidencias
                         .map(
                             incidencia => `
 
-                                <div
-                                    class="
-                                        activity
-                                        portal-incidencia-item
-                                    "
-                                >
+                                <article class="portal-incidencia-card">
 
-                                    <span>
+                                    <div>
 
-                                        ${
-                                            incidencia.estado ===
-                                            "Resuelta"
-
-                                                ? "✅"
-
-                                                : "⚠️"
-                                        }
-
-                                    </span>
+                                        <span
+                                            class="
+                                                portal-incidencia-icon
+                                            "
+                                        >
+                                            ${
+                                                incidencia.estado ===
+                                                "Resuelta"
+                                                    ? "✅"
+                                                    : "⚠️"
+                                            }
+                                        </span>
 
 
-                                    <div class="portal-incidencia-content">
+                                        <div>
 
-                                        <strong>
-                                            ${incidencia.tipo}
-                                        </strong>
+                                            <h3>
+                                                ${this.escapar(
+                                                    incidencia.tipo
+                                                    ||
+                                                    "Incidencia"
+                                                )}
+                                            </h3>
 
-                                        <p>
-                                            ${incidencia.descripcion}
-                                        </p>
 
-                                        <p>
-                                            ${this.formatearFechaHora(
-                                                incidencia.fechaCreacion
-                                            )}
-                                            ·
-                                            ${incidencia.estado}
-                                        </p>
+                                            <p>
+                                                ${this.escapar(
+                                                    incidencia.descripcion
+                                                    ||
+                                                    ""
+                                                )}
+                                            </p>
+
+                                        </div>
 
                                     </div>
 
-                                </div>
+
+                                    <footer>
+
+                                        <span>
+                                            ${this.escapar(
+                                                incidencia.prioridad
+                                                ||
+                                                "Media"
+                                            )}
+                                        </span>
+
+
+                                        <strong>
+                                            ${this.escapar(
+                                                incidencia.estado
+                                                ||
+                                                "Pendiente"
+                                            )}
+                                        </strong>
+
+                                    </footer>
+
+                                </article>
 
                             `
                         )
@@ -2388,8 +2004,13 @@ export class TrabajadorPortalView {
             </section>
 
         `;
+
     }
 
+
+    // =====================================================
+    // FORMULARIO INCIDENCIA
+    // =====================================================
 
     mostrarFormularioIncidencia(
         trabajador,
@@ -2397,217 +2018,244 @@ export class TrabajadorPortalView {
     ) {
 
         const tareas =
-            this.trabajoService
-                .obtenerPorTrabajador(
-                    trabajador.id
-                );
+            this.obtenerTareasTrabajador(
+                trabajador.id
+            );
 
 
         const fincas =
-            this.fincaService
-                .obtenerTodas();
+            this.obtenerFincas();
 
 
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverPortalIncidencia"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="portal-form-page">
+
+                <button
+                    id="volverPortalIncidencia"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar portal-form-header">
+                <header class="portal-form-header">
 
-                <div>
+                    <span>
+                        ⚠️ PORTAL DEL TRABAJADOR
+                    </span>
 
-                    <h2>
+
+                    <h1>
                         Comunicar incidencia
-                    </h2>
+                    </h1>
+
 
                     <p>
-                        Explica el problema para que administración pueda revisarlo
+                        Explica el problema para que administración
+                        pueda revisarlo.
                     </p>
 
-                </div>
-
-            </header>
+                </header>
 
 
-            <div class="form-panel portal-form-panel">
+                <div class="portal-form-layout">
 
-                <div class="form-group">
-
-                    <label>
-                        Tipo *
-                    </label>
-
-                    <select id="portalTipoIncidencia">
-
-                        <option value="Avería">
-                            Avería
-                        </option>
-
-                        <option value="Falta de material">
-                            Falta de material
-                        </option>
-
-                        <option value="Problema en cultivo">
-                            Problema en cultivo
-                        </option>
-
-                        <option value="Plaga / enfermedad">
-                            Plaga / enfermedad
-                        </option>
-
-                        <option value="Riego">
-                            Riego
-                        </option>
-
-                        <option value="Maquinaria">
-                            Maquinaria
-                        </option>
-
-                        <option value="Seguridad">
-                            Seguridad
-                        </option>
-
-                        <option value="Otro">
-                            Otro
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Prioridad
-                    </label>
-
-                    <select id="portalPrioridadIncidencia">
-
-                        <option value="Baja">
-                            Baja
-                        </option>
-
-                        <option
-                            value="Media"
-                            selected
-                        >
-                            Media
-                        </option>
-
-                        <option value="Alta">
-                            Alta
-                        </option>
-
-                        <option value="Urgente">
-                            Urgente
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Finca
-                    </label>
-
-                    <select id="portalFincaIncidencia">
-
-                        <option value="">
-                            Sin finca concreta
-                        </option>
-
-
-                        ${fincas
-                            .map(
-                                finca => `
-
-                                    <option value="${finca.id}">
-                                        ${finca.nombre}
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Tarea relacionada
-                    </label>
-
-                    <select id="portalTrabajoIncidencia">
-
-                        <option value="">
-                            Sin tarea relacionada
-                        </option>
-
-
-                        ${tareas
-                            .map(
-                                tarea => `
-
-                                    <option value="${tarea.id}">
-                                        ${tarea.titulo}
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Descripción *
-                    </label>
-
-                    <textarea
-                        id="portalDescripcionIncidencia"
-                        rows="6"
-                        placeholder="Explica qué ha ocurrido..."
-                    ></textarea>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarPortalIncidencia"
-                        class="secondary-button"
-                        type="button"
+                    <section
+                        class="
+                            form-panel
+                            portal-form-panel
+                        "
                     >
-                        Cancelar
-                    </button>
+
+                        <div class="form-group">
+
+                            <label>
+                                Tipo *
+                            </label>
 
 
-                    <button
-                        id="guardarPortalIncidencia"
-                        class="primary-button"
-                        type="button"
-                    >
-                        Comunicar incidencia
-                    </button>
+                            <select id="portalTipoIncidencia">
+
+                                <option value="Avería">
+                                    Avería
+                                </option>
+
+                                <option value="Falta de material">
+                                    Falta de material
+                                </option>
+
+                                <option value="Problema en cultivo">
+                                    Problema en cultivo
+                                </option>
+
+                                <option value="Plaga / enfermedad">
+                                    Plaga / enfermedad
+                                </option>
+
+                                <option value="Riego">
+                                    Riego
+                                </option>
+
+                                <option value="Maquinaria">
+                                    Maquinaria
+                                </option>
+
+                                <option value="Seguridad">
+                                    Seguridad
+                                </option>
+
+                                <option value="Otro">
+                                    Otro
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Prioridad
+                            </label>
+
+
+                            <select id="portalPrioridadIncidencia">
+
+                                <option value="Baja">
+                                    Baja
+                                </option>
+
+                                <option
+                                    value="Media"
+                                    selected
+                                >
+                                    Media
+                                </option>
+
+                                <option value="Alta">
+                                    Alta
+                                </option>
+
+                                <option value="Urgente">
+                                    Urgente
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Finca
+                            </label>
+
+
+                            <select id="portalFincaIncidencia">
+
+                                <option value="">
+                                    Sin finca concreta
+                                </option>
+
+
+                                ${fincas
+                                    .map(
+                                        finca => `
+
+                                            <option
+                                                value="${finca.id}"
+                                            >
+                                                ${this.escapar(
+                                                    finca.nombre
+                                                )}
+                                            </option>
+
+                                        `
+                                    )
+                                    .join("")}
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Tarea relacionada
+                            </label>
+
+
+                            <select id="portalTrabajoIncidencia">
+
+                                <option value="">
+                                    Sin tarea relacionada
+                                </option>
+
+
+                                ${tareas
+                                    .map(
+                                        tarea => `
+
+                                            <option
+                                                value="${tarea.id}"
+                                            >
+                                                ${this.escapar(
+                                                    tarea.titulo
+                                                )}
+                                            </option>
+
+                                        `
+                                    )
+                                    .join("")}
+
+                            </select>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Descripción *
+                            </label>
+
+
+                            <textarea
+                                id="portalDescripcionIncidencia"
+                                rows="6"
+                                placeholder="Explica qué ha ocurrido..."
+                            ></textarea>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarPortalIncidencia"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarPortalIncidencia"
+                                class="primary-button"
+                                type="button"
+                            >
+                                Comunicar incidencia
+                            </button>
+
+                        </div>
+
+                    </section>
 
                 </div>
 
@@ -2644,7 +2292,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "volverPortalIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 volver
             );
@@ -2654,7 +2302,7 @@ export class TrabajadorPortalView {
             .getElementById(
                 "cancelarPortalIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 volver
             );
@@ -2664,9 +2312,31 @@ export class TrabajadorPortalView {
             .getElementById(
                 "guardarPortalIncidencia"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
                 () => {
+
+                    const descripcion =
+                        document
+                            .getElementById(
+                                "portalDescripcionIncidencia"
+                            )
+                            .value
+                            .trim();
+
+
+                    if (
+                        !descripcion
+                    ) {
+
+                        alert(
+                            "Escribe una descripción de la incidencia."
+                        );
+
+                        return;
+
+                    }
+
 
                     const resultado =
                         this.incidenciaService
@@ -2708,12 +2378,7 @@ export class TrabajadorPortalView {
                                     trabajadorId:
                                         trabajador.id,
 
-                                    descripcion:
-                                        document
-                                            .getElementById(
-                                                "portalDescripcionIncidencia"
-                                            )
-                                            .value,
+                                    descripcion,
 
                                     origen:
                                         "Portal trabajador"
@@ -2731,6 +2396,7 @@ export class TrabajadorPortalView {
                         );
 
                         return;
+
                     }
 
 
@@ -2743,17 +2409,716 @@ export class TrabajadorPortalView {
 
                 }
             );
+
     }
 
 
     // =====================================================
-    // SALIR / HELPERS
+    // MODO CAMPO
+    // =====================================================
+
+    mostrarModoCampo(
+        trabajador
+    ) {
+
+        const tareas =
+            this.obtenerTareasTrabajador(
+                trabajador.id
+            );
+
+
+        const pendientes =
+            tareas.filter(
+                tarea =>
+                    tarea.estado ===
+                    "Pendiente"
+            );
+
+
+        const enCurso =
+            tareas.filter(
+                tarea =>
+                    tarea.estado ===
+                    "En curso"
+            );
+
+
+        const incidencias =
+            this.obtenerIncidenciasTrabajador(
+                trabajador.id
+            );
+
+
+        const incidenciasActivas =
+            incidencias.filter(
+                incidencia =>
+                    incidencia.estado !==
+                    "Resuelta"
+            );
+
+
+        const tareaActual =
+            enCurso[0]
+            ||
+            null;
+
+
+        this.mainContent.innerHTML = `
+
+            <div class="campo-page">
+
+                <header class="campo-header">
+
+                    <div>
+
+                        <span>
+                            🌾 GESTACAMPS · MODO CAMPO
+                        </span>
+
+
+                        <h1>
+                            ${this.escapar(
+                                this.obtenerNombreTrabajador(
+                                    trabajador
+                                )
+                            )}
+                        </h1>
+
+
+                        <p>
+                            ${
+                                tareaActual
+                                    ? "Tienes una tarea en curso."
+                                    : "Consulta y gestiona tu jornada."
+                            }
+                        </p>
+
+                    </div>
+
+
+                    <button
+                        id="salirModoCampo"
+                        type="button"
+                    >
+                        Vista completa
+                    </button>
+
+                </header>
+
+
+                <section class="campo-stats">
+
+                    ${this.crearTarjetaCampoResumen(
+                        "🚜",
+                        "En curso",
+                        enCurso.length
+                    )}
+
+
+                    ${this.crearTarjetaCampoResumen(
+                        "🕒",
+                        "Pendientes",
+                        pendientes.length
+                    )}
+
+
+                    ${this.crearTarjetaCampoResumen(
+                        "⚠️",
+                        "Incidencias",
+                        incidenciasActivas.length
+                    )}
+
+                </section>
+
+
+                <section class="campo-current-card">
+
+                    <span class="campo-section-label">
+                        TRABAJO ACTUAL
+                    </span>
+
+
+                    ${
+                        tareaActual
+
+                            ? this.crearTareaActualCampo(
+                                tareaActual
+                            )
+
+                            : this.crearEstadoVacio(
+                                "🌱",
+                                "No tienes ninguna tarea en curso",
+                                "Puedes iniciar una de tus tareas pendientes."
+                            )
+                    }
+
+                </section>
+
+
+                <section class="campo-actions">
+
+                    <button
+                        id="campoVerTareas"
+                        class="campo-action-primary"
+                        type="button"
+                    >
+                        📋 Ver todas mis tareas
+                    </button>
+
+
+                    <button
+                        id="campoIncidencia"
+                        class="campo-action-warning"
+                        type="button"
+                    >
+                        ⚠️ Comunicar incidencia
+                    </button>
+
+                </section>
+
+
+                ${
+                    pendientes.length
+
+                        ? `
+
+                            <section class="campo-section">
+
+                                <span class="campo-section-label">
+                                    PRÓXIMAS TAREAS
+                                </span>
+
+
+                                <div class="campo-task-list">
+
+                                    ${pendientes
+                                        .map(
+                                            tarea =>
+                                                this.crearTarjetaPendienteCampo(
+                                                    tarea
+                                                )
+                                        )
+                                        .join("")}
+
+                                </div>
+
+                            </section>
+
+                        `
+
+                        : ""
+                }
+
+
+                <button
+                    id="campoCerrarSesion"
+                    class="campo-logout"
+                    type="button"
+                >
+                    Cerrar sesión
+                </button>
+
+            </div>
+
+        `;
+
+
+        document
+            .getElementById(
+                "salirModoCampo"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.desactivarModoCampo(
+                        trabajador
+                    )
+            );
+
+
+        document
+            .getElementById(
+                "campoVerTareas"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.desactivarModoCampo(
+                        trabajador
+                    )
+            );
+
+
+        document
+            .getElementById(
+                "campoIncidencia"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrarFormularioIncidencia(
+                        trabajador,
+                        true
+                    )
+            );
+
+
+        document
+            .getElementById(
+                "campoCerrarSesion"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.cerrarSesion()
+            );
+
+
+        document
+            .querySelectorAll(
+                ".campo-iniciar-tarea"
+            )
+            .forEach(
+                boton => {
+
+                    boton.addEventListener(
+                        "click",
+                        () =>
+                            this.cambiarEstadoTareaCampo(
+                                boton.dataset.id,
+                                "En curso",
+                                trabajador
+                            )
+                    );
+
+                }
+            );
+
+
+        document
+            .querySelectorAll(
+                ".campo-completar-tarea"
+            )
+            .forEach(
+                boton => {
+
+                    boton.addEventListener(
+                        "click",
+                        () =>
+                            this.cambiarEstadoTareaCampo(
+                                boton.dataset.id,
+                                "Completada",
+                                trabajador
+                            )
+                    );
+
+                }
+            );
+
+    }
+
+
+    // =====================================================
+    // RESUMEN MODO CAMPO
+    // =====================================================
+
+    crearTarjetaCampoResumen(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="campo-stat-card">
+
+                <span>
+                    ${icono}
+                </span>
+
+                <p>
+                    ${this.escapar(
+                        titulo
+                    )}
+                </p>
+
+                <strong>
+                    ${valor}
+                </strong>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // TAREA ACTUAL CAMPO
+    // =====================================================
+
+    crearTareaActualCampo(
+        tarea
+    ) {
+
+        return `
+
+            <div class="campo-current-task">
+
+                <div class="campo-current-heading">
+
+                    <div>
+
+                        <h2>
+                            ${this.escapar(
+                                tarea.titulo
+                            )}
+                        </h2>
+
+
+                        <strong>
+                            ${this.escapar(
+                                tarea.tipo
+                                ||
+                                "Trabajo"
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <span>
+                        En curso
+                    </span>
+
+                </div>
+
+
+                <div class="campo-current-data">
+
+                    <p>
+                        📍
+                        ${this.escapar(
+                            tarea.fincaNombre
+                            ||
+                            "Sin finca"
+                        )}
+                    </p>
+
+
+                    ${
+                        tarea.parcela
+                            ? `<p>🗺️ ${this.escapar(tarea.parcela)}</p>`
+                            : ""
+                    }
+
+
+                    ${
+                        tarea.cultivo
+                            ? `<p>🌱 ${this.escapar(tarea.cultivo)}</p>`
+                            : ""
+                    }
+
+
+                    ${
+                        tarea.maquinariaNombre
+
+                            ? `<p>🚜 ${this.escapar(
+                                tarea.maquinariaNombre
+                            )}</p>`
+
+                            : ""
+                    }
+
+                </div>
+
+
+                ${
+                    tarea.notas
+
+                        ? `
+
+                            <div class="campo-current-notes">
+
+                                <strong>
+                                    Notas
+                                </strong>
+
+                                <p>
+                                    ${this.escapar(
+                                        tarea.notas
+                                    )}
+                                </p>
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                <button
+                    type="button"
+                    class="
+                        campo-completar-tarea
+                        campo-complete-button
+                    "
+                    data-id="${tarea.id}"
+                >
+                    ✅ Completar tarea
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // TAREA PENDIENTE CAMPO
+    // =====================================================
+
+    crearTarjetaPendienteCampo(
+        tarea
+    ) {
+
+        return `
+
+            <article class="campo-pending-task">
+
+                <div>
+
+                    <strong>
+                        ${this.escapar(
+                            tarea.titulo
+                        )}
+                    </strong>
+
+
+                    <p>
+                        📍
+                        ${this.escapar(
+                            tarea.fincaNombre
+                            ||
+                            "Sin finca"
+                        )}
+                    </p>
+
+                </div>
+
+
+                <button
+                    type="button"
+                    class="campo-iniciar-tarea"
+                    data-id="${tarea.id}"
+                >
+                    ▶ Iniciar
+                </button>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // CAMBIAR ESTADO CAMPO
+    // =====================================================
+
+    cambiarEstadoTareaCampo(
+        id,
+        estado,
+        trabajador
+    ) {
+
+        const resultado =
+            this.trabajoService
+                .cambiarEstado(
+                    id,
+                    estado
+                );
+
+
+        if (
+            resultado
+            &&
+            resultado.ok ===
+            false
+        ) {
+
+            alert(
+                resultado.mensaje
+            );
+
+            return;
+
+        }
+
+
+        this.mostrarModoCampo(
+            trabajador
+        );
+
+    }
+
+
+    // =====================================================
+    // TAREAS TRABAJADOR
+    // =====================================================
+
+    obtenerTareasTrabajador(
+        trabajadorId
+    ) {
+
+        if (
+            this.trabajoService
+            &&
+            typeof this.trabajoService
+                .obtenerPorTrabajador ===
+                "function"
+        ) {
+
+            const datos =
+                this.trabajoService
+                    .obtenerPorTrabajador(
+                        trabajadorId
+                    );
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        return [];
+
+    }
+
+
+    // =====================================================
+    // INCIDENCIAS TRABAJADOR
+    // =====================================================
+
+    obtenerIncidenciasTrabajador(
+        trabajadorId
+    ) {
+
+        if (
+            this.incidenciaService
+            &&
+            typeof this.incidenciaService
+                .obtenerPorTrabajador ===
+                "function"
+        ) {
+
+            const datos =
+                this.incidenciaService
+                    .obtenerPorTrabajador(
+                        trabajadorId
+                    );
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        return [];
+
+    }
+
+
+    // =====================================================
+    // FICHAJES TRABAJADOR
+    // =====================================================
+
+    obtenerFichajesTrabajador(
+        trabajadorId
+    ) {
+
+        if (
+            this.fichajeService
+            &&
+            typeof this.fichajeService
+                .obtenerPorTrabajador ===
+                "function"
+        ) {
+
+            const datos =
+                this.fichajeService
+                    .obtenerPorTrabajador(
+                        trabajadorId
+                    );
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        return [];
+
+    }
+
+
+    // =====================================================
+    // FINCAS
+    // =====================================================
+
+    obtenerFincas() {
+
+        if (
+            this.fincaService
+            &&
+            typeof this.fincaService
+                .obtenerTodas ===
+                "function"
+        ) {
+
+            const datos =
+                this.fincaService
+                    .obtenerTodas();
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        return [];
+
+    }
+
+
+    // =====================================================
+    // VOLVER ADMIN
     // =====================================================
 
     volverAdministracion() {
+
         sessionStorage.removeItem(
             this.claveSesion
         );
+
 
         sessionStorage.removeItem(
             this.claveModoCampo
@@ -2761,33 +3126,187 @@ export class TrabajadorPortalView {
 
 
         if (
-            typeof
-            this.onSalirPortal ===
+            typeof this.onSalirPortal ===
             "function"
         ) {
 
             this.onSalirPortal();
 
         }
+
     }
 
+
+    // =====================================================
+    // NOMBRE
+    // =====================================================
 
     obtenerNombreTrabajador(
         trabajador
     ) {
 
-        return [
-            trabajador.nombre,
-            trabajador.apellidos
-        ]
-            .filter(
-                Boolean
-            )
-            .join(
-                " "
-            );
+        return (
+            [
+                trabajador?.nombre,
+                trabajador?.apellidos
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .trim()
+            ||
+            "Trabajador"
+        );
+
     }
 
+
+    // =====================================================
+    // INICIALES
+    // =====================================================
+
+    obtenerIniciales(
+        trabajador
+    ) {
+
+        return [
+            trabajador?.nombre,
+            trabajador?.apellidos
+        ]
+            .filter(Boolean)
+            .map(
+                texto =>
+                    String(
+                        texto
+                    )
+                        .trim()
+                        .charAt(0)
+                        .toUpperCase()
+            )
+            .slice(
+                0,
+                2
+            )
+            .join("")
+        ||
+        "T";
+
+    }
+
+
+    // =====================================================
+    // CLASE ESTADO
+    // =====================================================
+
+    obtenerClaseEstado(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "En curso"
+        ) {
+
+            return "progress";
+
+        }
+
+
+        if (
+            estado ===
+            "Completada"
+            ||
+            estado ===
+            "Completado"
+        ) {
+
+            return "completed";
+
+        }
+
+
+        return "pending";
+
+    }
+
+
+    // =====================================================
+    // CLASE CORRECCIÓN
+    // =====================================================
+
+    obtenerClaseCorreccion(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "Aprobada"
+        ) {
+
+            return "approved";
+
+        }
+
+
+        if (
+            estado ===
+            "Rechazada"
+        ) {
+
+            return "rejected";
+
+        }
+
+
+        return "pending";
+
+    }
+
+
+    // =====================================================
+    // VACÍO
+    // =====================================================
+
+    crearEstadoVacio(
+        icono,
+        titulo,
+        texto
+    ) {
+
+        return `
+
+            <div class="portal-empty">
+
+                <span>
+                    ${icono}
+                </span>
+
+
+                <div>
+
+                    <strong>
+                        ${this.escapar(
+                            titulo
+                        )}
+                    </strong>
+
+                    <p>
+                        ${this.escapar(
+                            texto
+                        )}
+                    </p>
+
+                </div>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // FECHA
+    // =====================================================
 
     formatearFecha(
         fecha
@@ -2796,77 +3315,70 @@ export class TrabajadorPortalView {
         if (
             !fecha
         ) {
+
             return "—";
+
         }
 
 
         const partes =
-            fecha.split(
-                "-"
-            );
+            String(
+                fecha
+            )
+                .split("-");
 
 
         if (
             partes.length !==
             3
         ) {
+
             return fecha;
+
         }
 
 
         return (
             `${partes[2]}/${partes[1]}/${partes[0]}`
         );
+
     }
 
 
-    formatearFechaHora(
+    // =====================================================
+    // ESCAPAR HTML
+    // =====================================================
+
+    escapar(
         valor
     ) {
 
-        if (
-            !valor
-        ) {
-            return "—";
-        }
-
-
-        const fecha =
-            new Date(
-                valor
-            );
-
-
-        if (
-            Number.isNaN(
-                fecha.getTime()
+        return String(
+            valor
+            ??
+            ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
             )
-        ) {
-            return valor;
-        }
-
-
-        return fecha
-            .toLocaleString(
-                "es-ES",
-                {
-
-                    day:
-                        "2-digit",
-
-                    month:
-                        "2-digit",
-
-                    year:
-                        "numeric",
-
-                    hour:
-                        "2-digit",
-
-                    minute:
-                        "2-digit"
-
-                }
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
             );
+
     }
+
 }

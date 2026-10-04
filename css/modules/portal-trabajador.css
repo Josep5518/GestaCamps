@@ -1,223 +1,579 @@
 /* =====================================================
    GESTACAMPS
-   MÓDULO · PORTAL DEL TRABAJADOR
-   Día 26 · Cierre Refactorización 1
+   PORTAL DEL TRABAJADOR
+   DÍA 27 · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   CONTENEDOR GENERAL
+   ACCESO
 ===================================================== */
 
-body.worker-portal-mode
-.main-content {
-    max-width: 1180px;
-
-    margin:
-        0
-        auto;
-
-    padding: 28px;
-}
-
-
-/* =====================================================
-   ACCESO POR PIN
-===================================================== */
-
-.portal-login-screen {
-    min-height:
-        calc(
-            100vh
-            -
-            40px
-        );
+.portal-access-page {
+    min-height: 100vh;
 
     display: flex;
-
     align-items: center;
-
     justify-content: center;
 
-    padding: 20px;
-}
-
-
-.portal-login-card {
-    width: 100%;
-
-    max-width: 480px;
-
     padding: 30px;
+
+    background: #f4f6f1;
 }
 
 
-.portal-login-header {
-    margin-bottom: 28px;
+.portal-access-layout {
+    width: min(1050px, 100%);
 
-    text-align: center;
+    display: grid;
+
+    grid-template-columns:
+        1.15fr
+        0.85fr;
+
+    overflow: hidden;
+
+    border-radius: 22px;
+
+    background: white;
+
+    box-shadow:
+        0 24px 60px
+        rgba(
+            15,
+            52,
+            38,
+            0.12
+        );
 }
 
 
-.portal-login-icon {
-    margin-bottom: 12px;
+/* =====================================================
+   FOTO ACCESO
+===================================================== */
+
+.portal-access-photo {
+    min-height: 580px;
+
+    display: flex;
+    align-items: flex-end;
+
+    padding: 38px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(11,44,31,0.05),
+            rgba(11,44,31,0.72)
+        ),
+        url("../../assets/images/portal-trabajador-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat;
+}
+
+
+.portal-access-brand {
+    max-width: 430px;
+
+    color: white;
+}
+
+
+.portal-access-brand > span {
+    display: block;
+
+    margin-bottom: 10px;
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 0.12em;
+}
+
+
+.portal-access-brand strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     font-size: 48px;
 
-    line-height: 1;
+    line-height: 0.98;
 }
 
 
-.portal-login-header h2 {
-    margin-bottom: 8px;
+.portal-access-brand p {
+    max-width: 390px;
+
+    margin:
+        14px
+        0
+        0;
+
+    font-size: 12px;
+
+    line-height: 1.55;
+
+    opacity: 0.85;
 }
 
 
-.portal-login-header p {
+/* =====================================================
+   TARJETA ACCESO
+===================================================== */
+
+.portal-access-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 48px;
+}
+
+
+.portal-access-icon {
+    width: 54px;
+    height: 54px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 18px;
+
+    border-radius: 15px;
+
+    background: #e8f3ed;
+
+    font-size: 26px;
+}
+
+
+.portal-access-eyebrow {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color: #42735e;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.portal-access-card h1 {
     margin: 0;
 
-    color:
-        #78837d;
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 36px;
 }
 
 
-.portal-login-pin {
+.portal-access-subtitle {
+    margin:
+        7px
+        0
+        24px;
+
+    color: #748079;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   PIN
+===================================================== */
+
+.portal-pin-group label {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: #41534a;
+
+    font-size: 9px;
+    font-weight: 700;
+}
+
+
+.portal-pin-group input {
+    width: 100%;
+    min-height: 56px;
+
+    box-sizing: border-box;
+
+    padding:
+        10px
+        15px;
+
+    border:
+        1px solid
+        #dae5de;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    background: #fafcfb;
+
+    color: #173f31;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+    font-weight: 700;
+
+    letter-spacing: 0.45em;
+
     text-align: center;
-
-    font-size: 24px;
-
-    letter-spacing: 8px;
 }
 
 
-.portal-login-button {
+.portal-pin-group input:focus {
+    border-color: #438565;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            54,
+            128,
+            92,
+            0.1
+        );
+}
+
+
+.portal-pin-group small {
+    display: block;
+
+    margin-top: 6px;
+
+    color: #88938d;
+
+    font-size: 8px;
+}
+
+
+.portal-access-main-button,
+.portal-access-back-button {
     width: 100%;
 
-    min-height: 50px;
+    min-height: 46px;
 
     justify-content: center;
 }
 
 
-.portal-login-back {
-    margin-top: 12px;
+.portal-access-main-button {
+    margin-top: 20px;
+}
+
+
+.portal-access-back-button {
+    margin-top: 9px;
 }
 
 
 /* =====================================================
-   CABECERA DEL PORTAL
+   PORTAL PRINCIPAL
 ===================================================== */
 
-body.worker-portal-mode
-.topbar,
+.portal-worker-page {
+    width: 100%;
+
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    padding-bottom: 40px;
+}
+
+
+/* =====================================================
+   HERO PORTAL
+===================================================== */
+
 .portal-worker-hero {
     display: grid;
 
     grid-template-columns:
-        1fr
-        auto;
+        minmax(360px, 0.85fr)
+        minmax(500px, 1.15fr);
 
     gap: 18px;
 
-    align-items: center;
-
     margin-bottom: 18px;
+}
 
-    padding: 18px;
 
-    border-radius: 16px;
+.portal-worker-hero-content {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.portal-worker-eyebrow {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #42735e;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.portal-worker-hero h1 {
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.2vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.portal-worker-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.portal-worker-hero-content > p {
+    margin:
+        12px
+        0
+        17px;
+
+    color: #748079;
+
+    font-size: 11px;
+}
+
+
+/* =====================================================
+   ACCIONES HERO
+===================================================== */
+
+.portal-worker-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 7px;
+}
+
+
+.portal-worker-actions button {
+    min-height: 37px;
+}
+
+
+.portal-logout-button {
+    padding:
+        0
+        13px;
+
+    border:
+        1px solid
+        #e1e5e2;
+
+    border-radius: 9px;
+
+    background: white;
+
+    color: #69736e;
+
+    font-size: 9px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   FOTO HERO
+===================================================== */
+
+.portal-worker-hero-image {
+    position: relative;
+
+    min-height: 220px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
 
     background:
         linear-gradient(
-            135deg,
-            #173f31,
-            #246b52
-        );
-
-    color: white;
+            90deg,
+            rgba(12,45,32,0.08),
+            rgba(12,45,32,0.5)
+        ),
+        url("../../assets/images/portal-trabajador-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat;
 
     box-shadow:
-        var(--gc-shadow-card);
-}
-
-
-body.worker-portal-mode
-.topbar h2,
-.portal-worker-hero h2,
-.portal-form-header h2 {
-    margin: 0;
-
-    color: white;
-}
-
-
-body.worker-portal-mode
-.topbar p,
-.portal-worker-hero p,
-.portal-form-header p {
-    color:
+        0 10px 30px
         rgba(
-            255,
-            255,
-            255,
-            0.78
-        ) !important;
+            19,
+            59,
+            43,
+            0.09
+        );
 }
 
 
-.portal-worker-kicker {
-    margin:
-        0
-        0
-        3px !important;
-}
+.portal-worker-avatar {
+    position: absolute;
 
+    z-index: 3;
 
-.portal-header-actions {
+    top: 16px;
+    right: 16px;
+
+    width: 50px;
+    height: 50px;
+
     display: flex;
+    align-items: center;
+    justify-content: center;
 
-    gap: 8px;
+    overflow: hidden;
 
-    flex-wrap: wrap;
-}
-
-
-body.worker-portal-mode
-#activarModoCampo,
-body.worker-portal-mode
-#comunicarIncidencia,
-.portal-worker-hero
-#activarModoCampo,
-.portal-worker-hero
-#comunicarIncidencia {
-    background: white;
-
-    color:
-        var(--gc-green-text);
-}
-
-
-body.worker-portal-mode
-#cerrarSesionTrabajador,
-.portal-worker-hero
-#cerrarSesionTrabajador {
-    border-color:
+    border:
+        3px solid
         rgba(
             255,
             255,
             255,
-            0.24
+            0.9
         );
 
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.1
-        );
+    border-radius: 50%;
+
+    background: #1c5e45;
 
     color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 15px;
+    font-weight: 700;
+
+    box-shadow:
+        0 5px 15px
+        rgba(
+            0,
+            0,
+            0,
+            0.18
+        );
+}
+
+
+.portal-worker-avatar img {
+    width: 100%;
+    height: 100%;
+
+    object-fit: cover;
+}
+
+
+.portal-worker-hero-copy {
+    position: absolute;
+
+    right: 20px;
+    bottom: 19px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 14px
+        rgba(
+            0,
+            0,
+            0,
+            0.35
+        );
+}
+
+
+.portal-worker-hero-copy small {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.portal-worker-hero-copy strong {
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 24px;
+
+    line-height: 1.04;
 }
 
 
@@ -225,154 +581,387 @@ body.worker-portal-mode
    KPIs
 ===================================================== */
 
-body.worker-portal-mode
-.stats,
 .portal-worker-stats {
+    display: grid !important;
+
     grid-template-columns:
         repeat(
             5,
-            minmax(
-                0,
-                1fr
-            )
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 11px !important;
+
+    margin-bottom: 19px !important;
+}
+
+
+.portal-worker-stats .card {
+    min-width: 0;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
         );
-
-    gap: 12px;
-
-    margin-bottom: 20px;
 }
 
 
 /* =====================================================
-   PANELES Y SECCIONES
+   SECCIONES
 ===================================================== */
 
-body.worker-portal-mode
-.panel {
+.portal-section {
+    margin-bottom: 14px;
+
+    padding: 16px;
+
     border:
         1px solid
         var(--gc-border-soft);
 
     border-radius: 15px;
 
+    background: white;
+
     box-shadow:
-        var(--gc-shadow-card);
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
 }
 
 
-body.worker-portal-mode
-.panel-header h3 {
+.portal-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 12px;
+}
+
+
+.portal-section-eyebrow {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #5a806f;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.09em;
+}
+
+
+.portal-section-header h2 {
     margin: 0;
 
-    font-size: 16px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
 }
 
 
-body.worker-portal-mode
-.panel-header p {
-    margin-top: 4px;
+.portal-section-header p {
+    margin:
+        4px
+        0
+        0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 10px;
+    font-size: 8px;
 }
 
 
-.portal-section {
-    margin-top: 24px;
+.portal-section-count {
+    min-width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding:
+        0
+        8px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #30634d;
+
+    font-size: 8px;
+    font-weight: 800;
 }
 
+
+/* =====================================================
+   TAREAS
+===================================================== */
 
 .portal-task-grid {
     display: grid;
 
     grid-template-columns:
         repeat(
-            auto-fit,
-            minmax(
-                280px,
-                1fr
-            )
+            3,
+            minmax(0, 1fr)
         );
 
-    gap: 18px;
+    gap: 10px;
 }
 
 
 .portal-task-card {
-    padding: 18px;
+    min-width: 0;
+
+    padding: 12px;
 
     border:
         1px solid
-        #e1e8e3;
+        #e3e9e5;
 
-    border-radius: 14px;
+    border-radius: 11px;
+
+    background: #fbfcfb;
+}
+
+
+.portal-task-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 8px;
+}
+
+
+.portal-task-kicker {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #648071;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+
+.portal-task-card h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 14px;
+}
+
+
+.portal-task-status {
+    flex: 0 0 auto;
+
+    padding:
+        4px
+        6px;
+
+    border-radius: 999px;
+
+    font-size: 6px;
+    font-weight: 800;
+}
+
+
+.portal-task-status.pending {
+    background: #fff1d8;
+
+    color: #805b1b;
+}
+
+
+.portal-task-status.progress {
+    background: #e4f1f8;
+
+    color: #346379;
+}
+
+
+.portal-task-status.completed {
+    background: #e3f3e9;
+
+    color: #286a4e;
+}
+
+
+.portal-task-location {
+    margin-top: 7px;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.portal-task-data {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 6px;
+
+    margin-top: 8px;
+}
+
+
+.portal-task-data > div {
+    padding: 7px;
+
+    border-radius: 7px;
 
     background: white;
 }
 
 
-.portal-task-card h3 {
-    margin-top: 0;
+.portal-task-data span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 6px;
 }
 
 
-.portal-task-type {
-    color:
-        #247354;
+.portal-task-data strong {
+    display: block;
+
+    margin-top: 2px;
+
+    font-size: 8px;
 }
 
 
-.trabajo-linea {
+.portal-task-chip {
+    display: inline-flex;
+
     margin:
+        7px
         4px
+        0
         0;
 
-    font-size: 10px;
+    padding:
+        4px
+        6px;
 
-    line-height: 1.35;
+    border-radius: 999px;
+
+    background: #edf5f0;
+
+    color: #486a59;
+
+    font-size: 7px;
+}
+
+
+.portal-task-resource {
+    margin-top: 7px;
+
+    padding: 7px;
+
+    border-radius: 7px;
+
+    background: #f5f7f5;
+
+    color: #506159;
+
+    font-size: 7px;
 }
 
 
 .portal-task-notes {
-    margin-top: 12px;
+    margin-top: 8px;
 
-    padding: 12px;
+    padding-top: 8px;
 
-    border-radius: 10px;
-
-    background:
-        #f6f8f6;
+    border-top:
+        1px solid
+        #e4e9e6;
 }
 
 
-.portal-task-actions {
-    justify-content:
-        flex-start;
+.portal-task-notes span {
+    display: block;
 
-    flex-wrap: wrap;
+    color: #597564;
 
-    margin-top: 16px;
+    font-size: 6px;
+    font-weight: 800;
+}
 
-    gap: 7px;
+
+.portal-task-notes p {
+    margin:
+        3px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 7px;
+
+    line-height: 1.4;
 }
 
 
 .portal-iniciar-tarea,
 .portal-completar-tarea {
-    min-height: 36px;
+    width: 100%;
 
-    padding:
-        0
-        11px;
+    min-height: 32px;
 
-    font-size: 10px;
+    margin-top: 9px;
+
+    justify-content: center;
+
+    font-size: 7px;
 }
 
 
 /* =====================================================
-   FICHAJES DEL TRABAJADOR
+   FICHAJES
 ===================================================== */
 
 .portal-fichajes-list {
@@ -380,207 +969,386 @@ body.worker-portal-mode
 }
 
 
-.portal-fichaje-item {
+.portal-fichaje-row {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
     padding:
-        14px
+        9px
         0;
 
     border-bottom:
         1px solid
-        #edf0ed;
+        var(--gc-border-soft);
 }
 
 
-.portal-fichaje-item:last-child {
+.portal-fichaje-row:last-child {
     border-bottom: 0;
 }
 
 
-.portal-fichaje-head {
+.portal-fichaje-icon {
+    width: 32px;
+    height: 32px;
+
+    flex:
+        0
+        0
+        32px;
+
     display: flex;
+    align-items: center;
+    justify-content: center;
 
-    align-items:
-        flex-start;
-
-    justify-content:
-        space-between;
-
-    gap: 12px;
-
-    flex-wrap: wrap;
+    border-radius: 9px;
 }
 
 
-.portal-fichaje-identity {
-    display: flex;
+.portal-fichaje-icon.entrada {
+    background: #e5f6ec;
 
-    gap: 10px;
-
-    align-items:
-        flex-start;
+    color: #18764f;
 }
 
 
-.portal-fichaje-identity p {
+.portal-fichaje-icon.salida {
+    background: #fdeaea;
+
+    color: #b13b3b;
+}
+
+
+.portal-fichaje-main {
+    min-width: 0;
+
+    flex: 1;
+}
+
+
+.portal-fichaje-main strong {
+    display: block;
+
+    font-size: 9px;
+}
+
+
+.portal-fichaje-main p {
     margin:
-        4px
+        2px
         0
         0;
 
-    color:
-        #65736c;
+    color: var(--gc-muted);
+
+    font-size: 7px;
 }
 
 
-.portal-correction-status {
-    display:
-        inline-flex;
+.portal-correction-pill {
+    display: inline-flex;
 
-    align-items:
-        center;
+    margin-top: 4px;
 
     padding:
-        5px
-        9px;
+        4px
+        6px;
 
-    border-radius:
-        999px;
+    border-radius: 999px;
 
-    font-size: 12px;
-
+    font-size: 6px;
     font-weight: 700;
 }
 
 
-.portal-correction-status.pendiente {
-    background:
-        #fff4d8;
+.portal-correction-pill.pending {
+    background: #fff1d8;
 
-    color:
-        #745500;
+    color: #805b1b;
 }
 
 
-.portal-correction-status.aprobada {
-    background:
-        #def5e8;
+.portal-correction-pill.approved {
+    background: #e3f3e9;
 
-    color:
-        #176044;
+    color: #286a4e;
 }
 
 
-.portal-correction-status.rechazada {
-    background:
-        #fde8e8;
+.portal-correction-pill.rejected {
+    background: #f9e7e7;
 
-    color:
-        #a42b2b;
+    color: #994747;
 }
 
 
-.portal-correction-box {
-    margin-top: 10px;
+.portal-solicitar-correccion {
+    min-height: 30px;
 
+    padding:
+        0
+        9px;
+
+    font-size: 7px;
+}
+
+
+/* =====================================================
+   INCIDENCIAS
+===================================================== */
+
+.portal-incidencias-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 8px;
+}
+
+
+.portal-incidencia-card {
     padding: 11px;
+
+    border:
+        1px solid
+        #e4e9e6;
 
     border-radius: 10px;
 
-    background:
-        #f7f9f7;
+    background: #fbfcfb;
 }
 
 
-.portal-correction-box p {
+.portal-incidencia-card > div {
+    display: flex;
+
+    gap: 8px;
+}
+
+
+.portal-incidencia-icon {
+    font-size: 17px;
+}
+
+
+.portal-incidencia-card h3 {
     margin: 0;
+
+    font-size: 10px;
 }
 
 
-.portal-correction-muted {
-    margin-top:
-        5px !important;
+.portal-incidencia-card p {
+    margin:
+        3px
+        0
+        0;
 
-    color:
-        #65736c;
+    color: var(--gc-muted);
+
+    font-size: 8px;
+
+    line-height: 1.4;
 }
 
 
-.portal-correction-original {
-    margin-top:
-        5px !important;
+.portal-incidencia-card footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    color:
-        #65736c;
+    gap: 8px;
 
-    font-size: 12px;
+    margin-top: 9px;
+
+    padding-top: 8px;
+
+    border-top:
+        1px solid
+        #e8ece9;
+
+    font-size: 7px;
 }
 
 
-.portal-corregir-fichaje {
-    margin-top: 10px;
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.portal-empty {
+    grid-column:
+        1
+        /
+        -1;
+
+    min-height: 75px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    padding: 9px;
 }
 
 
-.portal-correction-pending {
+.portal-empty > span {
+    width: 39px;
+    height: 39px;
+
+    flex:
+        0
+        0
+        39px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #edf5f0;
+
+    font-size: 18px;
+}
+
+
+.portal-empty strong {
+    display: block;
+
+    font-size: 9px;
+}
+
+
+.portal-empty p {
+    margin:
+        2px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   FORMULARIOS PORTAL
+===================================================== */
+
+.portal-form-page {
+    width: 100%;
+
+    max-width: 1000px;
+
+    margin: 0 auto;
+
+    padding-bottom: 40px;
+}
+
+
+.portal-form-header {
     margin:
         10px
         0
-        0;
-
-    color:
-        #8a6b00;
-
-    font-size: 12px;
+        16px;
 }
 
 
-.portal-fichaje-summary {
-    margin-bottom: 18px;
+.portal-form-header > span {
+    display: block;
 
-    padding: 14px;
+    margin-bottom: 4px;
 
-    border-radius: 12px;
+    color: #42735e;
 
-    background:
-        #f5f8f6;
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
 }
 
 
-.portal-fichaje-summary p {
+.portal-form-header h1 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 30px;
+}
+
+
+.portal-form-header p {
     margin:
-        6px
+        5px
         0
         0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
 }
 
 
-/* =====================================================
-   INCIDENCIAS DEL TRABAJADOR
-===================================================== */
-
-.portal-incidencias-list {
+.portal-form-layout {
     display: grid;
-}
 
+    grid-template-columns:
+        minmax(0, 650px);
 
-.portal-incidencia-content {
-    flex: 1;
-
-    min-width: 0;
-}
-
-
-/* =====================================================
-   FORMULARIOS DEL PORTAL
-===================================================== */
-
-.portal-form-header {
-    margin-bottom: 18px;
+    justify-content: start;
 }
 
 
 .portal-form-panel {
-    max-width: 720px;
+    max-width: none;
+}
+
+
+.portal-current-record {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 18px;
+
+    padding: 12px;
+
+    border-radius: 10px;
+
+    background: #f5f8f6;
+}
+
+
+.portal-current-record > span {
+    font-size: 19px;
+}
+
+
+.portal-current-record strong {
+    font-size: 10px;
+}
+
+
+.portal-current-record p {
+    margin:
+        3px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
 }
 
 
@@ -588,519 +1356,484 @@ body.worker-portal-mode
    MODO CAMPO
 ===================================================== */
 
-.modo-campo-shell {
-    max-width: 900px;
+.campo-page {
+    width: min(900px, 100%);
 
-    margin:
-        0
-        auto;
+    margin: 0 auto;
 
     padding-bottom: 40px;
 }
 
 
-.modo-campo-hero {
-    margin-bottom: 18px;
-
-    padding: 22px;
-
-    border-radius: 18px;
-
-    background:
-        #12372a;
-
-    color: white;
-}
-
-
-.modo-campo-hero-content {
+.campo-header {
     display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
 
-    justify-content:
-        space-between;
+    gap: 20px;
 
-    align-items:
-        flex-start;
-
-    gap: 15px;
-
-    flex-wrap: wrap;
-}
-
-
-.modo-campo-kicker {
-    margin:
-        0
-        0
-        5px;
-
-    opacity: 0.8;
-
-    font-size: 14px;
-}
-
-
-.modo-campo-hero h2 {
-    margin: 0;
-
-    color: white;
-
-    font-size: 27px;
-}
-
-
-.modo-campo-role {
-    margin:
-        6px
-        0
-        0;
-
-    opacity: 0.85;
-}
-
-
-.modo-campo-vista-completa {
-    min-height: 46px;
-
-    padding:
-        0
-        16px;
-
-    border: 0;
-
-    border-radius: 12px;
-
-    background:
-        rgba(
-            255,
-            255,
-            255,
-            0.14
-        );
-
-    color: white;
-
-    font-weight: 600;
-
-    cursor: pointer;
-}
-
-
-.modo-campo-stats {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(
-                145px,
-                1fr
-            )
-        );
-
-    gap: 12px;
-
-    margin-bottom: 18px;
-}
-
-
-.modo-campo-stat-card {
-    padding: 16px;
-
-    border-radius: 16px;
-
-    background: white;
-
-    box-shadow:
-        0
-        4px
-        18px
-        rgba(
-            0,
-            0,
-            0,
-            0.05
-        );
-}
-
-
-.modo-campo-stat-icon {
-    margin-bottom: 8px;
-
-    font-size: 26px;
-}
-
-
-.modo-campo-stat-card p {
-    margin: 0;
-
-    color:
-        #78837d;
-
-    font-size: 13px;
-}
-
-
-.modo-campo-stat-card strong {
-    display: block;
-
-    margin-top: 3px;
-
-    font-size: 25px;
-}
-
-
-.modo-campo-panel {
-    margin-bottom: 18px;
+    margin-bottom: 14px;
 
     padding: 20px;
 
     border-radius: 18px;
 
-    background: white;
+    background:
+        linear-gradient(
+            135deg,
+            #12372a,
+            #205b44
+        );
+
+    color: white;
 
     box-shadow:
-        0
-        4px
-        18px
+        0 12px 30px
         rgba(
-            0,
-            0,
-            0,
-            0.06
+            18,
+            55,
+            42,
+            0.15
         );
 }
 
 
-.modo-campo-section-label {
+.campo-header span {
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 8px;
+
+    opacity: 0.73;
+}
+
+
+.campo-header h1 {
+    margin: 0;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 27px;
+}
+
+
+.campo-header p {
     margin:
+        4px
         0
-        0
-        12px;
+        0;
 
-    color:
-        #78837d;
+    font-size: 9px;
 
-    font-size: 13px;
-
-    font-weight: 600;
-
-    text-transform:
-        uppercase;
-
-    letter-spacing:
-        0.4px;
+    opacity: 0.78;
 }
 
 
-.modo-campo-empty {
+.campo-header button {
+    min-height: 36px;
+
     padding:
-        20px
-        10px;
+        0
+        11px;
 
-    text-align: center;
-}
-
-
-.modo-campo-empty-icon {
-    margin-bottom: 10px;
-
-    font-size: 40px;
-}
-
-
-.modo-campo-empty strong {
-    font-size: 18px;
-}
-
-
-.modo-campo-empty p {
-    margin-bottom: 0;
-
-    color:
-        #78837d;
-}
-
-
-.modo-campo-quick-actions {
-    display: grid;
-
-    grid-template-columns:
-        repeat(
-            auto-fit,
-            minmax(
-                220px,
-                1fr
-            )
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.3
         );
 
-    gap: 12px;
+    border-radius: 9px;
 
-    margin-bottom: 18px;
-}
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.12
+        );
 
+    color: white;
 
-.modo-campo-action {
-    min-height: 82px;
-
-    padding: 16px;
-
-    border: 0;
-
-    border-radius: 16px;
-
-    font-size: 17px;
-
+    font-size: 8px;
     font-weight: 700;
 
     cursor: pointer;
 }
 
 
-.modo-campo-action-primary {
-    background:
-        #1f7255;
+/* =====================================================
+   STATS CAMPO
+===================================================== */
 
-    color: white;
-}
-
-
-.modo-campo-action-warning {
-    background:
-        #fff4cf;
-
-    color:
-        #6c5500;
-}
-
-
-.modo-campo-panel-title {
-    margin-top: 0;
-}
-
-
-.modo-campo-pending-list {
+.campo-stats {
     display: grid;
 
-    gap: 12px;
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(0, 1fr)
+        );
+
+    gap: 9px;
+
+    margin-bottom: 12px;
 }
 
 
-.modo-campo-pending-card {
+.campo-stat-card {
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
+}
+
+
+.campo-stat-card > span {
+    font-size: 19px;
+}
+
+
+.campo-stat-card p {
+    margin:
+        7px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.campo-stat-card strong {
+    display: block;
+
+    margin-top: 2px;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 20px;
+}
+
+
+/* =====================================================
+   TARJETA ACTUAL
+===================================================== */
+
+.campo-current-card,
+.campo-section {
+    margin-bottom: 12px;
+
     padding: 16px;
 
     border:
         1px solid
-        #e4eae6;
+        var(--gc-border-soft);
 
-    border-radius: 14px;
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
 }
 
 
-.modo-campo-pending-card h3 {
-    margin:
-        0
-        0
-        6px;
+.campo-section-label {
+    display: block;
+
+    margin-bottom: 10px;
+
+    color: #5a806f;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.09em;
 }
 
 
-.modo-campo-pending-card p {
-    margin:
+.campo-current-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+.campo-current-heading h2 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+}
+
+
+.campo-current-heading div > strong {
+    display: block;
+
+    margin-top: 3px;
+
+    color: #2a7053;
+
+    font-size: 9px;
+}
+
+
+.campo-current-heading > span {
+    padding:
         5px
+        7px;
+
+    border-radius: 999px;
+
+    background: #e3f3e9;
+
+    color: #286a4e;
+
+    font-size: 7px;
+    font-weight: 800;
+}
+
+
+.campo-current-data {
+    display: grid;
+
+    gap: 6px;
+
+    margin-top: 14px;
+}
+
+
+.campo-current-data p {
+    margin: 0;
+
+    font-size: 10px;
+}
+
+
+.campo-current-notes {
+    margin-top: 12px;
+
+    padding: 10px;
+
+    border-radius: 9px;
+
+    background: #f5f7f5;
+}
+
+
+.campo-current-notes strong {
+    font-size: 8px;
+}
+
+
+.campo-current-notes p {
+    margin:
+        4px
+        0
         0;
 
-    color:
-        #5f6d66;
+    color: var(--gc-muted);
+
+    font-size: 8px;
 }
 
 
-.modo-campo-start-button {
+.campo-complete-button {
     width: 100%;
 
-    min-height: 54px;
+    min-height: 52px;
 
-    margin-top: 13px;
+    margin-top: 15px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background: #1f7255;
+
+    color: white;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+/* =====================================================
+   ACCIONES CAMPO
+===================================================== */
+
+.campo-actions {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 9px;
+
+    margin-bottom: 12px;
+}
+
+
+.campo-actions button {
+    min-height: 65px;
 
     border: 0;
 
     border-radius: 13px;
 
-    background:
-        #1f7255;
-
-    color: white;
-
-    font-size: 16px;
-
-    font-weight: 700;
+    font-size: 11px;
+    font-weight: 800;
 
     cursor: pointer;
 }
 
 
-.modo-campo-current-head {
-    display: flex;
+.campo-action-primary {
+    background: #1f7255;
 
-    justify-content:
-        space-between;
-
-    align-items:
-        flex-start;
-
-    gap: 15px;
-
-    flex-wrap: wrap;
+    color: white;
 }
 
 
-.modo-campo-current-head h2 {
-    margin:
-        0
-        0
-        6px;
+.campo-action-warning {
+    background: #fff2cc;
 
-    font-size: 24px;
+    color: #6c5500;
 }
 
 
-.modo-campo-task-type {
-    color:
-        #247354;
-}
+/* =====================================================
+   PENDIENTES CAMPO
+===================================================== */
 
-
-.modo-campo-status {
-    padding:
-        7px
-        12px;
-
-    border-radius:
-        999px;
-
-    background:
-        #e3f3eb;
-
-    color:
-        #176044;
-
-    font-size: 13px;
-
-    font-weight: 600;
-}
-
-
-.modo-campo-current-meta {
+.campo-task-list {
     display: grid;
+
+    gap: 7px;
+}
+
+
+.campo-pending-task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     gap: 10px;
 
-    margin-top: 18px;
+    padding: 10px;
 
-    font-size: 16px;
+    border-radius: 9px;
+
+    background: #f8faf8;
 }
 
 
-.modo-campo-task-notes {
-    margin-top: 16px;
+.campo-pending-task strong {
+    display: block;
 
-    padding: 14px;
-
-    border-radius: 12px;
-
-    background:
-        #f5f7f5;
+    font-size: 9px;
 }
 
 
-.modo-campo-task-notes p {
+.campo-pending-task p {
     margin:
-        6px
+        3px
         0
         0;
+
+    color: var(--gc-muted);
+
+    font-size: 7px;
 }
 
 
-.modo-campo-complete-button {
-    width: 100%;
+.campo-pending-task button {
+    min-height: 31px;
 
-    min-height: 62px;
-
-    margin-top: 20px;
+    padding:
+        0
+        9px;
 
     border: 0;
 
-    border-radius: 15px;
+    border-radius: 8px;
 
-    background:
-        #1f7255;
+    background: #e2f1e8;
 
-    color: white;
+    color: #1c6247;
 
-    font-size: 18px;
-
-    font-weight: 700;
+    font-size: 7px;
+    font-weight: 800;
 
     cursor: pointer;
 }
 
 
-.modo-campo-incidencias-list {
-    display: grid;
-}
+/* =====================================================
+   CERRAR SESIÓN CAMPO
+===================================================== */
 
-
-.modo-campo-incidencia-item {
-    padding:
-        14px
-        0;
-
-    border-bottom:
-        1px solid
-        #edf0ed;
-}
-
-
-.modo-campo-incidencia-item:last-child {
-    border-bottom: 0;
-}
-
-
-.modo-campo-incidencia-item p {
-    margin:
-        5px
-        0;
-
-    color:
-        #5f6d66;
-}
-
-
-.modo-campo-incidencia-item small {
-    color:
-        #78837d;
-}
-
-
-.modo-campo-logout {
+.campo-logout {
     width: 100%;
 
-    min-height: 56px;
+    min-height: 44px;
 
     border:
         1px solid
         #dce5df;
 
-    border-radius: 15px;
+    border-radius: 11px;
 
     background: white;
 
-    color:
-        #34483e;
+    color: #53645b;
 
-    font-size: 16px;
-
-    font-weight: 600;
+    font-size: 9px;
+    font-weight: 700;
 
     cursor: pointer;
 }
@@ -1110,31 +1843,51 @@ body.worker-portal-mode
    TABLET
 ===================================================== */
 
-@media (max-width: 900px) {
+@media (max-width: 1050px) {
 
-    body.worker-portal-mode
-    .stats,
+    .portal-access-layout {
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .portal-worker-hero {
+        grid-template-columns: 1fr;
+    }
+
+
+    .portal-worker-hero-content {
+        min-height: 0;
+    }
+
+
+    .portal-worker-hero-image {
+        min-height: 180px;
+    }
+
+
     .portal-worker-stats {
         grid-template-columns:
             repeat(
                 2,
-                minmax(
-                    0,
-                    1fr
-                )
-            );
+                minmax(0, 1fr)
+            ) !important;
     }
 
 
-    body.worker-portal-mode
-    .stats
-    .card:last-child,
-    .portal-worker-stats
-    .card:last-child {
+    .portal-worker-stats .card:last-child {
         grid-column:
             1
             /
             -1;
+    }
+
+
+    .portal-task-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
     }
 
 }
@@ -1153,98 +1906,80 @@ body.worker-portal-mode
         max-width: none;
 
         padding:
-            18px
             12px
+            10px
             calc(
-                22px
+                24px
                 +
-                env(
-                    safe-area-inset-bottom
-                )
+                env(safe-area-inset-bottom)
             );
     }
 
 
-    .portal-login-screen {
-        min-height:
-            calc(
-                100vh
-                -
-                20px
-            );
+    .portal-access-page {
+        padding: 0;
 
-        padding: 12px;
+        background: white;
     }
 
 
-    .portal-login-card {
-        padding: 22px;
+    .portal-access-layout {
+        min-height: 100vh;
+
+        grid-template-columns: 1fr;
+
+        border-radius: 0;
+
+        box-shadow: none;
     }
 
 
-    .portal-login-icon {
-        font-size: 42px;
+    .portal-access-photo {
+        min-height: 220px;
+
+        padding: 20px;
     }
 
 
-    body.worker-portal-mode
-    .topbar,
-    .portal-worker-hero,
-    .portal-form-header {
-        grid-template-columns:
-            1fr;
-
-        gap: 12px;
-
-        padding: 14px;
-
-        border-radius: 14px;
+    .portal-access-brand strong {
+        font-size: 34px;
     }
 
 
-    body.worker-portal-mode
-    .topbar h2,
-    .portal-worker-hero h2,
-    .portal-form-header h2 {
-        font-size: 21px;
+    .portal-access-card {
+        padding:
+            28px
+            20px;
     }
 
 
-    .portal-worker-kicker {
-        margin-bottom:
-            3px !important;
-
-        color:
-            rgba(
-                255,
-                255,
-                255,
-                0.65
-            ) !important;
-
-        font-size: 9px;
-
-        text-transform:
-            uppercase;
-
-        letter-spacing:
-            0.06em;
-
-        font-weight: 700;
+    .portal-worker-hero {
+        gap: 10px;
     }
 
 
-    .portal-header-actions {
+    .portal-worker-hero-content {
+        padding:
+            0
+            2px;
+    }
+
+
+    .portal-worker-hero h1 {
+        font-size: 31px;
+    }
+
+
+    .portal-worker-actions {
         display: grid;
 
         grid-template-columns:
             1fr
             1fr;
-
-        gap: 7px;
     }
 
 
+    .portal-worker-actions
     #activarModoCampo {
         grid-column:
             1
@@ -1253,248 +1988,158 @@ body.worker-portal-mode
     }
 
 
-    #activarModoCampo,
-    #comunicarIncidencia,
-    #cerrarSesionTrabajador {
+    .portal-worker-actions button {
         width: 100%;
 
-        min-height: 38px;
-
-        justify-content:
-            center;
-
-        padding:
-            0
-            8px;
-
-        font-size: 10px;
+        justify-content: center;
     }
 
 
-    body.worker-portal-mode
-    .stats,
+    .portal-worker-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .portal-worker-hero-copy strong {
+        font-size: 18px;
+    }
+
+
     .portal-worker-stats {
         grid-template-columns:
             repeat(
                 2,
-                minmax(
-                    0,
-                    1fr
-                )
+                minmax(0, 1fr)
             ) !important;
 
-        gap: 8px;
-
-        margin-bottom: 16px;
+        gap: 8px !important;
     }
 
 
-    body.worker-portal-mode
-    .stats
-    .card,
-    .portal-worker-stats
-    .card {
-        padding: 10px;
+    .portal-task-grid,
+    .portal-incidencias-grid {
+        grid-template-columns: 1fr;
     }
 
 
-    body.worker-portal-mode
-    .stats
-    .card:last-child,
-    .portal-worker-stats
-    .card:last-child {
-        grid-column:
-            1
-            /
-            -1;
-    }
-
-
-    body.worker-portal-mode
-    .panel {
+    .portal-section {
         padding: 13px;
 
         border-radius: 13px;
     }
 
 
-    .portal-section {
-        margin-top: 12px;
+    .portal-section-header {
+        align-items: flex-start;
     }
 
 
-    .portal-task-grid {
-        grid-template-columns:
-            1fr;
-
-        gap: 8px;
+    .portal-fichaje-row {
+        flex-wrap: wrap;
     }
 
 
-    .portal-task-card {
-        padding: 11px;
-    }
-
-
-    .portal-task-card h3 {
-        margin-bottom: 4px;
-
-        font-size: 14px;
-    }
-
-
-    .trabajo-linea {
-        margin:
-            3px
-            0;
-
-        font-size: 9px;
-    }
-
-
-    .portal-iniciar-tarea,
-    .portal-completar-tarea {
+    .portal-solicitar-correccion {
         width: 100%;
 
-        justify-content:
-            center;
+        justify-content: center;
     }
 
 
-    .portal-form-panel {
-        max-width: none;
+    .campo-page {
+        width: 100%;
     }
 
 
-    .modo-campo-shell {
-        max-width: none;
-
-        padding-bottom: 24px;
-    }
-
-
-    .modo-campo-hero {
-        padding: 16px;
-
-        border-radius: 15px;
-    }
-
-
-    .modo-campo-hero h2 {
-        font-size: 23px;
-    }
-
-
-    .modo-campo-stats {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(
-                    0,
-                    1fr
-                )
-            ) !important;
-
-        gap: 8px;
-    }
-
-
-    .modo-campo-stats
-    .modo-campo-stat-card:last-child {
-        grid-column:
-            1
-            /
-            -1;
-    }
-
-
-    .modo-campo-panel,
-    .modo-campo-trabajo-actual {
-        padding: 14px;
+    .campo-header {
+        padding: 15px;
 
         border-radius: 14px;
     }
 
 
-    .modo-campo-empty {
-        min-height: 150px;
-
-        padding:
-            18px
-            10px;
-
-        display: flex;
-
-        flex-direction:
-            column;
-
-        align-items:
-            center;
-
-        justify-content:
-            center;
+    .campo-header h1 {
+        font-size: 23px;
     }
 
 
-    .modo-campo-quick-actions {
+    .campo-stats {
         grid-template-columns:
-            1fr;
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
+
+        gap: 6px;
     }
 
 
-    .modo-campo-action {
-        min-height: 64px;
+    .campo-stat-card {
+        padding: 10px;
     }
 
 
-    .modo-campo-current-head h2 {
-        font-size: 20px;
+    .campo-stat-card strong {
+        font-size: 17px;
     }
 
 
-    .modo-campo-current-meta {
-        font-size: 14px;
+    .campo-current-card,
+    .campo-section {
+        padding: 13px;
+
+        border-radius: 13px;
+    }
+
+
+    .campo-actions {
+        grid-template-columns: 1fr;
     }
 
 }
 
 
 /* =====================================================
-   MÓVIL ESTRECHO
+   MÓVIL PEQUEÑO
 ===================================================== */
 
 @media (max-width: 420px) {
 
-    body.worker-portal-mode
-    .stats,
-    .portal-worker-stats,
-    .modo-campo-stats {
-        grid-template-columns:
-            1fr !important;
+    .portal-worker-actions {
+        grid-template-columns: 1fr;
     }
 
 
-    body.worker-portal-mode
-    .stats
-    .card:last-child,
-    .portal-worker-stats
-    .card:last-child,
-    .modo-campo-stats
-    .modo-campo-stat-card:last-child {
-        grid-column:
-            auto;
-    }
-
-
-    .portal-header-actions {
-        grid-template-columns:
-            1fr;
-    }
-
-
+    .portal-worker-actions
     #activarModoCampo {
-        grid-column:
-            auto;
+        grid-column: auto;
+    }
+
+
+    .portal-worker-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .campo-stats {
+        grid-template-columns: 1fr;
+    }
+
+
+    .campo-pending-task {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+
+    .campo-pending-task button {
+        width: 100%;
     }
 
 }

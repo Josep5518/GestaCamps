@@ -7,11 +7,22 @@ export class IncidenciasView {
         trabajoService,
         trabajadorService
     ) {
-        this.mainContent = mainContent;
-        this.incidenciaService = incidenciaService;
-        this.fincaService = fincaService;
-        this.trabajoService = trabajoService;
-        this.trabajadorService = trabajadorService;
+
+        this.mainContent =
+            mainContent;
+
+        this.incidenciaService =
+            incidenciaService;
+
+        this.fincaService =
+            fincaService;
+
+        this.trabajoService =
+            trabajoService;
+
+        this.trabajadorService =
+            trabajadorService;
+
     }
 
 
@@ -22,137 +33,231 @@ export class IncidenciasView {
     mostrar() {
 
         const incidencias =
-            this.incidenciaService
-                .obtenerTodas();
+            this.obtenerListaSegura(
+                () =>
+                    this.incidenciaService
+                        .obtenerTodas()
+            );
 
 
         const abiertas =
-            this.incidenciaService
-                .obtenerAbiertas()
+            this.obtenerListaSegura(
+                () =>
+                    this.incidenciaService
+                        .obtenerAbiertas()
+            )
                 .length;
 
 
         const revision =
-            this.incidenciaService
-                .obtenerEnRevision()
+            this.obtenerListaSegura(
+                () =>
+                    this.incidenciaService
+                        .obtenerEnRevision()
+            )
                 .length;
 
 
         const resueltas =
-            this.incidenciaService
-                .obtenerResueltas()
+            this.obtenerListaSegura(
+                () =>
+                    this.incidenciaService
+                        .obtenerResueltas()
+            )
                 .length;
 
 
         const urgentes =
-            this.incidenciaService
-                .obtenerUrgentesActivas()
+            this.obtenerListaSegura(
+                () =>
+                    this.incidenciaService
+                        .obtenerUrgentesActivas()
+            )
                 .length;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="incidencias-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Incidencias
-                    </h2>
+                <section class="incidencias-hero">
 
-                    <p>
-                        Controla problemas y avisos de la explotación
-                    </p>
+                    <div class="incidencias-hero-content">
+
+                        <span class="incidencias-eyebrow">
+                            ⚠️ PERSONAL
+                        </span>
+
+
+                        <h1>
+                            Detecta el problema,
+                            <span>
+                                actúa a tiempo.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Registra averías, problemas en cultivo,
+                            incidencias de seguridad y cualquier aviso
+                            que requiera atención en la explotación.
+                        </p>
+
+
+                        <button
+                            id="nuevaIncidencia"
+                            class="
+                                primary-button
+                                incidencias-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva incidencia
+                        </button>
+
+                    </div>
+
+
+                    <div class="incidencias-hero-image">
+
+                        <div class="incidencias-hero-badge">
+
+                            <span>
+                                Incidencias activas
+                            </span>
+
+                            <strong>
+                                ${abiertas + revision}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="incidencias-hero-copy">
+
+                            <small>
+                                DETECTA · COMUNICA · RESUELVE
+                            </small>
+
+                            <strong>
+                                Ningún problema<br>
+                                pasa desapercibido
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats incidencias-stats">
+
+                    ${this.crearStat(
+                        "⚠️",
+                        "Abiertas",
+                        abiertas
+                    )}
+
+
+                    ${this.crearStat(
+                        "🔎",
+                        "En revisión",
+                        revision
+                    )}
+
+
+                    ${this.crearStat(
+                        "✅",
+                        "Resueltas",
+                        resueltas
+                    )}
+
+
+                    ${this.crearStat(
+                        "🚨",
+                        "Urgentes",
+                        urgentes
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="incidencias-section-header">
+
+                    <div>
+
+                        <span class="incidencias-section-eyebrow">
+                            CONTROL DE INCIDENCIAS
+                        </span>
+
+
+                        <h2>
+                            Avisos de la explotación
+                        </h2>
+
+
+                        <p>
+                            Consulta el estado, prioridad y origen
+                            de cada incidencia registrada.
+                        </p>
+
+                    </div>
+
+
+                    <span class="incidencias-count">
+
+                        ${incidencias.length}
+
+                        ${
+                            incidencias.length === 1
+                                ? "incidencia"
+                                : "incidencias"
+                        }
+
+                    </span>
 
                 </div>
 
 
-                <button
-                    id="nuevaIncidencia"
-                    class="primary-button"
-                    type="button"
+                <!-- ==========================================
+                     LISTA
+                =========================================== -->
+
+                <div
+                    id="listaIncidencias"
+                    class="incidencias-grid"
                 >
-                    + Nueva incidencia
-                </button>
 
-            </header>
+                    ${
+                        incidencias.length ===
+                        0
 
+                            ? this.crearVacio()
 
-            <section class="stats incidencias-stats">
+                            : incidencias
+                                .map(
+                                    incidencia =>
+                                        this.crearTarjeta(
+                                            incidencia
+                                        )
+                                )
+                                .join("")
+                    }
 
-                ${this.crearStat(
-                    "⚠️",
-                    "Abiertas",
-                    abiertas
-                )}
-
-
-                ${this.crearStat(
-                    "🔎",
-                    "En revisión",
-                    revision
-                )}
-
-
-                ${this.crearStat(
-                    "✅",
-                    "Resueltas",
-                    resueltas
-                )}
-
-
-                ${this.crearStat(
-                    "🚨",
-                    "Urgentes",
-                    urgentes
-                )}
-
-            </section>
-
-
-            <div id="listaIncidencias">
-
-                ${
-                    incidencias.length ===
-                    0
-
-                        ? `
-
-                            <div class="empty-state">
-
-                                <div class="empty-icon">
-                                    ⚠️
-                                </div>
-
-                                <h3>
-                                    No hay incidencias
-                                </h3>
-
-                                <p>
-                                    Cuando se registre una incidencia aparecerá aquí.
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : `
-
-                            <div class="incidencias-grid">
-
-                                ${incidencias
-                                    .map(
-                                        incidencia =>
-                                            this.crearTarjeta(
-                                                incidencia
-                                            )
-                                    )
-                                    .join("")}
-
-                            </div>
-
-                        `
-                }
+                </div>
 
             </div>
 
@@ -171,6 +276,7 @@ export class IncidenciasView {
 
 
         this.configurarEventos();
+
     }
 
 
@@ -192,11 +298,15 @@ export class IncidenciasView {
                     ${icono}
                 </span>
 
+
                 <div>
 
                     <p>
-                        ${titulo}
+                        ${this.escapar(
+                            titulo
+                        )}
                     </p>
+
 
                     <h3>
                         ${valor}
@@ -207,6 +317,7 @@ export class IncidenciasView {
             </article>
 
         `;
+
     }
 
 
@@ -218,210 +329,271 @@ export class IncidenciasView {
         incidencia
     ) {
 
-        const iconoPrioridad = {
+        const prioridad =
+            incidencia.prioridad
+            ||
+            "Media";
 
-            Baja:
-                "🟢",
 
-            Media:
-                "🟡",
+        const estado =
+            incidencia.estado
+            ||
+            "Abierta";
 
-            Alta:
-                "🟠",
 
-            Urgente:
-                "🔴"
-
-        };
+        const icono =
+            this.obtenerIconoTipo(
+                incidencia.tipo
+            );
 
 
         return `
 
             <article class="incidencia-card">
 
-                <div class="incidencia-card-header">
+                <!-- ==================================
+                     CABECERA
+                =================================== -->
 
-                    <span class="incidencia-icon">
-                        ⚠️
-                    </span>
+                <div class="incidencia-card-top">
 
+                    <div class="incidencia-card-main">
 
-                    <div class="incidencia-actions">
-
-                        ${
-                            incidencia.estado !==
-                            "Resuelta"
-
-                                ? `
-
-                                    <button
-                                        class="
-                                            secondary-button
-                                            incidencia-revision
-                                        "
-                                        data-id="${incidencia.id}"
-                                        type="button"
-                                    >
-                                        En revisión
-                                    </button>
+                        <span class="incidencia-card-icon">
+                            ${icono}
+                        </span>
 
 
-                                    <button
-                                        class="
-                                            primary-button
-                                            incidencia-resolver
-                                        "
-                                        data-id="${incidencia.id}"
-                                        type="button"
-                                    >
-                                        Resolver
-                                    </button>
+                        <div>
 
-                                `
+                            <span class="incidencia-card-kicker">
+                                INCIDENCIA
+                            </span>
 
-                                : `
 
-                                    <button
-                                        class="
-                                            secondary-button
-                                            incidencia-reabrir
-                                        "
-                                        data-id="${incidencia.id}"
-                                        type="button"
-                                    >
-                                        Reabrir
-                                    </button>
+                            <h3>
+                                ${this.escapar(
+                                    incidencia.tipo
+                                    ||
+                                    "Incidencia"
+                                )}
+                            </h3>
 
-                                `
-                        }
+
+                            <p>
+
+                                ${
+                                    incidencia.fincaNombre
+                                        ? `📍 ${this.escapar(
+                                            incidencia.fincaNombre
+                                        )}`
+                                        : "Sin finca concreta"
+                                }
+
+                            </p>
+
+                        </div>
 
                     </div>
+
+
+                    <span
+                        class="
+                            incidencia-priority
+                            ${this.obtenerClasePrioridad(
+                                prioridad
+                            )}
+                        "
+                    >
+
+                        ${this.escapar(
+                            prioridad
+                        )}
+
+                    </span>
 
                 </div>
 
 
-                <h3>
-                    ${incidencia.tipo}
-                </h3>
+                <!-- ==================================
+                     ESTADO
+                =================================== -->
+
+                <div class="incidencia-status-row">
+
+                    <span
+                        class="
+                            incidencia-status
+                            ${this.obtenerClaseEstado(
+                                estado
+                            )}
+                        "
+                    >
+
+                        ●
+                        ${this.escapar(
+                            estado
+                        )}
+
+                    </span>
 
 
-                <div class="incidencia-meta">
+                    <span class="incidencia-date">
 
-                    <p>
-
-                        ${
-                            iconoPrioridad[
-                                incidencia.prioridad
-                            ]
-                            ||
-                            "🟡"
-                        }
-
-                        Prioridad:
-
-                        <strong>
-                            ${incidencia.prioridad}
-                        </strong>
-
-                    </p>
-
-
-                    <p>
-
-                        📌 Estado:
-
-                        <strong>
-                            ${incidencia.estado}
-                        </strong>
-
-                    </p>
-
-
-                    ${
-                        incidencia.fincaNombre
-
-                            ? `
-
-                                <p>
-                                    📍 ${incidencia.fincaNombre}
-                                </p>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        incidencia.trabajoNombre
-
-                            ? `
-
-                                <p>
-                                    📋 ${incidencia.trabajoNombre}
-                                </p>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        incidencia.trabajadorNombre
-
-                            ? `
-
-                                <p>
-                                    👷 ${incidencia.trabajadorNombre}
-                                </p>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    <p>
                         🕒
                         ${this.formatearFechaHora(
                             incidencia.fechaCreacion
+                        )}
+
+                    </span>
+
+                </div>
+
+
+                <!-- ==================================
+                     RELACIONES
+                =================================== -->
+
+                ${
+                    incidencia.trabajoNombre
+                    ||
+                    incidencia.trabajadorNombre
+
+                        ? `
+
+                            <div class="incidencia-relations">
+
+                                ${
+                                    incidencia.trabajoNombre
+
+                                        ? `
+
+                                            <div>
+
+                                                <span>
+                                                    📋
+                                                </span>
+
+
+                                                <div>
+
+                                                    <small>
+                                                        Tarea
+                                                    </small>
+
+                                                    <strong>
+                                                        ${this.escapar(
+                                                            incidencia.trabajoNombre
+                                                        )}
+                                                    </strong>
+
+                                                </div>
+
+                                            </div>
+
+                                        `
+
+                                        : ""
+                                }
+
+
+                                ${
+                                    incidencia.trabajadorNombre
+
+                                        ? `
+
+                                            <div>
+
+                                                <span>
+                                                    👷
+                                                </span>
+
+
+                                                <div>
+
+                                                    <small>
+                                                        Comunicada por
+                                                    </small>
+
+                                                    <strong>
+                                                        ${this.escapar(
+                                                            incidencia.trabajadorNombre
+                                                        )}
+                                                    </strong>
+
+                                                </div>
+
+                                            </div>
+
+                                        `
+
+                                        : ""
+                                }
+
+                            </div>
+
+                        `
+
+                        : ""
+                }
+
+
+                <!-- ==================================
+                     DESCRIPCIÓN
+                =================================== -->
+
+                <div class="incidencia-description">
+
+                    <span>
+                        DESCRIPCIÓN
+                    </span>
+
+
+                    <p>
+                        ${this.escapar(
+                            incidencia.descripcion
+                            ||
+                            "Sin descripción."
                         )}
                     </p>
 
                 </div>
 
 
-                <div class="incidencia-descripcion">
-
-                    <strong>
-                        Descripción
-                    </strong>
-
-                    <p>
-                        ${incidencia.descripcion}
-                    </p>
-
-                </div>
-
+                <!-- ==================================
+                     RESOLUCIÓN
+                =================================== -->
 
                 ${
-                    incidencia.estado ===
+                    estado ===
                     "Resuelta"
 
                         ? `
 
-                            <div class="incidencia-resuelta">
+                            <div class="incidencia-resolution">
 
-                                <strong>
-                                    ✅ Resuelta
-                                </strong>
+                                <div>
 
-                                <p>
-                                    ${this.formatearFechaHora(
-                                        incidencia.fechaResolucion
-                                    )}
-                                </p>
+                                    <span>
+                                        ✅
+                                    </span>
+
+
+                                    <div>
+
+                                        <strong>
+                                            Incidencia resuelta
+                                        </strong>
+
+                                        <p>
+                                            ${this.formatearFechaHora(
+                                                incidencia.fechaResolucion
+                                            )}
+                                        </p>
+
+                                    </div>
+
+                                </div>
 
 
                                 ${
@@ -429,8 +601,12 @@ export class IncidenciasView {
 
                                         ? `
 
-                                            <p class="incidencia-resuelta-notas">
-                                                ${incidencia.observacionesResolucion}
+                                            <p class="incidencia-resolution-notes">
+
+                                                ${this.escapar(
+                                                    incidencia.observacionesResolucion
+                                                )}
+
                                             </p>
 
                                         `
@@ -445,9 +621,83 @@ export class IncidenciasView {
                         : ""
                 }
 
+
+                <!-- ==================================
+                     ACCIONES
+                =================================== -->
+
+                <div class="incidencia-actions">
+
+                    ${
+                        estado !==
+                        "Resuelta"
+
+                            ? `
+
+                                ${
+                                    estado !==
+                                    "En revisión"
+
+                                        ? `
+
+                                            <button
+                                                class="
+                                                    secondary-button
+                                                    incidencia-revision
+                                                "
+                                                data-id="${this.escapar(
+                                                    incidencia.id
+                                                )}"
+                                                type="button"
+                                            >
+                                                🔎 En revisión
+                                            </button>
+
+                                        `
+
+                                        : ""
+                                }
+
+
+                                <button
+                                    class="
+                                        primary-button
+                                        incidencia-resolver
+                                    "
+                                    data-id="${this.escapar(
+                                        incidencia.id
+                                    )}"
+                                    type="button"
+                                >
+                                    ✓ Resolver
+                                </button>
+
+                            `
+
+                            : `
+
+                                <button
+                                    class="
+                                        secondary-button
+                                        incidencia-reabrir
+                                    "
+                                    data-id="${this.escapar(
+                                        incidencia.id
+                                    )}"
+                                    type="button"
+                                >
+                                    ↩ Reabrir incidencia
+                                </button>
+
+                            `
+                    }
+
+                </div>
+
             </article>
 
         `;
+
     }
 
 
@@ -456,6 +706,17 @@ export class IncidenciasView {
     // =====================================================
 
     configurarEventos() {
+
+        document
+            .getElementById(
+                "crearPrimeraIncidencia"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrarFormulario()
+            );
+
 
         document
             .querySelectorAll(
@@ -533,6 +794,7 @@ export class IncidenciasView {
 
                 }
             );
+
     }
 
 
@@ -556,18 +818,22 @@ export class IncidenciasView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido actualizar la incidencia."
             );
 
             return;
+
         }
 
 
         this.mostrar();
+
     }
 
 
@@ -578,255 +844,381 @@ export class IncidenciasView {
     mostrarFormulario() {
 
         const fincas =
-            this.fincaService
-                .obtenerTodas();
+            this.obtenerListaSegura(
+                () =>
+                    this.fincaService
+                        .obtenerTodas()
+            );
 
 
         const trabajos =
-            this.trabajoService
-                .obtenerTodos();
+            this.obtenerListaSegura(
+                () =>
+                    this.trabajoService
+                        .obtenerTodos()
+            );
 
 
         const trabajadores =
-            this.trabajadorService
-                .obtenerTodos();
+            this.obtenerListaSegura(
+                () =>
+                    this.trabajadorService
+                        .obtenerTodos()
+            );
 
 
         this.mainContent.innerHTML = `
 
-            <button
-                id="volverIncidencias"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+            <div class="incidencia-form-page">
+
+                <button
+                    id="volverIncidencias"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="incidencia-form-header">
 
-                <div>
+                    <span>
+                        ⚠️ PERSONAL
+                    </span>
 
-                    <h2>
+
+                    <h1>
                         Nueva incidencia
-                    </h2>
+                    </h1>
+
 
                     <p>
-                        Registra un problema o aviso
+                        Registra un problema o aviso relacionado
+                        con la explotación.
                     </p>
 
-                </div>
+                </header>
 
-            </header>
 
+                <div class="incidencia-form-layout">
 
-            <div class="form-panel incidencia-form-panel">
-
-                <div class="form-group">
-
-                    <label>
-                        Tipo *
-                    </label>
-
-                    <select id="tipoIncidencia">
-
-                        <option value="Avería">
-                            Avería
-                        </option>
-
-                        <option value="Falta de material">
-                            Falta de material
-                        </option>
-
-                        <option value="Problema en cultivo">
-                            Problema en cultivo
-                        </option>
-
-                        <option value="Plaga / enfermedad">
-                            Plaga / enfermedad
-                        </option>
-
-                        <option value="Riego">
-                            Riego
-                        </option>
-
-                        <option value="Maquinaria">
-                            Maquinaria
-                        </option>
-
-                        <option value="Seguridad">
-                            Seguridad
-                        </option>
-
-                        <option value="Otro">
-                            Otro
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Prioridad
-                    </label>
-
-                    <select id="prioridadIncidencia">
-
-                        <option value="Baja">
-                            Baja
-                        </option>
-
-                        <option
-                            value="Media"
-                            selected
-                        >
-                            Media
-                        </option>
-
-                        <option value="Alta">
-                            Alta
-                        </option>
-
-                        <option value="Urgente">
-                            Urgente
-                        </option>
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Finca
-                    </label>
-
-                    <select id="fincaIncidencia">
-
-                        <option value="">
-                            Sin finca concreta
-                        </option>
-
-
-                        ${fincas
-                            .map(
-                                finca => `
-
-                                    <option value="${finca.id}">
-                                        ${finca.nombre}
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Tarea relacionada
-                    </label>
-
-                    <select id="trabajoIncidencia">
-
-                        <option value="">
-                            Sin tarea relacionada
-                        </option>
-
-
-                        ${trabajos
-                            .map(
-                                trabajo => `
-
-                                    <option value="${trabajo.id}">
-                                        ${trabajo.titulo}
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Trabajador que comunica
-                    </label>
-
-                    <select id="trabajadorIncidencia">
-
-                        <option value="">
-                            Administración
-                        </option>
-
-
-                        ${trabajadores
-                            .map(
-                                trabajador => `
-
-                                    <option value="${trabajador.id}">
-
-                                        ${this.trabajadorService
-                                            .obtenerNombreCompleto(
-                                                trabajador
-                                            )}
-
-                                    </option>
-
-                                `
-                            )
-                            .join("")}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Descripción *
-                    </label>
-
-                    <textarea
-                        id="descripcionIncidencia"
-                        rows="6"
-                        placeholder="Explica qué ha ocurrido..."
-                    ></textarea>
-
-                </div>
-
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarIncidencia"
-                        class="secondary-button"
-                        type="button"
+                    <section
+                        class="
+                            form-panel
+                            incidencia-form-panel
+                        "
                     >
-                        Cancelar
-                    </button>
+
+                        <div class="incidencia-form-section">
+
+                            <span>
+                                ⚠️
+                            </span>
 
 
-                    <button
-                        id="guardarIncidencia"
-                        class="primary-button"
-                        type="button"
-                    >
-                        Guardar incidencia
-                    </button>
+                            <div>
+
+                                <h3>
+                                    Datos de la incidencia
+                                </h3>
+
+
+                                <p>
+                                    Describe qué ha ocurrido
+                                    y dónde se ha detectado.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="incidencia-form-grid">
+
+                            <div class="form-group">
+
+                                <label>
+                                    Tipo *
+                                </label>
+
+
+                                <select id="tipoIncidencia">
+
+                                    <option value="Avería">
+                                        Avería
+                                    </option>
+
+                                    <option value="Falta de material">
+                                        Falta de material
+                                    </option>
+
+                                    <option value="Problema en cultivo">
+                                        Problema en cultivo
+                                    </option>
+
+                                    <option value="Plaga / enfermedad">
+                                        Plaga / enfermedad
+                                    </option>
+
+                                    <option value="Riego">
+                                        Riego
+                                    </option>
+
+                                    <option value="Maquinaria">
+                                        Maquinaria
+                                    </option>
+
+                                    <option value="Seguridad">
+                                        Seguridad
+                                    </option>
+
+                                    <option value="Otro">
+                                        Otro
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Prioridad
+                                </label>
+
+
+                                <select id="prioridadIncidencia">
+
+                                    <option value="Baja">
+                                        Baja
+                                    </option>
+
+                                    <option
+                                        value="Media"
+                                        selected
+                                    >
+                                        Media
+                                    </option>
+
+                                    <option value="Alta">
+                                        Alta
+                                    </option>
+
+                                    <option value="Urgente">
+                                        Urgente
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Finca
+                                </label>
+
+
+                                <select id="fincaIncidencia">
+
+                                    <option value="">
+                                        Sin finca concreta
+                                    </option>
+
+
+                                    ${fincas
+                                        .map(
+                                            finca => `
+
+                                                <option
+                                                    value="${finca.id}"
+                                                >
+                                                    ${this.escapar(
+                                                        finca.nombre
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Tarea relacionada
+                                </label>
+
+
+                                <select id="trabajoIncidencia">
+
+                                    <option value="">
+                                        Sin tarea relacionada
+                                    </option>
+
+
+                                    ${trabajos
+                                        .map(
+                                            trabajo => `
+
+                                                <option
+                                                    value="${trabajo.id}"
+                                                >
+                                                    ${this.escapar(
+                                                        trabajo.titulo
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    form-group
+                                    incidencia-form-wide
+                                "
+                            >
+
+                                <label>
+                                    Trabajador que comunica
+                                </label>
+
+
+                                <select id="trabajadorIncidencia">
+
+                                    <option value="">
+                                        Administración
+                                    </option>
+
+
+                                    ${trabajadores
+                                        .map(
+                                            trabajador => `
+
+                                                <option
+                                                    value="${trabajador.id}"
+                                                >
+                                                    ${this.escapar(
+                                                        this.obtenerNombreTrabajador(
+                                                            trabajador
+                                                        )
+                                                    )}
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    form-group
+                                    incidencia-form-wide
+                                "
+                            >
+
+                                <label>
+                                    Descripción *
+                                </label>
+
+
+                                <textarea
+                                    id="descripcionIncidencia"
+                                    rows="6"
+                                    placeholder="Explica qué ha ocurrido..."
+                                ></textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarIncidencia"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarIncidencia"
+                                class="primary-button"
+                                type="button"
+                            >
+                                Guardar incidencia
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <aside class="incidencia-form-aside">
+
+                        <div class="incidencia-form-photo">
+
+                            <div>
+
+                                <span>
+                                    DETECCIÓN TEMPRANA
+                                </span>
+
+
+                                <strong>
+                                    Ver el problema
+                                    es empezar a resolverlo.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="incidencia-form-tip">
+
+                            <span>
+                                ⚡
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Prioriza correctamente
+                                </strong>
+
+
+                                <p>
+                                    Usa prioridad urgente solo para
+                                    incidencias que necesitan atención
+                                    inmediata.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
@@ -866,6 +1258,7 @@ export class IncidenciasView {
                 () =>
                     this.guardarFormulario()
             );
+
     }
 
 
@@ -874,6 +1267,30 @@ export class IncidenciasView {
     // =====================================================
 
     guardarFormulario() {
+
+        const descripcion =
+            document
+                .getElementById(
+                    "descripcionIncidencia"
+                )
+                ?.value
+                .trim()
+            ||
+            "";
+
+
+        if (
+            !descripcion
+        ) {
+
+            alert(
+                "Escribe una descripción de la incidencia."
+            );
+
+            return;
+
+        }
+
 
         const resultado =
             this.incidenciaService
@@ -921,12 +1338,7 @@ export class IncidenciasView {
                             ||
                             null,
 
-                        descripcion:
-                            document
-                                .getElementById(
-                                    "descripcionIncidencia"
-                                )
-                                .value,
+                        descripcion,
 
                         origen:
                             "Administración"
@@ -936,18 +1348,253 @@ export class IncidenciasView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido registrar la incidencia."
             );
 
             return;
+
         }
 
 
         this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // ICONO TIPO
+    // =====================================================
+
+    obtenerIconoTipo(
+        tipo
+    ) {
+
+        const iconos = {
+
+            "Avería":
+                "🔧",
+
+            "Falta de material":
+                "📦",
+
+            "Problema en cultivo":
+                "🌱",
+
+            "Plaga / enfermedad":
+                "🐛",
+
+            "Riego":
+                "💧",
+
+            "Maquinaria":
+                "🚜",
+
+            "Seguridad":
+                "🦺",
+
+            "Otro":
+                "⚠️"
+
+        };
+
+
+        return (
+            iconos[tipo]
+            ||
+            "⚠️"
+        );
+
+    }
+
+
+    // =====================================================
+    // CLASE PRIORIDAD
+    // =====================================================
+
+    obtenerClasePrioridad(
+        prioridad
+    ) {
+
+        if (
+            prioridad ===
+            "Urgente"
+        ) {
+
+            return "urgente";
+
+        }
+
+
+        if (
+            prioridad ===
+            "Alta"
+        ) {
+
+            return "alta";
+
+        }
+
+
+        if (
+            prioridad ===
+            "Baja"
+        ) {
+
+            return "baja";
+
+        }
+
+
+        return "media";
+
+    }
+
+
+    // =====================================================
+    // CLASE ESTADO
+    // =====================================================
+
+    obtenerClaseEstado(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "Resuelta"
+        ) {
+
+            return "resuelta";
+
+        }
+
+
+        if (
+            estado ===
+            "En revisión"
+        ) {
+
+            return "revision";
+
+        }
+
+
+        return "abierta";
+
+    }
+
+
+    // =====================================================
+    // NOMBRE TRABAJADOR
+    // =====================================================
+
+    obtenerNombreTrabajador(
+        trabajador
+    ) {
+
+        if (
+            typeof this.trabajadorService
+                ?.obtenerNombreCompleto ===
+            "function"
+        ) {
+
+            return this.trabajadorService
+                .obtenerNombreCompleto(
+                    trabajador
+                );
+
+        }
+
+
+        return (
+            [
+                trabajador?.nombre,
+                trabajador?.apellidos
+            ]
+                .filter(Boolean)
+                .join(" ")
+                .trim()
+            ||
+            "Trabajador"
+        );
+
+    }
+
+
+    // =====================================================
+    // LISTA SEGURA
+    // =====================================================
+
+    obtenerListaSegura(
+        callback
+    ) {
+
+        try {
+
+            const resultado =
+                callback();
+
+
+            return Array.isArray(
+                resultado
+            )
+                ? resultado
+                : [];
+
+        }
+
+        catch {
+
+            return [];
+
+        }
+
+    }
+
+
+    // =====================================================
+    // VACÍO
+    // =====================================================
+
+    crearVacio() {
+
+        return `
+
+            <div class="incidencias-empty">
+
+                <div class="incidencias-empty-icon">
+                    ✅
+                </div>
+
+
+                <h3>
+                    No hay incidencias
+                </h3>
+
+
+                <p>
+                    Cuando se registre un problema o aviso
+                    aparecerá aquí.
+                </p>
+
+
+                <button
+                    id="crearPrimeraIncidencia"
+                    class="primary-button"
+                    type="button"
+                >
+                    + Registrar incidencia
+                </button>
+
+            </div>
+
+        `;
+
     }
 
 
@@ -962,7 +1609,9 @@ export class IncidenciasView {
         if (
             !valor
         ) {
+
             return "—";
+
         }
 
 
@@ -977,7 +1626,11 @@ export class IncidenciasView {
                 fecha.getTime()
             )
         ) {
-            return valor;
+
+            return String(
+                valor
+            );
+
         }
 
 
@@ -1003,5 +1656,44 @@ export class IncidenciasView {
 
                 }
             );
+
     }
+
+
+    // =====================================================
+    // ESCAPAR HTML
+    // =====================================================
+
+    escapar(
+        valor
+    ) {
+
+        return String(
+            valor
+            ??
+            ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
+
+    }
+
 }

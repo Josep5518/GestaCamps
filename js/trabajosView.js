@@ -1,7 +1,8 @@
-// =====================================================
-// GESTACAMPS
-// VISTA DE TRABAJOS Y TAREAS
-// =====================================================
+import {
+    escaparHTML,
+    mismoId
+} from "./utils.js";
+
 
 export class TrabajosView {
 
@@ -32,96 +33,6 @@ export class TrabajosView {
         this.campaniaService =
             campaniaService;
 
-
-        this.vistaActual =
-            "lista";
-
-
-        const hoy =
-            new Date();
-
-
-        this.fechaCalendario =
-            new Date(
-                hoy.getFullYear(),
-                hoy.getMonth(),
-                1
-            );
-
-    }
-
-
-    // =====================================================
-    // COMPARAR IDS
-    // =====================================================
-
-    mismoId(
-        idA,
-        idB
-    ) {
-
-        if (
-            idA === null
-            ||
-            idA === undefined
-            ||
-            idB === null
-            ||
-            idB === undefined
-        ) {
-
-            return false;
-
-        }
-
-
-        return (
-            String(
-                idA
-            )
-            ===
-            String(
-                idB
-            )
-        );
-
-    }
-
-
-    // =====================================================
-    // ESCAPAR HTML
-    // =====================================================
-
-    escapar(
-        valor
-    ) {
-
-        return String(
-            valor
-            ??
-            ""
-        )
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
-
     }
 
 
@@ -139,16 +50,12 @@ export class TrabajosView {
                 "function"
         ) {
 
-            const trabajadores =
+            return (
                 this.trabajadorService
-                    .obtenerTodos();
-
-
-            return Array.isArray(
-                trabajadores
-            )
-                ? trabajadores
-                : [];
+                    .obtenerTodos()
+                ||
+                []
+            );
 
         }
 
@@ -172,16 +79,12 @@ export class TrabajosView {
                 "function"
         ) {
 
-            const maquinaria =
+            return (
                 this.maquinariaService
-                    .obtenerTodos();
-
-
-            return Array.isArray(
-                maquinaria
-            )
-                ? maquinaria
-                : [];
+                    .obtenerTodos()
+                ||
+                []
+            );
 
         }
 
@@ -200,11 +103,7 @@ export class TrabajosView {
     ) {
 
         if (
-            id === null
-            ||
-            id === undefined
-            ||
-            id === ""
+            !id
         ) {
 
             return null;
@@ -220,14 +119,20 @@ export class TrabajosView {
                 "function"
         ) {
 
-            return (
+            const trabajador =
                 this.trabajadorService
                     .obtenerPorId(
                         id
-                    )
-                ||
-                null
-            );
+                    );
+
+
+            if (
+                trabajador
+            ) {
+
+                return trabajador;
+
+            }
 
         }
 
@@ -236,7 +141,7 @@ export class TrabajosView {
             this.obtenerTrabajadores()
                 .find(
                     trabajador =>
-                        this.mismoId(
+                        mismoId(
                             trabajador.id,
                             id
                         )
@@ -257,11 +162,7 @@ export class TrabajosView {
     ) {
 
         if (
-            id === null
-            ||
-            id === undefined
-            ||
-            id === ""
+            !id
         ) {
 
             return null;
@@ -277,14 +178,20 @@ export class TrabajosView {
                 "function"
         ) {
 
-            return (
+            const maquina =
                 this.maquinariaService
                     .obtenerPorId(
                         id
-                    )
-                ||
-                null
-            );
+                    );
+
+
+            if (
+                maquina
+            ) {
+
+                return maquina;
+
+            }
 
         }
 
@@ -293,7 +200,7 @@ export class TrabajosView {
             this.obtenerMaquinaria()
                 .find(
                     maquina =>
-                        this.mismoId(
+                        mismoId(
                             maquina.id,
                             id
                         )
@@ -323,19 +230,14 @@ export class TrabajosView {
 
 
         return (
+            trabajador.nombreCompleto
+            ||
             [
                 trabajador.nombre,
                 trabajador.apellidos
             ]
-                .filter(
-                    Boolean
-                )
-                .join(
-                    " "
-                )
-                .trim()
-            ||
-            `Trabajador ${trabajador.id || ""}`
+                .filter(Boolean)
+                .join(" ")
         );
 
     }
@@ -358,28 +260,19 @@ export class TrabajosView {
         }
 
 
-        return (
-            maquina.nombre
-            ||
-            [
-                maquina.marca,
-                maquina.modelo
-            ]
-                .filter(
-                    Boolean
-                )
-                .join(
-                    " · "
-                )
-            ||
-            `Maquinaria ${maquina.id || ""}`
-        );
+        return [
+            maquina.nombre,
+            maquina.marca,
+            maquina.modelo
+        ]
+            .filter(Boolean)
+            .join(" · ");
 
     }
 
 
     // =====================================================
-    // NOMBRES TRABAJADORES
+    // TRABAJADORES DE UNA TAREA
     // =====================================================
 
     obtenerNombresTrabajo(
@@ -397,9 +290,7 @@ export class TrabajosView {
 
             return trabajo
                 .trabajadorNombres
-                .join(
-                    ", "
-                );
+                .join(", ");
 
         }
 
@@ -408,8 +299,7 @@ export class TrabajosView {
             trabajo.trabajadorNombre
         ) {
 
-            return trabajo
-                .trabajadorNombre;
+            return trabajo.trabajadorNombre;
 
         }
 
@@ -420,73 +310,7 @@ export class TrabajosView {
 
 
     // =====================================================
-    // ES RECURRENTE
-    // =====================================================
-
-    esRecurrente(
-        trabajo
-    ) {
-
-        return Boolean(
-            trabajo?.serieRecurrenciaId
-            &&
-            trabajo?.recurrencia?.activa ===
-            true
-        );
-
-    }
-
-
-    // =====================================================
-    // TEXTO RECURRENCIA
-    // =====================================================
-
-    obtenerTextoRecurrencia(
-        trabajo
-    ) {
-
-        if (
-            !this.esRecurrente(
-                trabajo
-            )
-        ) {
-
-            return "";
-
-        }
-
-
-        const tipo =
-            trabajo.recurrencia.tipo
-            ||
-            "Recurrente";
-
-
-        const indice =
-            Number(
-                trabajo.recurrencia.indice
-                ??
-                1
-            );
-
-
-        const total =
-            Number(
-                trabajo.recurrencia.total
-                ??
-                1
-            );
-
-
-        return (
-            `${tipo} · ${indice}/${total}`
-        );
-
-    }
-
-
-    // =====================================================
-    // PANTALLA PRINCIPAL
+    // MOSTRAR
     // =====================================================
 
     mostrar() {
@@ -497,221 +321,191 @@ export class TrabajosView {
 
 
         const pendientes =
-            trabajos
-                .filter(
-                    trabajo =>
-                        trabajo.estado ===
-                        "Pendiente"
-                )
-                .length;
+            trabajos.filter(
+                trabajo =>
+                    trabajo.estado ===
+                    "Pendiente"
+            ).length;
 
 
         const enCurso =
-            trabajos
-                .filter(
-                    trabajo =>
-                        trabajo.estado ===
-                        "En curso"
-                )
-                .length;
+            trabajos.filter(
+                trabajo =>
+                    trabajo.estado ===
+                    "En curso"
+            ).length;
 
 
         const completadas =
-            trabajos
-                .filter(
-                    trabajo =>
-                        trabajo.estado ===
-                        "Completada"
-                )
-                .length;
+            trabajos.filter(
+                trabajo =>
+                    trabajo.estado ===
+                    "Completada"
+                    ||
+                    trabajo.estado ===
+                    "Completado"
+            ).length;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="trabajos-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Trabajos y tareas
-                    </h2>
+                <section class="trabajos-hero">
 
-                    <p>
-                        Organiza los trabajos de tu explotación
-                    </p>
+                    <div class="trabajos-hero-content">
 
-                </div>
-
-
-                <button
-                    id="nuevoTrabajo"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nueva tarea
-                </button>
-
-            </header>
+                        <span class="trabajos-eyebrow">
+                            🚜 GESTIÓN AGRÍCOLA
+                        </span>
 
 
-            <section class="stats trabajos-stats">
+                        <h1>
+                            Cada tarea,
+                            <span>
+                                en el momento justo.
+                            </span>
+                        </h1>
 
-                <div class="card">
 
-                    <span class="card-icon">
-                        📋
-                    </span>
+                        <p>
+                            Planifica el trabajo diario, asigna personal
+                            y maquinaria y controla el estado de cada
+                            tarea de tu explotación.
+                        </p>
+
+
+                        <button
+                            id="nuevoTrabajo"
+                            class="
+                                primary-button
+                                trabajos-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva tarea
+                        </button>
+
+                    </div>
+
+
+                    <div class="trabajos-hero-image">
+
+                        <div class="trabajos-hero-badge">
+
+                            <span>
+                                Pendientes
+                            </span>
+
+                            <strong>
+                                ${pendientes}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="trabajos-hero-copy">
+
+                            <small>
+                                PLANIFICA · ASIGNA · COMPLETA
+                            </small>
+
+                            <strong>
+                                El trabajo del campo,<br>
+                                bien organizado
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats trabajos-stats">
+
+                    ${this.crearStat(
+                        "📋",
+                        "Tareas",
+                        trabajos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "🕒",
+                        "Pendientes",
+                        pendientes
+                    )}
+
+
+                    ${this.crearStat(
+                        "🚜",
+                        "En curso",
+                        enCurso
+                    )}
+
+
+                    ${this.crearStat(
+                        "✅",
+                        "Completadas",
+                        completadas
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTADO
+                =========================================== -->
+
+                <div class="trabajos-section-header">
 
                     <div>
 
+                        <span class="trabajos-section-eyebrow">
+                            PLANIFICACIÓN DIARIA
+                        </span>
+
+
+                        <h2>
+                            Trabajos y tareas
+                        </h2>
+
+
                         <p>
-                            Total
+                            Consulta responsables, maquinaria,
+                            prioridad y estado de cada trabajo.
                         </p>
 
-                        <h3>
-                            ${trabajos.length}
-                        </h3>
+                    </div>
+
+
+                    <div class="trabajos-summary">
+
+                        <span>
+                            ${pendientes} pendientes
+                        </span>
+
+                        <span>
+                            ${enCurso} en curso
+                        </span>
 
                     </div>
 
                 </div>
 
 
-                <div class="card">
-
-                    <span class="card-icon">
-                        🕒
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Pendientes
-                        </p>
-
-                        <h3>
-                            ${pendientes}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        🚜
-                    </span>
-
-                    <div>
-
-                        <p>
-                            En curso
-                        </p>
-
-                        <h3>
-                            ${enCurso}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <span class="card-icon">
-                        ✅
-                    </span>
-
-                    <div>
-
-                        <p>
-                            Completadas
-                        </p>
-
-                        <h3>
-                            ${completadas}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <div
-                style="
-                    display:flex;
-                    gap:8px;
-                    margin:20px 0 14px;
-                    padding:5px;
-                    background:#eef3ef;
-                    border-radius:12px;
-                    width:max-content;
-                    max-width:100%;
-                "
-            >
-
-                <button
-                    id="vistaListaTrabajos"
-                    type="button"
-                    style="
-                        border:0;
-                        border-radius:9px;
-                        padding:9px 14px;
-                        cursor:pointer;
-                        font-weight:600;
-                        background:${
-                            this.vistaActual ===
-                            "lista"
-                                ? "#1f7659"
-                                : "transparent"
-                        };
-                        color:${
-                            this.vistaActual ===
-                            "lista"
-                                ? "#ffffff"
-                                : "#365247"
-                        };
-                    "
-                >
-                    📋 Lista
-                </button>
-
-
-                <button
-                    id="vistaCalendarioTrabajos"
-                    type="button"
-                    style="
-                        border:0;
-                        border-radius:9px;
-                        padding:9px 14px;
-                        cursor:pointer;
-                        font-weight:600;
-                        background:${
-                            this.vistaActual ===
-                            "calendario"
-                                ? "#1f7659"
-                                : "transparent"
-                        };
-                        color:${
-                            this.vistaActual ===
-                            "calendario"
-                                ? "#ffffff"
-                                : "#365247"
-                        };
-                    "
-                >
-                    📅 Calendario
-                </button>
+                <div id="listaTrabajos"></div>
 
             </div>
-
-
-            <div id="contenidoTrabajos"></div>
 
         `;
 
@@ -720,64 +514,55 @@ export class TrabajosView {
             .getElementById(
                 "nuevoTrabajo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormulario();
-
-                }
+                () =>
+                    this.mostrarFormulario()
             );
 
 
-        document
-            .getElementById(
-                "vistaListaTrabajos"
-            )
-            .addEventListener(
-                "click",
-                () => {
+        this.mostrarLista();
 
-                    this.vistaActual =
-                        "lista";
-
-                    this.mostrar();
-
-                }
-            );
+    }
 
 
-        document
-            .getElementById(
-                "vistaCalendarioTrabajos"
-            )
-            .addEventListener(
-                "click",
-                () => {
+    // =====================================================
+    // KPI
+    // =====================================================
 
-                    this.vistaActual =
-                        "calendario";
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
 
-                    this.mostrar();
+        return `
 
-                }
-            );
+            <div class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
 
 
-        if (
-            this.vistaActual ===
-            "calendario"
-        ) {
+                <div>
 
-            this.mostrarCalendario();
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
 
-        }
 
-        else {
+                    <h3>
+                        ${valor}
+                    </h3>
 
-            this.mostrarLista();
+                </div>
 
-        }
+            </div>
+
+        `;
 
     }
 
@@ -785,7 +570,8 @@ export class TrabajosView {
     // =====================================================
     // LISTA
     // =====================================================
-        mostrarLista() {
+
+    mostrarLista() {
 
         const trabajos =
             this.trabajoService
@@ -795,24 +581,39 @@ export class TrabajosView {
                     (
                         a,
                         b
-                    ) =>
-                        new Date(
-                            b.fecha
-                            ||
-                            0
-                        )
-                        -
-                        new Date(
-                            a.fecha
-                            ||
-                            0
-                        )
+                    ) => {
+
+                        const fechaA =
+                            new Date(
+                                a.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        const fechaB =
+                            new Date(
+                                b.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        return (
+                            fechaB
+                            -
+                            fechaA
+                        );
+
+                    }
                 );
 
 
         const contenedor =
             document.getElementById(
-                "contenidoTrabajos"
+                "listaTrabajos"
             );
 
 
@@ -832,23 +633,46 @@ export class TrabajosView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="trabajos-empty">
 
-                    <div class="empty-icon">
+                    <div class="trabajos-empty-icon">
                         🚜
                     </div>
+
 
                     <h3>
                         Todavía no tienes tareas
                     </h3>
 
+
                     <p>
-                        Crea tu primera tarea para organizar los trabajos.
+                        Crea tu primera tarea para comenzar
+                        a organizar el trabajo de la explotación.
                     </p>
+
+
+                    <button
+                        id="crearPrimeraTarea"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Crear primera tarea
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimeraTarea"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormulario()
+                );
 
 
             return;
@@ -862,21 +686,23 @@ export class TrabajosView {
 
                 ${trabajos
                     .map(
-                        trabajo =>
-                            this.crearTarjetaTrabajo(
-                                trabajo
+                        (
+                            trabajo,
+                            index
+                        ) =>
+                            this.crearTarjeta(
+                                trabajo,
+                                index
                             )
                     )
-                    .join(
-                        ""
-                    )}
+                    .join("")}
 
             </div>
 
         `;
 
 
-        this.configurarEventosLista();
+        this.configurarEventos();
 
     }
 
@@ -885,431 +711,512 @@ export class TrabajosView {
     // TARJETA
     // =====================================================
 
-    crearTarjetaTrabajo(
-        trabajo
+    crearTarjeta(
+        trabajo,
+        index
     ) {
 
-        const idSeguro =
-            this.escapar(
-                trabajo.id
-            );
-
-
-        const recurrente =
-            this.esRecurrente(
-                trabajo
-            );
+        const numeroImagen =
+            (
+                index %
+                3
+            )
+            +
+            1;
 
 
         return `
 
-            <div class="trabajo-card">
+            <article class="trabajo-card trabajo-card-premium">
 
-                <div class="trabajo-card-header">
+                <!-- ==================================
+                     FOTO
+                =================================== -->
 
-                    <span class="trabajo-icon">
-                        🚜
-                    </span>
+                <div
+                    class="
+                        trabajo-cover
+                        trabajo-cover-${numeroImagen}
+                    "
+                >
+
+                    <div class="trabajo-cover-overlay"></div>
 
 
-                    <div class="trabajo-actions">
+                    <div class="trabajo-cover-top">
 
-                        <button
-                            type="button"
+                        <span
                             class="
-                                secondary-button
-                                editar-trabajo
+                                trabajo-status
+                                ${this.obtenerClaseEstado(
+                                    trabajo.estado
+                                )}
                             "
-                            data-id="${idSeguro}"
                         >
-                            Editar
-                        </button>
 
-
-                        <button
-                            type="button"
-                            class="
-                                delete-button
-                                eliminar-trabajo
-                            "
-                            data-id="${idSeguro}"
-                        >
-                            ×
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <h3>
-                    ${this.escapar(
-                        trabajo.titulo
-                        ||
-                        "Trabajo"
-                    )}
-                </h3>
-
-
-                ${
-                    recurrente
-
-                        ? `
-
-                            <div
-                                style="
-                                    display:inline-flex;
-                                    align-items:center;
-                                    gap:5px;
-                                    margin:0 0 10px;
-                                    padding:5px 8px;
-                                    background:#edf6f1;
-                                    color:#176044;
-                                    border-radius:999px;
-                                    font-size:11px;
-                                    font-weight:600;
-                                "
-                            >
-                                🔁
-                                ${this.escapar(
-                                    this.obtenerTextoRecurrencia(
-                                        trabajo
-                                    )
-                                )}
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
-
-                <strong class="trabajo-tipo">
-
-                    ${this.escapar(
-                        trabajo.tipo
-                        ||
-                        trabajo.titulo
-                        ||
-                        "Trabajo"
-                    )}
-
-                </strong>
-
-
-                <p class="trabajo-linea">
-
-                    📍
-                    ${this.escapar(
-                        trabajo.fincaNombre
-                        ||
-                        "Sin finca"
-                    )}
-
-                    ${
-                        trabajo.parcela
-
-                            ? ` · ${this.escapar(
-                                trabajo.parcela
-                            )}`
-
-                            : ""
-                    }
-
-                </p>
-
-
-                ${
-                    trabajo.cultivo
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                🌱
-                                ${this.escapar(
-                                    trabajo.cultivo
-                                )}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    trabajo.campaniaNombre
-
-                        ? `
-
-                            <p class="trabajo-campania">
-                                📅
-                                ${this.escapar(
-                                    trabajo.campaniaNombre
-                                )}
-                            </p>
-
-                        `
-
-                        : `
-
-                            <p
-                                class="
-                                    trabajo-campania
-                                    trabajo-sin-campania
-                                "
-                            >
-                                📅 Sin campanya asignada
-                            </p>
-
-                        `
-                }
-
-
-                <div class="trabajo-info-grid">
-
-                    <div>
-
-                        <span>
-                            Estado
-                        </span>
-
-                        <strong>
-                            ${this.escapar(
+                            ●
+                            ${escaparHTML(
                                 trabajo.estado
                                 ||
                                 "Pendiente"
                             )}
-                        </strong>
+
+                        </span>
+
+
+                        <div class="trabajo-cover-actions">
+
+                            <button
+                                class="
+                                    trabajo-icon-button
+                                    editar-trabajo
+                                "
+                                data-id="${trabajo.id}"
+                                type="button"
+                                title="Editar tarea"
+                            >
+                                ✎
+                            </button>
+
+
+                            <button
+                                class="
+                                    trabajo-icon-button
+                                    trabajo-delete
+                                    eliminar-trabajo
+                                "
+                                data-id="${trabajo.id}"
+                                type="button"
+                                title="Eliminar tarea"
+                            >
+                                ×
+                            </button>
+
+                        </div>
 
                     </div>
 
 
-                    <div>
+                    <div class="trabajo-cover-copy">
 
                         <span>
-                            Prioridad
+                            ${escaparHTML(
+                                trabajo.tipo
+                                ||
+                                "TRABAJO"
+                            )}
                         </span>
 
+
                         <strong>
-                            ${this.escapar(
+                            ${escaparHTML(
+                                trabajo.titulo
+                                ||
+                                "Trabajo"
+                            )}
+                        </strong>
+
+
+                        <p>
+                            📍
+                            ${escaparHTML(
+                                trabajo.fincaNombre
+                                ||
+                                "Sin finca"
+                            )}
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================
+                     CUERPO
+                =================================== -->
+
+                <div class="trabajo-card-body">
+
+                    <div class="trabajo-title-row">
+
+                        <div>
+
+                            <span class="trabajo-kicker">
+                                TRABAJO AGRÍCOLA
+                            </span>
+
+
+                            <h3>
+                                ${escaparHTML(
+                                    trabajo.titulo
+                                    ||
+                                    "Trabajo"
+                                )}
+                            </h3>
+
+                        </div>
+
+
+                        <span
+                            class="
+                                trabajo-priority
+                                ${this.obtenerClasePrioridad(
+                                    trabajo.prioridad
+                                )}
+                            "
+                        >
+                            ${escaparHTML(
                                 trabajo.prioridad
                                 ||
                                 "Media"
                             )}
-                        </strong>
+                        </span>
 
                     </div>
 
+
+                    <p class="trabajo-location">
+
+                        📍
+                        ${escaparHTML(
+                            trabajo.fincaNombre
+                            ||
+                            "Sin finca"
+                        )}
+
+                        ${
+                            trabajo.parcela
+
+                                ? ` · ${escaparHTML(
+                                    trabajo.parcela
+                                )}`
+
+                                : ""
+                        }
+
+                    </p>
+
+
+                    <div class="trabajo-tags">
+
+                        ${
+                            trabajo.cultivo
+
+                                ? `
+
+                                    <span>
+                                        🌱
+                                        ${escaparHTML(
+                                            trabajo.cultivo
+                                        )}
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+
+                        ${
+                            trabajo.campaniaNombre
+
+                                ? `
+
+                                    <span>
+                                        🗓️
+                                        ${escaparHTML(
+                                            trabajo.campaniaNombre
+                                        )}
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+                    </div>
+
+
+                    <div class="trabajo-info-grid">
+
+                        <div>
+
+                            <span>
+                                Fecha prevista
+                            </span>
+
+                            <strong>
+                                ${this.formatearFecha(
+                                    trabajo.fecha
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Tipo
+                            </span>
+
+                            <strong>
+                                ${escaparHTML(
+                                    trabajo.tipo
+                                    ||
+                                    trabajo.titulo
+                                    ||
+                                    "Trabajo"
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trabajo-resource">
+
+                        <span>
+                            👷
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                Trabajadores
+                            </small>
+
+                            <strong>
+                                ${escaparHTML(
+                                    this.obtenerNombresTrabajo(
+                                        trabajo
+                                    )
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="trabajo-resource">
+
+                        <span>
+                            🚜
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                Maquinaria
+                            </small>
+
+                            <strong>
+                                ${escaparHTML(
+                                    trabajo.maquinariaNombre
+                                    ||
+                                    "Sin maquinaria asignada"
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        trabajo.fechaInicio
+
+                            ? `
+
+                                <div class="trabajo-time-line">
+
+                                    <span>
+                                        ▶
+                                    </span>
+
+                                    <p>
+                                        Iniciada:
+                                        <strong>
+                                            ${this.formatearFechaHora(
+                                                trabajo.fechaInicio
+                                            )}
+                                        </strong>
+                                    </p>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${
+                        trabajo.fechaCompletada
+
+                            ? `
+
+                                <div class="trabajo-time-line completed">
+
+                                    <span>
+                                        ✓
+                                    </span>
+
+                                    <p>
+                                        Finalizada:
+                                        <strong>
+                                            ${this.formatearFechaHora(
+                                                trabajo.fechaCompletada
+                                            )}
+                                        </strong>
+                                    </p>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${
+                        trabajo.notas
+
+                            ? `
+
+                                <div class="trabajo-notes">
+
+                                    <span>
+                                        NOTAS
+                                    </span>
+
+                                    <p>
+                                        ${escaparHTML(
+                                            trabajo.notas
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${this.crearBotonesEstado(
+                        trabajo
+                    )}
+
                 </div>
 
+            </article>
 
-                <p class="trabajo-linea">
+        `;
 
-                    🗓️
-                    ${this.formatearFecha(
-                        trabajo.fecha
-                    )}
-
-                </p>
+    }
 
 
-                <p class="trabajo-linea">
+    // =====================================================
+    // BOTONES DE ESTADO
+    // =====================================================
 
-                    👷
-                    ${this.escapar(
-                        this.obtenerNombresTrabajo(
-                            trabajo
-                        )
-                    )}
+    crearBotonesEstado(
+        trabajo
+    ) {
 
-                </p>
+        if (
+            trabajo.estado ===
+            "Pendiente"
+        ) {
 
-
-                <p class="trabajo-linea">
-
-                    🚜
-                    ${this.escapar(
-                        trabajo.maquinariaNombre
-                        ||
-                        "Sin maquinaria asignada"
-                    )}
-
-                </p>
-
-
-                ${
-                    trabajo.fechaInicio
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                ▶️ Iniciada:
-                                ${this.formatearFechaHora(
-                                    trabajo.fechaInicio
-                                )}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    trabajo.fechaCompletada
-
-                        ? `
-
-                            <p class="trabajo-linea">
-                                ✅ Finalizada:
-                                ${this.formatearFechaHora(
-                                    trabajo.fechaCompletada
-                                )}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    trabajo.notas
-
-                        ? `
-
-                            <div class="trabajador-notas">
-
-                                <span>
-                                    Notas
-                                </span>
-
-                                <p>
-                                    ${this.escapar(
-                                        trabajo.notas
-                                    )}
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
+            return `
 
                 <div class="trabajo-state-actions">
 
-                    ${
-                        trabajo.estado ===
-                        "Pendiente"
-
-                            ? `
-
-                                <button
-                                    type="button"
-                                    class="
-                                        task-state-button
-                                        estado-trabajo
-                                    "
-                                    data-id="${idSeguro}"
-                                    data-estado="En curso"
-                                >
-                                    ▶️ Iniciar
-                                </button>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        trabajo.estado ===
-                        "En curso"
-
-                            ? `
-
-                                <button
-                                    type="button"
-                                    class="
-                                        task-state-button
-                                        estado-trabajo
-                                    "
-                                    data-id="${idSeguro}"
-                                    data-estado="Pendiente"
-                                >
-                                    ↩ Pendiente
-                                </button>
-
-
-                                <button
-                                    type="button"
-                                    class="
-                                        task-state-button
-                                        estado-trabajo
-                                    "
-                                    data-id="${idSeguro}"
-                                    data-estado="Completada"
-                                >
-                                    ✅ Completar
-                                </button>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        trabajo.estado ===
-                        "Completada"
-
-                            ? `
-
-                                <button
-                                    type="button"
-                                    class="
-                                        task-state-button
-                                        estado-trabajo
-                                    "
-                                    data-id="${idSeguro}"
-                                    data-estado="En curso"
-                                >
-                                    ↩ Reabrir
-                                </button>
-
-                            `
-
-                            : ""
-                    }
-
-
-                    ${
-                        recurrente
-
-                            ? `
-
-                                <button
-                                    type="button"
-                                    class="
-                                        secondary-button
-                                        eliminar-serie
-                                    "
-                                    data-serie="${this.escapar(
-                                        trabajo.serieRecurrenciaId
-                                    )}"
-                                >
-                                    🔁 Eliminar serie
-                                </button>
-
-                            `
-
-                            : ""
-                    }
+                    <button
+                        class="
+                            task-state-button
+                            trabajo-start
+                            estado-trabajo
+                        "
+                        data-id="${trabajo.id}"
+                        data-estado="En curso"
+                        type="button"
+                    >
+                        ▶ Iniciar tarea
+                    </button>
 
                 </div>
+
+            `;
+
+        }
+
+
+        if (
+            trabajo.estado ===
+            "En curso"
+        ) {
+
+            return `
+
+                <div class="trabajo-state-actions">
+
+                    <button
+                        class="
+                            task-state-button
+                            trabajo-secondary-state
+                            estado-trabajo
+                        "
+                        data-id="${trabajo.id}"
+                        data-estado="Pendiente"
+                        type="button"
+                    >
+                        ↩ Pendiente
+                    </button>
+
+
+                    <button
+                        class="
+                            task-state-button
+                            trabajo-complete
+                            estado-trabajo
+                        "
+                        data-id="${trabajo.id}"
+                        data-estado="Completada"
+                        type="button"
+                    >
+                        ✓ Completar
+                    </button>
+
+                </div>
+
+            `;
+
+        }
+
+
+        return `
+
+            <div class="trabajo-state-actions">
+
+                <button
+                    class="
+                        task-state-button
+                        trabajo-secondary-state
+                        estado-trabajo
+                    "
+                    data-id="${trabajo.id}"
+                    data-estado="En curso"
+                    type="button"
+                >
+                    ↩ Reabrir tarea
+                </button>
 
             </div>
 
@@ -1319,10 +1226,10 @@ export class TrabajosView {
 
 
     // =====================================================
-    // EVENTOS LISTA
+    // EVENTOS
     // =====================================================
 
-    configurarEventosLista() {
+    configurarEventos() {
 
         document
             .querySelectorAll(
@@ -1436,71 +1343,6 @@ export class TrabajosView {
 
         document
             .querySelectorAll(
-                ".eliminar-serie"
-            )
-            .forEach(
-                boton => {
-
-                    boton.addEventListener(
-                        "click",
-                        event => {
-
-                            event.preventDefault();
-
-                            event.stopPropagation();
-
-
-                            const serie =
-                                boton.dataset.serie;
-
-
-                            if (
-                                !confirm(
-                                    "¿Quieres eliminar toda la serie recurrente? Se eliminarán todas sus tareas."
-                                )
-                            ) {
-
-                                return;
-
-                            }
-
-
-                            const resultado =
-                                this.trabajoService
-                                    .eliminarSerie(
-                                        serie
-                                    );
-
-
-                            if (
-                                !resultado.ok
-                            ) {
-
-                                alert(
-                                    resultado.mensaje
-                                );
-
-                                return;
-
-                            }
-
-
-                            alert(
-                                `Serie eliminada. ${resultado.eliminadas} tareas eliminadas.`
-                            );
-
-
-                            this.mostrar();
-
-                        }
-                    );
-
-                }
-            );
-
-
-        document
-            .querySelectorAll(
                 ".estado-trabajo"
             )
             .forEach(
@@ -1543,735 +1385,6 @@ export class TrabajosView {
 
                 }
             );
-
-    }
-
-
-    // =====================================================
-    // CALENDARIO
-    // =====================================================
-
-    mostrarCalendario() {
-
-        const contenedor =
-            document.getElementById(
-                "contenidoTrabajos"
-            );
-
-
-        if (
-            !contenedor
-        ) {
-
-            return;
-
-        }
-
-
-        const trabajos =
-            this.trabajoService
-                .obtenerTodos();
-
-
-        const anio =
-            this.fechaCalendario
-                .getFullYear();
-
-
-        const mes =
-            this.fechaCalendario
-                .getMonth();
-
-
-        const primerDiaMes =
-            new Date(
-                anio,
-                mes,
-                1
-            );
-
-
-        const ultimoDiaMes =
-            new Date(
-                anio,
-                mes + 1,
-                0
-            );
-
-
-        const diasMes =
-            ultimoDiaMes
-                .getDate();
-
-
-        const desplazamiento =
-            (
-                primerDiaMes.getDay()
-                +
-                6
-            )
-            %
-            7;
-
-
-        const nombreMes =
-            this.fechaCalendario
-                .toLocaleDateString(
-                    "es-ES",
-                    {
-                        month:
-                            "long",
-
-                        year:
-                            "numeric"
-                    }
-                );
-
-
-        const cabeceraDias =
-            [
-                "Lun",
-                "Mar",
-                "Mié",
-                "Jue",
-                "Vie",
-                "Sáb",
-                "Dom"
-            ];
-
-
-        let celdas =
-            "";
-
-
-        for (
-            let i = 0;
-            i < desplazamiento;
-            i++
-        ) {
-
-            celdas += `
-
-                <div
-                    style="
-                        min-height:105px;
-                        border:1px solid #edf1ee;
-                        background:#fafcfb;
-                        border-radius:10px;
-                    "
-                ></div>
-
-            `;
-
-        }
-
-
-        for (
-            let dia = 1;
-            dia <= diasMes;
-            dia++
-        ) {
-
-            const fecha =
-                this.crearFechaISO(
-                    anio,
-                    mes,
-                    dia
-                );
-
-
-            const tareasDia =
-                trabajos
-                    .filter(
-                        trabajo =>
-                            trabajo.fecha ===
-                            fecha
-                    )
-                    .sort(
-                        (
-                            a,
-                            b
-                        ) =>
-                            this.obtenerOrdenPrioridad(
-                                a.prioridad
-                            )
-                            -
-                            this.obtenerOrdenPrioridad(
-                                b.prioridad
-                            )
-                    );
-
-
-            const esHoy =
-                fecha ===
-                this.obtenerFechaHoy();
-
-
-            celdas += `
-
-                <div
-                    class="calendario-dia"
-                    data-fecha="${fecha}"
-                    style="
-                        min-height:105px;
-                        border:${
-                            esHoy
-                                ? "2px solid #2b8767"
-                                : "1px solid #e4ebe6"
-                        };
-                        background:${
-                            esHoy
-                                ? "#f0faf5"
-                                : "#ffffff"
-                        };
-                        border-radius:10px;
-                        padding:7px;
-                        overflow:hidden;
-                    "
-                >
-
-                    <div
-                        style="
-                            display:flex;
-                            justify-content:space-between;
-                            align-items:center;
-                            margin-bottom:6px;
-                        "
-                    >
-
-                        <strong
-                            style="
-                                font-size:13px;
-                                color:${
-                                    esHoy
-                                        ? "#176044"
-                                        : "#273b33"
-                                };
-                            "
-                        >
-                            ${dia}
-                        </strong>
-
-
-                        ${
-                            esHoy
-
-                                ? `
-
-                                    <span
-                                        style="
-                                            font-size:9px;
-                                            background:#dff4e8;
-                                            color:#176044;
-                                            border-radius:999px;
-                                            padding:2px 5px;
-                                        "
-                                    >
-                                        Hoy
-                                    </span>
-
-                                `
-
-                                : ""
-                        }
-
-                    </div>
-
-
-                    <div
-                        style="
-                            display:grid;
-                            gap:4px;
-                        "
-                    >
-
-                        ${tareasDia
-                            .map(
-                                trabajo =>
-                                    this.crearEventoCalendario(
-                                        trabajo
-                                    )
-                            )
-                            .join(
-                                ""
-                            )}
-
-                    </div>
-
-                </div>
-
-            `;
-
-        }
-
-
-        contenedor.innerHTML = `
-
-            <section
-                style="
-                    background:#ffffff;
-                    border-radius:14px;
-                    padding:16px;
-                    box-shadow:0 4px 14px rgba(20,60,40,.05);
-                "
-            >
-
-                <div
-                    style="
-                        display:flex;
-                        align-items:center;
-                        justify-content:space-between;
-                        gap:10px;
-                        flex-wrap:wrap;
-                        margin-bottom:14px;
-                    "
-                >
-
-                    <div>
-
-                        <h3
-                            style="
-                                margin:0;
-                                text-transform:capitalize;
-                            "
-                        >
-                            ${this.escapar(
-                                nombreMes
-                            )}
-                        </h3>
-
-                        <p
-                            style="
-                                margin:4px 0 0;
-                                color:#78837d;
-                                font-size:13px;
-                            "
-                        >
-                            Calendario real de trabajos
-                        </p>
-
-                    </div>
-
-
-                    <div
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:6px;
-                        "
-                    >
-
-                        <button
-                            id="mesAnterior"
-                            type="button"
-                            class="secondary-button"
-                        >
-                            ←
-                        </button>
-
-
-                        <button
-                            id="irHoy"
-                            type="button"
-                            class="secondary-button"
-                        >
-                            Hoy
-                        </button>
-
-
-                        <button
-                            id="mesSiguiente"
-                            type="button"
-                            class="secondary-button"
-                        >
-                            →
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    style="
-                        overflow-x:auto;
-                        padding-bottom:4px;
-                    "
-                >
-
-                    <div
-                        style="
-                            min-width:0;
-                            display:grid;
-                            grid-template-columns:repeat(7, minmax(0, 1fr));
-                            gap:5px;
-                        "
-                    >
-
-                        ${cabeceraDias
-                            .map(
-                                dia => `
-
-                                    <div
-                                        style="
-                                            text-align:center;
-                                            font-size:11px;
-                                            font-weight:700;
-                                            color:#66756e;
-                                            padding:5px 2px;
-                                        "
-                                    >
-                                        ${dia}
-                                    </div>
-
-                                `
-                            )
-                            .join(
-                                ""
-                            )}
-
-
-                        ${celdas}
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    style="
-                        margin-top:14px;
-                        display:flex;
-                        gap:8px;
-                        flex-wrap:wrap;
-                        font-size:11px;
-                        color:#66756e;
-                    "
-                >
-
-                    <span>
-                        🟡 Pendiente
-                    </span>
-
-                    <span>
-                        🔵 En curso
-                    </span>
-
-                    <span>
-                        🟢 Completada
-                    </span>
-
-                    <span>
-                        🔁 Recurrente
-                    </span>
-
-                </div>
-
-            </section>
-
-        `;
-
-
-        document
-            .getElementById(
-                "mesAnterior"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    this.fechaCalendario =
-                        new Date(
-                            anio,
-                            mes - 1,
-                            1
-                        );
-
-
-                    this.mostrarCalendario();
-
-                }
-            );
-
-
-        document
-            .getElementById(
-                "mesSiguiente"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    this.fechaCalendario =
-                        new Date(
-                            anio,
-                            mes + 1,
-                            1
-                        );
-
-
-                    this.mostrarCalendario();
-
-                }
-            );
-
-
-        document
-            .getElementById(
-                "irHoy"
-            )
-            .addEventListener(
-                "click",
-                () => {
-
-                    const hoy =
-                        new Date();
-
-
-                    this.fechaCalendario =
-                        new Date(
-                            hoy.getFullYear(),
-                            hoy.getMonth(),
-                            1
-                        );
-
-
-                    this.mostrarCalendario();
-
-                }
-            );
-
-
-        document
-            .querySelectorAll(
-                ".evento-calendario"
-            )
-            .forEach(
-                evento => {
-
-                    evento.addEventListener(
-                        "click",
-                        e => {
-
-                            e.preventDefault();
-
-                            e.stopPropagation();
-
-
-                            this.mostrarFormulario(
-                                evento.dataset.id
-                            );
-
-                        }
-                    );
-
-                }
-            );
-
-    }
-
-
-    // =====================================================
-    // EVENTO CALENDARIO
-    // =====================================================
-
-    crearEventoCalendario(
-        trabajo
-    ) {
-
-        const estado =
-            trabajo.estado
-            ||
-            "Pendiente";
-
-
-        const estilo =
-            this.obtenerEstiloEstadoCalendario(
-                estado
-            );
-
-
-        const recurrente =
-            this.esRecurrente(
-                trabajo
-            );
-
-
-        return `
-
-            <button
-                type="button"
-                class="evento-calendario"
-                data-id="${this.escapar(
-                    trabajo.id
-                )}"
-                title="${this.escapar(
-                    trabajo.titulo
-                    ||
-                    "Trabajo"
-                )}"
-                style="
-                    width:100%;
-                    border:0;
-                    border-left:3px solid ${estilo.borde};
-                    border-radius:6px;
-                    padding:5px;
-                    background:${estilo.fondo};
-                    color:${estilo.texto};
-                    cursor:pointer;
-                    text-align:left;
-                    min-width:0;
-                    overflow:hidden;
-                "
-            >
-
-                <strong
-                    style="
-                        display:block;
-                        font-size:10px;
-                        line-height:1.2;
-                        overflow:hidden;
-                        text-overflow:ellipsis;
-                        white-space:nowrap;
-                    "
-                >
-                    ${
-                        recurrente
-                            ? "🔁 "
-                            : ""
-                    }
-
-                    ${this.escapar(
-                        trabajo.titulo
-                        ||
-                        "Trabajo"
-                    )}
-                </strong>
-
-
-                <span
-                    style="
-                        display:block;
-                        margin-top:2px;
-                        font-size:8px;
-                        opacity:.85;
-                        overflow:hidden;
-                        text-overflow:ellipsis;
-                        white-space:nowrap;
-                    "
-                >
-                    ${this.escapar(
-                        trabajo.prioridad
-                        ||
-                        "Media"
-                    )}
-                </span>
-
-            </button>
-
-        `;
-
-    }
-
-
-    // =====================================================
-    // ESTILO CALENDARIO
-    // =====================================================
-
-    obtenerEstiloEstadoCalendario(
-        estado
-    ) {
-
-        if (
-            estado ===
-            "Completada"
-        ) {
-
-            return {
-
-                fondo:
-                    "#e5f7ec",
-
-                borde:
-                    "#2f9d68",
-
-                texto:
-                    "#176044"
-
-            };
-
-        }
-
-
-        if (
-            estado ===
-            "En curso"
-        ) {
-
-            return {
-
-                fondo:
-                    "#e8f0fb",
-
-                borde:
-                    "#4c78b7",
-
-                texto:
-                    "#31598b"
-
-            };
-
-        }
-
-
-        return {
-
-            fondo:
-                "#fff4dc",
-
-            borde:
-                "#d79a18",
-
-            texto:
-                "#785400"
-
-        };
-
-    }
-
-
-    // =====================================================
-    // ORDEN PRIORIDAD
-    // =====================================================
-
-    obtenerOrdenPrioridad(
-        prioridad
-    ) {
-
-        const orden = {
-
-            Urgente:
-                0,
-
-            Alta:
-                1,
-
-            Media:
-                2,
-
-            Baja:
-                3
-
-        };
-
-
-        return (
-            orden[
-                prioridad
-            ]
-            ??
-            99
-        );
 
     }
 
@@ -2348,45 +1461,37 @@ export class TrabajosView {
             )
 
                 ? trabajo.trabajadorIds
-                    .map(
-                        item =>
-                            String(
-                                item
-                            )
-                    )
 
                 : trabajo?.trabajadorId
 
                     ? [
-                        String(
-                            trabajo.trabajadorId
-                        )
+                        trabajo.trabajadorId
                     ]
 
                     : [];
 
 
-        const recurrente =
-            this.esRecurrente(
-                trabajo
-            );
-
-
         this.mainContent.innerHTML = `
-                    <button
-                id="volverTrabajos"
-                class="back-button"
-                type="button"
-            >
-                ← Volver
-            </button>
+
+            <div class="trabajo-form-page">
+
+                <button
+                    id="volverTrabajos"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="trabajo-form-header">
 
-                <div>
+                    <span class="trabajo-form-eyebrow">
+                        🚜 TRABAJOS Y TAREAS
+                    </span>
 
-                    <h2>
+
+                    <h1>
 
                         ${
                             editando
@@ -2394,687 +1499,600 @@ export class TrabajosView {
                                 : "Nueva tarea"
                         }
 
-                    </h2>
+                    </h1>
 
 
                     <p>
 
                         ${
                             editando
-                                ? "Modifica los datos del trabajo"
-                                : "Crea un nuevo trabajo para la explotación"
+
+                                ? "Actualiza la planificación y recursos asignados."
+
+                                : "Planifica un nuevo trabajo para tu explotación."
                         }
 
                     </p>
 
-                </div>
-
-            </header>
+                </header>
 
 
-            <div class="form-panel">
+                <div class="trabajo-form-layout">
 
-
-                ${
-                    recurrente
-
-                        ? `
-
-                            <div
-                                style="
-                                    margin-bottom:18px;
-                                    padding:12px 14px;
-                                    background:#edf6f1;
-                                    color:#176044;
-                                    border-radius:10px;
-                                "
-                            >
-
-                                <strong>
-                                    🔁 Tarea recurrente
-                                </strong>
-
-                                <p
-                                    style="
-                                        margin:5px 0 0;
-                                        font-size:13px;
-                                    "
-                                >
-                                    ${this.escapar(
-                                        this.obtenerTextoRecurrencia(
-                                            trabajo
-                                        )
-                                    )}
-                                </p>
-
-                                <p
-                                    style="
-                                        margin:5px 0 0;
-                                        font-size:12px;
-                                    "
-                                >
-                                    Estás editando únicamente esta repetición.
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
-
-                <div class="form-group">
-
-                    <label>
-                        Nombre del trabajo *
-                    </label>
-
-                    <input
-                        id="tituloTrabajo"
-                        type="text"
-                        placeholder="Ej. Desbroce"
-                        value="${this.escapar(
-                            trabajo?.titulo
-                            ||
-                            ""
-                        )}"
+                    <section
+                        class="
+                            form-panel
+                            trabajo-form-panel
+                        "
                     >
 
-                </div>
+                        <div class="trabajo-form-section">
+
+                            <span>
+                                🚜
+                            </span>
 
 
-                <div class="form-group">
+                            <div>
 
-                    <label>
-                        Tipo de trabajo *
-                    </label>
-
-                    <select id="tipoTrabajo">
-
-                        ${this.crearOpcionesTipo(
-                            trabajo?.tipo
-                            ||
-                            trabajo?.titulo
-                            ||
-                            ""
-                        )}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Finca *
-                    </label>
-
-                    <select id="fincaTrabajo">
-
-                        ${fincas
-                            .map(
-                                finca => `
-
-                                    <option
-                                        value="${this.escapar(
-                                            finca.id
-                                        )}"
-
-                                        ${
-                                            this.mismoId(
-                                                trabajo?.fincaId,
-                                                finca.id
-                                            )
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${this.escapar(
-                                            finca.nombre
-                                        )}
-                                    </option>
-
-                                `
-                            )
-                            .join(
-                                ""
-                            )}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Parcela
-                    </label>
-
-                    <input
-                        id="parcelaTrabajo"
-                        type="text"
-                        placeholder="Ej. Parcela 2"
-                        value="${this.escapar(
-                            trabajo?.parcela
-                            ||
-                            ""
-                        )}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Cultivo
-                    </label>
-
-                    <input
-                        id="cultivoTrabajo"
-                        type="text"
-                        placeholder="Ej. Nectarina · Nectared 6"
-                        value="${this.escapar(
-                            trabajo?.cultivo
-                            ||
-                            ""
-                        )}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Campanya
-                    </label>
-
-                    <select
-                        id="campaniaTrabajo"
-                    ></select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Fecha prevista *
-                    </label>
-
-                    <input
-                        id="fechaTrabajo"
-                        type="date"
-                        value="${
-                            trabajo?.fecha
-                            ||
-                            this.obtenerFechaHoy()
-                        }"
-                    >
-
-                </div>
-
-
-                ${
-                    !editando
-
-                        ? `
-
-                            <div
-                                style="
-                                    margin:18px 0;
-                                    padding:14px;
-                                    background:#f7faf8;
-                                    border:1px solid #dfe7e1;
-                                    border-radius:12px;
-                                "
-                            >
-
-                                <h3
-                                    style="
-                                        margin:0 0 12px;
-                                        font-size:15px;
-                                    "
-                                >
-                                    🔁 Tarea recurrente
+                                <h3>
+                                    Información de la tarea
                                 </h3>
 
-
-                                <div class="form-group">
-
-                                    <label>
-                                        Repetición
-                                    </label>
-
-                                    <select id="recurrenciaTipo">
-
-                                        <option value="Ninguna">
-                                            No repetir
-                                        </option>
-
-                                        <option value="Diaria">
-                                            Cada día
-                                        </option>
-
-                                        <option value="Semanal">
-                                            Cada semana
-                                        </option>
-
-                                        <option value="Quincenal">
-                                            Cada 2 semanas
-                                        </option>
-
-                                        <option value="Mensual">
-                                            Cada mes
-                                        </option>
-
-                                    </select>
-
-                                </div>
-
-
-                                <div
-                                    id="opcionesRecurrencia"
-                                    style="
-                                        display:none;
-                                        margin-top:12px;
-                                    "
-                                >
-
-                                    <div class="form-group">
-
-                                        <label>
-                                            Finalizar
-                                        </label>
-
-                                        <select id="recurrenciaFinTipo">
-
-                                            <option value="repeticiones">
-                                                Después de un número de repeticiones
-                                            </option>
-
-                                            <option value="fecha">
-                                                En una fecha concreta
-                                            </option>
-
-                                        </select>
-
-                                    </div>
-
-
-                                    <div
-                                        id="bloqueRepeticiones"
-                                        class="form-group"
-                                    >
-
-                                        <label>
-                                            Número total de repeticiones
-                                        </label>
-
-                                        <input
-                                            id="recurrenciaRepeticiones"
-                                            type="number"
-                                            min="2"
-                                            max="365"
-                                            value="4"
-                                        >
-
-                                        <small
-                                            style="
-                                                display:block;
-                                                margin-top:5px;
-                                                color:#78837d;
-                                            "
-                                        >
-                                            Incluye la primera tarea.
-                                        </small>
-
-                                    </div>
-
-
-                                    <div
-                                        id="bloqueFechaFin"
-                                        class="form-group"
-                                        style="
-                                            display:none;
-                                        "
-                                    >
-
-                                        <label>
-                                            Repetir hasta
-                                        </label>
-
-                                        <input
-                                            id="recurrenciaFechaFin"
-                                            type="date"
-                                        >
-
-                                    </div>
-
-                                </div>
+                                <p>
+                                    Define qué hay que hacer,
+                                    dónde y quién lo realizará.
+                                </p>
 
                             </div>
 
-                        `
-
-                        : ""
-                }
+                        </div>
 
 
-                <div class="form-group">
+                        <div class="trabajo-form-grid">
 
-                    <label>
-                        Prioridad
-                    </label>
+                            <div class="form-group trabajo-form-wide">
 
-                    <select id="prioridadTrabajo">
-
-                        ${[
-                            "Baja",
-                            "Media",
-                            "Alta",
-                            "Urgente"
-                        ]
-                            .map(
-                                prioridad => `
-
-                                    <option
-                                        value="${prioridad}"
-
-                                        ${
-                                            (
-                                                trabajo?.prioridad
-                                                ||
-                                                "Media"
-                                            )
-                                            ===
-                                            prioridad
-
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${prioridad}
-                                    </option>
-
-                                `
-                            )
-                            .join(
-                                ""
-                            )}
-
-                    </select>
-
-                </div>
+                                <label>
+                                    Nombre del trabajo *
+                                </label>
 
 
-                <div class="form-group">
-
-                    <label>
-                        Estado
-                    </label>
-
-                    <select id="estadoTrabajo">
-
-                        ${[
-                            "Pendiente",
-                            "En curso",
-                            "Completada"
-                        ]
-                            .map(
-                                estado => `
-
-                                    <option
-                                        value="${estado}"
-
-                                        ${
-                                            (
-                                                trabajo?.estado
-                                                ||
-                                                "Pendiente"
-                                            )
-                                            ===
-                                            estado
-
-                                                ? "selected"
-                                                : ""
-                                        }
-                                    >
-                                        ${estado}
-                                    </option>
-
-                                `
-                            )
-                            .join(
-                                ""
-                            )}
-
-                    </select>
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Trabajadores asignados
-                    </label>
-
-
-                    ${
-                        trabajadores.length ===
-                        0
-
-                            ? `
-
-                                <p
-                                    style="
-                                        color:#78837d;
-                                        margin:8px 0;
-                                    "
-                                >
-                                    No hay trabajadores creados.
-                                </p>
-
-                            `
-
-                            : `
-
-                                <div
-                                    style="
-                                        display:grid;
-                                        gap:10px;
-                                        margin-top:10px;
-                                    "
+                                <input
+                                    id="tituloTrabajo"
+                                    type="text"
+                                    placeholder="Ej. Desbroce"
+                                    value="${escaparHTML(
+                                        trabajo?.titulo
+                                        ||
+                                        ""
+                                    )}"
                                 >
 
-                                    ${trabajadores
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Tipo de trabajo *
+                                </label>
+
+
+                                <select
+                                    id="tipoTrabajo"
+                                >
+
+                                    ${this.crearOpcionesTipo(
+                                        trabajo?.tipo
+                                        ||
+                                        trabajo?.titulo
+                                        ||
+                                        ""
+                                    )}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Fecha prevista *
+                                </label>
+
+
+                                <input
+                                    id="fechaTrabajo"
+                                    type="date"
+                                    value="${
+                                        trabajo?.fecha
+                                        ||
+                                        this.obtenerFechaHoy()
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Finca *
+                                </label>
+
+
+                                <select
+                                    id="fincaTrabajo"
+                                >
+
+                                    ${fincas
                                         .map(
-                                            trabajador => `
+                                            finca => `
 
-                                                <label
-                                                    style="
-                                                        display:flex;
-                                                        align-items:center;
-                                                        gap:10px;
-                                                        padding:10px 12px;
-                                                        border:1px solid #dfe7e1;
-                                                        border-radius:10px;
-                                                        cursor:pointer;
-                                                    "
+                                                <option
+                                                    value="${finca.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            trabajo?.fincaId,
+                                                            finca.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
                                                 >
-
-                                                    <input
-                                                        type="checkbox"
-                                                        class="trabajador-tarea-checkbox"
-                                                        value="${this.escapar(
-                                                            trabajador.id
-                                                        )}"
-
-                                                        ${
-                                                            trabajadorIdsActuales
-                                                                .includes(
-                                                                    String(
-                                                                        trabajador.id
-                                                                    )
-                                                                )
-
-                                                                    ? "checked"
-                                                                    : ""
-                                                        }
-                                                    >
-
-
-                                                    <span>
-
-                                                        <strong>
-                                                            ${this.escapar(
-                                                                this.obtenerNombreTrabajador(
-                                                                    trabajador
-                                                                )
-                                                            )}
-                                                        </strong>
-
-
-                                                        ${
-                                                            trabajador.puesto
-
-                                                                ? `
-
-                                                                    <small
-                                                                        style="
-                                                                            display:block;
-                                                                            color:#78837d;
-                                                                            margin-top:2px;
-                                                                        "
-                                                                    >
-                                                                        ${this.escapar(
-                                                                            trabajador.puesto
-                                                                        )}
-                                                                    </small>
-
-                                                                `
-
-                                                                : ""
-                                                        }
-
-                                                    </span>
-
-                                                </label>
+                                                    ${escaparHTML(
+                                                        finca.nombre
+                                                    )}
+                                                </option>
 
                                             `
                                         )
-                                        .join(
-                                            ""
-                                        )}
+                                        .join("")}
 
-                                </div>
+                                </select>
 
-                            `
-                    }
-
-                </div>
+                            </div>
 
 
-                <div class="form-group">
+                            <div class="form-group">
 
-                    <label>
-                        Maquinaria
-                    </label>
-
-                    <select id="maquinariaTrabajo">
-
-                        <option value="">
-                            Sin maquinaria asignada
-                        </option>
+                                <label>
+                                    Campaña
+                                </label>
 
 
-                        ${maquinaria
-                            .map(
-                                maquina => `
+                                <select
+                                    id="campaniaTrabajo"
+                                ></select>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Parcela
+                                </label>
+
+
+                                <input
+                                    id="parcelaTrabajo"
+                                    type="text"
+                                    placeholder="Ej. Parcela Norte"
+                                    value="${escaparHTML(
+                                        trabajo?.parcela
+                                        ||
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Cultivo
+                                </label>
+
+
+                                <input
+                                    id="cultivoTrabajo"
+                                    type="text"
+                                    placeholder="Ej. Nectarina · Nectared 6"
+                                    value="${escaparHTML(
+                                        trabajo?.cultivo
+                                        ||
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label>
+                                    Prioridad
+                                </label>
+
+
+                                <select
+                                    id="prioridadTrabajo"
+                                >
 
                                     <option
-                                        value="${this.escapar(
-                                            maquina.id
-                                        )}"
-
+                                        value="Baja"
                                         ${
-                                            this.mismoId(
-                                                trabajo?.maquinariaId,
-                                                maquina.id
-                                            )
+                                            trabajo?.prioridad ===
+                                            "Baja"
 
                                                 ? "selected"
+
                                                 : ""
                                         }
                                     >
-
-                                        ${this.escapar(
-                                            this.obtenerNombreMaquinaria(
-                                                maquina
-                                            )
-                                        )}
-
+                                        Baja
                                     </option>
 
-                                `
-                            )
-                            .join(
-                                ""
-                            )}
 
-                    </select>
+                                    <option
+                                        value="Media"
+                                        ${
+                                            !trabajo
+                                            ||
+                                            trabajo.prioridad ===
+                                            "Media"
 
-                </div>
+                                                ? "selected"
 
-
-                <div class="form-group">
-
-                    <label>
-                        Notas
-                    </label>
-
-                    <textarea
-                        id="notasTrabajo"
-                        rows="5"
-                        placeholder="Observaciones..."
-                    >${this.escapar(
-                        trabajo?.notas
-                        ||
-                        ""
-                    )}</textarea>
-
-                </div>
+                                                : ""
+                                        }
+                                    >
+                                        Media
+                                    </option>
 
 
-                <div class="form-actions">
+                                    <option
+                                        value="Alta"
+                                        ${
+                                            trabajo?.prioridad ===
+                                            "Alta"
 
-                    <button
-                        id="cancelarTrabajo"
-                        type="button"
-                        class="secondary-button"
-                    >
-                        Cancelar
-                    </button>
+                                                ? "selected"
+
+                                                : ""
+                                        }
+                                    >
+                                        Alta
+                                    </option>
+
+                                </select>
+
+                            </div>
 
 
-                    <button
-                        id="guardarTrabajo"
-                        type="button"
-                        class="primary-button"
-                    >
+                            <div class="form-group">
 
-                        ${
-                            editando
-                                ? "Guardar cambios"
-                                : "Crear tarea"
-                        }
+                                <label>
+                                    Estado
+                                </label>
 
-                    </button>
+
+                                <select
+                                    id="estadoTrabajo"
+                                >
+
+                                    <option
+                                        value="Pendiente"
+                                        ${
+                                            !trabajo
+                                            ||
+                                            trabajo.estado ===
+                                            "Pendiente"
+
+                                                ? "selected"
+
+                                                : ""
+                                        }
+                                    >
+                                        Pendiente
+                                    </option>
+
+
+                                    <option
+                                        value="En curso"
+                                        ${
+                                            trabajo?.estado ===
+                                            "En curso"
+
+                                                ? "selected"
+
+                                                : ""
+                                        }
+                                    >
+                                        En curso
+                                    </option>
+
+
+                                    <option
+                                        value="Completada"
+                                        ${
+                                            trabajo?.estado ===
+                                            "Completada"
+
+                                                ? "selected"
+
+                                                : ""
+                                        }
+                                    >
+                                        Completada
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group trabajo-form-wide">
+
+                                <label>
+                                    Trabajadores asignados
+                                </label>
+
+
+                                <div class="trabajo-workers">
+
+                                    ${
+                                        trabajadores.length
+
+                                            ? trabajadores
+                                                .map(
+                                                    trabajador => {
+
+                                                        const seleccionado =
+                                                            trabajadorIdsActuales
+                                                                .some(
+                                                                    id =>
+                                                                        mismoId(
+                                                                            id,
+                                                                            trabajador.id
+                                                                        )
+                                                                );
+
+
+                                                        return `
+
+                                                            <label class="trabajo-worker">
+
+                                                                <input
+                                                                    type="checkbox"
+                                                                    class="trabajador-tarea-checkbox"
+                                                                    value="${trabajador.id}"
+
+                                                                    ${
+                                                                        seleccionado
+                                                                            ? "checked"
+                                                                            : ""
+                                                                    }
+                                                                >
+
+
+                                                                <span class="trabajo-worker-avatar">
+
+                                                                    ${this.obtenerIniciales(
+                                                                        trabajador
+                                                                    )}
+
+                                                                </span>
+
+
+                                                                <span>
+
+                                                                    <strong>
+                                                                        ${escaparHTML(
+                                                                            this.obtenerNombreTrabajador(
+                                                                                trabajador
+                                                                            )
+                                                                        )}
+                                                                    </strong>
+
+
+                                                                    ${
+                                                                        trabajador.puesto
+
+                                                                            ? `
+
+                                                                                <small>
+                                                                                    ${escaparHTML(
+                                                                                        trabajador.puesto
+                                                                                    )}
+                                                                                </small>
+
+                                                                            `
+
+                                                                            : ""
+                                                                    }
+
+                                                                </span>
+
+                                                            </label>
+
+                                                        `;
+
+                                                    }
+                                                )
+                                                .join("")
+
+                                            : `
+
+                                                <p class="trabajo-no-workers">
+                                                    No hay trabajadores creados.
+                                                </p>
+
+                                            `
+                                    }
+
+                                </div>
+
+                            </div>
+
+
+                            <div class="form-group trabajo-form-wide">
+
+                                <label>
+                                    Maquinaria
+                                </label>
+
+
+                                <select
+                                    id="maquinariaTrabajo"
+                                >
+
+                                    <option value="">
+                                        Sin maquinaria asignada
+                                    </option>
+
+
+                                    ${maquinaria
+                                        .map(
+                                            maquina => `
+
+                                                <option
+                                                    value="${maquina.id}"
+
+                                                    ${
+                                                        mismoId(
+                                                            trabajo?.maquinariaId,
+                                                            maquina.id
+                                                        )
+
+                                                            ? "selected"
+
+                                                            : ""
+                                                    }
+                                                >
+
+                                                    ${escaparHTML(
+                                                        this.obtenerNombreMaquinaria(
+                                                            maquina
+                                                        )
+                                                    )}
+
+                                                </option>
+
+                                            `
+                                        )
+                                        .join("")}
+
+                                </select>
+
+                            </div>
+
+
+                            <div class="form-group trabajo-form-wide">
+
+                                <label>
+                                    Notas
+                                </label>
+
+
+                                <textarea
+                                    id="notasTrabajo"
+                                    rows="5"
+                                    placeholder="Observaciones..."
+                                >${escaparHTML(
+                                    trabajo?.notas
+                                    ||
+                                    ""
+                                )}</textarea>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarTrabajo"
+                                type="button"
+                                class="secondary-button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarTrabajo"
+                                type="button"
+                                class="primary-button"
+                            >
+
+                                ${
+                                    editando
+                                        ? "Guardar cambios"
+                                        : "Crear tarea"
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <aside class="trabajo-form-aside">
+
+                        <div class="trabajo-form-photo">
+
+                            <div>
+
+                                <span>
+                                    TRABAJO DE CAMPO
+                                </span>
+
+
+                                <strong>
+                                    Cada jornada,
+                                    mejor organizada.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="trabajo-form-tip">
+
+                            <span>
+                                👷
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Equipo y recursos
+                                </strong>
+
+
+                                <p>
+                                    Asigna trabajadores y maquinaria
+                                    para que cada tarea tenga claros
+                                    sus responsables.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
@@ -3084,30 +2102,32 @@ export class TrabajosView {
 
 
         const fincaSelect =
-            document.getElementById(
-                "fincaTrabajo"
-            );
+            document
+                .getElementById(
+                    "fincaTrabajo"
+                );
 
 
         const campaniaSelect =
-            document.getElementById(
-                "campaniaTrabajo"
-            );
+            document
+                .getElementById(
+                    "campaniaTrabajo"
+                );
 
 
-        const cargarCampanyas =
+        const cargarCampanias =
             () => {
 
                 const fincaId =
                     fincaSelect.value;
 
 
-                const campanyas =
+                const campanias =
                     this.campaniaService
                         .obtenerTodas()
                         .filter(
                             campania =>
-                                this.mismoId(
+                                mismoId(
                                     campania.fincaId,
                                     fincaId
                                 )
@@ -3117,107 +2137,59 @@ export class TrabajosView {
                 campaniaSelect.innerHTML = `
 
                     <option value="">
-                        Sin campanya
+                        Sin campaña asignada
                     </option>
 
-
-                    ${campanyas
+                    ${campanias
                         .map(
                             campania => `
 
                                 <option
-                                    value="${this.escapar(
-                                        campania.id
-                                    )}"
+                                    value="${campania.id}"
+
+                                    ${
+                                        mismoId(
+                                            trabajo?.campaniaId,
+                                            campania.id
+                                        )
+
+                                            ? "selected"
+
+                                            : ""
+                                    }
                                 >
-                                    ${this.escapar(
+                                    ${escaparHTML(
                                         campania.nombre
-                                    )}
-                                    ·
-                                    ${this.escapar(
-                                        campania.estado
                                     )}
                                 </option>
 
                             `
                         )
-                        .join(
-                            ""
-                        )}
+                        .join("")}
 
                 `;
-
-
-                if (
-                    trabajo?.campaniaId
-                    &&
-                    campanyas.some(
-                        campania =>
-                            this.mismoId(
-                                campania.id,
-                                trabajo.campaniaId
-                            )
-                    )
-                ) {
-
-                    campaniaSelect.value =
-                        String(
-                            trabajo.campaniaId
-                        );
-
-
-                    return;
-
-                }
-
-
-                if (
-                    !editando
-                    &&
-                    campanyas.length ===
-                    1
-                ) {
-
-                    campaniaSelect.value =
-                        String(
-                            campanyas[0].id
-                        );
-
-                }
 
             };
 
 
+        cargarCampanias();
+
+
         fincaSelect
-            .addEventListener(
+            ?.addEventListener(
                 "change",
-                cargarCampanyas
+                cargarCampanias
             );
-
-
-        cargarCampanyas();
-
-
-        if (
-            !editando
-        ) {
-
-            this.configurarRecurrenciaFormulario();
-
-        }
 
 
         document
             .getElementById(
                 "volverTrabajos"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrar();
-
-                }
+                () =>
+                    this.mostrar()
             );
 
 
@@ -3225,13 +2197,10 @@ export class TrabajosView {
             .getElementById(
                 "cancelarTrabajo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrar();
-
-                }
+                () =>
+                    this.mostrar()
             );
 
 
@@ -3239,259 +2208,60 @@ export class TrabajosView {
             .getElementById(
                 "guardarTrabajo"
             )
-            .addEventListener(
+            ?.addEventListener(
                 "click",
-                () => {
-
-                    this.guardarFormulario(
-                        id,
-                        editando
-                    );
-
-                }
+                () =>
+                    this.guardarTrabajo(
+                        trabajo,
+                        id
+                    )
             );
 
     }
 
 
     // =====================================================
-    // CONFIGURAR RECURRENCIA
+    // GUARDAR
     // =====================================================
 
-    configurarRecurrenciaFormulario() {
-
-        const tipo =
-            document.getElementById(
-                "recurrenciaTipo"
-            );
-
-
-        const opciones =
-            document.getElementById(
-                "opcionesRecurrencia"
-            );
-
-
-        const finTipo =
-            document.getElementById(
-                "recurrenciaFinTipo"
-            );
-
-
-        const bloqueRepeticiones =
-            document.getElementById(
-                "bloqueRepeticiones"
-            );
-
-
-        const bloqueFechaFin =
-            document.getElementById(
-                "bloqueFechaFin"
-            );
-
-
-        const fechaTrabajo =
-            document.getElementById(
-                "fechaTrabajo"
-            );
-
-
-        const fechaFin =
-            document.getElementById(
-                "recurrenciaFechaFin"
-            );
-
-
-        const actualizarTipo =
-            () => {
-
-                const activa =
-                    tipo.value !==
-                    "Ninguna";
-
-
-                opciones.style.display =
-                    activa
-                        ? "block"
-                        : "none";
-
-            };
-
-
-        const actualizarFin =
-            () => {
-
-                const porFecha =
-                    finTipo.value ===
-                    "fecha";
-
-
-                bloqueRepeticiones.style.display =
-                    porFecha
-                        ? "none"
-                        : "block";
-
-
-                bloqueFechaFin.style.display =
-                    porFecha
-                        ? "block"
-                        : "none";
-
-            };
-
-
-        const actualizarFechaMinima =
-            () => {
-
-                if (
-                    fechaTrabajo.value
-                ) {
-
-                    fechaFin.min =
-                        fechaTrabajo.value;
-
-
-                    if (
-                        fechaFin.value
-                        &&
-                        fechaFin.value <=
-                        fechaTrabajo.value
-                    ) {
-
-                        fechaFin.value =
-                            "";
-
-                    }
-
-                }
-
-            };
-
-
-        tipo.addEventListener(
-            "change",
-            actualizarTipo
-        );
-
-
-        finTipo.addEventListener(
-            "change",
-            actualizarFin
-        );
-
-
-        fechaTrabajo.addEventListener(
-            "change",
-            actualizarFechaMinima
-        );
-
-
-        actualizarTipo();
-
-        actualizarFin();
-
-        actualizarFechaMinima();
-
-    }
-
-
-    // =====================================================
-    // GUARDAR FORMULARIO
-    // =====================================================
-        guardarFormulario(
-        id,
-        editando
+    guardarTrabajo(
+        trabajo,
+        id
     ) {
 
-        const titulo =
-            document
-                .getElementById(
-                    "tituloTrabajo"
-                )
-                .value
-                .trim();
-
-
-        const tipo =
-            document
-                .getElementById(
-                    "tipoTrabajo"
-                )
-                .value;
-
-
-        const fincaId =
-            document
-                .getElementById(
-                    "fincaTrabajo"
-                )
-                .value;
-
-
-        const parcela =
-            document
-                .getElementById(
-                    "parcelaTrabajo"
-                )
-                .value
-                .trim();
-
-
-        const cultivo =
-            document
-                .getElementById(
-                    "cultivoTrabajo"
-                )
-                .value
-                .trim();
-
-
-        const campaniaId =
-            document
-                .getElementById(
-                    "campaniaTrabajo"
-                )
-                .value
-            ||
-            null;
-
-
-        const fecha =
-            document
-                .getElementById(
-                    "fechaTrabajo"
-                )
-                .value;
-
-
-        const prioridad =
-            document
-                .getElementById(
-                    "prioridadTrabajo"
-                )
-                .value;
-
-
-        const estado =
-            document
-                .getElementById(
-                    "estadoTrabajo"
-                )
-                .value;
-
-
         const trabajadorIds =
-            Array
-                .from(
-                    document
-                        .querySelectorAll(
-                            ".trabajador-tarea-checkbox:checked"
-                        )
-                )
+            [
+                ...document
+                    .querySelectorAll(
+                        ".trabajador-tarea-checkbox:checked"
+                    )
+            ]
                 .map(
                     checkbox =>
                         checkbox.value
                 );
+
+
+        const trabajadorNombres =
+            trabajadorIds
+                .map(
+                    trabajadorId => {
+
+                        const trabajador =
+                            this.obtenerTrabajadorPorId(
+                                trabajadorId
+                            );
+
+
+                        return (
+                            this.obtenerNombreTrabajador(
+                                trabajador
+                            )
+                        );
+
+                    }
+                )
+                .filter(Boolean);
 
 
         const maquinariaId =
@@ -3499,442 +2269,135 @@ export class TrabajosView {
                 .getElementById(
                     "maquinariaTrabajo"
                 )
-                .value
-            ||
-            null;
-
-
-        const notas =
-            document
-                .getElementById(
-                    "notasTrabajo"
-                )
-                .value
-                .trim();
-
-
-        if (
-            !titulo
-        ) {
-
-            alert(
-                "Indica el nombre del trabajo."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            !tipo
-        ) {
-
-            alert(
-                "Selecciona el tipo de trabajo."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            !fincaId
-        ) {
-
-            alert(
-                "Selecciona una finca."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            !fecha
-        ) {
-
-            alert(
-                "Selecciona una fecha."
-            );
-
-            return;
-
-        }
-
-
-        const finca =
-            this.fincaService
-                .obtenerPorId(
-                    fincaId
-                );
-
-
-        if (
-            !finca
-        ) {
-
-            alert(
-                "La finca seleccionada no existe."
-            );
-
-            return;
-
-        }
-
-
-        const campania =
-            campaniaId
-
-                ? this.campaniaService
-                    .obtenerPorId(
-                        campaniaId
-                    )
-
-                : null;
-
-
-        const trabajadores =
-            trabajadorIds
-                .map(
-                    trabajadorId =>
-                        this.obtenerTrabajadorPorId(
-                            trabajadorId
-                        )
-                )
-                .filter(
-                    Boolean
-                );
-
-
-        const trabajadorNombres =
-            trabajadores
-                .map(
-                    trabajador =>
-                        this.obtenerNombreTrabajador(
-                            trabajador
-                        )
-                );
+                .value;
 
 
         const maquina =
-            maquinariaId
-
-                ? this.obtenerMaquinariaPorId(
-                    maquinariaId
-                )
-
-                : null;
+            this.obtenerMaquinariaPorId(
+                maquinariaId
+            );
 
 
         const datos = {
 
             titulo:
-                titulo,
+                document
+                    .getElementById(
+                        "tituloTrabajo"
+                    )
+                    .value,
 
             tipo:
-                tipo,
+                document
+                    .getElementById(
+                        "tipoTrabajo"
+                    )
+                    .value,
 
             fincaId:
-                fincaId,
-
-            fincaNombre:
-                finca.nombre,
+                document
+                    .getElementById(
+                        "fincaTrabajo"
+                    )
+                    .value,
 
             parcela:
-                parcela,
+                document
+                    .getElementById(
+                        "parcelaTrabajo"
+                    )
+                    .value,
 
             cultivo:
-                cultivo,
+                document
+                    .getElementById(
+                        "cultivoTrabajo"
+                    )
+                    .value,
 
             campaniaId:
-                campaniaId,
-
-            campaniaNombre:
-                campania?.nombre
-                ||
-                "",
-
-            fecha:
-                fecha,
-
-            prioridad:
-                prioridad,
-
-            estado:
-                estado,
-
-            trabajadorIds:
-                trabajadorIds,
-
-            trabajadorNombres:
-                trabajadorNombres,
-
-            trabajadorId:
-                trabajadorIds[0]
+                document
+                    .getElementById(
+                        "campaniaTrabajo"
+                    )
+                    .value
                 ||
                 null,
 
-            trabajadorNombre:
-                trabajadorNombres[0]
-                ||
-                "",
+            fecha:
+                document
+                    .getElementById(
+                        "fechaTrabajo"
+                    )
+                    .value,
+
+            prioridad:
+                document
+                    .getElementById(
+                        "prioridadTrabajo"
+                    )
+                    .value,
+
+            estado:
+                document
+                    .getElementById(
+                        "estadoTrabajo"
+                    )
+                    .value,
+
+            trabajadorIds,
+
+            trabajadorNombres,
 
             maquinariaId:
-                maquinariaId,
+                maquinariaId
+                ||
+                null,
 
             maquinariaNombre:
-                maquina
-
-                    ? this.obtenerNombreMaquinaria(
-                        maquina
-                    )
-
-                    : "",
+                this.obtenerNombreMaquinaria(
+                    maquina
+                ),
 
             notas:
-                notas
+                document
+                    .getElementById(
+                        "notasTrabajo"
+                    )
+                    .value
 
         };
 
 
-        if (
-            editando
-        ) {
+        const resultado =
+            trabajo
 
-            const resultado =
-                this.trabajoService
+                ? this.trabajoService
                     .editar(
                         id,
                         datos
-                    );
+                    )
 
-
-            if (
-                !resultado.ok
-            ) {
-
-                alert(
-                    resultado.mensaje
-                );
-
-                return;
-
-            }
-
-
-            this.mostrar();
-
-            return;
-
-        }
-
-
-        const recurrenciaTipo =
-            document
-                .getElementById(
-                    "recurrenciaTipo"
-                )
-                ?.value
-            ||
-            "Ninguna";
-
-
-        if (
-            recurrenciaTipo ===
-            "Ninguna"
-        ) {
-
-            const resultado =
-                this.trabajoService
+                : this.trabajoService
                     .crear(
                         datos
                     );
 
 
-            if (
-                !resultado.ok
-            ) {
-
-                alert(
-                    resultado.mensaje
-                );
-
-                return;
-
-            }
-
-
-            this.mostrar();
-
-            return;
-
-        }
-
-
-        const finTipo =
-            document
-                .getElementById(
-                    "recurrenciaFinTipo"
-                )
-                .value;
-
-
-        const repeticiones =
-            Number(
-                document
-                    .getElementById(
-                        "recurrenciaRepeticiones"
-                    )
-                    .value
-            );
-
-
-        const fechaFin =
-            document
-                .getElementById(
-                    "recurrenciaFechaFin"
-                )
-                .value;
-
-
-        const configuracionRecurrencia = {
-
-            tipo:
-                recurrenciaTipo,
-
-            finTipo:
-                finTipo,
-
-            repeticiones:
-                repeticiones,
-
-            fechaFin:
-                fechaFin
-
-        };
-
-
-        const validacion =
-            this.validarRecurrencia(
-                fecha,
-                configuracionRecurrencia
-            );
-
-
         if (
-            !validacion.ok
+            resultado
+            &&
+            resultado.ok ===
+            false
         ) {
 
             alert(
-                validacion.mensaje
+                resultado.mensaje
             );
 
             return;
 
         }
-
-
-        const fechas =
-            this.generarFechasRecurrencia(
-                fecha,
-                configuracionRecurrencia
-            );
-
-
-        if (
-            fechas.length ===
-            0
-        ) {
-
-            alert(
-                "No se han podido generar las fechas de la recurrencia."
-            );
-
-            return;
-
-        }
-
-
-        if (
-            typeof this.trabajoService
-                .crearSerieRecurrente ===
-                "function"
-        ) {
-
-            const resultado =
-                this.trabajoService
-                    .crearSerieRecurrente(
-                        datos,
-                        {
-                            tipo:
-                                recurrenciaTipo,
-
-                            fechas:
-                                fechas
-                        }
-                    );
-
-
-            if (
-                !resultado.ok
-            ) {
-
-                alert(
-                    resultado.mensaje
-                );
-
-                return;
-
-            }
-
-
-            this.mostrar();
-
-            return;
-
-        }
-
-
-        fechas.forEach(
-            (
-                fechaRepeticion,
-                indice
-            ) => {
-
-                this.trabajoService
-                    .crear(
-                        {
-                            ...datos,
-
-                            fecha:
-                                fechaRepeticion,
-
-                            serieRecurrenciaId:
-                                `${Date.now()}-${Math.random()}`,
-
-                            recurrencia: {
-
-                                activa:
-                                    true,
-
-                                tipo:
-                                    recurrenciaTipo,
-
-                                indice:
-                                    indice + 1,
-
-                                total:
-                                    fechas.length
-
-                            }
-                        }
-                    );
-
-            }
-        );
 
 
         this.mostrar();
@@ -3943,401 +2406,11 @@ export class TrabajosView {
 
 
     // =====================================================
-    // VALIDAR RECURRENCIA
-    // =====================================================
-
-    validarRecurrencia(
-        fechaInicio,
-        configuracion
-    ) {
-
-        if (
-            !fechaInicio
-        ) {
-
-            return {
-
-                ok:
-                    false,
-
-                mensaje:
-                    "Indica una fecha de inicio."
-
-            };
-
-        }
-
-
-        if (
-            configuracion.finTipo ===
-            "repeticiones"
-        ) {
-
-            if (
-                !Number.isFinite(
-                    configuracion.repeticiones
-                )
-                ||
-                configuracion.repeticiones <
-                2
-                ||
-                configuracion.repeticiones >
-                365
-            ) {
-
-                return {
-
-                    ok:
-                        false,
-
-                    mensaje:
-                        "El número de repeticiones debe estar entre 2 y 365."
-
-                };
-
-            }
-
-
-            return {
-
-                ok:
-                    true
-
-            };
-
-        }
-
-
-        if (
-            configuracion.finTipo ===
-            "fecha"
-        ) {
-
-            if (
-                !configuracion.fechaFin
-            ) {
-
-                return {
-
-                    ok:
-                        false,
-
-                    mensaje:
-                        "Indica la fecha final de la recurrencia."
-
-                };
-
-            }
-
-
-            if (
-                configuracion.fechaFin <=
-                fechaInicio
-            ) {
-
-                return {
-
-                    ok:
-                        false,
-
-                    mensaje:
-                        "La fecha final debe ser posterior a la fecha de inicio."
-
-                };
-
-            }
-
-
-            return {
-
-                ok:
-                    true
-
-            };
-
-        }
-
-
-        return {
-
-            ok:
-                false,
-
-            mensaje:
-                "La configuración de recurrencia no es válida."
-
-        };
-
-    }
-
-
-    // =====================================================
-    // GENERAR FECHAS DE RECURRENCIA
-    // =====================================================
-
-    generarFechasRecurrencia(
-        fechaInicio,
-        configuracion
-    ) {
-
-        const fechaBase =
-            this.parsearFechaISO(
-                fechaInicio
-            );
-
-
-        if (
-            !fechaBase
-        ) {
-
-            return [];
-
-        }
-
-
-        const fechas =
-            [];
-
-
-        if (
-            configuracion.finTipo ===
-            "repeticiones"
-        ) {
-
-            for (
-                let indice = 0;
-                indice < configuracion.repeticiones;
-                indice++
-            ) {
-
-                const fecha =
-                    this.sumarRecurrencia(
-                        fechaBase,
-                        configuracion.tipo,
-                        indice
-                    );
-
-
-                fechas.push(
-                    this.formatearFechaISO(
-                        fecha
-                    )
-                );
-
-            }
-
-
-            return fechas;
-
-        }
-
-
-        if (
-            configuracion.finTipo ===
-            "fecha"
-        ) {
-
-            const fechaLimite =
-                this.parsearFechaISO(
-                    configuracion.fechaFin
-                );
-
-
-            if (
-                !fechaLimite
-            ) {
-
-                return [];
-
-            }
-
-
-            let indice =
-                0;
-
-
-            while (
-                indice <
-                3650
-            ) {
-
-                const fecha =
-                    this.sumarRecurrencia(
-                        fechaBase,
-                        configuracion.tipo,
-                        indice
-                    );
-
-
-                if (
-                    fecha >
-                    fechaLimite
-                ) {
-
-                    break;
-
-                }
-
-
-                fechas.push(
-                    this.formatearFechaISO(
-                        fecha
-                    )
-                );
-
-
-                indice++;
-
-            }
-
-        }
-
-
-        return fechas;
-
-    }
-
-
-    // =====================================================
-    // SUMAR RECURRENCIA
-    // =====================================================
-
-    sumarRecurrencia(
-        fechaBase,
-        tipo,
-        indice
-    ) {
-
-        const fecha =
-            new Date(
-                fechaBase.getFullYear(),
-                fechaBase.getMonth(),
-                fechaBase.getDate()
-            );
-
-
-        if (
-            indice ===
-            0
-        ) {
-
-            return fecha;
-
-        }
-
-
-        if (
-            tipo ===
-            "Diaria"
-        ) {
-
-            fecha.setDate(
-                fecha.getDate()
-                +
-                indice
-            );
-
-
-            return fecha;
-
-        }
-
-
-        if (
-            tipo ===
-            "Semanal"
-        ) {
-
-            fecha.setDate(
-                fecha.getDate()
-                +
-                (
-                    indice
-                    *
-                    7
-                )
-            );
-
-
-            return fecha;
-
-        }
-
-
-        if (
-            tipo ===
-            "Quincenal"
-        ) {
-
-            fecha.setDate(
-                fecha.getDate()
-                +
-                (
-                    indice
-                    *
-                    14
-                )
-            );
-
-
-            return fecha;
-
-        }
-
-
-        if (
-            tipo ===
-            "Mensual"
-        ) {
-
-            const diaOriginal =
-                fechaBase.getDate();
-
-
-            const destino =
-                new Date(
-                    fechaBase.getFullYear(),
-                    fechaBase.getMonth()
-                    +
-                    indice,
-                    1
-                );
-
-
-            const ultimoDiaDestino =
-                new Date(
-                    destino.getFullYear(),
-                    destino.getMonth() +
-                    1,
-                    0
-                )
-                    .getDate();
-
-
-            destino.setDate(
-                Math.min(
-                    diaOriginal,
-                    ultimoDiaDestino
-                )
-            );
-
-
-            return destino;
-
-        }
-
-
-        return fecha;
-
-    }
-
-
-    // =====================================================
-    // TIPOS DE TRABAJO
+    // TIPOS
     // =====================================================
 
     crearOpcionesTipo(
-        seleccionada = ""
+        seleccionado = ""
     ) {
 
         const tipos = [
@@ -4347,26 +2420,26 @@ export class TrabajosView {
             "Riego",
             "Fertilización",
             "Tratamiento",
-            "Cosecha",
+            "Siembra",
             "Plantación",
+            "Cosecha",
             "Mantenimiento",
             "Preparación del terreno",
-            "Inspección",
             "Otro"
 
         ];
 
 
         if (
-            seleccionada
+            seleccionado
             &&
             !tipos.includes(
-                seleccionada
+                seleccionado
             )
         ) {
 
             tipos.unshift(
-                seleccionada
+                seleccionado
             );
 
         }
@@ -4377,165 +2450,154 @@ export class TrabajosView {
                 tipo => `
 
                     <option
-                        value="${this.escapar(
+                        value="${escaparHTML(
                             tipo
                         )}"
 
                         ${
-                            tipo ===
-                            seleccionada
+                            seleccionado ===
+                            tipo
 
                                 ? "selected"
 
                                 : ""
                         }
                     >
-                        ${this.escapar(
+                        ${escaparHTML(
                             tipo
                         )}
                     </option>
 
                 `
             )
-            .join(
-                ""
-            );
+            .join("");
 
     }
 
 
     // =====================================================
-    // OBTENER FECHA HOY
+    // ESTADOS VISUALES
+    // =====================================================
+
+    obtenerClaseEstado(
+        estado
+    ) {
+
+        if (
+            estado ===
+            "En curso"
+        ) {
+
+            return "en-curso";
+
+        }
+
+
+        if (
+            estado ===
+            "Completada"
+            ||
+            estado ===
+            "Completado"
+        ) {
+
+            return "completada";
+
+        }
+
+
+        return "pendiente";
+
+    }
+
+
+    obtenerClasePrioridad(
+        prioridad
+    ) {
+
+        if (
+            prioridad ===
+            "Alta"
+        ) {
+
+            return "alta";
+
+        }
+
+
+        if (
+            prioridad ===
+            "Baja"
+        ) {
+
+            return "baja";
+
+        }
+
+
+        return "media";
+
+    }
+
+
+    // =====================================================
+    // INICIALES
+    // =====================================================
+
+    obtenerIniciales(
+        trabajador
+    ) {
+
+        const nombre =
+            String(
+                trabajador?.nombre
+                ||
+                ""
+            )
+                .trim();
+
+
+        const apellidos =
+            String(
+                trabajador?.apellidos
+                ||
+                ""
+            )
+                .trim();
+
+
+        return (
+            (
+                nombre.charAt(0)
+                +
+                apellidos.charAt(0)
+            )
+                .toUpperCase()
+            ||
+            "T"
+        );
+
+    }
+
+
+    // =====================================================
+    // FECHA HOY
     // =====================================================
 
     obtenerFechaHoy() {
 
-        const hoy =
+        const fecha =
             new Date();
 
 
-        return this.formatearFechaISO(
-            hoy
-        );
-
-    }
-
-
-    // =====================================================
-    // CREAR FECHA ISO
-    // =====================================================
-
-    crearFechaISO(
-        anio,
-        mes,
-        dia
-    ) {
-
-        return this.formatearFechaISO(
-
-            new Date(
-                anio,
-                mes,
-                dia
-            )
-
-        );
-
-    }
-
-
-    // =====================================================
-    // PARSEAR FECHA ISO
-    // =====================================================
-
-    parsearFechaISO(
-        fecha
-    ) {
-
-        if (
-            !fecha
-            ||
-            typeof fecha !==
-            "string"
-        ) {
-
-            return null;
-
-        }
-
-
-        const partes =
-            fecha
-                .split(
-                    "-"
-                );
-
-
-        if (
-            partes.length !==
-            3
-        ) {
-
-            return null;
-
-        }
-
-
-        const anio =
-            Number(
-                partes[0]
-            );
-
-
-        const mes =
-            Number(
-                partes[1]
-            );
-
-
-        const dia =
-            Number(
-                partes[2]
-            );
-
-
-        if (
-            !anio
-            ||
-            !mes
-            ||
-            !dia
-        ) {
-
-            return null;
-
-        }
-
-
-        return new Date(
-            anio,
-            mes - 1,
-            dia
-        );
-
-    }
-
-
-    // =====================================================
-    // FORMATEAR FECHA ISO
-    // =====================================================
-
-    formatearFechaISO(
-        fecha
-    ) {
-
-        const anio =
+        const year =
             fecha.getFullYear();
 
 
-        const mes =
+        const month =
             String(
-                fecha.getMonth() +
+                fecha.getMonth()
+                +
                 1
             )
                 .padStart(
@@ -4544,7 +2606,7 @@ export class TrabajosView {
                 );
 
 
-        const dia =
+        const day =
             String(
                 fecha.getDate()
             )
@@ -4554,9 +2616,7 @@ export class TrabajosView {
                 );
 
 
-        return (
-            `${anio}-${mes}-${dia}`
-        );
+        return `${year}-${month}-${day}`;
 
     }
 
@@ -4573,19 +2633,21 @@ export class TrabajosView {
             !fecha
         ) {
 
-            return "Sin fecha";
+            return "—";
 
         }
 
 
-        const fechaObjeto =
-            this.parsearFechaISO(
+        const partes =
+            String(
                 fecha
-            );
+            )
+                .split("-");
 
 
         if (
-            !fechaObjeto
+            partes.length !==
+            3
         ) {
 
             return fecha;
@@ -4593,16 +2655,13 @@ export class TrabajosView {
         }
 
 
-        return fechaObjeto
-            .toLocaleDateString(
-                "es-ES"
-            );
+        return `${partes[2]}/${partes[1]}/${partes[0]}`;
 
     }
 
 
     // =====================================================
-    // FORMATEAR FECHA Y HORA
+    // FORMATEAR FECHA/HORA
     // =====================================================
 
     formatearFechaHora(
@@ -4613,7 +2672,7 @@ export class TrabajosView {
             !valor
         ) {
 
-            return "";
+            return "—";
 
         }
 
@@ -4630,9 +2689,7 @@ export class TrabajosView {
             )
         ) {
 
-            return this.escapar(
-                valor
-            );
+            return valor;
 
         }
 
@@ -4641,722 +2698,24 @@ export class TrabajosView {
             .toLocaleString(
                 "es-ES",
                 {
-                    dateStyle:
-                        "short",
 
-                    timeStyle:
-                        "short"
-                }
-            );
+                    day:
+                        "2-digit",
 
-    }
-        // =====================================================
-    // OBTENER TRABAJO POR ID CON FALLBACK
-    // =====================================================
+                    month:
+                        "2-digit",
 
-    obtenerTrabajoPorIdSeguro(
-        id
-    ) {
+                    year:
+                        "numeric",
 
-        if (
-            id === null
-            ||
-            id === undefined
-            ||
-            id === ""
-        ) {
+                    hour:
+                        "2-digit",
 
-            return null;
-
-        }
-
-
-        if (
-            this.trabajoService
-            &&
-            typeof this.trabajoService
-                .obtenerPorId ===
-                "function"
-        ) {
-
-            const trabajo =
-                this.trabajoService
-                    .obtenerPorId(
-                        id
-                    );
-
-
-            if (
-                trabajo
-            ) {
-
-                return trabajo;
-
-            }
-
-        }
-
-
-        return (
-            this.trabajoService
-                .obtenerTodos()
-                .find(
-                    trabajo =>
-                        this.mismoId(
-                            trabajo.id,
-                            id
-                        )
-                )
-            ||
-            null
-        );
-
-    }
-
-
-    // =====================================================
-    // OBTENER FINCA POR ID CON FALLBACK
-    // =====================================================
-
-    obtenerFincaPorIdSeguro(
-        id
-    ) {
-
-        if (
-            id === null
-            ||
-            id === undefined
-            ||
-            id === ""
-        ) {
-
-            return null;
-
-        }
-
-
-        if (
-            this.fincaService
-            &&
-            typeof this.fincaService
-                .obtenerPorId ===
-                "function"
-        ) {
-
-            const finca =
-                this.fincaService
-                    .obtenerPorId(
-                        id
-                    );
-
-
-            if (
-                finca
-            ) {
-
-                return finca;
-
-            }
-
-        }
-
-
-        return (
-            this.fincaService
-                .obtenerTodas()
-                .find(
-                    finca =>
-                        this.mismoId(
-                            finca.id,
-                            id
-                        )
-                )
-            ||
-            null
-        );
-
-    }
-
-
-    // =====================================================
-    // OBTENER CAMPAÑA POR ID CON FALLBACK
-    // =====================================================
-
-    obtenerCampaniaPorIdSeguro(
-        id
-    ) {
-
-        if (
-            id === null
-            ||
-            id === undefined
-            ||
-            id === ""
-        ) {
-
-            return null;
-
-        }
-
-
-        if (
-            this.campaniaService
-            &&
-            typeof this.campaniaService
-                .obtenerPorId ===
-                "function"
-        ) {
-
-            const campania =
-                this.campaniaService
-                    .obtenerPorId(
-                        id
-                    );
-
-
-            if (
-                campania
-            ) {
-
-                return campania;
-
-            }
-
-        }
-
-
-        return (
-            this.campaniaService
-                .obtenerTodas()
-                .find(
-                    campania =>
-                        this.mismoId(
-                            campania.id,
-                            id
-                        )
-                )
-            ||
-            null
-        );
-
-    }
-
-
-    // =====================================================
-    // NORMALIZAR ESTADO
-    // =====================================================
-
-    normalizarEstado(
-        estado
-    ) {
-
-        const valor =
-            String(
-                estado
-                ||
-                ""
-            )
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            valor ===
-            "completada"
-            ||
-            valor ===
-            "completado"
-        ) {
-
-            return "Completada";
-
-        }
-
-
-        if (
-            valor ===
-            "en curso"
-            ||
-            valor ===
-            "encurso"
-        ) {
-
-            return "En curso";
-
-        }
-
-
-        return "Pendiente";
-
-    }
-
-
-    // =====================================================
-    // NORMALIZAR PRIORIDAD
-    // =====================================================
-
-    normalizarPrioridad(
-        prioridad
-    ) {
-
-        const valor =
-            String(
-                prioridad
-                ||
-                ""
-            )
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            valor ===
-            "urgente"
-        ) {
-
-            return "Urgente";
-
-        }
-
-
-        if (
-            valor ===
-            "alta"
-        ) {
-
-            return "Alta";
-
-        }
-
-
-        if (
-            valor ===
-            "baja"
-        ) {
-
-            return "Baja";
-
-        }
-
-
-        return "Media";
-
-    }
-
-
-    // =====================================================
-    // ORDENAR TRABAJOS
-    // =====================================================
-
-    ordenarTrabajos(
-        trabajos = []
-    ) {
-
-        return [
-            ...trabajos
-        ]
-            .sort(
-                (
-                    a,
-                    b
-                ) => {
-
-                    const fechaA =
-                        a.fecha
-                        ||
-                        "";
-
-
-                    const fechaB =
-                        b.fecha
-                        ||
-                        "";
-
-
-                    if (
-                        fechaA !==
-                        fechaB
-                    ) {
-
-                        return fechaA
-                            .localeCompare(
-                                fechaB
-                            );
-
-                    }
-
-
-                    return (
-                        this.obtenerOrdenPrioridad(
-                            a.prioridad
-                        )
-                        -
-                        this.obtenerOrdenPrioridad(
-                            b.prioridad
-                        )
-                    );
+                    minute:
+                        "2-digit"
 
                 }
             );
-
-    }
-
-
-    // =====================================================
-    // COMPROBAR SI FECHA ES HOY
-    // =====================================================
-
-    esHoy(
-        fecha
-    ) {
-
-        return (
-            fecha ===
-            this.obtenerFechaHoy()
-        );
-
-    }
-
-
-    // =====================================================
-    // COMPROBAR SI ESTÁ VENCIDA
-    // =====================================================
-
-    estaVencida(
-        trabajo
-    ) {
-
-        if (
-            !trabajo
-            ||
-            !trabajo.fecha
-            ||
-            trabajo.estado ===
-            "Completada"
-        ) {
-
-            return false;
-
-        }
-
-
-        return (
-            trabajo.fecha <
-            this.obtenerFechaHoy()
-        );
-
-    }
-
-
-    // =====================================================
-    // OBTENER ETIQUETA DE FECHA
-    // =====================================================
-
-    obtenerEtiquetaFecha(
-        trabajo
-    ) {
-
-        if (
-            !trabajo?.fecha
-        ) {
-
-            return "Sin fecha";
-
-        }
-
-
-        if (
-            this.esHoy(
-                trabajo.fecha
-            )
-        ) {
-
-            return "Hoy";
-
-        }
-
-
-        if (
-            this.estaVencida(
-                trabajo
-            )
-        ) {
-
-            return (
-                `Vencida · ${this.formatearFecha(
-                    trabajo.fecha
-                )}`
-            );
-
-        }
-
-
-        return this.formatearFecha(
-            trabajo.fecha
-        );
-
-    }
-
-
-    // =====================================================
-    // OBTENER CLASE SEGÚN ESTADO
-    // =====================================================
-
-    obtenerClaseEstado(
-        estado
-    ) {
-
-        const normalizado =
-            this.normalizarEstado(
-                estado
-            );
-
-
-        if (
-            normalizado ===
-            "Completada"
-        ) {
-
-            return "completed";
-
-        }
-
-
-        if (
-            normalizado ===
-            "En curso"
-        ) {
-
-            return "in-progress";
-
-        }
-
-
-        return "pending";
-
-    }
-
-
-    // =====================================================
-    // OBTENER TEXTO DEL ESTADO
-    // =====================================================
-
-    obtenerTextoEstado(
-        estado
-    ) {
-
-        return this.normalizarEstado(
-            estado
-        );
-
-    }
-
-
-    // =====================================================
-    // OBTENER ICONO SEGÚN TIPO
-    // =====================================================
-
-    obtenerIconoTipo(
-        tipo
-    ) {
-
-        const valor =
-            String(
-                tipo
-                ||
-                ""
-            )
-                .trim()
-                .toLowerCase();
-
-
-        if (
-            valor.includes(
-                "poda"
-            )
-        ) {
-
-            return "✂️";
-
-        }
-
-
-        if (
-            valor.includes(
-                "riego"
-            )
-        ) {
-
-            return "💧";
-
-        }
-
-
-        if (
-            valor.includes(
-                "fertiliz"
-            )
-        ) {
-
-            return "🧪";
-
-        }
-
-
-        if (
-            valor.includes(
-                "tratamiento"
-            )
-        ) {
-
-            return "🧴";
-
-        }
-
-
-        if (
-            valor.includes(
-                "cosecha"
-            )
-        ) {
-
-            return "🧺";
-
-        }
-
-
-        if (
-            valor.includes(
-                "plant"
-            )
-        ) {
-
-            return "🌱";
-
-        }
-
-
-        if (
-            valor.includes(
-                "mantenimiento"
-            )
-        ) {
-
-            return "🔧";
-
-        }
-
-
-        if (
-            valor.includes(
-                "desbro"
-            )
-        ) {
-
-            return "🌿";
-
-        }
-
-
-        return "🚜";
-
-    }
-
-
-    // =====================================================
-    // OBTENER COLOR DE PRIORIDAD
-    // =====================================================
-
-    obtenerColorPrioridad(
-        prioridad
-    ) {
-
-        const valor =
-            this.normalizarPrioridad(
-                prioridad
-            );
-
-
-        if (
-            valor ===
-            "Urgente"
-        ) {
-
-            return {
-
-                fondo:
-                    "#fdeceb",
-
-                texto:
-                    "#a64038"
-
-            };
-
-        }
-
-
-        if (
-            valor ===
-            "Alta"
-        ) {
-
-            return {
-
-                fondo:
-                    "#fff0e2",
-
-                texto:
-                    "#a85d1a"
-
-            };
-
-        }
-
-
-        if (
-            valor ===
-            "Baja"
-        ) {
-
-            return {
-
-                fondo:
-                    "#eef3f0",
-
-                texto:
-                    "#607168"
-
-            };
-
-        }
-
-
-        return {
-
-            fondo:
-                "#edf4fb",
-
-            texto:
-                "#41698f"
-
-        };
-
-    }
-
-
-    // =====================================================
-    // DESTRUIR / LIMPIAR
-    // =====================================================
-
-    destruir() {
-
-        /*
-         * Actualmente no hay listeners globales
-         * persistentes en esta vista.
-         *
-         * Este método queda preparado para futuras
-         * ampliaciones sin romper la navegación.
-         */
 
     }
 

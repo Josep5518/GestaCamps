@@ -1,184 +1,401 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · TRABAJADORES
-   Día 26 · Cierre Refactorización 1
+   DÍA 27 · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   ESTILOS BASE
+   PÁGINA
 ===================================================== */
 
-/* ==================================
-   TRABAJADORES
-================================== */
+.trabajadores-page,
+.trabajador-form-page {
+    width: 100%;
+    padding-bottom: 40px;
+}
 
-.trabajadores-grid {
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.trabajadores-hero {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 22px;
-    margin-top: 20px;
-}
 
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
 
-.trabajador-card {
-    background-color: white;
-    border-radius: 14px;
-    padding: 22px;
-    box-shadow: var(--gc-shadow-card);
-}
+    gap: 18px;
 
-
-.trabajador-card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
     margin-bottom: 18px;
 }
 
 
-.trabajador-icon {
-    width: 48px;
-    height: 48px;
-
-    background-color: var(--gc-green-soft);
-
-    border-radius: 12px;
+.trabajadores-hero-content {
+    min-height: 215px;
 
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
 
-    font-size: 24px;
+    padding:
+        10px
+        18px
+        10px
+        2px;
 }
 
 
-.trabajador-actions {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-
-.trabajador-card h3 {
-    margin: 0 0 8px;
-}
-
-
-.trabajador-puesto {
-    color: var(--gc-green);
-    font-weight: 600;
-    margin-bottom: 16px;
-}
-
-
-.trabajador-info {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    margin: 18px 0;
-}
-
-
-.trabajador-info div {
-    background-color: var(--gc-surface-soft);
-    border-radius: 9px;
-    padding: 12px;
-}
-
-
-.trabajador-info span {
+.trabajadores-eyebrow {
     display: block;
 
-    color: var(--gc-muted);
+    margin-bottom: 9px;
 
-    font-size: 12px;
+    color: #39725b;
 
-    margin-bottom: 5px;
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
 }
 
 
-.trabajador-card p {
-    color: var(--gc-muted-strong);
-    font-size: 14px;
-}
+.trabajadores-hero h1 {
+    max-width: 540px;
 
-
-.trabajador-notas {
-    margin-top: 18px;
-
-    padding-top: 14px;
-
-    border-top:
-        1px solid
-        var(--gc-border-soft);
-}
-
-
-.trabajador-notas span {
-    display: block;
-
-    color: var(--gc-muted);
-
-    font-size: 12px;
-
-    margin-bottom: 5px;
-}
-
-
-.trabajador-notas p {
     margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
 }
 
 
-@media (max-width: 1100px) {
+.trabajadores-hero h1 span {
+    display: block;
 
-    .trabajadores-grid {
-        grid-template-columns:
-            repeat(
-                2,
-                1fr
-            );
-    }
-
+    color: #195b42;
 }
 
 
-@media (max-width: 650px) {
+.trabajadores-hero-content > p {
+    max-width: 500px;
 
-    .trabajadores-grid {
-        grid-template-columns: 1fr;
-    }
+    margin:
+        14px
+        0
+        18px;
 
+    color: var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+.trabajadores-hero-button {
+    align-self: flex-start;
+
+    min-height: 39px;
 }
 
 
 /* =====================================================
-   AJUSTES Y VERSIÓN PREMIUM
+   HERO FOTO
 ===================================================== */
 
-/* =====================================================
-   GESTACAMPS
-   DÍA 17 - TRABAJADORES
-===================================================== */
+.trabajadores-hero-image {
+    position: relative;
+
+    min-height: 215px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        url("../../assets/images/trabajadores-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dce9df;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.trabajadores-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0),
+            rgba(8,37,26,0.04) 40%,
+            rgba(8,37,26,0.52)
+        );
+}
+
+
+.trabajadores-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 120px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.91
+        );
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.trabajadores-hero-badge span {
+    display: block;
+
+    color: #687a71;
+
+    font-size: 8px;
+}
+
+
+.trabajadores-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+}
+
+
+.trabajadores-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(
+            0,
+            0,
+            0,
+            0.3
+        );
+}
+
+
+.trabajadores-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.trabajadores-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    line-height: 1.03;
+}
 
 
 /* =====================================================
-   STATS
+   KPIs
 ===================================================== */
 
 .trabajadores-stats {
-    display: grid;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
-            3,
+            4,
             minmax(0, 1fr)
+        ) !important;
+
+    gap: 13px !important;
+
+    margin-bottom: 24px !important;
+}
+
+
+.trabajadores-stats .card {
+    min-width: 0;
+    min-height: 76px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
         );
+}
 
-    gap: 16px;
 
-    margin-bottom: 20px;
+/* =====================================================
+   CABECERA LISTADO
+===================================================== */
+
+.trabajadores-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin:
+        7px
+        0
+        13px;
+}
+
+
+.trabajadores-section-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.trabajadores-section-header h2 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+}
+
+
+.trabajadores-section-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.trabajadores-summary {
+    display: flex;
+
+    gap: 6px;
+}
+
+
+.trabajadores-summary span {
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 8px;
+    font-weight: 700;
 }
 
 
@@ -186,12 +403,12 @@
    GRID
 ===================================================== */
 
-.trabajadores-grid-premium {
+.trabajadores-grid {
     display: grid;
 
     grid-template-columns:
         repeat(
-            2,
+            3,
             minmax(0, 1fr)
         );
 
@@ -206,48 +423,247 @@
 .trabajador-card-premium {
     min-width: 0;
 
-    padding: 16px;
+    overflow: hidden;
+
+    padding: 0;
 
     border:
         1px solid
         var(--gc-border-soft);
 
-    border-radius: 15px;
+    border-radius: 16px;
 
     background: white;
 
     box-shadow:
-        var(--gc-shadow-card);
+        0 8px 22px
+        rgba(
+            18,
+            55,
+            42,
+            0.055
+        );
+
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+
+@media (hover: hover) {
+
+    .trabajador-card-premium:hover {
+        transform:
+            translateY(-3px);
+
+        box-shadow:
+            0 14px 32px
+            rgba(
+                18,
+                55,
+                42,
+                0.09
+            );
+    }
+
 }
 
 
 /* =====================================================
-   CABECERA
+   HERO TARJETA
 ===================================================== */
 
-.trabajador-card-premium
-.trabajador-card-header {
-    display: flex;
+.trabajador-card-hero {
+    position: relative;
 
-    align-items: flex-start;
-    justify-content: space-between;
+    height: 106px;
 
-    gap: 12px;
+    overflow: visible;
 
-    margin-bottom: 13px;
+    background:
+        linear-gradient(
+            135deg,
+            #dfeee5,
+            #f2f5e8
+        );
 }
 
 
-.trabajador-identity {
+.trabajador-card-hero-pattern {
+    position: absolute;
+
+    inset: 0;
+
+    overflow: hidden;
+}
+
+
+.trabajador-card-hero-pattern::before {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -100px;
+    right: -40px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(
+            66,
+            128,
+            95,
+            0.08
+        );
+}
+
+
+.trabajador-card-hero-pattern::after {
+    content: "";
+
+    position: absolute;
+
+    width: 140px;
+    height: 140px;
+
+    bottom: -100px;
+    left: 20px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(
+            181,
+            194,
+            121,
+            0.11
+        );
+}
+
+
+/* =====================================================
+   TOP HERO TARJETA
+===================================================== */
+
+.trabajador-card-hero-top {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 11px;
+    right: 11px;
+    left: 11px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+}
+
+
+/* =====================================================
+   ESTADO
+===================================================== */
+
+.trabajador-status {
+    padding:
+        5px
+        8px;
+
+    border-radius: 999px;
+
+    font-size: 7px;
+    font-weight: 800;
+}
+
+
+.trabajador-status.activo {
+    background:
+        rgba(
+            230,
+            246,
+            237,
+            0.94
+        );
+
+    color: #176044;
+}
+
+
+.trabajador-status.inactivo {
+    background:
+        rgba(
+            247,
+            235,
+            233,
+            0.94
+        );
+
+    color: #984b43;
+}
+
+
+/* =====================================================
+   ACCIONES TARJETA
+===================================================== */
+
+.trabajador-card-actions {
     display: flex;
 
+    gap: 5px;
+}
+
+
+.trabajador-icon-button {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
     align-items: center;
+    justify-content: center;
 
-    gap: 11px;
+    padding: 0;
 
-    min-width: 0;
+    border:
+        1px solid
+        rgba(
+            255,
+            255,
+            255,
+            0.6
+        );
 
-    flex: 1;
+    border-radius: 9px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.91
+        );
+
+    color: #1d6148;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 4px 10px
+        rgba(
+            28,
+            76,
+            56,
+            0.05
+        );
+}
+
+
+.trabajador-delete {
+    color: #b23e3e;
 }
 
 
@@ -255,179 +671,152 @@
    AVATAR
 ===================================================== */
 
-.trabajador-avatar {
-    width: 46px;
-    height: 46px;
+.trabajador-avatar-wrap {
+    position: absolute;
 
-    flex: 0 0 46px;
+    z-index: 4;
+
+    left: 16px;
+    bottom: -30px;
+}
+
+
+.trabajador-avatar,
+.trabajador-avatar-photo {
+    width: 64px;
+    height: 64px;
 
     display: flex;
     align-items: center;
     justify-content: center;
 
+    overflow: hidden;
+
+    border:
+        4px solid
+        white;
+
     border-radius: 50%;
 
     background:
         linear-gradient(
-            135deg,
-            #dff1e8,
-            #edf7f2
+            145deg,
+            #276e52,
+            #173f31
         );
 
-    color:
-        var(--gc-green-text);
+    color: white;
 
-    font-size: 14px;
-    font-weight: 800;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    border:
-        1px solid
-        #d1e9dc;
+    font-size: 20px;
+    font-weight: 700;
+
+    box-shadow:
+        0 8px 20px
+        rgba(
+            15,
+            53,
+            38,
+            0.16
+        );
+
+    object-fit: cover;
 }
 
 
 /* =====================================================
-   NOMBRE Y PUESTO
+   CUERPO TARJETA
 ===================================================== */
 
-.trabajador-identity h3 {
+.trabajador-card-body {
+    padding:
+        41px
+        15px
+        15px;
+}
+
+
+.trabajador-card-kicker {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #5a806f;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.09em;
+}
+
+
+.trabajador-card-body h3 {
     margin: 0;
 
-    overflow: hidden;
+    color: var(--gc-text);
 
-    color:
-        var(--gc-text);
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    font-size: 15px;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
+    font-size: 18px;
 }
 
 
 .trabajador-puesto {
     margin:
-        4px
+        3px
         0
-        0 !important;
+        0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size:
-        10px !important;
+    font-size: 9px;
 }
 
 
 /* =====================================================
-   ACCIONES
+   PIN
 ===================================================== */
 
-.trabajador-actions {
-    display: flex;
-
-    align-items: center;
-
-    gap: 6px;
-
-    flex:
-        0
-        0
-        auto;
+.trabajador-access-row {
+    margin-top: 10px;
 }
 
 
-.trabajador-actions
-.secondary-button {
-    min-height: 34px;
-
-    padding:
-        0
-        10px;
-
-    font-size: 10px;
-}
-
-
-.trabajador-actions
-.delete-button {
-    width: 34px;
-
-    min-width: 34px;
-
-    height: 34px;
-
-    padding: 0;
-}
-
-
-/* =====================================================
-   ESTADO / PIN
-===================================================== */
-
-.trabajador-state-row {
-    display: flex;
-
-    align-items: center;
-
-    gap: 8px;
-
-    flex-wrap: wrap;
-
-    margin-bottom: 12px;
-}
-
-
-.trabajador-status,
 .trabajador-pin-status {
     display: inline-flex;
-
     align-items: center;
 
-    min-height: 25px;
-
     padding:
-        0
-        8px;
+        5px
+        7px;
 
     border-radius: 999px;
 
-    font-size: 9px;
+    background: #f2f4f2;
 
+    color: #69756f;
+
+    font-size: 7px;
     font-weight: 700;
 }
 
 
-.trabajador-status.activo {
-    background:
-        #e3f5ea;
+.trabajador-pin-status.configured {
+    background: #eaf4ee;
 
-    color:
-        #176044;
-}
-
-
-.trabajador-status.inactivo {
-    background:
-        #fde8e8;
-
-    color:
-        #a42b2b;
-}
-
-
-.trabajador-pin-status {
-    background:
-        #f1f4f2;
-
-    color:
-        var(--gc-muted-strong);
+    color: #356951;
 }
 
 
 /* =====================================================
-   DATOS
+   INFO
 ===================================================== */
 
 .trabajador-info-premium {
@@ -439,41 +828,42 @@
             minmax(0, 1fr)
         );
 
-    gap: 8px;
+    gap: 7px;
+
+    margin-top: 10px;
 }
 
 
 .trabajador-info-premium > div {
     min-width: 0;
 
-    padding: 10px;
+    padding:
+        9px
+        10px;
 
     border-radius: 9px;
 
-    background:
-        #f7f9f7;
+    background: #f7f9f7;
 }
 
 
 .trabajador-info-premium span {
     display: block;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 9px;
+    font-size: 7px;
 }
 
 
 .trabajador-info-premium strong {
     display: block;
 
-    margin-top: 3px;
+    margin-top: 2px;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size: 11px;
+    font-size: 9px;
 }
 
 
@@ -482,27 +872,68 @@
 ===================================================== */
 
 .trabajador-contact {
-    display: flex;
+    display: grid;
 
-    flex-direction: column;
+    gap: 7px;
 
-    gap: 5px;
-
-    margin-top: 11px;
+    margin-top: 9px;
 }
 
 
-.trabajador-contact span {
-    overflow: hidden;
+.trabajador-contact > div {
+    display: flex;
+    align-items: center;
 
-    color:
-        var(--gc-muted-strong);
+    gap: 8px;
 
-    font-size: 10px;
+    min-width: 0;
 
-    white-space: nowrap;
+    padding:
+        8px
+        9px;
 
-    text-overflow: ellipsis;
+    border-radius: 8px;
+
+    background: #fafbfa;
+}
+
+
+.trabajador-contact > div > span {
+    width: 22px;
+
+    flex:
+        0
+        0
+        22px;
+
+    text-align: center;
+}
+
+
+.trabajador-contact > div > div {
+    min-width: 0;
+}
+
+
+.trabajador-contact small {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 6px;
+}
+
+
+.trabajador-contact strong {
+    display: block;
+
+    margin-top: 1px;
+
+    overflow-wrap: anywhere;
+
+    color: var(--gc-text);
+
+    font-size: 8px;
 }
 
 
@@ -511,9 +942,9 @@
 ===================================================== */
 
 .trabajador-notas {
-    margin-top: 11px;
+    margin-top: 9px;
 
-    padding-top: 10px;
+    padding-top: 9px;
 
     border-top:
         1px solid
@@ -524,10 +955,12 @@
 .trabajador-notas span {
     display: block;
 
-    color:
-        var(--gc-muted);
+    color: #587563;
 
-    font-size: 9px;
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
 }
 
 
@@ -537,12 +970,140 @@
         0
         0;
 
-    color:
-        var(--gc-muted-strong);
+    color: var(--gc-muted);
 
-    font-size: 10px;
+    font-size: 8px;
 
-    line-height: 1.4;
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   BOTÓN PRINCIPAL TARJETA
+===================================================== */
+
+.trabajador-main-action {
+    width: 100%;
+    min-height: 35px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-top: 12px;
+
+    padding:
+        0
+        11px;
+
+    border: 0;
+
+    border-radius: 9px;
+
+    background: #e8f3ed;
+
+    color: #17553e;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.trabajador-main-action:hover {
+    background: #dceee4;
+}
+
+
+.trabajador-main-action span {
+    font-size: 14px;
+
+    transition:
+        transform 0.15s ease;
+}
+
+
+.trabajador-main-action:hover span {
+    transform:
+        translateX(3px);
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.trabajadores-empty {
+    min-height: 300px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    border:
+        1px dashed
+        #dbe5df;
+
+    border-radius: 16px;
+
+    background: white;
+
+    text-align: center;
+}
+
+
+.trabajadores-empty-icon {
+    width: 62px;
+    height: 62px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 11px;
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e1f1e7,
+            #f2f6e9
+        );
+
+    font-size: 29px;
+}
+
+
+.trabajadores-empty h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 19px;
+}
+
+
+.trabajadores-empty p {
+    max-width: 390px;
+
+    margin:
+        7px
+        0
+        15px;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+
+    line-height: 1.5;
 }
 
 
@@ -550,12 +1111,162 @@
    FORMULARIO
 ===================================================== */
 
-.trabajador-form-panel {
-    max-width: 900px;
+.trabajador-form-page > .back-button {
+    margin-bottom: 10px;
+}
 
+
+.trabajador-form-header {
+    margin-bottom: 16px;
+}
+
+
+.trabajador-form-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #41735d;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.trabajador-form-header h1 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 29px;
+}
+
+
+.trabajador-form-header p {
     margin:
+        5px
         0
-        auto;
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   FORM LAYOUT
+===================================================== */
+
+.trabajador-form-layout {
+    display: grid;
+
+    grid-template-columns:
+        minmax(600px, 1fr)
+        minmax(270px, 0.42fr);
+
+    gap: 15px;
+
+    align-items: start;
+}
+
+
+.trabajador-form-panel {
+    max-width: none;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+}
+
+
+.trabajador-form-section {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 17px;
+}
+
+
+.trabajador-form-avatar {
+    width: 42px;
+    height: 42px;
+
+    flex:
+        0
+        0
+        42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background:
+        linear-gradient(
+            145deg,
+            #276e52,
+            #173f31
+        );
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 13px;
+    font-weight: 700;
+}
+
+
+.trabajador-form-section h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+}
+
+
+.trabajador-form-section p {
+    margin:
+        2px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
 }
 
 
@@ -568,9 +1279,180 @@
             minmax(0, 1fr)
         );
 
-    gap:
-        14px
-        16px;
+    column-gap: 12px;
+}
+
+
+.trabajador-form-wide {
+    grid-column:
+        1
+        /
+        -1;
+}
+
+
+/* =====================================================
+   ASIDE
+===================================================== */
+
+.trabajador-form-aside {
+    display: grid;
+
+    gap: 12px;
+}
+
+
+.trabajador-form-photo {
+    min-height: 330px;
+
+    display: flex;
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    padding: 19px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8,40,28,0.02),
+            rgba(8,40,28,0.68)
+        ),
+        url("../../assets/images/trabajadores-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat;
+
+    box-shadow:
+        0 8px 22px
+        rgba(
+            18,
+            55,
+            42,
+            0.07
+        );
+}
+
+
+.trabajador-form-photo span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.77
+        );
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.trabajador-form-photo strong {
+    display: block;
+
+    max-width: 250px;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+
+    line-height: 1.06;
+}
+
+
+/* =====================================================
+   TIP
+===================================================== */
+
+.trabajador-form-tip {
+    display: flex;
+
+    gap: 9px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        #dfebe4;
+
+    border-radius: 12px;
+
+    background: #f5f9f6;
+}
+
+
+.trabajador-form-tip > span {
+    width: 34px;
+    height: 34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #e2f1e8;
+}
+
+
+.trabajador-form-tip strong {
+    display: block;
+
+    color: #244d3c;
+
+    font-size: 9px;
+}
+
+
+.trabajador-form-tip p {
+    margin:
+        3px
+        0
+        0;
+
+    color: #718078;
+
+    font-size: 8px;
+
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   TABLET GRANDE
+===================================================== */
+
+@media (max-width: 1250px) {
+
+    .trabajadores-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+    }
+
 }
 
 
@@ -578,10 +1460,46 @@
    TABLET
 ===================================================== */
 
-@media (max-width: 1050px) {
+@media (max-width: 1100px) {
 
-    .trabajadores-grid-premium {
+    .trabajadores-hero {
         grid-template-columns: 1fr;
+    }
+
+
+    .trabajadores-hero-content {
+        min-height: 0;
+    }
+
+
+    .trabajadores-hero-image {
+        min-height: 185px;
+    }
+
+
+    .trabajadores-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .trabajador-form-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .trabajador-form-aside {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .trabajador-form-photo {
+        min-height: 180px;
     }
 
 }
@@ -593,6 +1511,69 @@
 
 @media (max-width: 760px) {
 
+    .trabajadores-page,
+    .trabajador-form-page {
+        padding-bottom: 24px;
+    }
+
+
+    .trabajadores-hero {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+
+        margin-bottom: 13px;
+    }
+
+
+    .trabajadores-hero-content {
+        min-height: 0;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .trabajadores-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .trabajadores-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .trabajadores-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .trabajadores-hero-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+
+    .trabajadores-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .trabajadores-hero-copy strong {
+        font-size: 18px;
+    }
+
+
     .trabajadores-stats {
         grid-template-columns:
             repeat(
@@ -600,104 +1581,67 @@
                 minmax(0, 1fr)
             ) !important;
 
+        gap: 8px !important;
+    }
+
+
+    .trabajadores-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+
         gap: 8px;
     }
 
 
-    .trabajadores-grid-premium {
+    .trabajadores-grid {
         grid-template-columns: 1fr;
 
         gap: 12px;
     }
 
 
-    .trabajador-card-premium {
-        padding: 13px;
-
-        border-radius: 13px;
+    .trabajador-form-header h1 {
+        font-size: 25px;
     }
 
 
-    .trabajador-card-premium
-    .trabajador-card-header {
-        gap: 8px;
+    .trabajador-form-panel {
+        padding: 14px;
 
-        margin-bottom: 10px;
-    }
-
-
-    .trabajador-identity {
-        gap: 9px;
-    }
-
-
-    .trabajador-avatar {
-        width: 40px;
-        height: 40px;
-
-        flex-basis: 40px;
-
-        font-size: 12px;
-    }
-
-
-    .trabajador-identity h3 {
-        font-size: 14px;
-    }
-
-
-    .trabajador-actions
-    .secondary-button {
-        min-height: 32px;
-
-        padding:
-            0
-            9px;
-    }
-
-
-    .trabajador-actions
-    .delete-button {
-        width: 32px;
-
-        min-width: 32px;
-
-        height: 32px;
-    }
-
-
-    .trabajador-state-row {
-        margin-bottom: 9px;
-    }
-
-
-    .trabajador-info-premium {
-        gap: 7px;
-    }
-
-
-    .trabajador-info-premium > div {
-        padding: 9px;
+        border-radius: 12px;
     }
 
 
     .trabajador-form-grid {
         grid-template-columns: 1fr;
+    }
 
-        gap: 0;
+
+    .trabajador-form-wide {
+        grid-column: auto;
+    }
+
+
+    .trabajador-form-aside {
+        grid-template-columns: 1fr;
+    }
+
+
+    .trabajador-form-photo {
+        min-height: 160px;
     }
 
 }
 
 
 /* =====================================================
-   MÓVIL ESTRECHO
+   MÓVIL PEQUEÑO
 ===================================================== */
 
 @media (max-width: 420px) {
 
-    .trabajadores-stats {
-        grid-template-columns: 1fr !important;
+    .trabajador-info-premium {
+        grid-template-columns: 1fr;
     }
 
 }

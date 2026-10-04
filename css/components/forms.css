@@ -1,22 +1,42 @@
 /* =====================================================
    GESTACAMPS
    COMPONENTE · FORMULARIOS
+   DÍA 27 · AJUSTE GLOBAL
+===================================================== */
+
+
+/* =====================================================
+   PANEL DE FORMULARIO
 ===================================================== */
 
 .form-panel {
+    width: 100%;
     max-width: 700px;
-
-    background-color: white;
 
     padding: 30px;
 
+    border:
+        1px solid
+        var(--gc-border-soft);
+
     border-radius: 14px;
 
-    box-shadow: var(--gc-shadow-card);
+    background-color: white;
+
+    box-shadow:
+        var(--gc-shadow-card);
+
+    box-sizing: border-box;
 }
 
 
+/* =====================================================
+   GRUPO DE FORMULARIO
+===================================================== */
+
 .form-group {
+    min-width: 0;
+
     margin-bottom: 22px;
 }
 
@@ -24,53 +44,517 @@
 .form-group label {
     display: block;
 
-    font-weight: 600;
-
     margin-bottom: 8px;
+
+    color:
+        var(--gc-text);
+
+    font-size: 12px;
+    font-weight: 600;
 }
 
+
+/* =====================================================
+   CONTROLES BASE
+===================================================== */
 
 .form-group input,
 .form-group textarea,
-.form-group select {
+.form-group select,
+
+/* -----------------------------------------------------
+   CUADERNO DE CAMPO
+----------------------------------------------------- */
+
+.cuaderno-search-wrap input,
+.cuaderno-filter-wrap select,
+
+/* -----------------------------------------------------
+   TRATAMIENTOS
+----------------------------------------------------- */
+
+.tratamientos-search-wrap input,
+.tratamientos-filter-wrap select,
+
+/* -----------------------------------------------------
+   BUSCADOR GLOBAL
+----------------------------------------------------- */
+
+.buscador-global-page input,
+.buscador-global-page select,
+
+/* -----------------------------------------------------
+   PANTALLAS NUEVAS · SEGURIDAD GLOBAL
+----------------------------------------------------- */
+
+.fincas-page input,
+.fincas-page select,
+.fincas-page textarea,
+
+.finca-detail input,
+.finca-detail select,
+.finca-detail textarea,
+
+.finca-form-page input,
+.finca-form-page select,
+.finca-form-page textarea,
+
+.cultivos-page input,
+.cultivos-page select,
+.cultivos-page textarea,
+
+.cultivo-form-page input,
+.cultivo-form-page select,
+.cultivo-form-page textarea,
+
+.cuaderno-page input,
+.cuaderno-page select,
+.cuaderno-page textarea,
+
+.cuaderno-form-page input,
+.cuaderno-form-page select,
+.cuaderno-form-page textarea,
+
+.tratamientos-page input,
+.tratamientos-page select,
+.tratamientos-page textarea,
+
+.tratamiento-form-page input,
+.tratamiento-form-page select,
+.tratamiento-form-page textarea {
+
     width: 100%;
+    min-width: 0;
 
-    border: 1px solid var(--gc-border);
+    box-sizing: border-box;
 
-    border-radius: 8px;
+    border:
+        1px solid
+        #dbe5df;
 
-    padding: 12px;
+    border-radius: 10px;
+
+    padding:
+        10px
+        12px;
+
+    color:
+        var(--gc-text);
 
     font-family: inherit;
 
-    font-size: 14px;
+    font-size: 11px;
+    font-weight: 500;
+
+    line-height: 1.35;
 
     outline: none;
 
-    background-color: white;
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 1px 2px
+        rgba(
+            18,
+            55,
+            42,
+            0.015
+        );
+
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease,
+        background-color 0.15s ease;
 }
 
+
+/* =====================================================
+   ALTURA DE INPUT / SELECT
+===================================================== */
+
+.form-group input,
+.form-group select,
+
+.cuaderno-search-wrap input,
+.cuaderno-filter-wrap select,
+
+.tratamientos-search-wrap input,
+.tratamientos-filter-wrap select,
+
+.buscador-global-page input,
+.buscador-global-page select,
+
+.fincas-page input,
+.fincas-page select,
+
+.finca-detail input,
+.finca-detail select,
+
+.finca-form-page input,
+.finca-form-page select,
+
+.cultivos-page input,
+.cultivos-page select,
+
+.cultivo-form-page input,
+.cultivo-form-page select,
+
+.cuaderno-page input,
+.cuaderno-page select,
+
+.cuaderno-form-page input,
+.cuaderno-form-page select,
+
+.tratamientos-page input,
+.tratamientos-page select,
+
+.tratamiento-form-page input,
+.tratamiento-form-page select {
+
+    min-height: 40px;
+}
+
+
+/* =====================================================
+   TEXTAREA
+===================================================== */
+
+.form-group textarea,
+
+.fincas-page textarea,
+.finca-detail textarea,
+.finca-form-page textarea,
+
+.cultivos-page textarea,
+.cultivo-form-page textarea,
+
+.cuaderno-page textarea,
+.cuaderno-form-page textarea,
+
+.tratamientos-page textarea,
+.tratamiento-form-page textarea {
+
+    min-height: 95px;
+
+    resize: vertical;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   PLACEHOLDER
+===================================================== */
+
+.form-group input::placeholder,
+.form-group textarea::placeholder,
+
+.cuaderno-search-wrap input::placeholder,
+.tratamientos-search-wrap input::placeholder,
+
+.buscador-global-page input::placeholder,
+
+.fincas-page input::placeholder,
+.fincas-page textarea::placeholder,
+
+.finca-form-page input::placeholder,
+.finca-form-page textarea::placeholder,
+
+.cultivos-page input::placeholder,
+.cultivos-page textarea::placeholder,
+
+.cultivo-form-page input::placeholder,
+.cultivo-form-page textarea::placeholder,
+
+.cuaderno-page input::placeholder,
+.cuaderno-page textarea::placeholder,
+
+.cuaderno-form-page input::placeholder,
+.cuaderno-form-page textarea::placeholder,
+
+.tratamientos-page input::placeholder,
+.tratamientos-page textarea::placeholder,
+
+.tratamiento-form-page input::placeholder,
+.tratamiento-form-page textarea::placeholder {
+
+    color:
+        #99a59f;
+
+    opacity: 1;
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+@media (hover: hover) {
+
+    .form-group input:hover,
+    .form-group textarea:hover,
+    .form-group select:hover,
+
+    .cuaderno-search-wrap input:hover,
+    .cuaderno-filter-wrap select:hover,
+
+    .tratamientos-search-wrap input:hover,
+    .tratamientos-filter-wrap select:hover,
+
+    .buscador-global-page input:hover,
+    .buscador-global-page select:hover,
+
+    .fincas-page input:hover,
+    .fincas-page select:hover,
+    .fincas-page textarea:hover,
+
+    .finca-form-page input:hover,
+    .finca-form-page select:hover,
+    .finca-form-page textarea:hover,
+
+    .cultivos-page input:hover,
+    .cultivos-page select:hover,
+    .cultivos-page textarea:hover,
+
+    .cultivo-form-page input:hover,
+    .cultivo-form-page select:hover,
+    .cultivo-form-page textarea:hover,
+
+    .cuaderno-page input:hover,
+    .cuaderno-page select:hover,
+    .cuaderno-page textarea:hover,
+
+    .cuaderno-form-page input:hover,
+    .cuaderno-form-page select:hover,
+    .cuaderno-form-page textarea:hover,
+
+    .tratamientos-page input:hover,
+    .tratamientos-page select:hover,
+    .tratamientos-page textarea:hover,
+
+    .tratamiento-form-page input:hover,
+    .tratamiento-form-page select:hover,
+    .tratamiento-form-page textarea:hover {
+
+        border-color:
+            #c7d9cf;
+
+    }
+
+}
+
+
+/* =====================================================
+   FOCUS
+===================================================== */
 
 .form-group input:focus,
 .form-group textarea:focus,
-.form-group select:focus {
-    border-color: var(--gc-green);
+.form-group select:focus,
+
+.cuaderno-search-wrap input:focus,
+.cuaderno-filter-wrap select:focus,
+
+.tratamientos-search-wrap input:focus,
+.tratamientos-filter-wrap select:focus,
+
+.buscador-global-page input:focus,
+.buscador-global-page select:focus,
+
+.fincas-page input:focus,
+.fincas-page select:focus,
+.fincas-page textarea:focus,
+
+.finca-detail input:focus,
+.finca-detail select:focus,
+.finca-detail textarea:focus,
+
+.finca-form-page input:focus,
+.finca-form-page select:focus,
+.finca-form-page textarea:focus,
+
+.cultivos-page input:focus,
+.cultivos-page select:focus,
+.cultivos-page textarea:focus,
+
+.cultivo-form-page input:focus,
+.cultivo-form-page select:focus,
+.cultivo-form-page textarea:focus,
+
+.cuaderno-page input:focus,
+.cuaderno-page select:focus,
+.cuaderno-page textarea:focus,
+
+.cuaderno-form-page input:focus,
+.cuaderno-form-page select:focus,
+.cuaderno-form-page textarea:focus,
+
+.tratamientos-page input:focus,
+.tratamientos-page select:focus,
+.tratamientos-page textarea:focus,
+
+.tratamiento-form-page input:focus,
+.tratamiento-form-page select:focus,
+.tratamiento-form-page textarea:focus {
+
+    border-color:
+        #3f8a68;
+
+    background:
+        #ffffff;
+
+    box-shadow:
+        0 0 0 3px
+        rgba(
+            54,
+            128,
+            92,
+            0.1
+        );
 }
 
 
-.form-group input:disabled {
-    background-color: #f2f4f3;
+/* =====================================================
+   SELECT
+===================================================== */
 
-    color: #69736e;
+.form-group select,
+
+.cuaderno-filter-wrap select,
+
+.tratamientos-filter-wrap select,
+
+.buscador-global-page select,
+
+.fincas-page select,
+.finca-detail select,
+.finca-form-page select,
+
+.cultivos-page select,
+.cultivo-form-page select,
+
+.cuaderno-page select,
+.cuaderno-form-page select,
+
+.tratamientos-page select,
+.tratamiento-form-page select {
+
+    cursor: pointer;
+
+    color:
+        #263b31;
 }
 
+
+/* =====================================================
+   INPUT SEARCH
+===================================================== */
+
+input[type="search"] {
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+
+input[type="search"]::-webkit-search-cancel-button {
+    cursor: pointer;
+
+    opacity: 0.45;
+}
+
+
+/* =====================================================
+   INPUT NUMBER
+===================================================== */
+
+input[type="number"] {
+    font-variant-numeric:
+        tabular-nums;
+}
+
+
+/* =====================================================
+   FECHA Y HORA
+===================================================== */
+
+input[type="date"],
+input[type="time"] {
+
+    color:
+        var(--gc-text);
+}
+
+
+/* =====================================================
+   DISABLED
+===================================================== */
+
+.form-group input:disabled,
+.form-group textarea:disabled,
+.form-group select:disabled,
+
+.fincas-page input:disabled,
+.fincas-page select:disabled,
+.fincas-page textarea:disabled,
+
+.cultivos-page input:disabled,
+.cultivos-page select:disabled,
+.cultivos-page textarea:disabled,
+
+.cuaderno-page input:disabled,
+.cuaderno-page select:disabled,
+.cuaderno-page textarea:disabled,
+
+.tratamientos-page input:disabled,
+.tratamientos-page select:disabled,
+.tratamientos-page textarea:disabled {
+
+    border-color:
+        #e1e6e3;
+
+    background-color:
+        #f2f4f3;
+
+    color:
+        #69736e;
+
+    cursor:
+        not-allowed;
+
+    opacity: 0.82;
+}
+
+
+/* =====================================================
+   READONLY
+===================================================== */
+
+.form-group input[readonly],
+.form-group textarea[readonly] {
+
+    background:
+        #f7f9f8;
+
+    color:
+        #64716a;
+}
+
+
+/* =====================================================
+   FORM ACTIONS
+===================================================== */
 
 .form-actions {
     display: flex;
-
+    align-items: center;
     justify-content: flex-end;
 
+    flex-wrap: wrap;
+
     gap: 10px;
+
+    margin-top: 8px;
 }
 
 
@@ -83,7 +567,316 @@
 
     margin-top: 7px;
 
-    color: var(--gc-muted);
+    color:
+        var(--gc-muted);
 
-    font-size: 12px;
+    font-size: 10px;
+
+    line-height: 1.45;
+}
+
+
+/* =====================================================
+   CHECKBOX / RADIO
+===================================================== */
+
+.form-group
+input[type="checkbox"],
+.form-group
+input[type="radio"],
+
+.cuaderno-trabajador-option
+input[type="checkbox"] {
+
+    width: 16px;
+    height: 16px;
+
+    min-height: 0;
+
+    flex:
+        0
+        0
+        16px;
+
+    margin: 0;
+
+    padding: 0;
+
+    accent-color:
+        var(--gc-green);
+
+    box-shadow: none;
+}
+
+
+/* =====================================================
+   FILTROS PREMIUM
+===================================================== */
+
+.cuaderno-search-wrap input,
+.tratamientos-search-wrap input {
+
+    min-height: 42px;
+
+    border-radius: 10px;
+
+    background:
+        #fbfcfb;
+}
+
+
+.cuaderno-filter-wrap select,
+.tratamientos-filter-wrap select {
+
+    min-height: 42px;
+
+    border-radius: 10px;
+
+    background-color:
+        #fbfcfb;
+}
+
+
+/* =====================================================
+   LABELS DE FILTROS
+===================================================== */
+
+.cuaderno-filter-wrap label,
+.tratamientos-filter-wrap label {
+
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        #687970;
+
+    font-size: 8px;
+    font-weight: 700;
+
+    letter-spacing:
+        0.01em;
+}
+
+
+/* =====================================================
+   BUSCADOR CUADERNO / TRATAMIENTOS
+===================================================== */
+
+.cuaderno-search-wrap,
+.tratamientos-search-wrap {
+
+    min-width: 0;
+}
+
+
+.cuaderno-search-wrap input,
+.tratamientos-search-wrap input {
+
+    padding-left:
+        36px;
+}
+
+
+/* =====================================================
+   VALIDACIÓN VISUAL
+===================================================== */
+
+.form-group input:invalid:not(:placeholder-shown),
+.form-group textarea:invalid:not(:placeholder-shown) {
+
+    border-color:
+        #d99c9c;
+}
+
+
+/* =====================================================
+   AUTOCOMPLETADO CHROME
+===================================================== */
+
+.form-group input:-webkit-autofill,
+.form-group input:-webkit-autofill:hover,
+.form-group input:-webkit-autofill:focus {
+
+    -webkit-text-fill-color:
+        var(--gc-text);
+
+    -webkit-box-shadow:
+        0 0 0 1000px
+        white
+        inset;
+
+    transition:
+        background-color
+        9999s
+        ease-in-out
+        0s;
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1100px) {
+
+    .form-panel {
+        max-width: none;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .form-panel {
+
+        max-width: none;
+
+        padding: 16px;
+
+        border-radius: 13px;
+
+    }
+
+
+    .form-group {
+
+        margin-bottom: 16px;
+
+    }
+
+
+    .form-group label {
+
+        margin-bottom: 6px;
+
+        font-size: 11px;
+
+    }
+
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select,
+
+    .cuaderno-search-wrap input,
+    .cuaderno-filter-wrap select,
+
+    .tratamientos-search-wrap input,
+    .tratamientos-filter-wrap select,
+
+    .buscador-global-page input,
+    .buscador-global-page select,
+
+    .fincas-page input,
+    .fincas-page select,
+    .fincas-page textarea,
+
+    .finca-form-page input,
+    .finca-form-page select,
+    .finca-form-page textarea,
+
+    .cultivos-page input,
+    .cultivos-page select,
+    .cultivos-page textarea,
+
+    .cultivo-form-page input,
+    .cultivo-form-page select,
+    .cultivo-form-page textarea,
+
+    .cuaderno-page input,
+    .cuaderno-page select,
+    .cuaderno-page textarea,
+
+    .cuaderno-form-page input,
+    .cuaderno-form-page select,
+    .cuaderno-form-page textarea,
+
+    .tratamientos-page input,
+    .tratamientos-page select,
+    .tratamientos-page textarea,
+
+    .tratamiento-form-page input,
+    .tratamiento-form-page select,
+    .tratamiento-form-page textarea {
+
+        min-height: 44px;
+
+        padding:
+            11px
+            12px;
+
+        border-radius: 10px;
+
+        font-size: 16px;
+
+    }
+
+
+    .form-group textarea,
+
+    .finca-form-page textarea,
+    .cultivo-form-page textarea,
+    .cuaderno-form-page textarea,
+    .tratamiento-form-page textarea {
+
+        min-height: 105px;
+
+    }
+
+
+    .form-actions {
+
+        gap: 8px;
+
+        margin-top: 5px;
+
+    }
+
+
+    .form-actions
+    .primary-button,
+
+    .form-actions
+    .secondary-button {
+
+        min-height: 42px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL PEQUEÑO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .form-actions {
+
+        display: grid;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+    }
+
+
+    .form-actions button {
+
+        width: 100%;
+
+        justify-content: center;
+
+    }
+
 }

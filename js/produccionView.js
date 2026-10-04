@@ -1,25 +1,42 @@
 import {
+
     escaparHTML,
+
     formatearFecha,
+
     formatearNumero,
+
     obtenerFechaHoy,
+
     mismoId
+
 } from "./utils.js";
 
+
 import {
+
     crearProduccionStockHelper
+
 } from "./produccion/produccionStock.js";
 
-import {
-    crearProduccionCardsHelper
-} from "./produccion/produccionCards.js";
 
 import {
+
+    crearProduccionCardsHelper
+
+} from "./produccion/produccionCards.js";
+
+
+import {
+
     crearProduccionFormHelper
+
 } from "./produccion/produccionForm.js";
 
 
+
 export class ProduccionView {
+
 
     constructor(
         mainContent,
@@ -30,11 +47,29 @@ export class ProduccionView {
         albaranService
     ) {
 
+
         this.mainContent =
             mainContent;
 
+
+        this.fincaService =
+            fincaService;
+
+
         this.produccionService =
             produccionService;
+
+
+        this.campaniaService =
+            campaniaService;
+
+
+        this.cultivoService =
+            cultivoService;
+
+
+        this.albaranService =
+            albaranService;
 
 
         // =================================================
@@ -111,9 +146,9 @@ export class ProduccionView {
 
     mostrar() {
 
+
         const registros =
-            this.produccionService
-                .obtenerTodos();
+            this.obtenerRegistros();
 
 
         const totalProducido =
@@ -181,80 +216,257 @@ export class ProduccionView {
             );
 
 
+        const fincas =
+            new Set(
+                registros
+                    .map(
+                        registro =>
+                            registro.fincaId
+                    )
+                    .filter(Boolean)
+            )
+                .size;
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="produccion-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Producción
-                    </h2>
+                <section class="produccion-hero">
 
-                    <p>
-                        Controla la producción, reservas, entregas y disponibilidad
-                    </p>
+                    <div class="produccion-hero-content">
+
+                        <span class="produccion-eyebrow">
+                            🍎 RECURSOS Y PRODUCCIÓN
+                        </span>
+
+
+                        <h1>
+                            Del campo,
+                            <span>
+                                a cada kilo.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Registra cada recolección y controla
+                            en tiempo real qué producción está disponible,
+                            reservada o ya entregada.
+                        </p>
+
+
+                        <button
+                            id="nuevaProduccion"
+                            class="
+                                primary-button
+                                produccion-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva producción
+                        </button>
+
+                    </div>
+
+
+                    <div class="produccion-hero-image">
+
+                        <div class="produccion-hero-badge">
+
+                            <span>
+                                Disponible
+                            </span>
+
+
+                            <strong>
+                                ${formatearNumero(
+                                    totalDisponible
+                                )} kg
+                            </strong>
+
+                        </div>
+
+
+                        <div class="produccion-hero-copy">
+
+                            <small>
+                                RECOLECTA · CONTROLA · ENTREGA
+                            </small>
+
+
+                            <strong>
+                                Cada cosecha,<br>
+                                convertida en datos
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats produccion-stats">
+
+                    ${this.crearTarjetaEstadistica(
+                        "🍎",
+                        "Producido",
+                        totalProducido
+                    )}
+
+
+                    ${this.crearTarjetaEstadistica(
+                        "🕒",
+                        "Reservado",
+                        totalReservado
+                    )}
+
+
+                    ${this.crearTarjetaEstadistica(
+                        "🚚",
+                        "Entregado",
+                        totalEntregado
+                    )}
+
+
+                    ${this.crearTarjetaEstadistica(
+                        "📦",
+                        "Disponible",
+                        totalDisponible
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     ESTADO STOCK
+                =========================================== -->
+
+                <section class="produccion-stock-legend">
+
+                    <div class="produccion-stock-legend-title">
+
+                        <span>
+                            📊
+                        </span>
+
+
+                        <div>
+
+                            <strong>
+                                Estado del stock
+                            </strong>
+
+
+                            <p>
+                                El stock cambia automáticamente
+                                según el estado de los albaranes.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="produccion-stock-legend-items">
+
+                        <span class="reservado">
+
+                            <i></i>
+
+                            Pendiente = reservado
+
+                        </span>
+
+
+                        <span class="entregado">
+
+                            <i></i>
+
+                            Entregado / Facturado = entregado
+
+                        </span>
+
+
+                        <span class="neutro">
+
+                            <i></i>
+
+                            Borrador / Cancelado = no afecta
+
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTADO
+                =========================================== -->
+
+                <div class="produccion-section-header">
+
+                    <div>
+
+                        <span class="produccion-section-eyebrow">
+                            REGISTROS DE PRODUCCIÓN
+                        </span>
+
+
+                        <h2>
+                            Cosechas registradas
+                        </h2>
+
+
+                        <p>
+                            Consulta la trazabilidad y disponibilidad
+                            de cada registro.
+                        </p>
+
+                    </div>
+
+
+                    <div class="produccion-summary">
+
+                        <span>
+                            ${registros.length}
+                            ${
+                                registros.length ===
+                                1
+                                    ? "registro"
+                                    : "registros"
+                            }
+                        </span>
+
+
+                        <span>
+                            ${fincas}
+                            ${
+                                fincas ===
+                                1
+                                    ? "finca"
+                                    : "fincas"
+                            }
+                        </span>
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevaProduccion"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nueva producción
-                </button>
-
-            </header>
-
-
-            <section class="stats produccion-stats">
-
-                ${this.crearTarjetaEstadistica(
-                    "🍎",
-                    "Producido",
-                    totalProducido
-                )}
-
-
-                ${this.crearTarjetaEstadistica(
-                    "🕒",
-                    "Reservado",
-                    totalReservado
-                )}
-
-
-                ${this.crearTarjetaEstadistica(
-                    "🚚",
-                    "Entregado",
-                    totalEntregado
-                )}
-
-
-                ${this.crearTarjetaEstadistica(
-                    "📦",
-                    "Disponible",
-                    totalDisponible
-                )}
-
-            </section>
-
-
-            <div class="produccion-stock-info">
-
-                <strong>
-                    Estado del stock:
-                </strong>
-
-                Pendiente = reservado ·
-                Entregado/Facturado = entregado ·
-                Borrador/Cancelado = no afecta al stock.
+                <div id="listaProduccion"></div>
 
             </div>
-
-
-            <div id="listaProduccion"></div>
 
         `;
 
@@ -290,11 +502,12 @@ export class ProduccionView {
 
         return `
 
-            <div class="card">
+            <article class="card">
 
                 <span class="card-icon">
                     ${icono}
                 </span>
+
 
                 <div>
 
@@ -304,6 +517,7 @@ export class ProduccionView {
                         )}
                     </p>
 
+
                     <h3>
                         ${formatearNumero(
                             valor
@@ -312,7 +526,7 @@ export class ProduccionView {
 
                 </div>
 
-            </div>
+            </article>
 
         `;
 
@@ -325,29 +539,49 @@ export class ProduccionView {
 
     mostrarLista() {
 
+
         const registros =
-            this.produccionService
-                .obtenerTodos()
+            this.obtenerRegistros()
                 .slice()
                 .sort(
                     (
                         a,
                         b
-                    ) =>
-                        new Date(
-                            b.fecha
-                        )
-                        -
-                        new Date(
-                            a.fecha
-                        )
+                    ) => {
+
+                        const fechaA =
+                            new Date(
+                                a.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        const fechaB =
+                            new Date(
+                                b.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        return (
+                            fechaB
+                            -
+                            fechaA
+                        );
+
+                    }
                 );
 
 
         const contenedor =
-            document.getElementById(
-                "listaProduccion"
-            );
+            document
+                .getElementById(
+                    "listaProduccion"
+                );
 
 
         if (
@@ -366,23 +600,46 @@ export class ProduccionView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="produccion-empty">
 
-                    <div class="empty-icon">
+                    <div class="produccion-empty-icon">
                         🍎
                     </div>
+
 
                     <h3>
                         Todavía no hay producción registrada
                     </h3>
 
+
                     <p>
-                        Añade el primer registro de producción de tu explotación.
+                        Registra tu primera cosecha para comenzar
+                        a controlar kilos, reservas y entregas.
                     </p>
+
+
+                    <button
+                        id="crearPrimeraProduccion"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Registrar producción
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimeraProduccion"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormulario()
+                );
 
 
             return;
@@ -419,6 +676,7 @@ export class ProduccionView {
     // =====================================================
 
     configurarEventos() {
+
 
         document
             .querySelectorAll(
@@ -474,6 +732,7 @@ export class ProduccionView {
         id
     ) {
 
+
         const registro =
             this.produccionService
                 .obtenerPorId(
@@ -518,6 +777,7 @@ export class ProduccionView {
             utilizado >
             0
         ) {
+
 
             let mensaje =
                 "No puedes eliminar esta producción porque tiene";
@@ -596,11 +856,13 @@ export class ProduccionView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido eliminar el registro."
             );
 
 
@@ -622,10 +884,43 @@ export class ProduccionView {
         id = null
     ) {
 
+
         this.formHelper
             .mostrarFormulario(
                 id
             );
+
+    }
+
+
+    // =====================================================
+    // REGISTROS
+    // =====================================================
+
+    obtenerRegistros() {
+
+
+        if (
+            typeof this.produccionService
+                ?.obtenerTodos !==
+            "function"
+        ) {
+
+            return [];
+
+        }
+
+
+        const registros =
+            this.produccionService
+                .obtenerTodos();
+
+
+        return Array.isArray(
+            registros
+        )
+            ? registros
+            : [];
 
     }
 

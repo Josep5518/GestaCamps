@@ -4,11 +4,13 @@ export class InventarioView {
         mainContent,
         inventarioService
     ) {
+
         this.mainContent =
             mainContent;
 
         this.inventarioService =
             inventarioService;
+
     }
 
 
@@ -19,13 +21,11 @@ export class InventarioView {
     mostrar() {
 
         const productos =
-            this.inventarioService
-                .obtenerTodos();
+            this.obtenerProductos();
 
 
         const stockBajo =
-            this.inventarioService
-                .obtenerStockBajo()
+            this.obtenerStockBajo()
                 .length;
 
 
@@ -34,64 +34,218 @@ export class InventarioView {
                 producto =>
                     Number(
                         producto.cantidad
-                    ) <= 0
+                        ||
+                        0
+                    ) <=
+                    0
             ).length;
+
+
+        const categorias =
+            new Set(
+                productos
+                    .map(
+                        producto =>
+                            producto.categoria
+                    )
+                    .filter(Boolean)
+            )
+                .size;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="inventario-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Inventario
-                    </h2>
+                <section class="inventario-hero">
 
-                    <p>
-                        Controla materiales, productos y existencias
-                    </p>
+                    <div class="inventario-hero-content">
+
+                        <span class="inventario-eyebrow">
+                            📦 RECURSOS Y PRODUCCIÓN
+                        </span>
+
+
+                        <h1>
+                            Todo en su sitio,
+                            <span>
+                                siempre disponible.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Controla materiales, productos y existencias
+                            y detecta a tiempo qué recursos necesitan
+                            reposición.
+                        </p>
+
+
+                        <button
+                            id="nuevoProducto"
+                            class="
+                                primary-button
+                                inventario-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo producto
+                        </button>
+
+                    </div>
+
+
+                    <div class="inventario-hero-image">
+
+                        <div class="inventario-hero-badge">
+
+                            <span>
+                                Productos
+                            </span>
+
+                            <strong>
+                                ${productos.length}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="inventario-hero-copy">
+
+                            <small>
+                                CONTROLA · REPÓN · ORGANIZA
+                            </small>
+
+
+                            <strong>
+                                Cada recurso,<br>
+                                bajo control
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats inventario-stats">
+
+                    ${this.crearStat(
+                        "📦",
+                        "Productos",
+                        productos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "⚠️",
+                        "Stock bajo",
+                        stockBajo
+                    )}
+
+
+                    ${this.crearStat(
+                        "⛔",
+                        "Sin stock",
+                        sinStock
+                    )}
+
+
+                    ${this.crearStat(
+                        "🗂️",
+                        "Categorías",
+                        categorias
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="inventario-section-header">
+
+                    <div>
+
+                        <span class="inventario-section-eyebrow">
+                            EXISTENCIAS
+                        </span>
+
+
+                        <h2>
+                            Materiales y productos
+                        </h2>
+
+
+                        <p>
+                            Consulta cantidades, stock mínimo,
+                            ubicación y proveedor.
+                        </p>
+
+                    </div>
+
+
+                    <div class="inventario-summary">
+
+                        <span>
+                            ${productos.length} productos
+                        </span>
+
+
+                        ${
+                            stockBajo > 0
+
+                                ? `
+
+                                    <span class="warning">
+                                        ${stockBajo} con stock bajo
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+
+                        ${
+                            sinStock > 0
+
+                                ? `
+
+                                    <span class="danger">
+                                        ${sinStock} sin stock
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevoProducto"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nuevo producto
-                </button>
+                <!-- ==========================================
+                     LISTA
+                =========================================== -->
 
-            </header>
+                <div
+                    id="listaInventario"
+                    class="inventario-list"
+                ></div>
 
-
-            <section class="stats inventario-stats">
-
-                ${this.crearStat(
-                    "📦",
-                    "Productos",
-                    productos.length
-                )}
-
-
-                ${this.crearStat(
-                    "⚠️",
-                    "Stock bajo",
-                    stockBajo
-                )}
-
-
-                ${this.crearStat(
-                    "⛔",
-                    "Sin stock",
-                    sinStock
-                )}
-
-            </section>
-
-
-            <div id="listaInventario"></div>
+            </div>
 
         `;
 
@@ -108,6 +262,7 @@ export class InventarioView {
 
 
         this.mostrarLista();
+
     }
 
 
@@ -129,14 +284,20 @@ export class InventarioView {
                     ${icono}
                 </span>
 
+
                 <div>
 
                     <p>
-                        ${titulo}
+                        ${this.escapar(
+                            titulo
+                        )}
                     </p>
 
+
                     <h3>
-                        ${valor}
+                        ${this.escapar(
+                            valor
+                        )}
                     </h3>
 
                 </div>
@@ -144,6 +305,7 @@ export class InventarioView {
             </article>
 
         `;
+
     }
 
 
@@ -154,8 +316,7 @@ export class InventarioView {
     mostrarLista() {
 
         const productos =
-            this.inventarioService
-                .obtenerTodos();
+            this.obtenerProductos();
 
 
         const contenedor =
@@ -168,7 +329,9 @@ export class InventarioView {
         if (
             !contenedor
         ) {
+
             return;
+
         }
 
 
@@ -177,28 +340,23 @@ export class InventarioView {
             0
         ) {
 
-            contenedor.innerHTML = `
+            contenedor.innerHTML =
+                this.crearVacio();
 
-                <div class="empty-state">
 
-                    <div class="empty-icon">
-                        📦
-                    </div>
-
-                    <h3>
-                        Todavía no tienes productos
-                    </h3>
-
-                    <p>
-                        Añade tu primer producto al inventario.
-                    </p>
-
-                </div>
-
-            `;
+            document
+                .getElementById(
+                    "crearPrimerProducto"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormularioCrear()
+                );
 
 
             return;
+
         }
 
 
@@ -208,21 +366,14 @@ export class InventarioView {
 
                 ${productos
                     .map(
-                        producto => {
-
-                            const estado =
-                                this.inventarioService
-                                    .obtenerEstadoStock(
-                                        producto
-                                    );
-
-
-                            return this.crearTarjetaProducto(
+                        (
+                            producto,
+                            index
+                        ) =>
+                            this.crearTarjeta(
                                 producto,
-                                estado
-                            );
-
-                        }
+                                index
+                            )
                     )
                     .join("")}
 
@@ -231,29 +382,433 @@ export class InventarioView {
         `;
 
 
-        // =================================================
-        // EDITAR
-        // =================================================
+        this.configurarEventos();
 
-        contenedor
+    }
+
+
+    // =====================================================
+    // TARJETA
+    // =====================================================
+
+    crearTarjeta(
+        producto,
+        index
+    ) {
+
+        const estado =
+            this.obtenerEstadoStock(
+                producto
+            );
+
+
+        const imagen =
+            (
+                index %
+                3
+            )
+            +
+            1;
+
+
+        const cantidad =
+            Number(
+                producto.cantidad
+                ||
+                0
+            );
+
+
+        const minimo =
+            Number(
+                producto.stockMinimo
+                ||
+                0
+            );
+
+
+        const porcentaje =
+            this.calcularPorcentajeStock(
+                cantidad,
+                minimo
+            );
+
+
+        return `
+
+            <article class="inventario-card">
+
+                <!-- ==================================
+                     FOTO
+                =================================== -->
+
+                <div
+                    class="
+                        inventario-cover
+                        inventario-cover-${imagen}
+                    "
+                >
+
+                    <div class="inventario-cover-overlay"></div>
+
+
+                    <div class="inventario-cover-top">
+
+                        <span
+                            class="
+                                inventario-stock-pill
+                                ${this.obtenerClaseEstado(
+                                    estado
+                                )}
+                            "
+                        >
+
+                            ●
+                            ${this.escapar(
+                                estado
+                            )}
+
+                        </span>
+
+
+                        <div class="inventario-cover-actions">
+
+                            <button
+                                class="
+                                    inventario-icon-button
+                                    editar-producto
+                                "
+                                data-id="${this.escapar(
+                                    producto.id
+                                )}"
+                                type="button"
+                                title="Editar producto"
+                            >
+                                ✎
+                            </button>
+
+
+                            <button
+                                class="
+                                    inventario-icon-button
+                                    inventario-delete
+                                    eliminar-producto
+                                "
+                                data-id="${this.escapar(
+                                    producto.id
+                                )}"
+                                type="button"
+                                title="Eliminar producto"
+                            >
+                                ×
+                            </button>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="inventario-cover-copy">
+
+                        <span>
+
+                            ${this.obtenerIconoCategoria(
+                                producto.categoria
+                            )}
+
+                            ${this.escapar(
+                                producto.categoria
+                                ||
+                                "INVENTARIO"
+                            )}
+
+                        </span>
+
+
+                        <strong>
+                            ${this.escapar(
+                                producto.nombre
+                                ||
+                                "Producto"
+                            )}
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ==================================
+                     CUERPO
+                =================================== -->
+
+                <div class="inventario-card-body">
+
+                    <div class="inventario-title-row">
+
+                        <div>
+
+                            <span class="inventario-kicker">
+                                RECURSO
+                            </span>
+
+
+                            <h3>
+                                ${this.escapar(
+                                    producto.nombre
+                                    ||
+                                    "Producto"
+                                )}
+                            </h3>
+
+                        </div>
+
+
+                        <span class="inventario-category-chip">
+
+                            ${this.obtenerIconoCategoria(
+                                producto.categoria
+                            )}
+
+                            ${this.escapar(
+                                producto.categoria
+                                ||
+                                "Otros"
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="inventario-stock-main">
+
+                        <div>
+
+                            <span>
+                                Stock actual
+                            </span>
+
+
+                            <strong>
+
+                                ${this.formatearNumero(
+                                    cantidad
+                                )}
+
+                                ${this.escapar(
+                                    producto.unidad
+                                    ||
+                                    ""
+                                )}
+
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Stock mínimo
+                            </span>
+
+
+                            <strong>
+
+                                ${this.formatearNumero(
+                                    minimo
+                                )}
+
+                                ${this.escapar(
+                                    producto.unidad
+                                    ||
+                                    ""
+                                )}
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="inventario-stock-progress">
+
+                        <div class="inventario-stock-progress-top">
+
+                            <span>
+                                Nivel de existencias
+                            </span>
+
+
+                            <strong>
+                                ${porcentaje} %
+                            </strong>
+
+                        </div>
+
+
+                        <div class="inventario-progress-track">
+
+                            <div
+                                class="
+                                    inventario-progress-bar
+                                    ${this.obtenerClaseEstado(
+                                        estado
+                                    )}
+                                "
+                                style="width:${porcentaje}%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    ${
+                        producto.proveedor
+
+                            ? `
+
+                                <div class="inventario-detail-row">
+
+                                    <span>
+                                        🚚
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Proveedor
+                                        </small>
+
+
+                                        <strong>
+                                            ${this.escapar(
+                                                producto.proveedor
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${
+                        producto.ubicacion
+
+                            ? `
+
+                                <div class="inventario-detail-row">
+
+                                    <span>
+                                        📍
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Ubicación
+                                        </small>
+
+
+                                        <strong>
+                                            ${this.escapar(
+                                                producto.ubicacion
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    ${
+                        producto.notas
+
+                            ? `
+
+                                <div class="inventario-notas">
+
+                                    <span>
+                                        NOTAS
+                                    </span>
+
+
+                                    <p>
+                                        ${this.escapar(
+                                            producto.notas
+                                        )}
+                                    </p>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
+                    <button
+                        class="
+                            inventario-main-action
+                            editar-producto
+                        "
+                        data-id="${this.escapar(
+                            producto.id
+                        )}"
+                        type="button"
+                    >
+
+                        Ver y editar producto
+
+                        <span>
+                            →
+                        </span>
+
+                    </button>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // EVENTOS
+    // =====================================================
+
+    configurarEventos() {
+
+        document
             .querySelectorAll(
                 ".editar-producto"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
-                            /*
-                             * IMPORTANTE:
-                             * No convertir a Number().
-                             * El ID puede ser UUID.
-                             */
-
                             this.mostrarFormularioEditar(
-                                button.dataset.id
+                                boton.dataset.id
                             );
 
                         }
@@ -263,28 +818,19 @@ export class InventarioView {
             );
 
 
-        // =================================================
-        // ELIMINAR
-        // =================================================
-
-        contenedor
+        document
             .querySelectorAll(
                 ".eliminar-producto"
             )
             .forEach(
-                button => {
+                boton => {
 
-                    button.addEventListener(
+                    boton.addEventListener(
                         "click",
                         () => {
 
-                            /*
-                             * IMPORTANTE:
-                             * El ID puede ser UUID.
-                             */
-
                             const id =
-                                button.dataset.id;
+                                boton.dataset.id;
 
 
                             const producto =
@@ -303,6 +849,7 @@ export class InventarioView {
                                 );
 
                                 return;
+
                             }
 
 
@@ -313,6 +860,7 @@ export class InventarioView {
                             ) {
 
                                 return;
+
                             }
 
 
@@ -337,6 +885,7 @@ export class InventarioView {
                                 );
 
                                 return;
+
                             }
 
 
@@ -347,233 +896,25 @@ export class InventarioView {
 
                 }
             );
+
     }
 
 
     // =====================================================
-    // TARJETA
-    // =====================================================
-
-    crearTarjetaProducto(
-        producto,
-        estado
-    ) {
-
-        return `
-
-            <article class="inventario-card">
-
-                <div class="inventario-card-header">
-
-                    <span class="inventario-icon">
-
-                        ${this.obtenerIconoCategoria(
-                            producto.categoria
-                        )}
-
-                    </span>
-
-
-                    <div class="inventario-actions">
-
-                        <button
-                            class="
-                                secondary-button
-                                editar-producto
-                            "
-                            data-id="${producto.id}"
-                            type="button"
-                        >
-                            Editar
-                        </button>
-
-
-                        <button
-                            class="
-                                delete-button
-                                eliminar-producto
-                            "
-                            data-id="${producto.id}"
-                            type="button"
-                            aria-label="Eliminar producto"
-                        >
-                            ×
-                        </button>
-
-                    </div>
-
-                </div>
-
-
-                <h3>
-                    ${producto.nombre}
-                </h3>
-
-
-                <p class="inventario-categoria">
-                    ${producto.categoria}
-                </p>
-
-
-                <div class="inventario-info">
-
-                    <div>
-
-                        <span>
-                            Stock
-                        </span>
-
-                        <strong>
-                            ${producto.cantidad}
-                            ${producto.unidad}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Mínimo
-                        </span>
-
-                        <strong>
-                            ${producto.stockMinimo}
-                            ${producto.unidad}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div
-                    class="
-                        stock-status
-                        ${this.obtenerClaseEstado(
-                            estado
-                        )}
-                    "
-                >
-                    ${estado}
-                </div>
-
-
-                ${
-                    producto.proveedor
-
-                        ? `
-
-                            <p>
-                                🚚 ${producto.proveedor}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    producto.ubicacion
-
-                        ? `
-
-                            <p>
-                                📍 ${producto.ubicacion}
-                            </p>
-
-                        `
-
-                        : ""
-                }
-
-
-                ${
-                    producto.notas
-
-                        ? `
-
-                            <div class="inventario-notas">
-
-                                <span>
-                                    Notas
-                                </span>
-
-                                <p>
-                                    ${producto.notas}
-                                </p>
-
-                            </div>
-
-                        `
-
-                        : ""
-                }
-
-            </article>
-
-        `;
-    }
-
-
-    // =====================================================
-    // FORMULARIO CREAR
+    // CREAR
     // =====================================================
 
     mostrarFormularioCrear() {
 
-        this.mainContent.innerHTML = `
+        this.mostrarFormulario(
+            null
+        );
 
-            <header class="topbar">
-
-                <div>
-
-                    <h2>
-                        Nuevo producto
-                    </h2>
-
-                    <p>
-                        Añade existencias al inventario
-                    </p>
-
-                </div>
-
-            </header>
-
-
-            ${this.crearFormulario(
-                null
-            )}
-
-        `;
-
-
-        document
-            .getElementById(
-                "cancelarProducto"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.mostrar()
-            );
-
-
-        document
-            .getElementById(
-                "guardarProducto"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.guardarNuevo()
-            );
     }
 
 
     // =====================================================
-    // FORMULARIO EDITAR
+    // EDITAR
     // =====================================================
 
     mostrarFormularioEditar(
@@ -596,33 +937,145 @@ export class InventarioView {
             );
 
             return;
+
         }
+
+
+        this.mostrarFormulario(
+            producto
+        );
+
+    }
+
+
+    // =====================================================
+    // FORMULARIO
+    // =====================================================
+
+    mostrarFormulario(
+        producto
+    ) {
+
+        const editando =
+            !!producto;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="inventario-form-page">
 
-                <div>
+                <button
+                    id="volverInventario"
+                    class="back-button"
+                    type="button"
+                >
+                    ← Volver
+                </button>
 
-                    <h2>
-                        Editar producto
-                    </h2>
+
+                <header class="inventario-form-header">
+
+                    <span>
+                        📦 RECURSOS Y PRODUCCIÓN
+                    </span>
+
+
+                    <h1>
+
+                        ${
+                            editando
+                                ? "Editar producto"
+                                : "Nuevo producto"
+                        }
+
+                    </h1>
+
 
                     <p>
-                        Modifica los datos del inventario
+
+                        ${
+                            editando
+
+                                ? "Actualiza las existencias y datos del producto."
+
+                                : "Añade un nuevo recurso al inventario de la explotación."
+                        }
+
                     </p>
+
+                </header>
+
+
+                <div class="inventario-form-layout">
+
+                    ${this.crearFormulario(
+                        producto
+                    )}
+
+
+                    <aside class="inventario-form-aside">
+
+                        <div class="inventario-form-photo">
+
+                            <div>
+
+                                <span>
+                                    CONTROL DE EXISTENCIAS
+                                </span>
+
+
+                                <strong>
+                                    Tener stock
+                                    es estar preparado.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="inventario-form-tip">
+
+                            <span>
+                                ⚠️
+                            </span>
+
+
+                            <div>
+
+                                <strong>
+                                    Define un stock mínimo
+                                </strong>
+
+
+                                <p>
+                                    GestaCamps podrá avisarte cuando
+                                    las existencias estén próximas
+                                    a agotarse.
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
-            </header>
-
-
-            ${this.crearFormulario(
-                producto
-            )}
+            </div>
 
         `;
+
+
+        document
+            .getElementById(
+                "volverInventario"
+            )
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrar()
+            );
 
 
         document
@@ -644,87 +1097,25 @@ export class InventarioView {
                 "click",
                 () => {
 
-                    const datos =
-                        this.obtenerDatosFormulario();
-
-
                     if (
-                        !datos
+                        editando
                     ) {
 
-                        return;
-                    }
-
-
-                    const resultado =
-                        this.inventarioService
-                            .actualizar(
-                                id,
-                                datos
-                            );
-
-
-                    if (
-                        !resultado.ok
-                    ) {
-
-                        alert(
-                            resultado.mensaje
-                            ||
-                            "No se ha podido actualizar el producto."
+                        this.guardarCambios(
+                            producto.id
                         );
 
-                        return;
                     }
 
+                    else {
 
-                    this.mostrar();
+                        this.guardarNuevo();
+
+                    }
 
                 }
             );
-    }
 
-
-    // =====================================================
-    // GUARDAR NUEVO
-    // =====================================================
-
-    guardarNuevo() {
-
-        const datos =
-            this.obtenerDatosFormulario();
-
-
-        if (
-            !datos
-        ) {
-
-            return;
-        }
-
-
-        const resultado =
-            this.inventarioService
-                .crear(
-                    datos
-                );
-
-
-        if (
-            !resultado.ok
-        ) {
-
-            alert(
-                resultado.mensaje
-                ||
-                "No se ha podido crear el producto."
-            );
-
-            return;
-        }
-
-
-        this.mostrar();
     }
 
 
@@ -738,138 +1129,219 @@ export class InventarioView {
 
         return `
 
-            <div class="form-panel inventario-form-panel">
+            <section
+                class="
+                    form-panel
+                    inventario-form-panel
+                "
+            >
 
-                <div class="form-group">
+                <div class="inventario-form-section">
 
-                    <label>
-                        Nombre *
-                    </label>
+                    <span>
 
-                    <input
-                        id="nombreProducto"
-                        type="text"
-                        placeholder="Ej. Sulfato de cobre"
-                        value="${producto?.nombre || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Categoría
-                    </label>
-
-                    <select
-                        id="categoriaProducto"
-                    >
-
-                        ${this.crearOpcionesCategoria(
+                        ${this.obtenerIconoCategoria(
                             producto?.categoria
+                            ||
+                            "Otros"
                         )}
 
-                    </select>
+                    </span>
+
+
+                    <div>
+
+                        <h3>
+                            Datos del producto
+                        </h3>
+
+
+                        <p>
+                            Existencias, proveedor y ubicación.
+                        </p>
+
+                    </div>
 
                 </div>
 
 
-                <div class="form-group">
+                <div class="inventario-form-grid">
 
-                    <label>
-                        Cantidad
-                    </label>
-
-                    <input
-                        id="cantidadProducto"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value="${producto?.cantidad ?? 0}"
+                    <div
+                        class="
+                            form-group
+                            inventario-form-wide
+                        "
                     >
 
-                </div>
+                        <label>
+                            Nombre *
+                        </label>
 
 
-                <div class="form-group">
+                        <input
+                            id="nombreProducto"
+                            type="text"
+                            placeholder="Ej. Sulfato de cobre"
+                            value="${this.escapar(
+                                producto?.nombre
+                                ||
+                                ""
+                            )}"
+                        >
 
-                    <label>
-                        Unidad
-                    </label>
+                    </div>
 
-                    <select
-                        id="unidadProducto"
+
+                    <div class="form-group">
+
+                        <label>
+                            Categoría
+                        </label>
+
+
+                        <select id="categoriaProducto">
+
+                            ${this.crearOpcionesCategoria(
+                                producto?.categoria
+                            )}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Unidad
+                        </label>
+
+
+                        <select id="unidadProducto">
+
+                            ${this.crearOpcionesUnidad(
+                                producto?.unidad
+                            )}
+
+                        </select>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Cantidad
+                        </label>
+
+
+                        <input
+                            id="cantidadProducto"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="${
+                                Number(
+                                    producto?.cantidad
+                                    ??
+                                    0
+                                )
+                            }"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Stock mínimo
+                        </label>
+
+
+                        <input
+                            id="stockMinimoProducto"
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            value="${
+                                Number(
+                                    producto?.stockMinimo
+                                    ??
+                                    0
+                                )
+                            }"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Proveedor
+                        </label>
+
+
+                        <input
+                            id="proveedorProducto"
+                            type="text"
+                            placeholder="Ej. Agro Lleida"
+                            value="${this.escapar(
+                                producto?.proveedor
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Ubicación
+                        </label>
+
+
+                        <input
+                            id="ubicacionProducto"
+                            type="text"
+                            placeholder="Ej. Almacén principal"
+                            value="${this.escapar(
+                                producto?.ubicacion
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div
+                        class="
+                            form-group
+                            inventario-form-wide
+                        "
                     >
 
-                        ${this.crearOpcionesUnidad(
-                            producto?.unidad
-                        )}
-
-                    </select>
-
-                </div>
+                        <label>
+                            Notas
+                        </label>
 
 
-                <div class="form-group">
+                        <textarea
+                            id="notasProducto"
+                            rows="5"
+                            placeholder="Observaciones sobre el producto..."
+                        >${this.escapar(
+                            producto?.notas
+                            ||
+                            ""
+                        )}</textarea>
 
-                    <label>
-                        Stock mínimo
-                    </label>
-
-                    <input
-                        id="stockMinimoProducto"
-                        type="number"
-                        min="0"
-                        step="0.01"
-                        value="${producto?.stockMinimo ?? 0}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Proveedor
-                    </label>
-
-                    <input
-                        id="proveedorProducto"
-                        type="text"
-                        placeholder="Ej. Agro Lleida"
-                        value="${producto?.proveedor || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Ubicación
-                    </label>
-
-                    <input
-                        id="ubicacionProducto"
-                        type="text"
-                        placeholder="Ej. Almacén principal"
-                        value="${producto?.ubicacion || ""}"
-                    >
-
-                </div>
-
-
-                <div class="form-group">
-
-                    <label>
-                        Notas
-                    </label>
-
-                    <textarea
-                        id="notasProducto"
-                        rows="5"
-                    >${producto?.notas || ""}</textarea>
+                    </div>
 
                 </div>
 
@@ -893,9 +1365,7 @@ export class InventarioView {
 
                         ${
                             producto
-
                                 ? "Guardar cambios"
-
                                 : "Guardar producto"
                         }
 
@@ -903,27 +1373,118 @@ export class InventarioView {
 
                 </div>
 
-            </div>
+            </section>
 
         `;
+
     }
 
 
     // =====================================================
-    // OBTENER DATOS FORMULARIO
+    // GUARDAR NUEVO
+    // =====================================================
+
+    guardarNuevo() {
+
+        const datos =
+            this.obtenerDatosFormulario();
+
+
+        if (
+            !datos
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.inventarioService
+                .crear(
+                    datos
+                );
+
+
+        if (
+            !resultado?.ok
+        ) {
+
+            alert(
+                resultado?.mensaje
+                ||
+                "No se ha podido crear el producto."
+            );
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // GUARDAR CAMBIOS
+    // =====================================================
+
+    guardarCambios(
+        id
+    ) {
+
+        const datos =
+            this.obtenerDatosFormulario();
+
+
+        if (
+            !datos
+        ) {
+
+            return;
+
+        }
+
+
+        const resultado =
+            this.inventarioService
+                .actualizar(
+                    id,
+                    datos
+                );
+
+
+        if (
+            !resultado?.ok
+        ) {
+
+            alert(
+                resultado?.mensaje
+                ||
+                "No se ha podido actualizar el producto."
+            );
+
+            return;
+
+        }
+
+
+        this.mostrar();
+
+    }
+
+
+    // =====================================================
+    // DATOS FORMULARIO
     // =====================================================
 
     obtenerDatosFormulario() {
 
         const nombre =
-            document
-                .getElementById(
-                    "nombreProducto"
-                )
-                ?.value
-                .trim()
-            ||
-            "";
+            this.obtenerValor(
+                "nombreProducto"
+            );
 
 
         if (
@@ -935,64 +1496,7 @@ export class InventarioView {
             );
 
             return null;
-        }
 
-
-        const cantidad =
-            Number(
-                document
-                    .getElementById(
-                        "cantidadProducto"
-                    )
-                    ?.value
-                ||
-                0
-            );
-
-
-        const stockMinimo =
-            Number(
-                document
-                    .getElementById(
-                        "stockMinimoProducto"
-                    )
-                    ?.value
-                ||
-                0
-            );
-
-
-        if (
-            Number.isNaN(
-                cantidad
-            )
-            ||
-            cantidad <
-            0
-        ) {
-
-            alert(
-                "La cantidad debe ser un número válido."
-            );
-
-            return null;
-        }
-
-
-        if (
-            Number.isNaN(
-                stockMinimo
-            )
-            ||
-            stockMinimo <
-            0
-        ) {
-
-            alert(
-                "El stock mínimo debe ser un número válido."
-            );
-
-            return null;
         }
 
 
@@ -1001,58 +1505,283 @@ export class InventarioView {
             nombre,
 
             categoria:
-                document
-                    .getElementById(
-                        "categoriaProducto"
-                    )
-                    ?.value
-                ||
-                "Fertilizantes",
+                this.obtenerValor(
+                    "categoriaProducto"
+                ),
 
-            cantidad,
+            cantidad:
+                Number(
+                    this.obtenerValor(
+                        "cantidadProducto"
+                    )
+                    ||
+                    0
+                ),
 
             unidad:
-                document
-                    .getElementById(
-                        "unidadProducto"
-                    )
-                    ?.value
-                ||
-                "ud",
+                this.obtenerValor(
+                    "unidadProducto"
+                ),
 
-            stockMinimo,
+            stockMinimo:
+                Number(
+                    this.obtenerValor(
+                        "stockMinimoProducto"
+                    )
+                    ||
+                    0
+                ),
 
             proveedor:
-                document
-                    .getElementById(
-                        "proveedorProducto"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                "",
+                this.obtenerValor(
+                    "proveedorProducto"
+                ),
 
             ubicacion:
-                document
-                    .getElementById(
-                        "ubicacionProducto"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                "",
+                this.obtenerValor(
+                    "ubicacionProducto"
+                ),
 
             notas:
-                document
-                    .getElementById(
-                        "notasProducto"
-                    )
-                    ?.value
-                    .trim()
-                ||
-                ""
+                this.obtenerValor(
+                    "notasProducto"
+                )
 
         };
+
+    }
+
+
+    // =====================================================
+    // VALOR
+    // =====================================================
+
+    obtenerValor(
+        id
+    ) {
+
+        return (
+            document
+                .getElementById(
+                    id
+                )
+                ?.value
+                ?.trim()
+            ||
+            ""
+        );
+
+    }
+
+
+    // =====================================================
+    // PRODUCTOS
+    // =====================================================
+
+    obtenerProductos() {
+
+        if (
+            typeof this.inventarioService
+                ?.obtenerTodos !==
+            "function"
+        ) {
+
+            return [];
+
+        }
+
+
+        const productos =
+            this.inventarioService
+                .obtenerTodos();
+
+
+        return Array.isArray(
+            productos
+        )
+            ? productos
+            : [];
+
+    }
+
+
+    // =====================================================
+    // STOCK BAJO
+    // =====================================================
+
+    obtenerStockBajo() {
+
+        if (
+            typeof this.inventarioService
+                ?.obtenerStockBajo ===
+            "function"
+        ) {
+
+            const productos =
+                this.inventarioService
+                    .obtenerStockBajo();
+
+
+            return Array.isArray(
+                productos
+            )
+                ? productos
+                : [];
+
+        }
+
+
+        return this.obtenerProductos()
+            .filter(
+                producto => {
+
+                    const cantidad =
+                        Number(
+                            producto.cantidad
+                            ||
+                            0
+                        );
+
+
+                    const minimo =
+                        Number(
+                            producto.stockMinimo
+                            ||
+                            0
+                        );
+
+
+                    return (
+                        cantidad >
+                        0
+                        &&
+                        cantidad <=
+                        minimo
+                    );
+
+                }
+            );
+
+    }
+
+
+    // =====================================================
+    // ESTADO STOCK
+    // =====================================================
+
+    obtenerEstadoStock(
+        producto
+    ) {
+
+        if (
+            typeof this.inventarioService
+                ?.obtenerEstadoStock ===
+            "function"
+        ) {
+
+            return this.inventarioService
+                .obtenerEstadoStock(
+                    producto
+                );
+
+        }
+
+
+        const cantidad =
+            Number(
+                producto.cantidad
+                ||
+                0
+            );
+
+
+        const minimo =
+            Number(
+                producto.stockMinimo
+                ||
+                0
+            );
+
+
+        if (
+            cantidad <=
+            0
+        ) {
+
+            return "Sin stock";
+
+        }
+
+
+        if (
+            cantidad <=
+            minimo
+        ) {
+
+            return "Stock bajo";
+
+        }
+
+
+        return "Disponible";
+
+    }
+
+
+    // =====================================================
+    // PORCENTAJE STOCK
+    // =====================================================
+
+    calcularPorcentajeStock(
+        cantidad,
+        minimo
+    ) {
+
+        if (
+            cantidad <=
+            0
+        ) {
+
+            return 0;
+
+        }
+
+
+        if (
+            minimo <=
+            0
+        ) {
+
+            return 100;
+
+        }
+
+
+        const referencia =
+            minimo *
+            2;
+
+
+        const porcentaje =
+            (
+                cantidad
+                /
+                referencia
+            )
+            *
+            100;
+
+
+        return Math.max(
+            0,
+            Math.min(
+                100,
+                Math.round(
+                    porcentaje
+                )
+            )
+        );
+
     }
 
 
@@ -1084,7 +1813,9 @@ export class InventarioView {
                 categoria => `
 
                     <option
-                        value="${categoria}"
+                        value="${this.escapar(
+                            categoria
+                        )}"
                         ${
                             categoria ===
                             actual
@@ -1094,12 +1825,15 @@ export class InventarioView {
                                 : ""
                         }
                     >
-                        ${categoria}
+                        ${this.escapar(
+                            categoria
+                        )}
                     </option>
 
                 `
             )
             .join("");
+
     }
 
 
@@ -1131,7 +1865,9 @@ export class InventarioView {
                 unidad => `
 
                     <option
-                        value="${unidad}"
+                        value="${this.escapar(
+                            unidad
+                        )}"
                         ${
                             unidad ===
                             actual
@@ -1141,17 +1877,20 @@ export class InventarioView {
                                 : ""
                         }
                     >
-                        ${unidad}
+                        ${this.escapar(
+                            unidad
+                        )}
                     </option>
 
                 `
             )
             .join("");
+
     }
 
 
     // =====================================================
-    // ICONO CATEGORÍA
+    // ICONOS
     // =====================================================
 
     obtenerIconoCategoria(
@@ -1188,12 +1927,14 @@ export class InventarioView {
 
             default:
                 return "📦";
+
         }
+
     }
 
 
     // =====================================================
-    // CLASE ESTADO STOCK
+    // CLASE STOCK
     // =====================================================
 
     obtenerClaseEstado(
@@ -1206,6 +1947,7 @@ export class InventarioView {
         ) {
 
             return "stock-empty";
+
         }
 
 
@@ -1215,9 +1957,116 @@ export class InventarioView {
         ) {
 
             return "stock-low";
+
         }
 
 
         return "stock-ok";
+
     }
+
+
+    // =====================================================
+    // NÚMERO
+    // =====================================================
+
+    formatearNumero(
+        valor
+    ) {
+
+        return Number(
+            valor
+            ||
+            0
+        )
+            .toLocaleString(
+                "es-ES",
+                {
+
+                    maximumFractionDigits:
+                        2
+
+                }
+            );
+
+    }
+
+
+    // =====================================================
+    // VACÍO
+    // =====================================================
+
+    crearVacio() {
+
+        return `
+
+            <div class="inventario-empty">
+
+                <div class="inventario-empty-icon">
+                    📦
+                </div>
+
+
+                <h3>
+                    Todavía no tienes productos
+                </h3>
+
+
+                <p>
+                    Añade tu primer material o producto
+                    al inventario.
+                </p>
+
+
+                <button
+                    id="crearPrimerProducto"
+                    class="primary-button"
+                    type="button"
+                >
+                    + Añadir producto
+                </button>
+
+            </div>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // ESCAPAR HTML
+    // =====================================================
+
+    escapar(
+        valor
+    ) {
+
+        return String(
+            valor
+            ??
+            ""
+        )
+            .replaceAll(
+                "&",
+                "&amp;"
+            )
+            .replaceAll(
+                "<",
+                "&lt;"
+            )
+            .replaceAll(
+                ">",
+                "&gt;"
+            )
+            .replaceAll(
+                '"',
+                "&quot;"
+            )
+            .replaceAll(
+                "'",
+                "&#039;"
+            );
+
+    }
+
 }

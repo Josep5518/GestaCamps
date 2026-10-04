@@ -1,339 +1,1596 @@
 /* =====================================================
    GESTACAMPS
-   MÓDULO · CUADERNO DE CAMPO
-   Día 26 · Cierre Refactorización 1
+   CUADERNO DE CAMPO
+   DÍA 27 · FRUIT ATTRACTION
 ===================================================== */
 
+
 /* =====================================================
-   ESTADÍSTICAS
+   PÁGINA
+===================================================== */
+
+.cuaderno-page,
+.cuaderno-form-page {
+    width: 100%;
+    padding-bottom: 40px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.cuaderno-hero {
+    display: grid;
+
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+
+.cuaderno-hero-content {
+    min-height: 215px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.cuaderno-eyebrow {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #39725b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cuaderno-hero h1 {
+    max-width: 520px;
+
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.cuaderno-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.cuaderno-hero-content > p {
+    max-width: 505px;
+
+    margin:
+        14px
+        0
+        18px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+.cuaderno-hero-button {
+    align-self: flex-start;
+
+    min-height: 39px;
+}
+
+
+/* =====================================================
+   HERO · FOTO
+===================================================== */
+
+.cuaderno-hero-image {
+    position: relative;
+
+    min-height: 215px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        url("../../assets/images/cuaderno-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dce9df;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.cuaderno-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0),
+            rgba(8,37,26,0.05) 42%,
+            rgba(8,37,26,0.5)
+        );
+}
+
+
+.cuaderno-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 115px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.9
+        );
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.cuaderno-hero-badge span {
+    display: block;
+
+    color: #687a71;
+
+    font-size: 8px;
+}
+
+
+.cuaderno-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+}
+
+
+.cuaderno-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(
+            0,
+            0,
+            0,
+            0.3
+        );
+}
+
+
+.cuaderno-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cuaderno-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    line-height: 1.03;
+}
+
+
+/* =====================================================
+   KPIs
 ===================================================== */
 
 .cuaderno-stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    display: grid !important;
+
+    grid-template-columns:
+        repeat(
+            4,
+            minmax(0, 1fr)
+        ) !important;
+
+    gap: 13px !important;
+
+    margin-bottom: 24px !important;
 }
+
+
+.cuaderno-stats .card {
+    min-width: 0;
+    min-height: 76px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+}
+
+
+/* =====================================================
+   CABECERA LISTADO
+===================================================== */
+
+.cuaderno-section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin:
+        7px
+        0
+        13px;
+}
+
+
+.cuaderno-section-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cuaderno-section-header h2 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+}
+
+
+.cuaderno-section-header p {
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.cuaderno-results-count {
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 8px;
+    font-weight: 700;
+}
+
 
 /* =====================================================
    FILTROS
 ===================================================== */
 
 .cuaderno-filtros-panel {
-    margin-bottom: 18px !important;
-    padding: 16px;
-    border: 1px solid var(--gc-border-soft);
-    border-radius: 14px;
-    background: white;
-    box-shadow: 0 6px 18px rgba(18, 55, 42, 0.04);
-}
-
-.cuaderno-filtros-grid {
     display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 12px;
+
+    grid-template-columns:
+        minmax(240px, 1fr)
+        210px
+        210px;
+
+    gap: 10px;
+
+    margin-bottom: 15px;
+
+    padding: 12px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 5px 17px
+        rgba(
+            18,
+            55,
+            42,
+            0.035
+        );
 }
 
-.cuaderno-filtros-panel .form-group {
-    margin: 0;
+
+.cuaderno-search-wrap {
+    position: relative;
+
+    display: flex;
+    align-items: center;
 }
 
-.cuaderno-filtros-panel label {
+
+.cuaderno-search-wrap > span {
+    position: absolute;
+
+    left: 11px;
+
+    z-index: 2;
+
+    font-size: 12px;
+}
+
+
+.cuaderno-search-wrap input {
+    width: 100%;
+    min-height: 39px;
+
+    padding-left: 35px;
+}
+
+
+.cuaderno-filter-wrap {
+    min-width: 0;
+}
+
+
+.cuaderno-filter-wrap label {
     display: block;
-    margin-bottom: 6px;
-    color: var(--gc-text);
-    font-size: 11px;
+
+    margin-bottom: 4px;
+
+    color: var(--gc-muted);
+
+    font-size: 7px;
     font-weight: 700;
 }
 
-#buscarCuaderno,
-#filtroFincaCuaderno,
-#filtroTipoCuaderno {
+
+.cuaderno-filter-wrap select {
     width: 100%;
-    min-width: 0;
-    min-height: 40px;
-    box-sizing: border-box;
+    min-height: 39px;
 }
+
 
 /* =====================================================
-   GRID DE REGISTROS
+   GRID
 ===================================================== */
-
-#listaCuadernoCampo,
-.cuaderno-grid {
-    min-width: 0;
-}
 
 .cuaderno-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 14px;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 13px;
 }
 
+
 /* =====================================================
-   TARJETA DE REGISTRO
+   TARJETA
 ===================================================== */
 
 .cuaderno-card {
     min-width: 0;
-    margin: 0 !important;
-    padding: 16px !important;
-    border: 1px solid var(--gc-border-soft);
+
+    padding: 15px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
     border-radius: 14px;
+
     background: white;
-    box-shadow: 0 7px 20px rgba(18, 55, 42, 0.05);
+
+    box-shadow:
+        0 7px 20px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+
     transition:
         transform 0.15s ease,
-        border-color 0.15s ease,
         box-shadow 0.15s ease;
 }
 
+
 @media (hover: hover) {
+
     .cuaderno-card:hover {
-        transform: translateY(-2px);
-        border-color: #d7e3dc;
-        box-shadow: 0 12px 28px rgba(18, 55, 42, 0.075);
+        transform:
+            translateY(-2px);
+
+        box-shadow:
+            0 12px 27px
+            rgba(
+                18,
+                55,
+                42,
+                0.075
+            );
     }
+
 }
 
-.cuaderno-card-header {
+
+/* =====================================================
+   CABECERA TARJETA
+===================================================== */
+
+.cuaderno-card-top {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
-    gap: 10px;
+    justify-content: space-between;
+
+    gap: 12px;
 }
 
-.cuaderno-card-header > div:first-child {
+
+.cuaderno-card-type {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
     min-width: 0;
 }
 
+
 .cuaderno-card-icon {
-    margin-bottom: 7px;
-    font-size: 22px;
-    line-height: 1;
+    width: 42px;
+    height: 42px;
+
+    flex:
+        0
+        0
+        42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e3f2e9,
+            #f2f7eb
+        );
+
+    font-size: 20px;
 }
+
+
+.cuaderno-card-kicker {
+    display: block;
+
+    margin-bottom: 2px;
+
+    color: #63816f;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
 
 .cuaderno-card h3 {
-    margin: 0 0 4px;
+    margin: 0;
+
     color: var(--gc-text);
-    font-size: 14px;
-    line-height: 1.25;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 15px;
 }
 
+
 .cuaderno-card-finca {
-    color: #247354;
-    font-size: 11px;
-    line-height: 1.3;
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+    font-weight: 500;
 }
+
+
+/* =====================================================
+   ACCIONES
+===================================================== */
 
 .cuaderno-card-actions {
     display: flex;
-    align-items: center;
-    gap: 7px;
-    flex: 0 0 auto;
+
+    gap: 5px;
 }
 
-.cuaderno-card-meta {
+
+.cuaderno-action-button {
+    width: 29px;
+    height: 29px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 0;
+
+    border:
+        1px solid
+        #dfe8e2;
+
+    border-radius: 8px;
+
+    background: #f8faf8;
+
+    color: #286148;
+
+    cursor: pointer;
+}
+
+
+.cuaderno-delete {
+    border-color: #efdddd;
+
+    background: #fffafa;
+
+    color: #b24141;
+}
+
+
+/* =====================================================
+   FECHA
+===================================================== */
+
+.cuaderno-card-date {
     display: grid;
-    gap: 5px;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    gap: 7px;
+
     margin-top: 12px;
 }
 
-.cuaderno-card p {
-    margin: 4px 0;
-    color: var(--gc-muted-strong);
-    font-size: 9px;
-    line-height: 1.35;
+
+.cuaderno-card-date > div {
+    padding:
+        8px
+        9px;
+
+    border-radius: 8px;
+
+    background: #f7f9f7;
 }
+
+
+.cuaderno-card-date span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 7px;
+}
+
+
+.cuaderno-card-date strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--gc-text);
+
+    font-size: 9px;
+}
+
+
+/* =====================================================
+   TAGS
+===================================================== */
+
+.cuaderno-card-tags {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 5px;
+
+    margin-top: 9px;
+}
+
+
+.cuaderno-card-tags:empty {
+    display: none;
+}
+
+
+.cuaderno-card-tags span {
+    padding:
+        5px
+        7px;
+
+    border-radius: 999px;
+
+    background: #edf5f0;
+
+    color: #456b59;
+
+    font-size: 7px;
+}
+
+
+/* =====================================================
+   INFO
+===================================================== */
+
+.cuaderno-info-line {
+    display: flex;
+    align-items: center;
+
+    gap: 7px;
+
+    margin-top: 7px;
+
+    padding:
+        7px
+        8px;
+
+    border-radius: 8px;
+
+    background: #fafbfa;
+}
+
+
+.cuaderno-info-line > span {
+    width: 23px;
+
+    flex:
+        0
+        0
+        23px;
+
+    text-align: center;
+
+    font-size: 13px;
+}
+
+
+.cuaderno-info-line div {
+    min-width: 0;
+}
+
+
+.cuaderno-info-line small {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 6px;
+}
+
+
+.cuaderno-info-line strong {
+    display: block;
+
+    margin-top: 1px;
+
+    overflow-wrap: anywhere;
+
+    color: var(--gc-text);
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   DETALLES
+===================================================== */
 
 .cuaderno-card-detail {
-    margin-top: 10px;
-    padding: 10px;
-    border-radius: 9px;
-    background: var(--gc-surface-soft);
+    margin-top: 9px;
+
+    padding-top: 9px;
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
 }
 
-.cuaderno-card-detail strong {
-    color: var(--gc-text);
-    font-size: 9px;
+
+.cuaderno-card-detail > span {
+    display: block;
+
+    color: #587563;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
 }
+
 
 .cuaderno-card-detail p {
-    margin: 5px 0 0;
+    margin:
+        4px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+
+    line-height: 1.45;
 }
 
-.cuaderno-card-author {
-    margin-top: 11px !important;
-    color: var(--gc-muted) !important;
-    font-size: 8px !important;
-}
 
 /* =====================================================
-   BOTONES DE TARJETA
+   FOOTER
 ===================================================== */
 
-.editar-cuaderno {
-    min-height: 32px;
-    padding: 0 9px;
-    border-radius: 8px;
+.cuaderno-card-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-top: 11px;
+
+    padding-top: 9px;
+
+    border-top:
+        1px solid
+        var(--gc-border-soft);
+}
+
+
+.cuaderno-card-footer span {
+    color: var(--gc-muted);
+
+    font-size: 7px;
+}
+
+
+.cuaderno-card-footer strong {
+    color: #436654;
+
+    font-size: 8px;
+}
+
+
+/* =====================================================
+   EMPTY
+===================================================== */
+
+.cuaderno-empty {
+    grid-column:
+        1
+        /
+        -1;
+
+    min-height: 240px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    padding: 25px;
+
+    border:
+        1px dashed
+        #dbe5df;
+
+    border-radius: 15px;
+
+    background: white;
+
+    text-align: center;
+}
+
+
+.cuaderno-empty-icon {
+    width: 57px;
+    height: 57px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 16px;
+
+    background: #eaf4ee;
+
+    font-size: 26px;
+}
+
+
+.cuaderno-empty h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+}
+
+
+.cuaderno-empty p {
+    margin:
+        6px
+        0
+        0;
+
+    color: var(--gc-muted);
+
     font-size: 9px;
 }
 
-.eliminar-cuaderno {
-    width: 32px;
-    min-width: 32px;
-    height: 32px;
-    padding: 0;
-    border-radius: 8px;
-    color: #b13b3b;
-    background: #fdeaea;
-}
 
 /* =====================================================
-   FORMULARIO
+   FORM
 ===================================================== */
 
-#volverCuaderno + .topbar {
-    margin-bottom: 18px;
+.cuaderno-form-page > .back-button {
+    margin-bottom: 10px;
 }
 
-#volverCuaderno ~ .form-panel {
-    border: 1px solid var(--gc-border-soft);
-    border-radius: 14px;
-    background: white;
-    box-shadow: 0 7px 20px rgba(18, 55, 42, 0.04);
+
+.cuaderno-form-header {
+    margin-bottom: 16px;
 }
 
-.cuaderno-trabajadores-grid {
+
+.cuaderno-form-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #41735d;
+
+    font-size: 8px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cuaderno-form-header h1 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 29px;
+}
+
+
+.cuaderno-form-header p {
+    margin:
+        5px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+/* =====================================================
+   FORM LAYOUT
+===================================================== */
+
+.cuaderno-form-layout {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
-    gap: 8px;
+
+    grid-template-columns:
+        minmax(600px, 1fr)
+        minmax(270px, 0.42fr);
+
+    gap: 15px;
+
+    align-items: start;
 }
+
+
+.cuaderno-form-panel {
+    max-width: none;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(
+            18,
+            55,
+            42,
+            0.045
+        );
+}
+
+
+.cuaderno-form-section {
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 17px;
+}
+
+
+.cuaderno-form-section > span {
+    width: 38px;
+    height: 38px;
+
+    flex:
+        0
+        0
+        38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eaf4ee;
+
+    font-size: 18px;
+}
+
+
+.cuaderno-form-section h3 {
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+}
+
+
+.cuaderno-form-section p {
+    margin:
+        2px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
+
+.cuaderno-form-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            2,
+            minmax(0, 1fr)
+        );
+
+    column-gap: 12px;
+}
+
+
+.cuaderno-form-wide {
+    grid-column:
+        1
+        /
+        -1;
+}
+
+
+/* =====================================================
+   TRABAJADORES
+===================================================== */
+
+.cuaderno-trabajadores {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 7px;
+
+    padding: 10px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 10px;
+
+    background: #f8faf8;
+}
+
 
 .cuaderno-trabajador-option {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 10px;
-    border: 1px solid #e1e8e3;
-    border-radius: 9px;
+
+    gap: 6px;
+
+    padding:
+        7px
+        9px;
+
+    border:
+        1px solid
+        #dfe8e2;
+
+    border-radius: 999px;
+
     background: white;
+
+    color: #345747;
+
+    font-size: 8px;
+
+    cursor: pointer;
 }
+
 
 .cuaderno-trabajador-option input {
-    flex: 0 0 auto;
+    width: auto;
+
+    margin: 0;
 }
+
+
+.cuaderno-no-workers {
+    margin: 0;
+
+    color: var(--gc-muted);
+
+    font-size: 8px;
+}
+
 
 /* =====================================================
-   ESTADO VACÍO
+   ASIDE
 ===================================================== */
 
-.cuaderno-empty-state {
-    grid-column: 1 / -1;
+.cuaderno-form-aside {
+    display: grid;
+
+    gap: 12px;
 }
+
+
+.cuaderno-form-photo {
+    min-height: 330px;
+
+    display: flex;
+    align-items: flex-end;
+
+    overflow: hidden;
+
+    padding: 19px;
+
+    border-radius: 15px;
+
+    background:
+        linear-gradient(
+            180deg,
+            rgba(8,40,28,0.02),
+            rgba(8,40,28,0.68)
+        ),
+        url("../../assets/images/cuaderno-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat;
+
+    box-shadow:
+        0 8px 22px
+        rgba(
+            18,
+            55,
+            42,
+            0.07
+        );
+}
+
+
+.cuaderno-form-photo span {
+    display: block;
+
+    margin-bottom: 5px;
+
+    color:
+        rgba(
+            255,
+            255,
+            255,
+            0.77
+        );
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cuaderno-form-photo strong {
+    display: block;
+
+    max-width: 250px;
+
+    color: white;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 22px;
+
+    line-height: 1.06;
+}
+
+
+/* =====================================================
+   TIP
+===================================================== */
+
+.cuaderno-form-tip {
+    display: flex;
+
+    gap: 9px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        #dfebe4;
+
+    border-radius: 12px;
+
+    background: #f5f9f6;
+}
+
+
+.cuaderno-form-tip > span {
+    width: 34px;
+    height: 34px;
+
+    flex:
+        0
+        0
+        34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #e2f1e8;
+}
+
+
+.cuaderno-form-tip strong {
+    display: block;
+
+    color: #244d3c;
+
+    font-size: 9px;
+}
+
+
+.cuaderno-form-tip p {
+    margin:
+        3px
+        0
+        0;
+
+    color: #718078;
+
+    font-size: 8px;
+
+    line-height: 1.45;
+}
+
 
 /* =====================================================
    TABLET
 ===================================================== */
 
-@media (max-width: 1250px) {
-    .cuaderno-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+@media (max-width: 1100px) {
+
+    .cuaderno-hero {
+        grid-template-columns: 1fr;
     }
 
-    .cuaderno-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    .cuaderno-hero-content {
+        min-height: 0;
     }
+
+
+    .cuaderno-hero-image {
+        min-height: 185px;
+    }
+
+
+    .cuaderno-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .cuaderno-filtros-panel {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .cuaderno-search-wrap {
+        grid-column:
+            1
+            /
+            -1;
+    }
+
+
+    .cuaderno-form-layout {
+        grid-template-columns: 1fr;
+    }
+
+
+    .cuaderno-form-aside {
+        grid-template-columns:
+            1fr
+            1fr;
+    }
+
+
+    .cuaderno-form-photo {
+        min-height: 180px;
+    }
+
 }
+
 
 /* =====================================================
    MÓVIL
 ===================================================== */
 
 @media (max-width: 760px) {
-    .cuaderno-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    .cuaderno-page,
+    .cuaderno-form-page {
+        padding-bottom: 24px;
     }
 
-    .cuaderno-filtros-panel {
-        padding: 12px !important;
-        margin-bottom: 14px !important;
-        border-radius: 12px;
-    }
 
-    .cuaderno-filtros-grid {
-        grid-template-columns: 1fr;
-        gap: 10px;
-    }
-
-    #buscarCuaderno,
-    #filtroFincaCuaderno,
-    #filtroTipoCuaderno {
-        width: 100% !important;
-        min-width: 0 !important;
-        max-width: 100% !important;
-        min-height: 42px;
-        overflow: hidden;
-        text-overflow: ellipsis;
-    }
-
-    .cuaderno-grid {
-        grid-template-columns: 1fr;
+    .cuaderno-hero {
         gap: 11px;
+
+        margin-bottom: 13px;
     }
 
-    .cuaderno-card {
-        padding: 13px !important;
-        border-radius: 12px;
+
+    .cuaderno-hero-content {
+        padding:
+            0
+            2px;
     }
 
-    .cuaderno-card-header {
+
+    .cuaderno-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .cuaderno-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .cuaderno-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .cuaderno-hero-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+
+    .cuaderno-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .cuaderno-hero-copy strong {
+        font-size: 18px;
+    }
+
+
+    .cuaderno-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px !important;
+    }
+
+
+    .cuaderno-section-header {
+        align-items: flex-start;
+        flex-direction: column;
+
         gap: 8px;
     }
 
-    .cuaderno-card-icon {
-        margin-bottom: 5px;
-        font-size: 20px;
+
+    .cuaderno-section-header h2 {
+        font-size: 18px;
     }
 
-    .cuaderno-card h3 {
-        margin-bottom: 3px;
-        font-size: 14px;
-    }
 
-    .cuaderno-card-meta {
-        margin-top: 10px;
-        gap: 4px;
-    }
-
-    .cuaderno-card p {
-        margin: 3px 0;
-        font-size: 9px;
-    }
-
-    .editar-cuaderno {
-        min-height: 32px;
-        padding: 0 9px;
-    }
-
-    .eliminar-cuaderno {
-        width: 32px;
-        min-width: 32px;
-        height: 32px;
-    }
-
-    .cuaderno-trabajadores-grid {
+    .cuaderno-filtros-panel {
         grid-template-columns: 1fr;
     }
+
+
+    .cuaderno-search-wrap {
+        grid-column: auto;
+    }
+
+
+    .cuaderno-grid {
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .cuaderno-card {
+        padding: 13px;
+    }
+
+
+    .cuaderno-form-header h1 {
+        font-size: 25px;
+    }
+
+
+    .cuaderno-form-panel {
+        padding: 14px;
+
+        border-radius: 12px;
+    }
+
+
+    .cuaderno-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .cuaderno-form-wide {
+        grid-column: auto;
+    }
+
+
+    .cuaderno-form-aside {
+        grid-template-columns: 1fr;
+    }
+
+
+    .cuaderno-form-photo {
+        min-height: 160px;
+    }
+
 }
 
+
 /* =====================================================
-   MÓVIL ESTRECHO
+   MÓVIL PEQUEÑO
 ===================================================== */
 
 @media (max-width: 420px) {
-    .cuaderno-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    .cuaderno-card-date {
+        grid-template-columns: 1fr 1fr;
     }
 
-    .cuaderno-card-actions {
-        gap: 5px;
+
+    .cuaderno-card-top {
+        gap: 7px;
     }
+
+
+    .cuaderno-card-icon {
+        width: 36px;
+        height: 36px;
+
+        flex-basis: 36px;
+
+        font-size: 17px;
+    }
+
 }
