@@ -28,10 +28,6 @@ export class PerfilView {
         this.authService =
             new AuthService();
 
-        this.copiaPendiente =
-            null;
-
-
         this.seguridadView =
             new SeguridadView(
                 this.authService,
@@ -40,6 +36,9 @@ export class PerfilView {
                         "Credenciales actualizadas correctamente."
                     )
             );
+
+        this.copiaPendiente =
+            null;
 
     }
 
@@ -76,110 +75,110 @@ export class PerfilView {
 
         const ultimaCopia =
             esAdministrador
-
                 ? this.backupService
                     .obtenerUltimaCopia()
-
                 : null;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar perfil-topbar">
+            <div class="perfil-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <button
-                        type="button"
-                        id="volverPerfil"
-                        class="back-button"
-                    >
-                        ← Volver
-                    </button>
-
-
-                    <h2>
-                        Perfil y explotación
-                    </h2>
-
-                    <p>
-                        Datos de la explotación, seguridad y configuración
-                    </p>
-
-                </div>
-
-            </header>
+                ${this.crearHero(
+                    datos,
+                    usuarioActual
+                )}
 
 
-            ${this.crearCabeceraPerfil(
-                datos,
-                usuarioActual
-            )}
+                <!-- ==========================================
+                     RESUMEN
+                =========================================== -->
+
+                ${this.crearResumenPerfil(
+                    datos,
+                    usuarioActual
+                )}
 
 
-            ${this.crearResumenPerfil(
-                datos,
-                usuarioActual
-            )}
+                <!-- ==========================================
+                     DATOS EXPLOTACIÓN
+                =========================================== -->
+
+                ${
+                    puedeEditarPerfil
+
+                        ? this.crearFormularioPerfil(
+                            datos,
+                            mensaje
+                        )
+
+                        : this.crearInformacionSoloLectura()
+                }
 
 
-            ${
-                puedeEditarPerfil
+                <!-- ==========================================
+                     SEGURIDAD
+                =========================================== -->
 
-                    ? this.crearFormularioPerfil(
-                        datos,
-                        mensaje
-                    )
+                <section class="perfil-section-block">
 
-                    : this.crearInformacionSoloLectura()
-            }
-
-
-            <section class="perfil-section-block">
-
-                <div class="perfil-section-title">
-
-                    <div>
-
-                        <span class="perfil-section-icon">
-                            🔐
-                        </span>
+                    <div class="perfil-section-heading">
 
                         <div>
 
-                            <h3>
-                                Seguridad
-                            </h3>
+                            <span>
+                                SEGURIDAD
+                            </span>
+
+
+                            <h2>
+                                Acceso y credenciales
+                            </h2>
+
 
                             <p>
-                                Credenciales y acceso a GestaCamps
+                                Gestiona las credenciales asociadas
+                                a tu sesión de GestaCamps.
                             </p>
 
                         </div>
 
+
+                        <div class="perfil-section-icon">
+                            🔐
+                        </div>
+
                     </div>
 
-                </div>
+
+                    ${this.seguridadView.render(
+                        usuarioActual
+                        ||
+                        {}
+                    )}
+
+                </section>
 
 
-                ${this.seguridadView.render(
-                    usuarioActual
-                    ||
-                    {}
-                )}
+                <!-- ==========================================
+                     BACKUP
+                =========================================== -->
 
-            </section>
+                ${
+                    esAdministrador
 
+                        ? this.crearSeccionBackup(
+                            ultimaCopia
+                        )
 
-            ${
-                esAdministrador
+                        : ""
+                }
 
-                    ? this.crearSeccionBackup(
-                        ultimaCopia
-                    )
-
-                    : ""
-            }
+            </div>
 
         `;
 
@@ -203,13 +202,21 @@ export class PerfilView {
 
 
     // =====================================================
-    // CABECERA PERFIL
+    // HERO
     // =====================================================
 
-    crearCabeceraPerfil(
+    crearHero(
         datos,
         usuarioActual
     ) {
+
+        const nombreExplotacion =
+            datos.nombre
+            ||
+            datos.nombreExplotacion
+            ||
+            "Mi explotación";
+
 
         const nombreUsuario =
             this.obtenerNombreUsuarioActual(
@@ -223,73 +230,103 @@ export class PerfilView {
             );
 
 
-        const explotacion =
-            datos.nombre
-            ||
-            datos.nombreExplotacion
-            ||
-            "GestaCamps";
-
-
-        const iniciales =
-            this.obtenerInicialesUsuario(
-                usuarioActual
-            );
-
-
         return `
 
-            <section class="perfil-hero">
+            <section class="perfil-premium-hero">
 
-                <div class="perfil-hero-avatar">
+                <div class="perfil-premium-content">
 
-                    ${escaparHTML(
-                        iniciales
-                    )}
-
-                </div>
-
-
-                <div class="perfil-hero-main">
-
-                    <span class="perfil-hero-label">
-                        Usuario
+                    <span class="perfil-eyebrow">
+                        ⚙️ SISTEMA
                     </span>
 
 
-                    <h2>
-
-                        ${escaparHTML(
-                            nombreUsuario
-                        )}
-
-                    </h2>
+                    <h1>
+                        Tu explotación,
+                        <span>
+                            bien configurada.
+                        </span>
+                    </h1>
 
 
                     <p>
-
-                        ${escaparHTML(
-                            rol
-                        )}
-
+                        Centraliza los datos generales,
+                        fiscales y de acceso que utiliza
+                        GestaCamps en toda la aplicación.
                     </p>
+
+
+                    <div class="perfil-hero-user">
+
+                        <div class="perfil-hero-avatar">
+
+                            ${escaparHTML(
+                                this.obtenerIniciales(
+                                    nombreUsuario
+                                )
+                            )}
+
+                        </div>
+
+
+                        <div>
+
+                            <small>
+                                SESIÓN ACTUAL
+                            </small>
+
+
+                            <strong>
+                                ${escaparHTML(
+                                    nombreUsuario
+                                )}
+                            </strong>
+
+
+                            <span>
+                                ${escaparHTML(
+                                    rol
+                                )}
+                            </span>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
 
-                <div class="perfil-hero-explotacion">
+                <div class="perfil-premium-image">
 
-                    <span>
-                        Explotación
-                    </span>
+                    <div class="perfil-hero-badge">
 
-                    <strong>
+                        <span>
+                            Explotación
+                        </span>
 
-                        ${escaparHTML(
-                            explotacion
-                        )}
 
-                    </strong>
+                        <strong>
+                            ${escaparHTML(
+                                nombreExplotacion
+                            )}
+                        </strong>
+
+                    </div>
+
+
+                    <div class="perfil-hero-copy">
+
+                        <small>
+                            IDENTIDAD · SEGURIDAD · DATOS
+                        </small>
+
+
+                        <strong>
+                            Todo preparado<br>
+                            para trabajar
+                        </strong>
+
+                    </div>
 
                 </div>
 
@@ -301,7 +338,7 @@ export class PerfilView {
 
 
     // =====================================================
-    // RESUMEN
+    // RESUMEN PERFIL
     // =====================================================
 
     crearResumenPerfil(
@@ -311,9 +348,11 @@ export class PerfilView {
 
         return `
 
-            <div class="perfil-top-grid">
+            <section class="perfil-top-grid">
 
-                <section class="perfil-card">
+                <!-- EXPLOTACIÓN -->
+
+                <article class="perfil-card">
 
                     <div class="perfil-card-header">
 
@@ -324,9 +363,15 @@ export class PerfilView {
 
                         <div>
 
+                            <span class="perfil-card-eyebrow">
+                                EXPLOTACIÓN
+                            </span>
+
+
                             <h3>
-                                Datos de la explotación
+                                Datos generales
                             </h3>
+
 
                             <p>
                                 Información general y fiscal
@@ -394,10 +439,12 @@ export class PerfilView {
 
                     </div>
 
-                </section>
+                </article>
 
 
-                <section class="perfil-card perfil-user-card">
+                <!-- USUARIO -->
+
+                <article class="perfil-card perfil-user-card">
 
                     <div class="perfil-card-header">
 
@@ -408,12 +455,18 @@ export class PerfilView {
 
                         <div>
 
+                            <span class="perfil-card-eyebrow">
+                                USUARIO
+                            </span>
+
+
                             <h3>
-                                Cuenta actual
+                                Sesión actual
                             </h3>
 
+
                             <p>
-                                Sesión iniciada en GestaCamps
+                                Usuario que está utilizando GestaCamps
                             </p>
 
                         </div>
@@ -423,47 +476,60 @@ export class PerfilView {
 
                     <div class="perfil-user-box">
 
-                        <div class="perfil-user-avatar">
+                        <span class="perfil-user-avatar">
 
                             ${escaparHTML(
-                                this.obtenerInicialesUsuario(
-                                    usuarioActual
+                                this.obtenerIniciales(
+                                    this.obtenerNombreUsuarioActual(
+                                        usuarioActual
+                                    )
                                 )
                             )}
 
-                        </div>
+                        </span>
 
 
                         <div>
 
                             <strong>
-
                                 ${escaparHTML(
                                     this.obtenerNombreUsuarioActual(
                                         usuarioActual
                                     )
                                 )}
-
                             </strong>
 
 
                             <span>
-
                                 ${escaparHTML(
                                     this.obtenerNombreRolActual(
                                         usuarioActual
                                     )
                                 )}
-
                             </span>
 
                         </div>
 
                     </div>
 
-                </section>
 
-            </div>
+                    <div class="perfil-user-note">
+
+                        <span>
+                            🔒
+                        </span>
+
+
+                        <p>
+                            Los permisos disponibles dependen
+                            del rol asignado a este usuario.
+                        </p>
+
+                    </div>
+
+                </article>
+
+            </section>
 
         `;
 
@@ -478,23 +544,29 @@ export class PerfilView {
 
         return `
 
-            <section
-                class="
-                    perfil-edit-card
-                    perfil-section-spaced
-                "
-            >
+            <section class="perfil-edit-card">
 
-                <div class="perfil-edit-header">
+                <div class="perfil-readonly">
 
-                    <h3>
-                        ℹ️ Datos de la explotación
-                    </h3>
+                    <span>
+                        ℹ️
+                    </span>
 
-                    <p>
-                        Tu usuario puede consultar estos datos,
-                        pero no modificarlos.
-                    </p>
+
+                    <div>
+
+                        <h3>
+                            Datos en modo consulta
+                        </h3>
+
+
+                        <p>
+                            Tu usuario puede consultar
+                            la información de la explotación,
+                            pero no modificarla.
+                        </p>
+
+                    </div>
 
                 </div>
 
@@ -525,7 +597,9 @@ export class PerfilView {
 
                             <div class="perfil-success">
 
-                                ✓
+                                <span>
+                                    ✓
+                                </span>
 
                                 ${escaparHTML(
                                     mensaje
@@ -539,183 +613,241 @@ export class PerfilView {
                 }
 
 
-                <div class="perfil-edit-header">
+                <div class="perfil-section-heading">
 
-                    <h3>
-                        Datos de la explotación
-                    </h3>
+                    <div>
 
-                    <p>
-                        Esta información se reutiliza en facturas y documentos
-                    </p>
+                        <span>
+                            CONFIGURACIÓN
+                        </span>
+
+
+                        <h2>
+                            Datos de la explotación
+                        </h2>
+
+
+                        <p>
+                            Esta información se reutiliza
+                            en documentos y módulos de GestaCamps.
+                        </p>
+
+                    </div>
+
+
+                    <div class="perfil-section-icon">
+                        ✎
+                    </div>
 
                 </div>
 
 
                 <div class="perfil-form-layout">
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilNombre",
+                    <div class="perfil-field perfil-full">
 
-                        etiqueta:
-                            "Nombre de la explotación *",
-
-                        valor:
-                            datos.nombre
-                            ||
-                            datos.nombreExplotacion
-                            ||
-                            "",
-
-                        completo:
-                            true
-                    })}
+                        <label for="perfilNombre">
+                            Nombre de la explotación *
+                        </label>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilTitular",
+                        <input
+                            id="perfilNombre"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.nombre
+                                ||
+                                datos.nombreExplotacion
+                                ||
+                                ""
+                            )}"
+                        >
 
-                        etiqueta:
-                            "Titular / Razón social",
-
-                        valor:
-                            datos.titular
-                            ||
-                            datos.razonSocial
-                            ||
-                            "",
-
-                        completo:
-                            true
-                    })}
+                    </div>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilNif",
+                    <div class="perfil-field perfil-full">
 
-                        etiqueta:
-                            "NIF / CIF",
-
-                        valor:
-                            datos.nifCif
-                            ||
-                            datos.nif
-                            ||
-                            ""
-                    })}
+                        <label for="perfilTitular">
+                            Titular / Razón social
+                        </label>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilTelefono",
+                        <input
+                            id="perfilTitular"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.titular
+                                ||
+                                datos.razonSocial
+                                ||
+                                ""
+                            )}"
+                        >
 
-                        etiqueta:
-                            "Teléfono",
-
-                        tipo:
-                            "tel",
-
-                        valor:
-                            datos.telefono
-                            ||
-                            ""
-                    })}
+                    </div>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilEmail",
+                    <div class="perfil-field">
 
-                        etiqueta:
-                            "Email",
-
-                        tipo:
-                            "email",
-
-                        valor:
-                            datos.email
-                            ||
-                            "",
-
-                        completo:
-                            true
-                    })}
+                        <label for="perfilNif">
+                            NIF / CIF
+                        </label>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilDireccion",
+                        <input
+                            id="perfilNif"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.nifCif
+                                ||
+                                datos.nif
+                                ||
+                                ""
+                            )}"
+                        >
 
-                        etiqueta:
-                            "Dirección",
-
-                        valor:
-                            datos.direccion
-                            ||
-                            "",
-
-                        completo:
-                            true
-                    })}
+                    </div>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilLocalidad",
+                    <div class="perfil-field">
 
-                        etiqueta:
-                            "Localidad",
-
-                        valor:
-                            datos.localidad
-                            ||
-                            ""
-                    })}
+                        <label for="perfilTelefono">
+                            Teléfono
+                        </label>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilProvincia",
+                        <input
+                            id="perfilTelefono"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.telefono
+                                ||
+                                ""
+                            )}"
+                        >
 
-                        etiqueta:
-                            "Provincia",
-
-                        valor:
-                            datos.provincia
-                            ||
-                            ""
-                    })}
-
-
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilCodigoPostal",
-
-                        etiqueta:
-                            "Código postal",
-
-                        valor:
-                            datos.codigoPostal
-                            ||
-                            ""
-                    })}
+                    </div>
 
 
-                    ${this.crearCampoPerfil({
-                        id:
-                            "perfilPais",
+                    <div class="perfil-field perfil-full">
 
-                        etiqueta:
-                            "País",
+                        <label for="perfilEmail">
+                            Email
+                        </label>
 
-                        valor:
-                            datos.pais
-                            ||
-                            "España"
-                    })}
+
+                        <input
+                            id="perfilEmail"
+                            type="email"
+                            value="${escaparHTML(
+                                datos.email
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="perfil-field perfil-full">
+
+                        <label for="perfilDireccion">
+                            Dirección
+                        </label>
+
+
+                        <input
+                            id="perfilDireccion"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.direccion
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="perfil-field">
+
+                        <label for="perfilLocalidad">
+                            Localidad
+                        </label>
+
+
+                        <input
+                            id="perfilLocalidad"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.localidad
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="perfil-field">
+
+                        <label for="perfilProvincia">
+                            Provincia
+                        </label>
+
+
+                        <input
+                            id="perfilProvincia"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.provincia
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="perfil-field">
+
+                        <label for="perfilCodigoPostal">
+                            Código postal
+                        </label>
+
+
+                        <input
+                            id="perfilCodigoPostal"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.codigoPostal
+                                ||
+                                ""
+                            )}"
+                        >
+
+                    </div>
+
+
+                    <div class="perfil-field">
+
+                        <label for="perfilPais">
+                            País
+                        </label>
+
+
+                        <input
+                            id="perfilPais"
+                            type="text"
+                            value="${escaparHTML(
+                                datos.pais
+                                ||
+                                "España"
+                            )}"
+                        >
+
+                    </div>
 
 
                     <div class="perfil-divider perfil-full"></div>
@@ -725,12 +857,19 @@ export class PerfilView {
 
                         <div class="perfil-docs-header">
 
+                            <span>
+                                DOCUMENTOS
+                            </span>
+
+
                             <h3>
-                                Documentos
+                                Identidad en documentos
                             </h3>
 
+
                             <p>
-                                Personaliza cómo aparecen tus facturas y documentos
+                                Configura cómo aparece
+                                GestaCamps en documentos generados.
                             </p>
 
                         </div>
@@ -741,7 +880,6 @@ export class PerfilView {
                             <input
                                 id="perfilMarcaGestaCamps"
                                 type="checkbox"
-
                                 ${
                                     datos.mostrarMarcaGestaCamps
                                         ? "checked"
@@ -750,14 +888,19 @@ export class PerfilView {
                             >
 
 
+                            <span class="perfil-checkbox-ui"></span>
+
+
                             <div>
 
                                 <strong>
                                     Mostrar marca GestaCamps
                                 </strong>
 
+
                                 <span>
-                                    Añade “Generado con GestaCamps” al pie de facturas y documentos.
+                                    Añade “Generado con GestaCamps”
+                                    al pie de facturas y documentos.
                                 </span>
 
                             </div>
@@ -789,61 +932,6 @@ export class PerfilView {
 
 
     // =====================================================
-    // CAMPO PERFIL
-    // =====================================================
-
-    crearCampoPerfil({
-        id,
-        etiqueta,
-        valor = "",
-        tipo = "text",
-        completo = false
-    }) {
-
-        return `
-
-            <div
-                class="
-                    perfil-field
-                    ${
-                        completo
-                            ? "perfil-full"
-                            : ""
-                    }
-                "
-            >
-
-                <label for="${escaparHTML(
-                    id
-                )}">
-
-                    ${escaparHTML(
-                        etiqueta
-                    )}
-
-                </label>
-
-
-                <input
-                    id="${escaparHTML(
-                        id
-                    )}"
-                    type="${escaparHTML(
-                        tipo
-                    )}"
-                    value="${escaparHTML(
-                        valor
-                    )}"
-                >
-
-            </div>
-
-        `;
-
-    }
-
-
-    // =====================================================
     // BACKUP
     // =====================================================
 
@@ -853,33 +941,51 @@ export class PerfilView {
 
         return `
 
-            <section
-                class="
-                    perfil-edit-card
-                    perfil-section-spaced
-                "
-            >
+            <section class="perfil-section-block perfil-backup-section">
 
-                <div class="perfil-edit-header">
+                <div class="perfil-section-heading">
 
-                    <h3>
-                        💾 Copias de seguridad
-                    </h3>
+                    <div>
 
-                    <p>
-                        Protege todos los datos almacenados en GestaCamps
-                    </p>
+                        <span>
+                            PROTECCIÓN DE DATOS
+                        </span>
+
+
+                        <h2>
+                            Copias de seguridad
+                        </h2>
+
+
+                        <p>
+                            Descarga o restaura todos los datos
+                            almacenados en GestaCamps.
+                        </p>
+
+                    </div>
+
+
+                    <div class="perfil-section-icon">
+                        💾
+                    </div>
 
                 </div>
 
 
                 <div class="backup-grid">
 
+                    <!-- DESCARGAR -->
+
                     <article class="backup-card">
 
                         <div class="backup-icon">
-                            📥
+                            ↓
                         </div>
+
+
+                        <span class="backup-kicker">
+                            EXPORTAR
+                        </span>
 
 
                         <h3>
@@ -888,21 +994,16 @@ export class PerfilView {
 
 
                         <p class="backup-description">
-
-                            Guarda fincas, Campanyas, cultivos,
-                            tratamientos, trabajadores, facturas,
-                            historial y el resto de datos.
-
+                            Guarda fincas, campañas, cultivos,
+                            tratamientos, trabajadores, documentos,
+                            producción, historial y datos financieros.
                         </p>
 
 
                         <button
                             id="descargarBackup"
                             type="button"
-                            class="
-                                primary-button
-                                backup-action
-                            "
+                            class="primary-button backup-action"
                         >
                             Descargar copia
                         </button>
@@ -912,26 +1013,35 @@ export class PerfilView {
 
                             Última copia:
 
-                            ${
-                                ultimaCopia
+                            <strong>
 
-                                    ? formatearFechaHora(
-                                        ultimaCopia
-                                    )
+                                ${
+                                    ultimaCopia
+                                        ? formatearFechaHora(
+                                            ultimaCopia
+                                        )
+                                        : "Nunca"
+                                }
 
-                                    : "Nunca"
-                            }
+                            </strong>
 
                         </p>
 
                     </article>
 
 
+                    <!-- RESTAURAR -->
+
                     <article class="backup-card">
 
                         <div class="backup-icon">
-                            📤
+                            ↑
                         </div>
+
+
+                        <span class="backup-kicker">
+                            IMPORTAR
+                        </span>
 
 
                         <h3>
@@ -940,19 +1050,26 @@ export class PerfilView {
 
 
                         <p class="backup-description">
-
-                            Recupera los datos desde una copia anterior
-                            de GestaCamps.
-
+                            Recupera una copia anterior
+                            de todos los datos de GestaCamps.
                         </p>
 
 
-                        <input
-                            id="archivoBackup"
-                            type="file"
-                            accept=".json,application/json"
-                            class="backup-file-input"
-                        >
+                        <label class="backup-file-label">
+
+                            <span>
+                                Seleccionar archivo JSON
+                            </span>
+
+
+                            <input
+                                id="archivoBackup"
+                                type="file"
+                                accept=".json,application/json"
+                                class="backup-file-input"
+                            >
+
+                        </label>
 
 
                         <div
@@ -965,17 +1082,26 @@ export class PerfilView {
                 </div>
 
 
+                <!-- ZONA PELIGRO -->
+
                 <div class="perfil-danger-zone">
+
+                    <div class="perfil-danger-icon">
+                        ⚠
+                    </div>
+
 
                     <div>
 
                         <h3>
-                            ⚠️ Zona de peligro
+                            Zona de peligro
                         </h3>
 
+
                         <p>
-                            Esta opción borra todos los datos locales de GestaCamps.
-                            Descarga una copia antes si quieres conservarlos.
+                            Elimina todos los datos locales de GestaCamps.
+                            Antes de utilizar esta opción,
+                            descarga una copia de seguridad.
                         </p>
 
                     </div>
@@ -1004,38 +1130,19 @@ export class PerfilView {
 
     configurarEventosPerfil() {
 
-        document
-            .getElementById(
-                "volverPerfil"
-            )
-            ?.addEventListener(
-                "click",
-                () =>
-                    this.volver()
-            );
+        const guardar =
+            document
+                .getElementById(
+                    "guardarPerfil"
+                );
 
 
-        document
-            .getElementById(
-                "guardarPerfil"
-            )
+        guardar
             ?.addEventListener(
                 "click",
                 () =>
                     this.guardarPerfil()
             );
-
-    }
-
-
-    // =====================================================
-    // VOLVER
-    // =====================================================
-
-    volver() {
-
-        window.location.hash =
-            "#inicio";
 
     }
 
@@ -1164,8 +1271,6 @@ export class PerfilView {
 
             alert(
                 resultado.mensaje
-                ||
-                "No se han podido guardar los datos."
             );
 
 
@@ -1197,10 +1302,28 @@ export class PerfilView {
         }
 
 
-        document
-            .getElementById(
-                "descargarBackup"
-            )
+        const botonDescargar =
+            document
+                .getElementById(
+                    "descargarBackup"
+                );
+
+
+        const archivoInput =
+            document
+                .getElementById(
+                    "archivoBackup"
+                );
+
+
+        const borrar =
+            document
+                .getElementById(
+                    "borrarDatosGestaCamps"
+                );
+
+
+        botonDescargar
             ?.addEventListener(
                 "click",
                 () =>
@@ -1208,10 +1331,7 @@ export class PerfilView {
             );
 
 
-        document
-            .getElementById(
-                "archivoBackup"
-            )
+        archivoInput
             ?.addEventListener(
                 "change",
                 event =>
@@ -1221,10 +1341,7 @@ export class PerfilView {
             );
 
 
-        document
-            .getElementById(
-                "borrarDatosGestaCamps"
-            )
+        borrar
             ?.addEventListener(
                 "click",
                 () =>
@@ -1309,9 +1426,10 @@ export class PerfilView {
 
 
         const resumen =
-            document.getElementById(
-                "resumenBackup"
-            );
+            document
+                .getElementById(
+                    "resumenBackup"
+                );
 
 
         if (
@@ -1393,145 +1511,27 @@ export class PerfilView {
         resumen
     ) {
 
-        const elementos = [
-
-            [
-                "🌾",
-                resumen.fincas,
-                "fincas"
-            ],
-
-            [
-                "🗓️",
-                resumen.campanias,
-                "Campanyas"
-            ],
-
-            [
-                "🌱",
-                resumen.cultivos,
-                "cultivos"
-            ],
-
-            [
-                "📖",
-                resumen.cuaderno,
-                "cuaderno"
-            ],
-
-            [
-                "🧪",
-                resumen.tratamientos,
-                "tratamientos"
-            ],
-
-            [
-                "👨‍🌾",
-                resumen.trabajos,
-                "trabajos"
-            ],
-
-            [
-                "👷",
-                resumen.trabajadores,
-                "trabajadores"
-            ],
-
-            [
-                "⏱️",
-                resumen.fichajes,
-                "fichajes"
-            ],
-
-            [
-                "⚠️",
-                resumen.incidencias,
-                "incidencias"
-            ],
-
-            [
-                "🚜",
-                resumen.maquinaria,
-                "maquinaria"
-            ],
-
-            [
-                "📦",
-                resumen.inventario,
-                "inventario"
-            ],
-
-            [
-                "🍎",
-                resumen.produccion,
-                "producción"
-            ],
-
-            [
-                "👥",
-                resumen.contactos,
-                "contactos"
-            ],
-
-            [
-                "🧾",
-                resumen.albaranes,
-                "albaranes"
-            ],
-
-            [
-                "💶",
-                resumen.facturas,
-                "facturas"
-            ],
-
-            [
-                "💳",
-                resumen.movimientos,
-                "cobros/pagos"
-            ],
-
-            [
-                "💰",
-                resumen.gastos,
-                "gastos"
-            ],
-
-            [
-                "🕒",
-                resumen.historial,
-                "historial"
-            ]
-
-        ];
-
-
         return `
 
             <div class="backup-preview">
 
                 <strong>
-                    Copia válida de GestaCamps
+                    ✓ Copia válida de GestaCamps
                 </strong>
 
 
                 <p>
-
                     <strong>
                         Explotación:
                     </strong>
 
                     ${escaparHTML(
                         resumen.explotacion
-                        ||
-                        "—"
                     )}
-
                 </p>
 
 
                 <p>
-
                     <strong>
                         Fecha:
                     </strong>
@@ -1539,41 +1539,82 @@ export class PerfilView {
                     ${formatearFechaHora(
                         resumen.fecha
                     )}
-
                 </p>
 
 
                 <div class="backup-preview-grid">
 
-                    ${elementos
-                        .map(
-                            (
-                                [
-                                    icono,
-                                    cantidad,
-                                    nombre
-                                ]
-                            ) => `
+                    <span>
+                        🌾 ${resumen.fincas} fincas
+                    </span>
 
-                                <span>
+                    <span>
+                        🗓️ ${resumen.campanias} campañas
+                    </span>
 
-                                    ${icono}
+                    <span>
+                        🌱 ${resumen.cultivos} cultivos
+                    </span>
 
-                                    ${Number(
-                                        cantidad
-                                        ||
-                                        0
-                                    )}
+                    <span>
+                        📖 ${resumen.cuaderno} cuaderno
+                    </span>
 
-                                    ${escaparHTML(
-                                        nombre
-                                    )}
+                    <span>
+                        🧪 ${resumen.tratamientos} tratamientos
+                    </span>
 
-                                </span>
+                    <span>
+                        👨‍🌾 ${resumen.trabajos} trabajos
+                    </span>
 
-                            `
-                        )
-                        .join("")}
+                    <span>
+                        👷 ${resumen.trabajadores} trabajadores
+                    </span>
+
+                    <span>
+                        ⏱️ ${resumen.fichajes} fichajes
+                    </span>
+
+                    <span>
+                        ⚠️ ${resumen.incidencias} incidencias
+                    </span>
+
+                    <span>
+                        🚜 ${resumen.maquinaria} maquinaria
+                    </span>
+
+                    <span>
+                        📦 ${resumen.inventario} inventario
+                    </span>
+
+                    <span>
+                        🍎 ${resumen.produccion} producción
+                    </span>
+
+                    <span>
+                        👥 ${resumen.contactos} contactos
+                    </span>
+
+                    <span>
+                        🧾 ${resumen.albaranes} albaranes
+                    </span>
+
+                    <span>
+                        💶 ${resumen.facturas} facturas
+                    </span>
+
+                    <span>
+                        💳 ${resumen.movimientos} cobros/pagos
+                    </span>
+
+                    <span>
+                        💰 ${resumen.gastos} gastos
+                    </span>
+
+                    <span>
+                        🕒 ${resumen.historial} historial
+                    </span>
 
                 </div>
 
@@ -1581,10 +1622,7 @@ export class PerfilView {
                 <button
                     id="restaurarBackup"
                     type="button"
-                    class="
-                        primary-button
-                        backup-restore-button
-                    "
+                    class="primary-button backup-restore-button"
                 >
                     Restaurar esta copia
                 </button>
@@ -1626,14 +1664,14 @@ export class PerfilView {
         }
 
 
-        const primeraConfirmacion =
+        const confirmar =
             window.confirm(
                 "La restauración sustituirá los datos actuales de GestaCamps por los contenidos en esta copia.\n\n¿Quieres continuar?"
             );
 
 
         if (
-            !primeraConfirmacion
+            !confirmar
         ) {
 
             return;
@@ -1641,14 +1679,14 @@ export class PerfilView {
         }
 
 
-        const segundaConfirmacion =
+        const segundoConfirmar =
             window.confirm(
                 "Esta acción reemplazará los datos actuales.\n\n¿Confirmas definitivamente la restauración?"
             );
 
 
         if (
-            !segundaConfirmacion
+            !segundoConfirmar
         ) {
 
             return;
@@ -1716,14 +1754,14 @@ export class PerfilView {
         }
 
 
-        const confirmar =
+        const primera =
             window.confirm(
                 "¿Quieres borrar TODOS los datos de GestaCamps?\n\nEsta acción no se puede deshacer sin una copia de seguridad."
             );
 
 
         if (
-            !confirmar
+            !primera
         ) {
 
             return;
@@ -1798,7 +1836,9 @@ export class PerfilView {
         if (
             this.explotacionService
             &&
-            typeof this.explotacionService.obtener ===
+            typeof
+            this.explotacionService
+                .obtener ===
             "function"
         ) {
 
@@ -1815,7 +1855,9 @@ export class PerfilView {
         if (
             this.explotacionService
             &&
-            typeof this.explotacionService.obtenerDatos ===
+            typeof
+            this.explotacionService
+                .obtenerDatos ===
             "function"
         ) {
 
@@ -1834,10 +1876,6 @@ export class PerfilView {
     }
 
 
-    // =====================================================
-    // VALOR
-    // =====================================================
-
     obtenerValor(
         id
     ) {
@@ -1848,7 +1886,6 @@ export class PerfilView {
                     id
                 )
                 ?.value
-                ?.trim()
             ??
             ""
         );
@@ -1878,13 +1915,8 @@ export class PerfilView {
                 usuario.nombre,
                 usuario.apellidos
             ]
-                .filter(
-                    Boolean
-                )
-                .join(
-                    " "
-                )
-                .trim()
+                .filter(Boolean)
+                .join(" ")
             ||
             usuario.usuario
             ||
@@ -1920,70 +1952,26 @@ export class PerfilView {
     }
 
 
-    obtenerInicialesUsuario(
-        usuario
+    obtenerIniciales(
+        nombre
     ) {
 
-        if (
-            !usuario
-        ) {
-
-            return "👤";
-
-        }
-
-
-        const partes = [
-
-            usuario.nombre,
-            usuario.apellidos
-
-        ]
-            .filter(
-                Boolean
-            );
-
-
-        if (
-            partes.length ===
-            0
-        ) {
-
-            const nombre =
-                usuario.usuario
-                ||
-                "";
-
-
-            return (
-                nombre
-                    .slice(
-                        0,
-                        2
-                    )
-                    .toUpperCase()
-                ||
-                "👤"
-            );
-
-        }
-
-
-        return partes
-            .map(
-                parte =>
-                    String(
-                        parte
-                    )
-                        .trim()
-                        .charAt(
-                            0
-                        )
-                        .toUpperCase()
-            )
+        return String(
+            nombre
+            ||
+            "U"
+        )
+            .trim()
+            .split(/\s+/)
             .slice(
                 0,
                 2
+            )
+            .map(
+                parte =>
+                    parte
+                        .charAt(0)
+                        .toUpperCase()
             )
             .join("");
 
@@ -1991,7 +1979,7 @@ export class PerfilView {
 
 
     // =====================================================
-    // DATO RESUMEN
+    // CREAR DATO
     // =====================================================
 
     crearDato(
@@ -2004,20 +1992,16 @@ export class PerfilView {
             <div class="perfil-summary-item">
 
                 <span>
-
                     ${escaparHTML(
                         titulo
                     )}
-
                 </span>
 
 
                 <strong>
-
                     ${escaparHTML(
                         valor
                     )}
-
                 </strong>
 
             </div>

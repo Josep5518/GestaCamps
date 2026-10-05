@@ -1,61 +1,187 @@
 /* =====================================================
-   GESTACAMPS
-   COMPONENTE · BOTONES
+   GESTACAMPS · BOTONES PRINCIPALES GLOBALES
 ===================================================== */
 
 .primary-button {
-    background-color: var(--gc-green);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    color: white;
+    gap: 7px;
 
-    border: none;
+    min-height: 38px;
 
-    padding: 11px 18px;
+    padding:
+        0
+        14px;
+
+    border:
+        1px solid
+        #1f6a4d;
 
     border-radius: 9px;
 
+    background:
+        linear-gradient(
+            135deg,
+            #1f6a4d,
+            #2d7d5d
+        );
+
+    color: #ffffff;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    line-height: 1;
+
+    text-decoration: none;
+
     cursor: pointer;
 
-    font-size: 14px;
+    box-shadow:
+        0 5px 14px
+        rgba(
+            24,
+            88,
+            63,
+            0.16
+        );
 
-    font-weight: 600;
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
 }
 
 
 .primary-button:hover {
-    background-color: var(--gc-green-hover);
+    background:
+        linear-gradient(
+            135deg,
+            #185a41,
+            #266e52
+        );
+
+    transform:
+        translateY(
+            -1px
+        );
+
+    box-shadow:
+        0 7px 18px
+        rgba(
+            24,
+            88,
+            63,
+            0.20
+        );
 }
 
 
-.secondary-button {
-    background-color: var(--gc-green-soft);
-
-    color: var(--gc-green-text);
-
-    border: none;
-
-    padding: 10px 16px;
-
-    border-radius: 8px;
-
-    cursor: pointer;
-
-    font-weight: 600;
+.primary-button:active {
+    transform:
+        translateY(
+            0
+        );
 }
 
 
-.secondary-button:hover {
-    background-color: #dcece4;
+.primary-button:focus-visible {
+    outline: none;
+
+    box-shadow:
+        0
+        0
+        0
+        3px
+        rgba(
+            45,
+            125,
+            93,
+            0.18
+        );
 }
 
 
 /* =====================================================
-   BOTONES DESHABILITADOS
+   SECUNDARIOS
 ===================================================== */
 
-.primary-button:disabled,
-.secondary-button:disabled {
-    opacity: 0.6;
+.secondary-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
 
-    cursor: not-allowed;
+    gap: 7px;
+
+    min-height: 38px;
+
+    padding:
+        0
+        13px;
+
+    border:
+        1px solid
+        #d6e2dc;
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: #28513f;
+
+    font-family: inherit;
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background 0.15s ease,
+        border-color 0.15s ease,
+        transform 0.15s ease;
+}
+
+
+.secondary-button:hover {
+    background: #f3f8f5;
+
+    border-color: #bdd3c8;
+
+    transform:
+        translateY(
+            -1px
+        );
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .primary-button,
+    .secondary-button {
+        min-height: 38px;
+
+        padding:
+            0
+            12px;
+
+        border-radius: 8px;
+
+        font-size: 11px;
+    }
+
+
+    .topbar > .primary-button,
+    .topbar > .secondary-button {
+        width: auto !important;
+
+        align-self: flex-start;
+    }
+
 }

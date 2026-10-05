@@ -4,11 +4,19 @@ export class HistorialView {
         mainContent,
         historialService
     ) {
-        this.mainContent = mainContent;
-        this.historialService = historialService;
 
-        this.filtroModulo = "";
-        this.busqueda = "";
+        this.mainContent =
+            mainContent;
+
+        this.historialService =
+            historialService;
+
+        this.filtroModulo =
+            "";
+
+        this.busqueda =
+            "";
+
     }
 
 
@@ -19,16 +27,16 @@ export class HistorialView {
     mostrar() {
 
         const todos =
-            this.historialService
-                .obtenerTodos();
+            this.obtenerRegistros();
+
 
         const hoy =
-            this.historialService
-                .obtenerHoy();
+            this.obtenerRegistrosHoy();
+
 
         const modulos =
-            this.historialService
-                .obtenerModulos();
+            this.obtenerModulos();
+
 
         const usuarios =
             new Set(
@@ -38,241 +46,471 @@ export class HistorialView {
                             registro.usuarioNombre
                     )
                     .filter(Boolean)
-            ).size;
+            )
+                .size;
+
+
+        const ultimoRegistro =
+            todos.length >
+            0
+                ? todos[0]
+                : null;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="historial-page">
 
-                <div>
-                    <h2>
-                        Historial
-                    </h2>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <p>
-                        Registro de actividad y cambios de GestaCamps
-                    </p>
-                </div>
+                <section class="historial-hero">
 
-            </header>
+                    <div class="historial-hero-content">
+
+                        <span class="historial-eyebrow">
+                            ⚙️ SISTEMA
+                        </span>
 
 
-            <section class="stats historial-stats">
+                        <h1>
+                            Cada cambio,
+                            <span>
+                                siempre registrado.
+                            </span>
+                        </h1>
 
-                <div class="card">
 
-                    <span class="card-icon">
-                        🧾
-                    </span>
-
-                    <div>
                         <p>
-                            Registros
+                            Consulta toda la actividad de GestaCamps:
+                            altas, modificaciones, eliminaciones y cambios
+                            de estado realizados por los usuarios.
                         </p>
 
-                        <h3>
-                            ${todos.length}
-                        </h3>
+
+                        <div class="historial-hero-status">
+
+                            <span>
+                                ✓
+                            </span>
+
+
+                            <div>
+
+                                <small>
+                                    ÚLTIMA ACTIVIDAD
+                                </small>
+
+
+                                <strong>
+
+                                    ${
+                                        ultimoRegistro
+
+                                            ? this.formatearFechaHora(
+                                                ultimoRegistro.fechaHora
+                                            )
+
+                                            : "Sin actividad"
+                                    }
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
                     </div>
 
-                </div>
+
+                    <div class="historial-hero-image">
+
+                        <div class="historial-hero-badge">
+
+                            <span>
+                                Registros hoy
+                            </span>
 
 
-                <div class="card">
+                            <strong>
+                                ${hoy.length}
+                            </strong>
 
-                    <span class="card-icon">
-                        🕒
-                    </span>
+                        </div>
 
-                    <div>
-                        <p>
-                            Hoy
-                        </p>
 
-                        <h3>
-                            ${hoy.length}
-                        </h3>
+                        <div class="historial-hero-copy">
+
+                            <small>
+                                REVISA · CONTROLA · TRAZA
+                            </small>
+
+
+                            <strong>
+                                Todo lo que ocurre,<br>
+                                queda registrado
+                            </strong>
+
+                        </div>
+
                     </div>
 
-                </div>
+                </section>
 
 
-                <div class="card">
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
 
-                    <span class="card-icon">
-                        📂
-                    </span>
+                <section class="stats historial-stats">
 
-                    <div>
-                        <p>
-                            Módulos
-                        </p>
+                    ${this.crearStat(
+                        "🧾",
+                        "Registros",
+                        todos.length
+                    )}
 
-                        <h3>
-                            ${modulos.length}
-                        </h3>
+
+                    ${this.crearStat(
+                        "🕒",
+                        "Hoy",
+                        hoy.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "📂",
+                        "Módulos",
+                        modulos.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "👤",
+                        "Usuarios",
+                        usuarios
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     FILTROS
+                =========================================== -->
+
+                <section class="historial-filtros-panel">
+
+                    <div class="historial-filtros-header">
+
+                        <div>
+
+                            <span class="historial-section-eyebrow">
+                                FILTROS
+                            </span>
+
+
+                            <h2>
+                                Buscar actividad
+                            </h2>
+
+
+                            <p>
+                                Localiza rápidamente una acción,
+                                usuario, módulo o elemento.
+                            </p>
+
+                        </div>
+
+
+                        <div class="historial-filter-icon">
+                            🔍
+                        </div>
+
                     </div>
 
-                </div>
+
+                    <div class="historial-filtros-grid">
+
+                        <div class="form-group historial-search-group">
+
+                            <label for="buscarHistorial">
+                                Buscar
+                            </label>
 
 
-                <div class="card">
+                            <div class="historial-search-wrapper">
 
-                    <span class="card-icon">
-                        👤
-                    </span>
-
-                    <div>
-                        <p>
-                            Usuarios
-                        </p>
-
-                        <h3>
-                            ${usuarios}
-                        </h3>
-                    </div>
-
-                </div>
-
-            </section>
+                                <span>
+                                    🔎
+                                </span>
 
 
-            <section class="panel historial-filtros-panel">
+                                <input
+                                    id="buscarHistorial"
+                                    type="search"
+                                    placeholder="Acción, usuario, elemento..."
+                                    value="${this.escaparHTML(
+                                        this.busqueda
+                                    )}"
+                                >
 
-                <div class="historial-filtros-grid">
+                            </div>
 
-                    <div class="form-group">
+                        </div>
 
-                        <label for="buscarHistorial">
-                            Buscar
-                        </label>
 
-                        <input
-                            id="buscarHistorial"
-                            type="search"
-                            placeholder="Acción, usuario, elemento..."
-                            value="${this.escaparHTML(this.busqueda)}"
+                        <div class="form-group">
+
+                            <label for="filtroModuloHistorial">
+                                Módulo
+                            </label>
+
+
+                            <select id="filtroModuloHistorial">
+
+                                <option value="">
+                                    Todos los módulos
+                                </option>
+
+
+                                ${modulos
+                                    .map(
+                                        modulo => `
+
+                                            <option
+                                                value="${this.escaparHTML(
+                                                    modulo
+                                                )}"
+                                                ${
+                                                    this.filtroModulo ===
+                                                    modulo
+
+                                                        ? "selected"
+
+                                                        : ""
+                                                }
+                                            >
+                                                ${this.escaparHTML(
+                                                    modulo
+                                                )}
+                                            </option>
+
+                                        `
+                                    )
+                                    .join("")}
+
+                            </select>
+
+                        </div>
+
+
+                        <button
+                            id="limpiarFiltrosHistorial"
+                            class="secondary-button historial-clear-button"
+                            type="button"
                         >
+                            Limpiar filtros
+                        </button>
 
                     </div>
 
+                </section>
 
-                    <div class="form-group">
 
-                        <label for="filtroModuloHistorial">
-                            Módulo
-                        </label>
+                <!-- ==========================================
+                     ACTIVIDAD
+                =========================================== -->
 
-                        <select
-                            id="filtroModuloHistorial"
+                <section class="historial-actividad-panel">
+
+                    <div class="historial-actividad-header">
+
+                        <div>
+
+                            <span class="historial-section-eyebrow">
+                                REGISTRO DE ACTIVIDAD
+                            </span>
+
+
+                            <h2>
+                                Historial
+                            </h2>
+
+
+                            <p>
+                                Últimos movimientos registrados
+                                en el sistema.
+                            </p>
+
+                        </div>
+
+
+                        <span
+                            id="contadorHistorial"
+                            class="historial-contador"
                         >
-
-                            <option value="">
-                                Todos los módulos
-                            </option>
-
-                            ${modulos
-                                .map(
-                                    modulo => `
-
-                                        <option
-                                            value="${this.escaparHTML(modulo)}"
-                                            ${
-                                                this.filtroModulo === modulo
-                                                    ? "selected"
-                                                    : ""
-                                            }
-                                        >
-                                            ${this.escaparHTML(modulo)}
-                                        </option>
-
-                                    `
-                                )
-                                .join("")
-                            }
-
-                        </select>
+                            0 registros
+                        </span>
 
                     </div>
 
-                </div>
 
-            </section>
+                    <div
+                        id="contenidoHistorial"
+                        class="historial-lista"
+                    ></div>
 
+                </section>
 
-            <section class="panel historial-actividad-panel">
-
-                <div class="panel-header historial-actividad-header">
-
-                    <div>
-                        <h3>
-                            Actividad
-                        </h3>
-
-                        <p>
-                            Últimos cambios realizados en GestaCamps
-                        </p>
-                    </div>
-
-                    <span
-                        id="contadorHistorial"
-                        class="historial-contador"
-                    >
-                        0 registros
-                    </span>
-
-                </div>
-
-
-                <div
-                    id="contenidoHistorial"
-                    class="historial-lista"
-                ></div>
-
-            </section>
+            </div>
 
         `;
 
 
-        const buscador =
-            document.getElementById(
-                "buscarHistorial"
-            );
-
-        const filtro =
-            document.getElementById(
-                "filtroModuloHistorial"
-            );
-
-
-        buscador?.addEventListener(
-            "input",
-            () => {
-
-                this.busqueda =
-                    buscador.value;
-
-                this.mostrarRegistros();
-
-            }
-        );
-
-
-        filtro?.addEventListener(
-            "change",
-            () => {
-
-                this.filtroModulo =
-                    filtro.value;
-
-                this.mostrarRegistros();
-
-            }
-        );
+        this.configurarEventos();
 
 
         this.mostrarRegistros();
+
+    }
+
+
+    // =====================================================
+    // STAT
+    // =====================================================
+
+    crearStat(
+        icono,
+        titulo,
+        valor
+    ) {
+
+        return `
+
+            <article class="card">
+
+                <span class="card-icon">
+                    ${icono}
+                </span>
+
+
+                <div>
+
+                    <p>
+                        ${this.escaparHTML(
+                            titulo
+                        )}
+                    </p>
+
+
+                    <h3>
+                        ${valor}
+                    </h3>
+
+                </div>
+
+            </article>
+
+        `;
+
+    }
+
+
+    // =====================================================
+    // EVENTOS
+    // =====================================================
+
+    configurarEventos() {
+
+        const buscador =
+            document
+                .getElementById(
+                    "buscarHistorial"
+                );
+
+
+        const filtro =
+            document
+                .getElementById(
+                    "filtroModuloHistorial"
+                );
+
+
+        const limpiar =
+            document
+                .getElementById(
+                    "limpiarFiltrosHistorial"
+                );
+
+
+        buscador
+            ?.addEventListener(
+                "input",
+                () => {
+
+                    this.busqueda =
+                        buscador.value;
+
+
+                    this.mostrarRegistros();
+
+                }
+            );
+
+
+        filtro
+            ?.addEventListener(
+                "change",
+                () => {
+
+                    this.filtroModulo =
+                        filtro.value;
+
+
+                    this.mostrarRegistros();
+
+                }
+            );
+
+
+        limpiar
+            ?.addEventListener(
+                "click",
+                () => {
+
+                    this.busqueda =
+                        "";
+
+                    this.filtroModulo =
+                        "";
+
+
+                    if (
+                        buscador
+                    ) {
+
+                        buscador.value =
+                            "";
+
+                    }
+
+
+                    if (
+                        filtro
+                    ) {
+
+                        filtro.value =
+                            "";
+
+                    }
+
+
+                    this.mostrarRegistros();
+
+                }
+            );
+
     }
 
 
@@ -283,14 +521,17 @@ export class HistorialView {
     mostrarRegistros() {
 
         const contenedor =
-            document.getElementById(
-                "contenidoHistorial"
-            );
+            document
+                .getElementById(
+                    "contenidoHistorial"
+                );
+
 
         const contador =
-            document.getElementById(
-                "contadorHistorial"
-            );
+            document
+                .getElementById(
+                    "contadorHistorial"
+                );
 
 
         if (
@@ -298,13 +539,14 @@ export class HistorialView {
             ||
             !contador
         ) {
+
             return;
+
         }
 
 
         let registros =
-            this.historialService
-                .obtenerTodos();
+            this.obtenerRegistros();
 
 
         if (
@@ -335,14 +577,29 @@ export class HistorialView {
                 registros.filter(
                     registro => {
 
+                        const cambios =
+                            Array.isArray(
+                                registro.cambios
+                            )
+                                ? registro.cambios
+                                : [];
+
+
                         const texto =
                             [
+
                                 registro.modulo,
+
                                 registro.accion,
+
                                 registro.referencia,
+
                                 registro.usuarioNombre,
+
                                 registro.usuarioTipo,
-                                ...(registro.cambios || [])
+
+                                ...cambios
+
                             ]
                                 .filter(Boolean)
                                 .join(" ")
@@ -359,55 +616,115 @@ export class HistorialView {
         }
 
 
+        registros =
+            registros
+                .slice()
+                .sort(
+                    (
+                        a,
+                        b
+                    ) => {
+
+                        const fechaA =
+                            new Date(
+                                a.fechaHora
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        const fechaB =
+                            new Date(
+                                b.fechaHora
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        return (
+                            fechaB -
+                            fechaA
+                        );
+
+                    }
+                );
+
+
         contador.textContent =
             `${registros.length} ${
-                registros.length === 1
+                registros.length ===
+                1
                     ? "registro"
                     : "registros"
             }`;
 
 
         if (
-            registros.length === 0
+            registros.length ===
+            0
         ) {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state historial-empty-state">
+                <div class="historial-empty">
 
-                    <div class="empty-icon">
+                    <div class="historial-empty-icon">
                         🕒
                     </div>
+
 
                     <h3>
                         No hay movimientos
                     </h3>
 
+
                     <p>
-                        Los cambios realizados en GestaCamps aparecerán aquí.
+
+                        ${
+                            this.busqueda
+                            ||
+                            this.filtroModulo
+
+                                ? "No hay registros que coincidan con los filtros seleccionados."
+
+                                : "Los cambios realizados en GestaCamps aparecerán aquí."
+                        }
+
                     </p>
 
                 </div>
 
             `;
 
+
             return;
+
         }
 
 
-        contenedor.innerHTML =
-            registros
-                .slice(
-                    0,
-                    500
-                )
-                .map(
-                    registro =>
-                        this.crearRegistro(
-                            registro
-                        )
-                )
-                .join("");
+        contenedor.innerHTML = `
+
+            <div class="historial-timeline">
+
+                ${registros
+                    .slice(
+                        0,
+                        500
+                    )
+                    .map(
+                        registro =>
+                            this.crearRegistro(
+                                registro
+                            )
+                    )
+                    .join("")}
+
+            </div>
+
+        `;
+
     }
 
 
@@ -424,6 +741,13 @@ export class HistorialView {
                 registro
             );
 
+
+        const clase =
+            this.obtenerClaseAccion(
+                registro
+            );
+
+
         const cambios =
             Array.isArray(
                 registro.cambios
@@ -434,10 +758,20 @@ export class HistorialView {
 
         return `
 
-            <article class="historial-item">
+            <article
+                class="
+                    historial-item
+                    ${clase}
+                "
+            >
+
+                <div class="historial-item-line"></div>
+
 
                 <div class="historial-item-icono">
+
                     ${icono}
+
                 </div>
 
 
@@ -445,24 +779,51 @@ export class HistorialView {
 
                     <div class="historial-item-cabecera">
 
-                        <div class="historial-item-titulo">
+                        <div>
 
-                            <strong>
-                                ${this.escaparHTML(
-                                    registro.accion
-                                    ||
-                                    "Actividad"
-                                )}
-                            </strong>
+                            <div class="historial-item-titulo">
 
-                            <span>
-                                ·
-                                ${this.escaparHTML(
-                                    registro.modulo
-                                    ||
-                                    "GestaCamps"
-                                )}
-                            </span>
+                                <strong>
+
+                                    ${this.escaparHTML(
+                                        registro.accion
+                                        ||
+                                        "Actividad"
+                                    )}
+
+                                </strong>
+
+
+                                <span>
+
+                                    ${this.escaparHTML(
+                                        registro.modulo
+                                        ||
+                                        "GestaCamps"
+                                    )}
+
+                                </span>
+
+                            </div>
+
+
+                            ${
+                                registro.referencia
+
+                                    ? `
+
+                                        <p class="historial-item-referencia">
+
+                                            ${this.escaparHTML(
+                                                registro.referencia
+                                            )}
+
+                                        </p>
+
+                                    `
+
+                                    : ""
+                            }
 
                         </div>
 
@@ -480,81 +841,95 @@ export class HistorialView {
                     </div>
 
 
-                    ${
-                        registro.referencia
+                    <div class="historial-item-footer">
 
-                            ? `
+                        <div class="historial-item-user">
 
-                                <p class="historial-item-referencia">
+                            <span class="historial-user-avatar">
+
+                                ${this.obtenerInicialUsuario(
+                                    registro.usuarioNombre
+                                )}
+
+                            </span>
+
+
+                            <div>
+
+                                <strong>
 
                                     ${this.escaparHTML(
-                                        registro.referencia
+                                        registro.usuarioNombre
+                                        ||
+                                        "Administración"
                                     )}
 
-                                </p>
-
-                            `
-
-                            : ""
-                    }
+                                </strong>
 
 
-                    <p class="historial-item-usuario">
+                                <small>
 
-                        👤
+                                    ${this.escaparHTML(
+                                        registro.usuarioTipo
+                                        ||
+                                        "Sistema"
+                                    )}
 
-                        ${this.escaparHTML(
-                            registro.usuarioNombre
-                            ||
-                            "Administración"
-                        )}
+                                </small>
+
+                            </div>
+
+                        </div>
+
 
                         ${
-                            registro.usuarioTipo
+                            cambios.length >
+                            0
 
-                                ? ` · ${this.escaparHTML(
-                                    registro.usuarioTipo
-                                )}`
+                                ? `
+
+                                    <div class="historial-item-cambios">
+
+                                        <span>
+                                            CAMPOS MODIFICADOS
+                                        </span>
+
+
+                                        <div>
+
+                                            ${cambios
+                                                .map(
+                                                    cambio => `
+
+                                                        <small>
+
+                                                            ${this.escaparHTML(
+                                                                cambio
+                                                            )}
+
+                                                        </small>
+
+                                                    `
+                                                )
+                                                .join("")}
+
+                                        </div>
+
+                                    </div>
+
+                                `
 
                                 : ""
                         }
 
-                    </p>
-
-
-                    ${
-                        cambios.length > 0
-
-                            ? `
-
-                                <p class="historial-item-cambios">
-
-                                    <strong>
-                                        Campos modificados:
-                                    </strong>
-
-                                    ${cambios
-                                        .map(
-                                            cambio =>
-                                                this.escaparHTML(
-                                                    cambio
-                                                )
-                                        )
-                                        .join(", ")
-                                    }
-
-                                </p>
-
-                            `
-
-                            : ""
-                    }
+                    </div>
 
                 </div>
 
             </article>
 
         `;
+
     }
 
 
@@ -570,7 +945,9 @@ export class HistorialView {
             registro.accion ===
             "Creación"
         ) {
-            return "➕";
+
+            return "＋";
+
         }
 
 
@@ -578,23 +955,159 @@ export class HistorialView {
             registro.accion ===
             "Eliminación"
         ) {
-            return "🗑️";
+
+            return "×";
+
         }
 
 
         if (
             String(
                 registro.accion
+                ||
+                ""
             )
                 .startsWith(
                     "Estado:"
                 )
         ) {
-            return "🔄";
+
+            return "↻";
+
         }
 
 
-        return "✏️";
+        return "✎";
+
+    }
+
+
+    // =====================================================
+    // CLASE ACCIÓN
+    // =====================================================
+
+    obtenerClaseAccion(
+        registro
+    ) {
+
+        if (
+            registro.accion ===
+            "Creación"
+        ) {
+
+            return "historial-creacion";
+
+        }
+
+
+        if (
+            registro.accion ===
+            "Eliminación"
+        ) {
+
+            return "historial-eliminacion";
+
+        }
+
+
+        if (
+            String(
+                registro.accion
+                ||
+                ""
+            )
+                .startsWith(
+                    "Estado:"
+                )
+        ) {
+
+            return "historial-estado";
+
+        }
+
+
+        return "historial-edicion";
+
+    }
+
+
+    // =====================================================
+    // INICIAL USUARIO
+    // =====================================================
+
+    obtenerInicialUsuario(
+        nombre
+    ) {
+
+        const limpio =
+            String(
+                nombre
+                ||
+                "A"
+            )
+                .trim();
+
+
+        return this.escaparHTML(
+            limpio
+                .charAt(0)
+                .toUpperCase()
+                ||
+                "A"
+        );
+
+    }
+
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    obtenerRegistros() {
+
+        const registros =
+            this.historialService
+                ?.obtenerTodos?.();
+
+
+        return Array.isArray(
+            registros
+        )
+            ? registros
+            : [];
+
+    }
+
+
+    obtenerRegistrosHoy() {
+
+        const registros =
+            this.historialService
+                ?.obtenerHoy?.();
+
+
+        return Array.isArray(
+            registros
+        )
+            ? registros
+            : [];
+
+    }
+
+
+    obtenerModulos() {
+
+        const modulos =
+            this.historialService
+                ?.obtenerModulos?.();
+
+
+        return Array.isArray(
+            modulos
+        )
+            ? modulos
+            : [];
+
     }
 
 
@@ -609,7 +1122,9 @@ export class HistorialView {
         if (
             !valor
         ) {
+
             return "—";
+
         }
 
 
@@ -624,13 +1139,16 @@ export class HistorialView {
                 fecha.getTime()
             )
         ) {
+
             return valor;
+
         }
 
 
         return fecha.toLocaleString(
             "es-ES",
             {
+
                 day:
                     "2-digit",
 
@@ -644,12 +1162,11 @@ export class HistorialView {
                     "2-digit",
 
                 minute:
-                    "2-digit",
-
-                second:
                     "2-digit"
+
             }
         );
+
     }
 
 
@@ -686,5 +1203,7 @@ export class HistorialView {
                 "'",
                 "&#039;"
             );
+
     }
+
 }

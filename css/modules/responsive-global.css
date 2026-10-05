@@ -1,100 +1,62 @@
 /* =====================================================
    GESTACAMPS
-   MÓDULO · RESPONSIVE GLOBAL / PWA
-   Día 23 · Modularización CSS
+   RESPONSIVE GLOBAL DEFINITIVO
+   FREEZE · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   RESPONSIVE GENERAL INICIAL
+   BASE RESPONSIVE
 ===================================================== */
-
-/* ==================================
-   RESPONSIVE
-================================== */
-
-@media (max-width: 1100px) {
-
-    .stats {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-    .fincas-grid,
-    .parcelas-grid,
-    .cultivos-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-
-}
-
-
-@media (max-width: 800px) {
-
-    .sidebar {
-        width: 210px;
-    }
-
-    .main-content {
-        margin-left: 210px;
-
-        padding: 25px;
-    }
-
-    .dashboard-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-@media (max-width: 650px) {
-
-    .sidebar {
-        display: none;
-    }
-
-    .main-content {
-        margin-left: 0;
-    }
-
-    .stats,
-    .finca-stats,
-    .cultivos-stats,
-    .fincas-grid,
-    .parcelas-grid,
-    .cultivos-grid {
-        grid-template-columns: 1fr;
-    }
-
-}
-
-
-/* =====================================================
-   PWA + RESPONSIVE MÓVIL
-===================================================== */
-
-/* ==================================
-   DÍA 6 - PWA + RESPONSIVE MÓVIL
-================================== */
 
 html {
+    min-width: 320px;
+
     min-height: 100%;
-    background-color: var(--gc-bg);
+
+    overflow-x: hidden;
+
+    -webkit-text-size-adjust: 100%;
 }
+
 
 body {
     min-width: 320px;
+
     min-height: 100vh;
     min-height: 100dvh;
+
     overflow-x: hidden;
 }
+
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+
+img,
+picture,
+video,
+canvas,
+svg {
+    max-width: 100%;
+
+    height: auto;
+}
+
 
 button,
 input,
 select,
 textarea {
+    max-width: 100%;
+
     font: inherit;
 }
+
 
 button,
 a,
@@ -104,17 +66,69 @@ textarea {
     -webkit-tap-highlight-color: transparent;
 }
 
-img,
-svg,
-canvas {
+
+input,
+select,
+textarea {
+    min-width: 0;
+}
+
+
+/* =====================================================
+   EVITAR DESBORDAMIENTOS
+===================================================== */
+
+.main-content,
+.panel,
+.card,
+.form-panel,
+[class*="-card"],
+[class*="-panel"],
+[class*="-grid"],
+[class*="-content"],
+[class*="-body"] {
+    min-width: 0;
+}
+
+
+p,
+span,
+strong,
+small,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    overflow-wrap: break-word;
+}
+
+
+/* =====================================================
+   TABLAS
+===================================================== */
+
+.table-wrapper,
+.table-responsive,
+.factura-table-wrapper,
+.albaran-table-wrapper {
+    width: 100%;
+
+    overflow-x: auto;
+
+    -webkit-overflow-scrolling: touch;
+}
+
+
+table {
     max-width: 100%;
 }
 
-.sidebar-desktop-brand > p {
-    margin-top: 12px;
-    color: var(--gc-sidebar-muted);
-    font-size: 14px;
-}
+
+/* =====================================================
+   CABECERA MÓVIL
+===================================================== */
 
 .sidebar-mobile-top,
 .mobile-header,
@@ -123,564 +137,1364 @@ canvas {
 }
 
 
-/* TABLET */
+/* =====================================================
+   DESKTOP GRANDE
+   > 1180
+===================================================== */
+
+@media (min-width: 1181px) {
+
+    .main-content {
+        min-width: 0;
+    }
+
+
+    .sidebar {
+        visibility: visible !important;
+
+        pointer-events: auto !important;
+
+        transform: none !important;
+    }
+
+
+    .sidebar-backdrop {
+        display: none !important;
+    }
+
+}
+
+
+/* =====================================================
+   TABLET / PORTÁTIL PEQUEÑO
+   <= 1180
+===================================================== */
 
 @media (max-width: 1180px) {
 
+    /* ================================================
+       CONTENIDO
+    ================================================= */
+
     .main-content {
-        padding: 28px 28px;
-    }
-
-    .stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-}
-
-.fincas-grid,
-.parcelas-grid,
-.cultivos-grid,
-.trabajos-grid,
-.trabajadores-grid,
-.maquinaria-grid,
-.inventario-grid,
-.produccion-grid,
-.albaranes-grid,
-.facturas-grid,
-.gastos-grid,
-.contactos-grid,
-.campanias-grid,
-.rentabilidad-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-}
-
-.dashboard-grid,
-.estadisticas-grid,
-.statistics-grid,
-.perfil-layout,
-.perfil-top-grid {
-    grid-template-columns: 1fr;
-}
-
-
-/* MÓVIL / DRAWER */
-
-@media (max-width: 760px) {
-
-    body {
-        padding-top: calc(64px + env(safe-area-inset-top));
-    }
-
-    body.mobile-menu-open {
-        overflow: hidden;
-        touch-action: none;
-    }
-
-    .mobile-header {
-        position: fixed;
-        z-index: 1200;
-        top: 0;
-        right: 0;
-        left: 0;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-        height: calc(64px + env(safe-area-inset-top));
-        padding:
-            calc(10px + env(safe-area-inset-top))
-            16px
-            10px;
-        background-color: var(--gc-green-dark);
-        color: var(--gc-white);
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.16);
-    }
-
-    .mobile-menu-button,
-    .mobile-menu-close {
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        flex: 0 0 42px;
-        width: 42px;
-        height: 42px;
-        border: 0;
-        border-radius: 10px;
-        cursor: pointer;
-    }
-
-    .mobile-menu-button {
-        background: rgba(255, 255, 255, 0.12);
-        color: var(--gc-white);
-        font-size: 24px;
-    }
-
-    .mobile-menu-close {
-        background: rgba(255, 255, 255, 0.1);
-        color: var(--gc-white);
-        font-size: 28px;
-        line-height: 1;
-    }
-
-    .mobile-brand {
         min-width: 0;
-        display: flex;
-        flex-direction: column;
-    }
 
-    .mobile-brand strong {
-        font-size: 18px;
-        line-height: 1.15;
-    }
-
-    .mobile-brand span {
-        margin-top: 2px;
-        color: var(--gc-sidebar-muted);
-        font-size: 11px;
-    }
-
-    .sidebar {
-        z-index: 1300;
-        display: block;
-        width: min(86vw, 320px);
-        height: 100vh;
-        height: 100dvh;
         padding:
-            calc(18px + env(safe-area-inset-top))
-            16px
-            calc(20px + env(safe-area-inset-bottom));
-        transform: translateX(-105%);
-        transition: transform 0.24s ease;
-        box-shadow: 12px 0 30px rgba(0, 0, 0, 0.18);
-        overscroll-behavior: contain;
+            26px
+            26px;
     }
 
-    .sidebar.sidebar-open {
-        transform: translateX(0);
+
+    /* ================================================
+       HEROES GENERALES
+    ================================================= */
+
+    .inicio-hero,
+    .buscador-global-hero,
+    .campanias-hero,
+    .fincas-hero,
+    .cultivos-hero,
+    .cuaderno-hero,
+    .tratamientos-hero,
+    .trabajos-hero,
+    .trabajadores-hero,
+    .fichajes-hero,
+    .portal-trabajador-hero,
+    .incidencias-hero,
+    .maquinaria-hero,
+    .inventario-hero,
+    .produccion-hero,
+    .contactos-hero,
+    .clientes-proveedores-hero,
+    .albaranes-hero,
+    .facturacion-hero,
+    .cobros-pagos-hero,
+    .gastos-hero,
+    .estadisticas-hero,
+    .historial-hero,
+    .usuarios-hero,
+    .perfil-premium-hero {
+        grid-template-columns: 1fr !important;
     }
 
-    .sidebar-desktop-brand {
-        display: none;
+
+    /* ================================================
+       IMÁGENES HERO
+    ================================================= */
+
+    .inicio-hero-image,
+    .buscador-global-hero-image,
+    .campanias-hero-image,
+    .fincas-hero-image,
+    .cultivos-hero-image,
+    .cuaderno-hero-image,
+    .tratamientos-hero-image,
+    .trabajos-hero-image,
+    .trabajadores-hero-image,
+    .fichajes-hero-image,
+    .portal-trabajador-hero-image,
+    .incidencias-hero-image,
+    .maquinaria-hero-image,
+    .inventario-hero-image,
+    .produccion-hero-image,
+    .contactos-hero-image,
+    .clientes-proveedores-hero-image,
+    .albaranes-hero-image,
+    .facturacion-hero-image,
+    .cobros-pagos-hero-image,
+    .gastos-hero-image,
+    .estadisticas-hero-image,
+    .historial-hero-image,
+    .usuarios-hero-image,
+    .perfil-premium-image {
+        min-height: 185px;
     }
 
-    .sidebar-mobile-top {
-        display: flex;
-        align-items: flex-start;
-        justify-content: space-between;
-        gap: 12px;
-    }
 
-    .sidebar-mobile-top h1 {
-        margin: 3px 0 4px;
-        font-size: 24px;
-    }
-
-    .sidebar-mobile-top p {
-        margin: 0;
-        color: var(--gc-sidebar-muted);
-        font-size: 12px;
-    }
-
-    .sidebar nav {
-        margin-top: 24px;
-        padding-bottom: 16px;
-    }
-
-    .sidebar nav a {
-        min-height: 44px;
-        display: flex;
-        align-items: center;
-        margin-bottom: 4px;
-        padding: 11px 12px;
-    }
-
-    .sidebar-backdrop {
-        position: fixed;
-        z-index: 1250;
-        inset: 0;
-        width: 100%;
-        height: 100%;
-        border: 0;
-        background: rgba(10, 25, 19, 0.48);
-        opacity: 0;
-        pointer-events: none;
-        transition: opacity 0.24s ease;
-    }
-
-    body.mobile-menu-open .sidebar-backdrop {
-        display: block;
-        opacity: 1;
-        pointer-events: auto;
-    }
-
-    .main-content {
-        width: 100%;
-        margin-left: 0;
-        padding: 20px 16px calc(28px + env(safe-area-inset-bottom));
-        overflow-x: hidden;
-    }
-
-    .topbar,
-    .detail-title,
-    .section-header,
-    .panel-header,
-    .campania-bottom,
-    .factura-detail-header {
-        gap: 12px;
-    }
-
-    .topbar {
-        align-items: flex-start;
-        margin-bottom: 22px;
-    }
-
-    .topbar h2 {
-        font-size: 24px;
-    }
-
-    .topbar p {
-        font-size: 13px;
-    }
-
-    .topbar > button,
-    .detail-title > button {
-        flex: 0 0 auto;
-    }
-
-    .welcome {
-        margin-bottom: 18px;
-    }
-
-    .welcome h2 {
-        font-size: 21px;
-    }
+    /* ================================================
+       STATS
+    ================================================= */
 
     .stats,
-    .finca-stats,
+    .inicio-stats,
+    .campanias-stats,
+    .fincas-stats,
     .cultivos-stats,
-    .estadisticas-secondary-stats,
-    .statistics-secondary-stats {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 12px;
-        margin-bottom: 20px;
+    .tratamientos-stats,
+    .trabajos-stats,
+    .trabajadores-stats,
+    .fichajes-stats,
+    .incidencias-stats,
+    .maquinaria-stats,
+    .inventario-stats,
+    .produccion-stats,
+    .contactos-stats,
+    .clientes-proveedores-stats,
+    .albaranes-stats,
+    .facturacion-stats,
+    .cobros-pagos-stats,
+    .gastos-stats,
+    .estadisticas-main-stats,
+    .historial-stats,
+    .usuarios-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
     }
 
-    .card {
-        min-width: 0;
-        padding: 15px;
-        gap: 11px;
-    }
 
-    .card-icon {
-        flex: 0 0 42px;
-        width: 42px;
-        height: 42px;
-        font-size: 20px;
-    }
-
-    .card p {
-        font-size: 12px;
-    }
-
-    .card h3 {
-        font-size: 18px;
-        overflow-wrap: anywhere;
-    }
-
-    .dashboard-grid,
-    .estadisticas-grid,
-    .statistics-grid,
-    .perfil-layout,
-    .perfil-top-grid,
-    .perfil-form-layout,
-    .perfil-form-panel {
-        grid-template-columns: 1fr !important;
-        gap: 14px;
-    }
+    /* ================================================
+       GRIDS DE TARJETAS
+    ================================================= */
 
     .fincas-grid,
     .parcelas-grid,
+    .campanias-grid,
     .cultivos-grid,
+    .tratamientos-grid,
     .trabajos-grid,
     .trabajadores-grid,
+    .incidencias-grid,
     .maquinaria-grid,
     .inventario-grid,
     .produccion-grid,
+    .contactos-grid,
+    .clientes-proveedores-grid,
     .albaranes-grid,
     .facturas-grid,
     .gastos-grid,
-    .contactos-grid,
-    .campanias-grid,
+    .usuarios-grid,
     .rentabilidad-grid {
-        grid-template-columns: 1fr;
-        gap: 14px;
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
     }
 
-    .panel,
-    .finca-card,
-    .parcela-card,
-    .cultivo-card,
-    .trabajo-card,
-    .trabajador-card,
-    .maquina-card,
-    .inventario-card,
-    .produccion-card,
-    .albaran-card,
-    .factura-card,
-    .gasto-card,
-    .contacto-card,
-    .campania-card,
-    .rentabilidad-card,
-    .estadisticas-panel,
-    .factura-detail,
-    .form-panel,
-    .perfil-card,
-    .perfil-form-card,
-    .perfil-edit-card {
-        width: 100%;
+
+    /* ================================================
+       GRIDS DOBLES
+    ================================================= */
+
+    .dashboard-grid,
+    .statistics-grid,
+    .estadisticas-grid,
+    .fichajes-main-grid,
+    .cobros-dashboard-grid,
+    .usuario-form-layout,
+    .perfil-top-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    /* ================================================
+       FORMULARIOS
+    ================================================= */
+
+    .form-panel {
         max-width: 100%;
-        min-width: 0;
-        padding: 18px;
-    }
-
-    .form-panel,
-    .factura-form-panel,
-    .factura-detail {
-        max-width: none;
-    }
-
-    .form-actions,
-    .factura-screen-actions,
-    .factura-export-actions,
-    .trabajo-state-actions,
-    .albaran-state-actions,
-    .factura-state-actions,
-    .gasto-state-actions,
-    .perfil-actions,
-    .cobros-top-actions {
-        flex-wrap: wrap;
-        gap: 8px;
-    }
-
-    .form-actions > button,
-    .factura-screen-actions > button,
-    .factura-export-actions > button {
-        min-height: 44px;
-    }
-
-    .form-group input,
-    .form-group textarea,
-    .form-group select,
-    .perfil-field input,
-    .perfil-field select,
-    .perfil-field textarea {
-        min-height: 44px;
-        font-size: 16px;
-    }
-
-    textarea {
-        resize: vertical;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .task-state-button,
-    .back-button {
-        touch-action: manipulation;
-    }
-
-    .primary-button,
-    .secondary-button,
-    .task-state-button {
-        min-height: 40px;
-    }
-
-    .delete-button {
-        flex: 0 0 36px;
-        width: 36px;
-        height: 36px;
-    }
-
-    .finca-info,
-    .cultivo-info,
-    .trabajo-info,
-    .trabajador-info,
-    .maquina-info,
-    .inventario-info,
-    .produccion-info,
-    .albaran-info,
-    .factura-importes,
-    .gasto-info,
-    .contacto-info,
-    .campania-info-grid,
-    .rentabilidad-info,
-    .rentabilidad-data,
-    .perfil-info-grid,
-    .perfil-summary-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .factura-line {
-        grid-template-columns: 1fr;
-        gap: 6px;
-    }
-
-    .albaran-selector {
-        grid-template-columns: auto minmax(0, 1fr);
-        gap: 10px;
-    }
-
-    .albaran-selector > strong,
-    .albaran-selector > span:last-child {
-        grid-column: 2;
-    }
-
-    .factura-detail-totals {
-        width: 100%;
-        max-width: none;
-        margin-left: 0;
-    }
-
-    .movimiento-item,
-    .task,
-    .activity {
-        min-width: 0;
-    }
-
-    .movimiento-item {
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .movimiento-main,
-    .movimiento-right,
-    .task > div,
-    .activity > div {
-        min-width: 0;
-    }
-
-    .movimiento-main strong,
-    .movimiento-main p,
-    .task strong,
-    .task p,
-    .activity strong,
-    .activity p {
-        overflow-wrap: anywhere;
     }
 
 }
 
 
-/* MÓVIL ESTRECHO */
+/* =====================================================
+   DRAWER MÓVIL
+   <= 760
+===================================================== */
+
+@media (max-width: 760px) {
+
+    /* ================================================
+       BODY
+    ================================================= */
+
+    body {
+        padding-top:
+            calc(
+                58px +
+                env(safe-area-inset-top)
+            );
+    }
+
+
+    body.mobile-menu-open {
+        overflow: hidden;
+
+        touch-action: none;
+    }
+
+
+    /* ================================================
+       HEADER MÓVIL
+    ================================================= */
+
+    .mobile-header {
+        position: fixed;
+
+        z-index: 1200;
+
+        top: 0;
+        right: 0;
+        left: 0;
+
+        display: flex;
+
+        align-items: center;
+
+        gap: 10px;
+
+        height:
+            calc(
+                58px +
+                env(safe-area-inset-top)
+            );
+
+        padding:
+            calc(
+                8px +
+                env(safe-area-inset-top)
+            )
+            13px
+            8px;
+
+        background: #103f31;
+
+        color: white;
+
+        box-shadow:
+            0
+            2px
+            10px
+            rgba(0, 0, 0, 0.14);
+    }
+
+
+    .mobile-header button {
+        flex:
+            0
+            0
+            auto;
+    }
+
+
+    /* ================================================
+       CONTENIDO
+    ================================================= */
+
+    .main-content {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        min-width: 0 !important;
+
+        margin-left: 0 !important;
+
+        padding:
+            16px
+            14px
+            calc(
+                25px +
+                env(safe-area-inset-bottom)
+            ) !important;
+    }
+
+
+    /* ================================================
+       SIDEBAR
+    ================================================= */
+
+    .sidebar {
+        position: fixed !important;
+
+        z-index: 1300 !important;
+
+        top: 0 !important;
+        bottom: 0 !important;
+        left: 0 !important;
+
+        width:
+            min(
+                86vw,
+                300px
+            ) !important;
+
+        height: 100vh !important;
+        height: 100dvh !important;
+
+        overflow-y: auto;
+
+        overscroll-behavior: contain;
+
+        padding-bottom:
+            calc(
+                20px +
+                env(safe-area-inset-bottom)
+            );
+
+        transform:
+            translateX(
+                -105%
+            ) !important;
+
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transition:
+            transform 0.24s ease,
+            visibility 0.24s ease;
+    }
+
+
+    .sidebar.sidebar-open {
+        transform:
+            translateX(
+                0
+            ) !important;
+
+        visibility: visible;
+
+        pointer-events: auto;
+    }
+
+
+    /* ================================================
+       BACKDROP
+    ================================================= */
+
+    .sidebar-backdrop {
+        position: fixed;
+
+        z-index: 1250;
+
+        inset: 0;
+
+        display: block;
+
+        border: 0;
+
+        background:
+            rgba(
+                6,
+                24,
+                18,
+                0.52
+            );
+
+        opacity: 0;
+
+        visibility: hidden;
+
+        pointer-events: none;
+
+        transition:
+            opacity 0.2s ease,
+            visibility 0.2s ease;
+    }
+
+
+    body.mobile-menu-open
+    .sidebar-backdrop {
+        opacity: 1;
+
+        visibility: visible;
+
+        pointer-events: auto;
+    }
+
+
+    /* ================================================
+       SIDEBAR CABECERA
+    ================================================= */
+
+    .sidebar-mobile-top {
+        display: flex;
+
+        align-items: center;
+        justify-content: space-between;
+    }
+
+
+    /* ================================================
+       TOPBARS
+    ================================================= */
+
+    .topbar,
+    .section-header,
+    .page-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 10px;
+    }
+
+
+    .topbar > button,
+    .topbar .primary-button {
+        width: 100%;
+    }
+
+
+    /* ================================================
+       TÍTULOS
+    ================================================= */
+
+    h1 {
+        max-width: 100%;
+    }
+
+
+    /* ================================================
+       TODOS LOS HEROES
+    ================================================= */
+
+    .inicio-hero,
+    .buscador-global-hero,
+    .campanias-hero,
+    .fincas-hero,
+    .cultivos-hero,
+    .cuaderno-hero,
+    .tratamientos-hero,
+    .trabajos-hero,
+    .trabajadores-hero,
+    .fichajes-hero,
+    .portal-trabajador-hero,
+    .incidencias-hero,
+    .maquinaria-hero,
+    .inventario-hero,
+    .produccion-hero,
+    .contactos-hero,
+    .clientes-proveedores-hero,
+    .albaranes-hero,
+    .facturacion-hero,
+    .cobros-pagos-hero,
+    .gastos-hero,
+    .estadisticas-hero,
+    .historial-hero,
+    .usuarios-hero,
+    .perfil-premium-hero {
+        grid-template-columns: 1fr !important;
+
+        gap: 11px !important;
+
+        margin-bottom: 14px !important;
+    }
+
+
+    /* ================================================
+       CONTENIDO HERO
+    ================================================= */
+
+    .inicio-hero-content,
+    .buscador-global-hero-content,
+    .campanias-hero-content,
+    .fincas-hero-content,
+    .cultivos-hero-content,
+    .cuaderno-hero-content,
+    .tratamientos-hero-content,
+    .trabajos-hero-content,
+    .trabajadores-hero-content,
+    .fichajes-hero-content,
+    .portal-trabajador-hero-content,
+    .incidencias-hero-content,
+    .maquinaria-hero-content,
+    .inventario-hero-content,
+    .produccion-hero-content,
+    .contactos-hero-content,
+    .clientes-proveedores-hero-content,
+    .albaranes-hero-content,
+    .facturacion-hero-content,
+    .cobros-pagos-hero-content,
+    .gastos-hero-content,
+    .estadisticas-hero-content,
+    .historial-hero-content,
+    .usuarios-hero-content,
+    .perfil-premium-content {
+        min-height: 0 !important;
+
+        padding:
+            0
+            1px !important;
+    }
+
+
+    /* ================================================
+       TITULARES HERO
+    ================================================= */
+
+    .inicio-hero h1,
+    .buscador-global-hero h1,
+    .campanias-hero h1,
+    .fincas-hero h1,
+    .cultivos-hero h1,
+    .cuaderno-hero h1,
+    .tratamientos-hero h1,
+    .trabajos-hero h1,
+    .trabajadores-hero h1,
+    .fichajes-hero h1,
+    .portal-trabajador-hero h1,
+    .incidencias-hero h1,
+    .maquinaria-hero h1,
+    .inventario-hero h1,
+    .produccion-hero h1,
+    .contactos-hero h1,
+    .clientes-proveedores-hero h1,
+    .albaranes-hero h1,
+    .facturacion-hero h1,
+    .cobros-pagos-hero h1,
+    .gastos-hero h1,
+    .estadisticas-hero h1,
+    .historial-hero h1,
+    .usuarios-hero h1,
+    .perfil-premium-hero h1 {
+        font-size:
+            clamp(
+                28px,
+                9vw,
+                34px
+            ) !important;
+
+        line-height: 1 !important;
+    }
+
+
+    /* ================================================
+       IMÁGENES HERO
+    ================================================= */
+
+    .inicio-hero-image,
+    .buscador-global-hero-image,
+    .campanias-hero-image,
+    .fincas-hero-image,
+    .cultivos-hero-image,
+    .cuaderno-hero-image,
+    .tratamientos-hero-image,
+    .trabajos-hero-image,
+    .trabajadores-hero-image,
+    .fichajes-hero-image,
+    .portal-trabajador-hero-image,
+    .incidencias-hero-image,
+    .maquinaria-hero-image,
+    .inventario-hero-image,
+    .produccion-hero-image,
+    .contactos-hero-image,
+    .clientes-proveedores-hero-image,
+    .albaranes-hero-image,
+    .facturacion-hero-image,
+    .cobros-pagos-hero-image,
+    .gastos-hero-image,
+    .estadisticas-hero-image,
+    .historial-hero-image,
+    .usuarios-hero-image,
+    .perfil-premium-image {
+        min-height: 145px !important;
+
+        border-radius: 13px !important;
+    }
+
+
+    /* ================================================
+       HERO BADGES
+    ================================================= */
+
+    [class*="-hero-badge"] {
+        top: 10px !important;
+        right: 10px !important;
+
+        max-width:
+            calc(
+                100% -
+                20px
+            );
+
+        padding:
+            7px
+            9px !important;
+    }
+
+
+    [class*="-hero-copy"] {
+        right: 12px !important;
+        bottom: 11px !important;
+
+        max-width: 75%;
+    }
+
+
+    [class*="-hero-copy"] strong {
+        font-size: 17px !important;
+    }
+
+
+    /* ================================================
+       STATS
+    ================================================= */
+
+    .stats,
+    .inicio-stats,
+    .campanias-stats,
+    .fincas-stats,
+    .cultivos-stats,
+    .tratamientos-stats,
+    .trabajos-stats,
+    .trabajadores-stats,
+    .fichajes-stats,
+    .incidencias-stats,
+    .maquinaria-stats,
+    .inventario-stats,
+    .produccion-stats,
+    .contactos-stats,
+    .clientes-proveedores-stats,
+    .albaranes-stats,
+    .facturacion-stats,
+    .cobros-pagos-stats,
+    .gastos-stats,
+    .estadisticas-main-stats,
+    .estadisticas-mini-stats,
+    .estadisticas-pasadas,
+    .historial-stats,
+    .usuarios-stats {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+
+        gap: 8px !important;
+    }
+
+
+    .stats .card {
+        min-width: 0;
+
+        min-height: 67px;
+
+        padding: 11px;
+    }
+
+
+    /* ================================================
+       TODOS LOS GRIDS DE TARJETAS
+    ================================================= */
+
+    .fincas-grid,
+    .parcelas-grid,
+    .campanias-grid,
+    .cultivos-grid,
+    .tratamientos-grid,
+    .trabajos-grid,
+    .trabajadores-grid,
+    .incidencias-grid,
+    .maquinaria-grid,
+    .inventario-grid,
+    .produccion-grid,
+    .contactos-grid,
+    .clientes-proveedores-grid,
+    .albaranes-grid,
+    .facturas-grid,
+    .gastos-grid,
+    .usuarios-grid,
+    .rentabilidad-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 11px !important;
+    }
+
+
+    /* ================================================
+       GRIDS SECUNDARIOS
+    ================================================= */
+
+    .dashboard-grid,
+    .statistics-grid,
+    .estadisticas-grid,
+    .estadisticas-graficos-grid,
+    .fichajes-main-grid,
+    .cobros-dashboard-grid,
+    .usuario-form-layout,
+    .perfil-top-grid,
+    .backup-grid,
+    .seguridad-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    /* ================================================
+       CABECERAS DE SECCIONES
+    ================================================= */
+
+    .campanias-section-header,
+    .fincas-section-header,
+    .cultivos-section-header,
+    .tratamientos-section-header,
+    .trabajos-section-header,
+    .trabajadores-section-header,
+    .incidencias-section-header,
+    .maquinaria-section-header,
+    .inventario-section-header,
+    .produccion-section-header,
+    .contactos-section-header,
+    .clientes-proveedores-section-header,
+    .albaranes-section-header,
+    .facturacion-section-header,
+    .gastos-section-header,
+    .usuarios-section-header,
+    .historial-actividad-header,
+    .historial-filtros-header {
+        align-items: flex-start !important;
+
+        flex-direction: column !important;
+
+        gap: 8px !important;
+    }
+
+
+    /* ================================================
+       RESÚMENES / CHIPS
+    ================================================= */
+
+    .campanias-summary,
+    .fincas-summary,
+    .cultivos-summary,
+    .tratamientos-summary,
+    .trabajos-summary,
+    .maquinaria-summary,
+    .inventario-summary,
+    .produccion-summary,
+    .albaranes-summary,
+    .facturacion-summary,
+    .gastos-summary,
+    .usuarios-summary {
+        width: 100%;
+
+        justify-content: flex-start;
+    }
+
+
+    /* ================================================
+       FORMULARIOS GENERALES
+    ================================================= */
+
+    .form-panel,
+    .usuario-form-panel,
+    .perfil-edit-card {
+        width: 100%;
+
+        max-width: 100% !important;
+
+        padding: 14px !important;
+
+        border-radius: 12px !important;
+    }
+
+
+    .form-grid,
+    .usuario-form-grid,
+    .perfil-form-layout {
+        grid-template-columns: 1fr !important;
+
+        gap: 10px !important;
+    }
+
+
+    .form-group,
+    .perfil-field {
+        min-width: 0;
+    }
+
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea,
+    .perfil-field input,
+    .perfil-field select,
+    .perfil-field textarea {
+        width: 100%;
+
+        min-width: 0;
+    }
+
+
+    /* ================================================
+       ACCIONES FORM
+    ================================================= */
+
+    .form-actions {
+        display: grid !important;
+
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            );
+
+        gap: 8px;
+
+        width: 100%;
+    }
+
+
+    .form-actions button {
+        width: 100%;
+    }
+
+
+    /* ================================================
+       BOTONES EN CARD
+    ================================================= */
+
+    .card-actions,
+    .trabajo-actions,
+    .usuario-actions {
+        max-width: 100%;
+    }
+
+
+    /* ================================================
+       MODALES
+    ================================================= */
+
+    .modal {
+        padding:
+            12px !important;
+    }
+
+
+    .modal-content,
+    .modal-card,
+    .modal-panel {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        max-height:
+            calc(
+                100dvh -
+                24px
+            );
+
+        overflow-y: auto;
+
+        border-radius: 14px !important;
+    }
+
+
+    /* ================================================
+       FACTURACIÓN / ALBARANES
+    ================================================= */
+
+    .factura-detail,
+    .albaran-detail {
+        width: 100% !important;
+
+        max-width: 100% !important;
+
+        padding: 14px !important;
+    }
+
+
+    .factura-parties,
+    .albaran-parties {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    /* ================================================
+       HISTORIAL
+    ================================================= */
+
+    .historial-filtros-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    .historial-clear-button {
+        width: 100%;
+    }
+
+
+    .historial-item-cabecera,
+    .historial-item-footer {
+        align-items: flex-start !important;
+
+        flex-direction: column !important;
+    }
+
+
+    .historial-item-cambios {
+        max-width: 100% !important;
+
+        text-align: left !important;
+    }
+
+
+    .historial-item-cambios > div {
+        justify-content: flex-start !important;
+    }
+
+
+    /* ================================================
+       ESTADÍSTICAS
+    ================================================= */
+
+    .gc-chart-panel {
+        min-height: auto !important;
+    }
+
+
+    .gc-donut-layout {
+        grid-template-columns: 1fr !important;
+
+        gap: 18px;
+    }
+
+
+    .gc-column-chart {
+        overflow-x: auto;
+
+        -webkit-overflow-scrolling: touch;
+    }
+
+
+    /* ================================================
+       PERFIL
+    ================================================= */
+
+    .perfil-summary-grid {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .perfil-full {
+        grid-column: auto !important;
+    }
+
+
+    .perfil-danger-zone {
+        grid-template-columns:
+            auto
+            1fr !important;
+    }
+
+
+    .perfil-danger-zone button {
+        grid-column:
+            1
+            /
+            -1;
+
+        width: 100%;
+    }
+
+
+    /* ================================================
+       PORTAL TRABAJADOR
+    ================================================= */
+
+    .worker-portal-mode {
+        padding-top: 0 !important;
+    }
+
+
+    .worker-portal-mode
+    .main-content {
+        padding-top: 14px !important;
+    }
+
+
+    /* ================================================
+       AUTH
+    ================================================= */
+
+    body:has(.auth-screen) {
+        padding-top: 0 !important;
+    }
+
+
+    .auth-screen {
+        min-height: 100vh;
+        min-height: 100dvh;
+
+        padding:
+            calc(
+                16px +
+                env(safe-area-inset-top)
+            )
+            13px
+            calc(
+                16px +
+                env(safe-area-inset-bottom)
+            );
+    }
+
+
+    .auth-card {
+        width: 100%;
+
+        max-width: 460px;
+
+        padding:
+            23px
+            18px;
+
+        border-radius: 17px;
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL PEQUEÑO
+   <= 480
+===================================================== */
 
 @media (max-width: 480px) {
 
     .main-content {
-        padding-right: 12px;
-        padding-left: 12px;
+        padding:
+            14px
+            11px
+            calc(
+                22px +
+                env(safe-area-inset-bottom)
+            ) !important;
     }
 
-    .topbar,
-    .detail-title,
-    .campania-bottom {
-        flex-direction: column;
-        align-items: stretch;
+
+    /* ================================================
+       STATS A UNA COLUMNA SOLO CUANDO HACE FALTA
+    ================================================= */
+
+    .estadisticas-main-stats,
+    .estadisticas-mini-stats,
+    .estadisticas-pasadas,
+    .historial-stats,
+    .usuarios-stats {
+        grid-template-columns: 1fr !important;
     }
 
-    .topbar > button,
-    .detail-title > button,
-    .campania-bottom button {
-        width: 100%;
+
+    /* ================================================
+       FORM ACTIONS
+    ================================================= */
+
+    .form-actions {
+        grid-template-columns: 1fr !important;
     }
 
-    .stats,
-    .finca-stats,
-    .cultivos-stats,
-    .estadisticas-secondary-stats,
-    .statistics-secondary-stats {
-        grid-template-columns: 1fr;
+
+    /* ================================================
+       HERO BADGES
+    ================================================= */
+
+    [class*="-hero-badge"] {
+        max-width:
+            calc(
+                100% -
+                20px
+            );
     }
 
-    .finca-info,
-    .cultivo-info,
-    .trabajo-info,
-    .trabajador-info,
-    .maquina-info,
-    .inventario-info,
-    .produccion-info,
-    .albaran-info,
-    .factura-importes,
-    .gasto-info,
-    .contacto-info,
-    .campania-info-grid,
-    .rentabilidad-info,
-    .rentabilidad-data,
-    .perfil-info-grid,
+
+    /* ================================================
+       HERO COPY
+    ================================================= */
+
+    [class*="-hero-copy"] {
+        max-width: 82%;
+    }
+
+
+    /* ================================================
+       PERFIL
+    ================================================= */
+
     .perfil-summary-grid {
-        grid-template-columns: 1fr;
+        grid-template-columns: 1fr !important;
     }
 
-    .card {
-        padding: 14px;
+
+    .backup-preview-grid {
+        grid-template-columns: 1fr !important;
     }
 
-    .panel,
-    .finca-card,
-    .parcela-card,
-    .cultivo-card,
-    .trabajo-card,
-    .trabajador-card,
-    .maquina-card,
-    .inventario-card,
-    .produccion-card,
-    .albaran-card,
-    .factura-card,
-    .gasto-card,
-    .contacto-card,
-    .campania-card,
-    .rentabilidad-card,
-    .estadisticas-panel,
-    .factura-detail,
-    .form-panel,
-    .perfil-card,
-    .perfil-form-card,
-    .perfil-edit-card {
-        padding: 15px;
+
+    /* ================================================
+       USUARIOS
+    ================================================= */
+
+    .usuario-actions {
+        grid-template-columns: 1fr !important;
     }
 
-    .form-actions,
-    .factura-screen-actions,
-    .factura-export-actions,
-    .perfil-actions {
-        flex-direction: column;
-        align-items: stretch;
+
+    /* ================================================
+       COBROS
+    ================================================= */
+
+    .cobros-balance-data {
+        grid-template-columns: 1fr !important;
     }
 
-    .form-actions > button,
-    .factura-screen-actions > button,
-    .factura-export-actions > button,
-    .perfil-actions > button {
-        width: 100%;
+
+    /* ================================================
+       OVERVIEWS
+    ================================================= */
+
+    .gastos-overview,
+    .inventario-overview,
+    .produccion-overview {
+        grid-template-columns: 1fr !important;
     }
 
 }
 
 
-/* PANTALLAS MUY PEQUEÑAS */
+/* =====================================================
+   MÓVILES MUY ESTRECHOS
+   <= 360
+===================================================== */
 
 @media (max-width: 360px) {
 
-    .mobile-header {
-        padding-right: 10px;
-        padding-left: 10px;
+    .main-content {
+        padding-right: 9px !important;
+        padding-left: 9px !important;
     }
+
+
+    .stats {
+        grid-template-columns: 1fr !important;
+    }
+
+
+    button {
+        max-width: 100%;
+    }
+
+}
+
+
+/* =====================================================
+   LANDSCAPE MÓVIL
+===================================================== */
+
+@media
+    (max-width: 900px)
+    and
+    (orientation: landscape) {
+
+    .mobile-header {
+        height:
+            calc(
+                52px +
+                env(safe-area-inset-top)
+            );
+    }
+
+
+    body {
+        padding-top:
+            calc(
+                52px +
+                env(safe-area-inset-top)
+            );
+    }
+
+
+    .sidebar {
+        width:
+            min(
+                65vw,
+                300px
+            ) !important;
+    }
+
+
+    [class*="-hero-image"],
+    .perfil-premium-image {
+        min-height: 135px !important;
+    }
+
+}
+
+
+/* =====================================================
+   TOUCH
+===================================================== */
+
+@media (pointer: coarse) {
+
+    button,
+    .primary-button,
+    .secondary-button,
+    .back-button,
+    .task-state-button {
+        min-height: 40px;
+    }
+
+
+    input,
+    select {
+        min-height: 42px;
+    }
+
+
+    textarea {
+        min-height: 95px;
+    }
+
+}
+
+
+/* =====================================================
+   SAFE AREA IOS
+===================================================== */
+
+@supports (
+    padding:
+        max(
+            0px
+        )
+) {
+
+    @media (max-width: 760px) {
+
+        .mobile-header {
+            padding-left:
+                max(
+                    13px,
+                    env(safe-area-inset-left)
+                );
+
+            padding-right:
+                max(
+                    13px,
+                    env(safe-area-inset-right)
+                );
+        }
+
+
+        .sidebar {
+            padding-left:
+                max(
+                    0px,
+                    env(safe-area-inset-left)
+                );
+        }
+
+    }
+
+}
+
+
+/* =====================================================
+   IMPRESIÓN
+===================================================== */
+
+@media print {
+
+    .sidebar,
+    .mobile-header,
+    .sidebar-backdrop,
+    .no-print {
+        display: none !important;
+    }
+
+
+    body {
+        padding: 0 !important;
+
+        background: white !important;
+    }
+
 
     .main-content {
-        padding-right: 10px;
-        padding-left: 10px;
+        width: 100% !important;
+
+        max-width: none !important;
+
+        margin: 0 !important;
+
+        padding: 0 !important;
     }
 
-    .mobile-brand strong {
-        font-size: 17px;
+}
+/* =====================================================
+   FREEZE FIX · INICIO MÓVIL ESTRECHO
+===================================================== */
+
+@media (max-width: 360px) {
+
+    .inicio-hero-copy {
+        right: 9px !important;
+        bottom: 9px !important;
+
+        max-width: 88% !important;
+    }
+
+
+    .inicio-hero-copy strong {
+        font-size: 15px !important;
+
+        line-height: 1.02;
+    }
+
+
+    .inicio-financial-grid,
+    .inicio-finanzas-grid,
+    .inicio-financial-summary {
+        grid-template-columns: 1fr !important;
     }
 
 }

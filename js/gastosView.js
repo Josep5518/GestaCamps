@@ -1,17 +1,25 @@
 import {
+
     escaparHTML,
+
     formatearDinero
+
 } from "./utils.js";
 
 
 import {
+
     crearGastosCardsHelper
+
 } from "./gastos/gastosCards.js";
 
 
 import {
+
     crearGastosFormHelper
+
 } from "./gastos/gastosForm.js";
+
 
 
 export class GastosView {
@@ -28,22 +36,17 @@ export class GastosView {
         this.mainContent =
             mainContent;
 
-
         this.gastoService =
             gastoService;
-
 
         this.fincaService =
             fincaService;
 
-
         this.maquinariaService =
             maquinariaService;
 
-
         this.clienteProveedorService =
             clienteProveedorService;
-
 
         this.campaniaService =
             campaniaService;
@@ -108,8 +111,7 @@ export class GastosView {
     mostrar() {
 
         const gastos =
-            this.gastoService
-                .obtenerTodos();
+            this.obtenerGastos();
 
 
         const total =
@@ -173,99 +175,332 @@ export class GastosView {
             ).length;
 
 
+        const pagados =
+            gastos.filter(
+                gasto =>
+                    gasto.estado ===
+                    "Pagado"
+            ).length;
+
+
+        const pendientes =
+            gastos.filter(
+                gasto =>
+                    gasto.estado ===
+                    "Pendiente"
+            ).length;
+
+
+        const categorias =
+            new Set(
+                gastos
+                    .map(
+                        gasto =>
+                            gasto.categoria
+                    )
+                    .filter(Boolean)
+            ).size;
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="gastos-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Gastos
-                    </h2>
+                <section class="gastos-hero">
 
-                    <p>
-                        Controla los gastos y sus pagos
-                    </p>
+                    <div class="gastos-hero-content">
+
+                        <span class="gastos-eyebrow">
+                            💸 COMERCIAL Y FINANZAS
+                        </span>
+
+
+                        <h1>
+                            Controla el coste,
+                            <span>
+                                protege el margen.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Registra cada gasto de la explotación
+                            y conoce en todo momento cuánto has pagado,
+                            qué queda pendiente y dónde se está yendo el dinero.
+                        </p>
+
+
+                        <button
+                            id="nuevoGasto"
+                            class="
+                                primary-button
+                                gastos-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo gasto
+                        </button>
+
+                    </div>
+
+
+                    <div class="gastos-hero-image">
+
+                        <div class="gastos-hero-badge">
+
+                            <span>
+                                Gasto acumulado
+                            </span>
+
+
+                            <strong>
+                                ${formatearDinero(
+                                    total
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="gastos-hero-copy">
+
+                            <small>
+                                REGISTRA · ANALIZA · CONTROLA
+                            </small>
+
+
+                            <strong>
+                                Cada coste,<br>
+                                perfectamente localizado
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats gastos-stats">
+
+                    ${this.crearTarjeta(
+                        "💸",
+                        "Gastos",
+                        gastos.length
+                    )}
+
+
+                    ${this.crearTarjeta(
+                        "💰",
+                        "Total",
+                        formatearDinero(
+                            total
+                        )
+                    )}
+
+
+                    ${this.crearTarjeta(
+                        "✅",
+                        "Pagado",
+                        formatearDinero(
+                            pagado
+                        )
+                    )}
+
+
+                    ${this.crearTarjeta(
+                        "🕒",
+                        "Pendiente",
+                        formatearDinero(
+                            pendiente
+                        )
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     RESUMEN
+                =========================================== -->
+
+                <section class="gastos-overview">
+
+                    <div>
+
+                        <span>
+                            ✅
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                PAGADOS
+                            </small>
+
+
+                            <strong>
+                                ${pagados}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ◐
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                PARCIALES
+                            </small>
+
+
+                            <strong>
+                                ${parciales}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            🕒
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                PENDIENTES
+                            </small>
+
+
+                            <strong>
+                                ${pendientes}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            🗂️
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                CATEGORÍAS
+                            </small>
+
+
+                            <strong>
+                                ${categorias}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="gastos-section-header">
+
+                    <div>
+
+                        <span class="gastos-section-eyebrow">
+                            COSTES DE EXPLOTACIÓN
+                        </span>
+
+
+                        <h2>
+                            Gastos registrados
+                        </h2>
+
+
+                        <p>
+                            Consulta importe, pagos, proveedor,
+                            finca, campaña y categoría de cada gasto.
+                        </p>
+
+                    </div>
+
+
+                    <div class="gastos-summary">
+
+                        <span>
+                            ${gastos.length}
+                            ${
+                                gastos.length ===
+                                1
+                                    ? "gasto"
+                                    : "gastos"
+                            }
+                        </span>
+
+
+                        ${
+                            pendientes >
+                            0
+
+                                ? `
+                                    <span class="warning">
+                                        ${pendientes} pendientes
+                                    </span>
+                                `
+
+                                : ""
+                        }
+
+
+                        ${
+                            parciales >
+                            0
+
+                                ? `
+                                    <span class="partial">
+                                        ${parciales} parciales
+                                    </span>
+                                `
+
+                                : ""
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevoGasto"
-                    class="primary-button"
-                    type="button"
-                >
-                    + Nuevo gasto
-                </button>
+                <div id="listaGastos"></div>
 
-            </header>
-
-
-            <section class="stats gastos-stats">
-
-                ${this.crearTarjeta(
-                    "💸",
-                    "Gastos",
-                    gastos.length
-                )}
-
-
-                ${this.crearTarjeta(
-                    "💰",
-                    "Total",
-                    formatearDinero(
-                        total
-                    )
-                )}
-
-
-                ${this.crearTarjeta(
-                    "✅",
-                    "Pagado",
-                    formatearDinero(
-                        pagado
-                    )
-                )}
-
-
-                ${this.crearTarjeta(
-                    "🕒",
-                    "Pendiente",
-                    formatearDinero(
-                        pendiente
-                    )
-                )}
-
-            </section>
-
-
-            ${
-                parciales >
-                0
-
-                    ? `
-
-                        <div class="gastos-parciales-badge">
-
-                            ◐ ${parciales}
-
-                            ${
-                                parciales ===
-                                1
-
-                                    ? "gasto parcialmente pagado"
-                                    : "gastos parcialmente pagados"
-                            }
-
-                        </div>
-
-                    `
-
-                    : ""
-            }
-
-
-            <div id="listaGastos"></div>
+            </div>
 
         `;
 
@@ -276,11 +511,8 @@ export class GastosView {
             )
             ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormulario();
-
-                }
+                () =>
+                    this.mostrarFormulario()
             );
 
 
@@ -301,11 +533,12 @@ export class GastosView {
 
         return `
 
-            <div class="card">
+            <article class="card">
 
                 <span class="card-icon">
                     ${icono}
                 </span>
+
 
                 <div>
 
@@ -315,13 +548,14 @@ export class GastosView {
                         )}
                     </p>
 
+
                     <h3>
                         ${valor}
                     </h3>
 
                 </div>
 
-            </div>
+            </article>
 
         `;
 
@@ -335,28 +569,46 @@ export class GastosView {
     mostrarLista() {
 
         const gastos =
-            this.gastoService
-                .obtenerTodos()
+            this.obtenerGastos()
                 .slice()
                 .sort(
                     (
                         a,
                         b
-                    ) =>
-                        new Date(
-                            b.fecha
-                        )
-                        -
-                        new Date(
-                            a.fecha
-                        )
+                    ) => {
+
+                        const fechaA =
+                            new Date(
+                                a.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        const fechaB =
+                            new Date(
+                                b.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        return (
+                            fechaB -
+                            fechaA
+                        );
+
+                    }
                 );
 
 
         const contenedor =
-            document.getElementById(
-                "listaGastos"
-            );
+            document
+                .getElementById(
+                    "listaGastos"
+                );
 
 
         if (
@@ -375,23 +627,46 @@ export class GastosView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="gastos-empty">
 
-                    <div class="empty-icon">
+                    <div class="gastos-empty-icon">
                         💸
                     </div>
+
 
                     <h3>
                         Todavía no tienes gastos
                     </h3>
 
+
                     <p>
-                        Registra tu primer gasto de explotación.
+                        Registra tu primer gasto para empezar
+                        a controlar los costes de la explotación.
                     </p>
+
+
+                    <button
+                        id="crearPrimerGasto"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Registrar gasto
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimerGasto"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormulario()
+                );
 
 
             return;
@@ -440,13 +715,6 @@ export class GastosView {
                         "click",
                         () => {
 
-                            /*
-                             * IMPORTANTE:
-                             * El ID puede ser UUID.
-                             *
-                             * NO usar Number().
-                             */
-
                             this.mostrarFormulario(
                                 boton.dataset.id
                             );
@@ -468,13 +736,6 @@ export class GastosView {
                     boton.addEventListener(
                         "click",
                         () => {
-
-                            /*
-                             * IMPORTANTE:
-                             * El ID puede ser UUID.
-                             *
-                             * NO usar Number().
-                             */
 
                             this.eliminarGasto(
                                 boton.dataset.id
@@ -540,6 +801,8 @@ export class GastosView {
 
             alert(
                 resultado.mensaje
+                ||
+                "No se ha podido eliminar el gasto."
             );
 
 
@@ -565,6 +828,59 @@ export class GastosView {
             .mostrarFormulario(
                 id
             );
+
+    }
+
+
+    // =====================================================
+    // GASTOS
+    // =====================================================
+
+    obtenerGastos() {
+
+        if (
+            typeof
+            this.gastoService
+                ?.obtenerTodos ===
+            "function"
+        ) {
+
+            const datos =
+                this.gastoService
+                    .obtenerTodos();
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        if (
+            typeof
+            this.gastoService
+                ?.obtenerTodas ===
+            "function"
+        ) {
+
+            const datos =
+                this.gastoService
+                    .obtenerTodas();
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        return [];
 
     }
 

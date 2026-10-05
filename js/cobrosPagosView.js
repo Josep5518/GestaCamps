@@ -1,16 +1,23 @@
 import {
+
     formatearDinero
+
 } from "./utils.js";
 
 
 import {
+
     crearCobrosPagosCardsHelper
+
 } from "./cobrosPagos/cobrosPagosCards.js";
 
 
 import {
+
     crearCobrosPagosFormHelper
+
 } from "./cobrosPagos/cobrosPagosForm.js";
+
 
 
 export class CobrosPagosView {
@@ -25,14 +32,11 @@ export class CobrosPagosView {
         this.mainContent =
             mainContent;
 
-
         this.cobroPagoService =
             cobroPagoService;
 
-
         this.facturaService =
             facturaService;
-
 
         this.gastoService =
             gastoService;
@@ -108,7 +112,7 @@ export class CobrosPagosView {
         if (
             typeof
             this.cobroPagoService
-                .sincronizarEstadosFacturas ===
+                ?.sincronizarEstadosFacturas ===
             "function"
         ) {
 
@@ -119,262 +123,560 @@ export class CobrosPagosView {
 
 
         const movimientos =
-            this.cobroPagoService
-                .obtenerTodos();
+            this.obtenerMovimientos();
 
 
         const cobrado =
-            this.cobroPagoService
-                .obtenerTotalCobrado();
+            Number(
+                this.cobroPagoService
+                    ?.obtenerTotalCobrado?.()
+                ||
+                0
+            );
 
 
         const pagado =
-            this.cobroPagoService
-                .obtenerTotalPagado();
+            Number(
+                this.cobroPagoService
+                    ?.obtenerTotalPagado?.()
+                ||
+                0
+            );
 
 
         const pendienteCobro =
-            this.cobroPagoService
-                .obtenerTotalPendienteCobro();
+            Number(
+                this.cobroPagoService
+                    ?.obtenerTotalPendienteCobro?.()
+                ||
+                0
+            );
 
 
         const pendientePago =
-            this.cobroPagoService
-                .obtenerTotalPendientePago();
+            Number(
+                this.cobroPagoService
+                    ?.obtenerTotalPendientePago?.()
+                ||
+                0
+            );
+
+
+        const caja =
+            cobrado -
+            pagado;
+
+
+        const cobrosRegistrados =
+            movimientos.filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Cobro"
+            ).length;
+
+
+        const pagosRegistrados =
+            movimientos.filter(
+                movimiento =>
+                    movimiento.tipo ===
+                    "Pago"
+            ).length;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="cobros-pagos-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Cobros y pagos
-                    </h2>
+                <section class="cobros-pagos-hero">
 
-                    <p>
-                        Controla el dinero cobrado, pendiente y pagado de la explotación
-                    </p>
+                    <div class="cobros-pagos-hero-content">
 
-                </div>
-
-
-                <div class="cobros-top-actions">
-
-                    <button
-                        id="nuevoCobro"
-                        type="button"
-                        class="primary-button"
-                    >
-                        + Nuevo cobro
-                    </button>
+                        <span class="cobros-pagos-eyebrow">
+                            💳 COMERCIAL Y FINANZAS
+                        </span>
 
 
-                    <button
-                        id="nuevoPago"
-                        type="button"
-                        class="secondary-button"
-                    >
-                        + Nuevo pago
-                    </button>
-
-                </div>
-
-            </header>
+                        <h1>
+                            Cada euro,
+                            <span>
+                                bajo control.
+                            </span>
+                        </h1>
 
 
-            <section class="stats cobros-pagos-stats">
-
-                ${this.cardsHelper.crearTarjeta(
-                    "💰",
-                    "Cobrado",
-                    formatearDinero(
-                        cobrado
-                    )
-                )}
-
-
-                ${this.cardsHelper.crearTarjeta(
-                    "📥",
-                    "Pendiente de cobro",
-                    formatearDinero(
-                        pendienteCobro
-                    )
-                )}
-
-
-                ${this.cardsHelper.crearTarjeta(
-                    "💸",
-                    "Pagado",
-                    formatearDinero(
-                        pagado
-                    )
-                )}
-
-
-                ${this.cardsHelper.crearTarjeta(
-                    "📤",
-                    "Pendiente de pago",
-                    formatearDinero(
-                        pendientePago
-                    )
-                )}
-
-            </section>
-
-
-            <section class="panel cobros-facturas-panel">
-
-                <div class="panel-header">
-
-                    <div>
-
-                        <h3>
-                            Facturas por cobrar
-                        </h3>
-
-                        <p class="cobros-panel-subtitle">
-                            El estado se actualiza automáticamente según los cobros.
+                        <p>
+                            Registra cobros y pagos, controla
+                            las facturas pendientes y conoce
+                            el estado real de la caja de tu explotación.
                         </p>
+
+
+                        <div class="cobros-pagos-hero-actions">
+
+                            <button
+                                id="nuevoCobro"
+                                class="primary-button"
+                                type="button"
+                            >
+                                + Nuevo cobro
+                            </button>
+
+
+                            <button
+                                id="nuevoPago"
+                                class="secondary-button"
+                                type="button"
+                            >
+                                + Nuevo pago
+                            </button>
+
+                        </div>
 
                     </div>
 
-                </div>
+
+                    <div class="cobros-pagos-hero-image">
+
+                        <div class="cobros-pagos-hero-badge">
+
+                            <span>
+                                Caja actual
+                            </span>
 
 
-                ${this.cardsHelper
-                    .crearListaFacturasPendientes()}
+                            <strong>
+                                ${formatearDinero(
+                                    caja
+                                )}
+                            </strong>
 
-            </section>
+                        </div>
 
 
-            <section class="dashboard-grid cobros-dashboard-grid">
+                        <div class="cobros-pagos-hero-copy">
 
-                <div class="panel">
+                            <small>
+                                COBRA · PAGA · CONTROLA
+                            </small>
 
-                    <div class="panel-header">
 
-                        <h3>
-                            Gastos pendientes de pago
-                        </h3>
+                            <strong>
+                                Finanzas claras,<br>
+                                decisiones mejores
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats cobros-pagos-stats">
+
+                    ${this.cardsHelper
+                        .crearTarjeta(
+                            "💰",
+                            "Cobrado",
+                            formatearDinero(
+                                cobrado
+                            )
+                        )}
+
+
+                    ${this.cardsHelper
+                        .crearTarjeta(
+                            "📥",
+                            "Pendiente de cobro",
+                            formatearDinero(
+                                pendienteCobro
+                            )
+                        )}
+
+
+                    ${this.cardsHelper
+                        .crearTarjeta(
+                            "💸",
+                            "Pagado",
+                            formatearDinero(
+                                pagado
+                            )
+                        )}
+
+
+                    ${this.cardsHelper
+                        .crearTarjeta(
+                            "📤",
+                            "Pendiente de pago",
+                            formatearDinero(
+                                pendientePago
+                            )
+                        )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     BALANCE
+                =========================================== -->
+
+                <section class="cobros-balance">
+
+                    <div class="cobros-balance-main">
+
+                        <span>
+                            🏦
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                BALANCE DE CAJA
+                            </small>
+
+
+                            <strong>
+                                ${formatearDinero(
+                                    caja
+                                )}
+                            </strong>
+
+
+                            <p>
+                                Diferencia entre cobros
+                                registrados y pagos realizados.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="cobros-balance-data">
+
+                        <div>
+
+                            <span>
+                                Movimientos
+                            </span>
+
+
+                            <strong>
+                                ${movimientos.length}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Cobros
+                            </span>
+
+
+                            <strong>
+                                ${cobrosRegistrados}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Pagos
+                            </span>
+
+
+                            <strong>
+                                ${pagosRegistrados}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     FACTURAS POR COBRAR
+                =========================================== -->
+
+                <section class="panel cobros-panel">
+
+                    <div class="panel-header cobros-panel-header">
+
+                        <div>
+
+                            <span class="cobros-section-eyebrow">
+                                COBROS PENDIENTES
+                            </span>
+
+
+                            <h3>
+                                Facturas por cobrar
+                            </h3>
+
+
+                            <p>
+                                El estado de la factura
+                                se actualiza automáticamente
+                                según los cobros registrados.
+                            </p>
+
+                        </div>
+
+
+                        <div class="cobros-panel-icon">
+                            📥
+                        </div>
 
                     </div>
 
 
                     ${this.cardsHelper
-                        .crearListaGastosPendientes()}
+                        .crearListaFacturasPendientes()}
 
-                </div>
+                </section>
 
 
-                <div class="panel">
+                <!-- ==========================================
+                     PAGOS + CAJA
+                =========================================== -->
 
-                    <div class="panel-header">
+                <section class="cobros-dashboard-grid">
 
-                        <h3>
-                            Resumen de caja
-                        </h3>
+                    <div class="panel cobros-panel">
+
+                        <div class="panel-header cobros-panel-header">
+
+                            <div>
+
+                                <span class="cobros-section-eyebrow">
+                                    PAGOS PENDIENTES
+                                </span>
+
+
+                                <h3>
+                                    Gastos por pagar
+                                </h3>
+
+                            </div>
+
+
+                            <div class="cobros-panel-icon">
+                                📤
+                            </div>
+
+                        </div>
+
+
+                        ${this.cardsHelper
+                            .crearListaGastosPendientes()}
 
                     </div>
 
 
-                    <div class="cobros-resumen-list">
+                    <div class="panel cobros-panel">
 
-                        ${this.cardsHelper.crearFilaResumen(
-                            "Entradas",
-                            cobrado,
-                            "💰"
-                        )}
+                        <div class="panel-header cobros-panel-header">
 
+                            <div>
 
-                        ${this.cardsHelper.crearFilaResumen(
-                            "Salidas",
-                            pagado,
-                            "💸"
-                        )}
+                                <span class="cobros-section-eyebrow">
+                                    TESORERÍA
+                                </span>
 
 
-                        ${this.cardsHelper.crearFilaResumen(
-                            "Caja",
-                            cobrado -
-                            pagado,
-                            "🏦",
-                            true
-                        )}
+                                <h3>
+                                    Resumen de caja
+                                </h3>
+
+                            </div>
+
+
+                            <div class="cobros-panel-icon">
+                                🏦
+                            </div>
+
+                        </div>
+
+
+                        <div class="cobros-caja-list">
+
+                            ${this.cardsHelper
+                                .crearFilaResumen(
+                                    "Entradas",
+                                    cobrado,
+                                    "💰"
+                                )}
+
+
+                            ${this.cardsHelper
+                                .crearFilaResumen(
+                                    "Salidas",
+                                    pagado,
+                                    "💸"
+                                )}
+
+
+                            ${this.cardsHelper
+                                .crearFilaResumen(
+                                    "Caja",
+                                    caja,
+                                    "🏦",
+                                    true
+                                )}
+
+                        </div>
 
                     </div>
 
-                </div>
-
-            </section>
+                </section>
 
 
-            <section class="panel cobros-movimientos-panel">
+                <!-- ==========================================
+                     MOVIMIENTOS
+                =========================================== -->
 
-                <div class="panel-header">
+                <section class="panel cobros-panel cobros-movimientos-panel">
 
-                    <h3>
-                        Movimientos
-                    </h3>
+                    <div class="cobros-movimientos-header">
 
-                </div>
+                        <div>
+
+                            <span class="cobros-section-eyebrow">
+                                HISTORIAL FINANCIERO
+                            </span>
 
 
-                <div id="listaMovimientos">
+                            <h3>
+                                Movimientos
+                            </h3>
 
-                    ${
-                        movimientos.length ===
-                        0
 
-                            ? `
+                            <p>
+                                Últimos cobros y pagos registrados
+                                en la explotación.
+                            </p>
 
-                                <p class="cobros-empty-text">
-                                    Todavía no hay cobros ni pagos registrados.
-                                </p>
+                        </div>
 
-                            `
 
-                            : `
+                        <span class="cobros-count">
+                            ${movimientos.length}
+                            ${
+                                movimientos.length ===
+                                1
+                                    ? "movimiento"
+                                    : "movimientos"
+                            }
+                        </span>
 
-                                <div class="movimientos-list">
+                    </div>
 
-                                    ${movimientos
-                                        .slice()
-                                        .sort(
-                                            (
-                                                a,
-                                                b
-                                            ) =>
-                                                new Date(
-                                                    b.fechaCreacion
-                                                    ||
-                                                    b.fecha
-                                                )
-                                                -
-                                                new Date(
-                                                    a.fechaCreacion
-                                                    ||
-                                                    a.fecha
-                                                )
-                                        )
-                                        .map(
-                                            movimiento =>
-                                                this.cardsHelper
-                                                    .crearMovimientoHTML(
-                                                        movimiento
-                                                    )
-                                        )
-                                        .join("")}
 
-                                </div>
+                    <div id="listaMovimientos">
 
-                            `
-                    }
+                        ${
+                            movimientos.length ===
+                            0
 
-                </div>
+                                ? `
 
-            </section>
+                                    <div class="cobros-empty">
+
+                                        <div class="cobros-empty-icon">
+                                            💳
+                                        </div>
+
+
+                                        <h3>
+                                            Todavía no hay movimientos
+                                        </h3>
+
+
+                                        <p>
+                                            Registra un cobro o un pago
+                                            para empezar a controlar
+                                            la caja de la explotación.
+                                        </p>
+
+                                    </div>
+
+                                `
+
+                                : `
+
+                                    <div class="movimientos-list">
+
+                                        ${movimientos
+                                            .slice()
+                                            .sort(
+                                                (
+                                                    a,
+                                                    b
+                                                ) => {
+
+                                                    const fechaA =
+                                                        new Date(
+                                                            a.fechaCreacion
+                                                            ||
+                                                            a.fecha
+                                                            ||
+                                                            0
+                                                        )
+                                                            .getTime();
+
+
+                                                    const fechaB =
+                                                        new Date(
+                                                            b.fechaCreacion
+                                                            ||
+                                                            b.fecha
+                                                            ||
+                                                            0
+                                                        )
+                                                            .getTime();
+
+
+                                                    return (
+                                                        fechaB -
+                                                        fechaA
+                                                    );
+
+                                                }
+                                            )
+                                            .map(
+                                                movimiento =>
+                                                    this.cardsHelper
+                                                        .crearMovimientoHTML(
+                                                            movimiento
+                                                        )
+                                            )
+                                            .join("")}
+
+                                    </div>
+
+                                `
+                        }
+
+                    </div>
+
+                </section>
+
+            </div>
 
         `;
 
@@ -385,11 +687,8 @@ export class CobrosPagosView {
             )
             ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormularioCobro();
-
-                }
+                () =>
+                    this.mostrarFormularioCobro()
             );
 
 
@@ -399,11 +698,8 @@ export class CobrosPagosView {
             )
             ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormularioPago();
-
-                }
+                () =>
+                    this.mostrarFormularioPago()
             );
 
 
@@ -487,6 +783,7 @@ export class CobrosPagosView {
                 "No se ha encontrado el movimiento."
             );
 
+
             return;
 
         }
@@ -527,6 +824,7 @@ export class CobrosPagosView {
                 "No se ha podido eliminar el movimiento."
             );
 
+
             return;
 
         }
@@ -561,6 +859,59 @@ export class CobrosPagosView {
 
         this.formHelper
             .mostrarFormularioPago();
+
+    }
+
+
+    // =====================================================
+    // MOVIMIENTOS
+    // =====================================================
+
+    obtenerMovimientos() {
+
+        if (
+            typeof
+            this.cobroPagoService
+                ?.obtenerTodos ===
+            "function"
+        ) {
+
+            const datos =
+                this.cobroPagoService
+                    .obtenerTodos();
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        if (
+            typeof
+            this.cobroPagoService
+                ?.obtenerTodas ===
+            "function"
+        ) {
+
+            const datos =
+                this.cobroPagoService
+                    .obtenerTodas();
+
+
+            return Array.isArray(
+                datos
+            )
+                ? datos
+                : [];
+
+        }
+
+
+        return [];
 
     }
 

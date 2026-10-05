@@ -1,19 +1,32 @@
 import {
+
     escaparHTML,
+
     formatearDinero
+
 } from "./utils.js";
 
+
 import {
+
     crearFacturacionCardsHelper
+
 } from "./facturacion/facturacionCards.js";
 
-import {
-    crearFacturacionDetalleHelper
-} from "./facturacion/facturacionDetalle.js";
 
 import {
+
+    crearFacturacionDetalleHelper
+
+} from "./facturacion/facturacionDetalle.js";
+
+
+import {
+
     crearFacturacionFormHelper
+
 } from "./facturacion/facturacionForm.js";
+
 
 
 export class FacturacionView {
@@ -26,12 +39,20 @@ export class FacturacionView {
         clienteProveedorService
     ) {
 
-        this.mainContent = mainContent;
+        this.mainContent =
+            mainContent;
 
-        this.facturaService = facturaService;
-        this.albaranService = albaranService;
-        this.explotacionService = explotacionService;
-        this.clienteProveedorService = clienteProveedorService;
+        this.facturaService =
+            facturaService;
+
+        this.albaranService =
+            albaranService;
+
+        this.explotacionService =
+            explotacionService;
+
+        this.clienteProveedorService =
+            clienteProveedorService;
 
 
         // =================================================
@@ -254,89 +275,304 @@ export class FacturacionView {
                 );
 
 
+        const totalPendiente =
+            facturas
+                .filter(
+                    factura =>
+                        factura.estado ===
+                        "Pendiente"
+                        ||
+                        factura.estado ===
+                        "Parcialmente cobrada"
+                )
+                .reduce(
+                    (
+                        total,
+                        factura
+                    ) =>
+                        total
+                        +
+                        this.obtenerTotalFactura(
+                            factura
+                        ),
+                    0
+                );
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="facturacion-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Facturación
-                    </h2>
+                <section class="facturacion-hero">
 
-                    <p>
-                        Genera facturas a partir de albaranes entregados
-                    </p>
+                    <div class="facturacion-hero-content">
+
+                        <span class="facturacion-eyebrow">
+                            💶 COMERCIAL Y FINANZAS
+                        </span>
+
+
+                        <h1>
+                            De la entrega,
+                            <span>
+                                al cobro.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Convierte tus albaranes entregados
+                            en facturas y controla importes,
+                            impuestos y estado de cobro.
+                        </p>
+
+
+                        <button
+                            id="nuevaFactura"
+                            class="
+                                primary-button
+                                facturacion-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nueva factura
+                        </button>
+
+                    </div>
+
+
+                    <div class="facturacion-hero-image">
+
+                        <div class="facturacion-hero-badge">
+
+                            <span>
+                                Total facturado
+                            </span>
+
+
+                            <strong>
+                                ${formatearDinero(
+                                    totalFacturado
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="facturacion-hero-copy">
+
+                            <small>
+                                FACTURA · CONTROLA · COBRA
+                            </small>
+
+
+                            <strong>
+                                Tus ventas,<br>
+                                bajo control
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats facturacion-stats">
+
+                    ${this.crearTarjetaResumen(
+                        "💶",
+                        "Facturas",
+                        facturas.length
+                    )}
+
+
+                    ${this.crearTarjetaResumen(
+                        "🕒",
+                        "Pendientes",
+                        pendientes
+                    )}
+
+
+                    ${this.crearTarjetaResumen(
+                        "◐",
+                        "Parciales",
+                        parciales
+                    )}
+
+
+                    ${this.crearTarjetaResumen(
+                        "✅",
+                        "Cobradas",
+                        cobradas
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     RESUMEN ECONÓMICO
+                =========================================== -->
+
+                <section class="facturacion-financial-summary">
+
+                    <div>
+
+                        <span>
+                            💰
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                FACTURACIÓN ACUMULADA
+                            </small>
+
+
+                            <strong>
+                                ${formatearDinero(
+                                    totalFacturado
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            ⏳
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                PENDIENTE DE COBRO
+                            </small>
+
+
+                            <strong>
+                                ${formatearDinero(
+                                    totalPendiente
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <div>
+
+                        <span>
+                            🚫
+                        </span>
+
+
+                        <div>
+
+                            <small>
+                                FACTURAS ANULADAS
+                            </small>
+
+
+                            <strong>
+                                ${anuladas}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTADO
+                =========================================== -->
+
+                <div class="facturacion-section-header">
+
+                    <div>
+
+                        <span class="facturacion-section-eyebrow">
+                            DOCUMENTOS DE VENTA
+                        </span>
+
+
+                        <h2>
+                            Facturas
+                        </h2>
+
+
+                        <p>
+                            Consulta importes, IVA, albaranes
+                            asociados y estado de cada factura.
+                        </p>
+
+                    </div>
+
+
+                    <div class="facturacion-summary">
+
+                        <span>
+                            ${facturas.length}
+                            ${
+                                facturas.length ===
+                                1
+                                    ? "factura"
+                                    : "facturas"
+                            }
+                        </span>
+
+
+                        ${
+                            pendientes >
+                            0
+
+                                ? `
+                                    <span class="warning">
+                                        ${pendientes} pendientes
+                                    </span>
+                                `
+
+                                : ""
+                        }
+
+
+                        ${
+                            cobradas >
+                            0
+
+                                ? `
+                                    <span class="success">
+                                        ${cobradas} cobradas
+                                    </span>
+                                `
+
+                                : ""
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevaFactura"
-                    type="button"
-                    class="primary-button"
-                >
-                    + Nueva factura
-                </button>
+                <div id="listaFacturas"></div>
 
-            </header>
-
-
-            <section class="stats facturacion-stats">
-
-                ${this.crearTarjetaResumen(
-                    "💶",
-                    "Facturas",
-                    facturas.length
-                )}
-
-
-                ${this.crearTarjetaResumen(
-                    "🕒",
-                    "Pendientes",
-                    pendientes
-                )}
-
-
-                ${this.crearTarjetaResumen(
-                    "◐",
-                    "Parciales",
-                    parciales
-                )}
-
-
-                ${this.crearTarjetaResumen(
-                    "✅",
-                    "Cobradas",
-                    cobradas
-                )}
-
-
-                ${this.crearTarjetaResumen(
-                    "💰",
-                    "Total facturado",
-                    formatearDinero(
-                        totalFacturado
-                    )
-                )}
-
-
-                ${
-                    anuladas > 0
-
-                        ? this.crearTarjetaResumen(
-                            "🚫",
-                            "Anuladas",
-                            anuladas
-                        )
-
-                        : ""
-                }
-
-            </section>
-
-
-            <div id="listaFacturas"></div>
+            </div>
 
         `;
 
@@ -369,11 +605,12 @@ export class FacturacionView {
 
         return `
 
-            <div class="card">
+            <article class="card">
 
                 <span class="card-icon">
                     ${icono}
                 </span>
+
 
                 <div>
 
@@ -383,13 +620,14 @@ export class FacturacionView {
                         )}
                     </p>
 
+
                     <h3>
                         ${valor}
                     </h3>
 
                 </div>
 
-            </div>
+            </article>
 
         `;
 
@@ -409,21 +647,41 @@ export class FacturacionView {
                     (
                         a,
                         b
-                    ) =>
-                        new Date(
-                            b.fecha
-                        )
-                        -
-                        new Date(
-                            a.fecha
-                        )
+                    ) => {
+
+                        const fechaA =
+                            new Date(
+                                a.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        const fechaB =
+                            new Date(
+                                b.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        return (
+                            fechaB
+                            -
+                            fechaA
+                        );
+
+                    }
                 );
 
 
         const contenedor =
-            document.getElementById(
-                "listaFacturas"
-            );
+            document
+                .getElementById(
+                    "listaFacturas"
+                );
 
 
         if (
@@ -442,23 +700,47 @@ export class FacturacionView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="facturacion-empty">
 
-                    <div class="empty-icon">
+                    <div class="facturacion-empty-icon">
                         💶
                     </div>
+
 
                     <h3>
                         Todavía no tienes facturas
                     </h3>
 
+
                     <p>
-                        Genera tu primera factura a partir de un albarán entregado.
+                        Genera tu primera factura
+                        a partir de uno o varios
+                        albaranes entregados.
                     </p>
+
+
+                    <button
+                        id="crearPrimeraFactura"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Crear factura
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimeraFactura"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormulario()
+                );
 
 
             return;
@@ -508,9 +790,7 @@ export class FacturacionView {
                         () => {
 
                             this.mostrarDetalle(
-                                Number(
-                                    boton.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }
@@ -532,9 +812,7 @@ export class FacturacionView {
                         () => {
 
                             this.anularFactura(
-                                Number(
-                                    boton.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }
@@ -556,9 +834,7 @@ export class FacturacionView {
                         () => {
 
                             this.eliminarFactura(
-                                Number(
-                                    boton.dataset.id
-                                )
+                                boton.dataset.id
                             );
 
                         }
@@ -603,6 +879,8 @@ export class FacturacionView {
 
             alert(
                 resultado.mensaje
+                ||
+                "No se ha podido anular la factura."
             );
 
 
@@ -649,6 +927,8 @@ export class FacturacionView {
 
             alert(
                 resultado.mensaje
+                ||
+                "No se ha podido eliminar la factura."
             );
 
 
@@ -808,24 +1088,25 @@ export class FacturacionView {
                 : [];
 
 
+        const albaranes =
+            this.obtenerAlbaranes();
+
+
         return ids
             .map(
                 id =>
-                    this.obtenerAlbaranes()
-                        .find(
-                            albaran =>
-                                String(
-                                    albaran.id
-                                )
-                                ===
-                                String(
-                                    id
-                                )
-                        )
+                    albaranes.find(
+                        albaran =>
+                            String(
+                                albaran.id
+                            )
+                            ===
+                            String(
+                                id
+                            )
+                    )
             )
-            .filter(
-                Boolean
-            );
+            .filter(Boolean);
 
     }
 
@@ -909,7 +1190,7 @@ export class FacturacionView {
 
 
     // =====================================================
-    // CAMPANYAS DE FACTURA
+    // CAMPAÑAS FACTURA
     // =====================================================
 
     obtenerCampanyasFactura(
@@ -1057,7 +1338,7 @@ export class FacturacionView {
 
 
     // =====================================================
-    // CLIENTE FACTURA
+    // CLIENTE
     // =====================================================
 
     obtenerClienteFactura(
@@ -1067,10 +1348,6 @@ export class FacturacionView {
         const contactos =
             this.obtenerContactos();
 
-
-        // =================================================
-        // CLIENTE ID DE FACTURA
-        // =================================================
 
         if (
             factura?.clienteId
@@ -1105,10 +1382,6 @@ export class FacturacionView {
                 factura
             );
 
-
-        // =================================================
-        // CLIENTE ID DE ALBARÁN
-        // =================================================
 
         for (
             const albaran
@@ -1148,10 +1421,6 @@ export class FacturacionView {
 
         }
 
-
-        // =================================================
-        // NOMBRE DE FACTURA
-        // =================================================
 
         const nombreFactura =
             String(
@@ -1195,17 +1464,13 @@ export class FacturacionView {
         }
 
 
-        // =================================================
-        // NOMBRE DE ALBARÁN
-        // =================================================
-
         for (
             const albaran
             of
             albaranes
         ) {
 
-            const nombreAlbaran =
+            const nombre =
                 String(
                     albaran.clienteNombre
                     ||
@@ -1218,7 +1483,7 @@ export class FacturacionView {
 
 
             if (
-                !nombreAlbaran
+                !nombre
             ) {
 
                 continue;
@@ -1237,7 +1502,7 @@ export class FacturacionView {
                             .trim()
                             .toLowerCase()
                         ===
-                        nombreAlbaran
+                        nombre
                 );
 
 
@@ -1252,30 +1517,7 @@ export class FacturacionView {
         }
 
 
-        // =================================================
-        // COMPATIBILIDAD: UN ÚNICO CLIENTE
-        // =================================================
-
-        const clientes =
-            contactos.filter(
-                contacto =>
-                    String(
-                        contacto.tipo
-                        ||
-                        ""
-                    )
-                        .toLowerCase()
-                    ===
-                    "cliente"
-            );
-
-
-        return clientes.length ===
-            1
-
-                ? clientes[0]
-
-                : null;
+        return null;
 
     }
 
@@ -1286,23 +1528,13 @@ export class FacturacionView {
 
     obtenerNifCliente(
         factura,
-        cliente = null
+        cliente
     ) {
 
-        const contacto =
-            cliente
-            ||
-            this.obtenerClienteFactura(
-                factura
-            );
-
-
         return (
-            contacto?.nif
+            cliente?.nif
             ||
-            contacto?.nifCif
-            ||
-            contacto?.cif
+            cliente?.cif
             ||
             factura?.clienteNif
             ||
@@ -1364,9 +1596,10 @@ export class FacturacionView {
         }
 
 
-        return this.obtenerAlbaranesFactura(
-            factura
-        )
+        return this
+            .obtenerAlbaranesFactura(
+                factura
+            )
             .reduce(
                 (
                     total,
@@ -1416,13 +1649,13 @@ export class FacturacionView {
 
 
         return (
-            iva >= 0
+            iva >=
+            0
             &&
-            iva <= 100
+            iva <=
+            100
         )
-
             ? iva
-
             : 21;
 
     }

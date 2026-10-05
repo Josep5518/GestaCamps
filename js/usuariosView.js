@@ -1,18 +1,19 @@
 import {
+
     ROLES_USUARIO,
+
     NOMBRES_ROL
+
 } from "./usuario.js";
 
+
 import {
+
     escaparHTML
+
 } from "./utils.js";
 
 
-// =====================================================
-// GESTACAMPS
-// USUARIOS VIEW
-// Día 26 · Refactorización 1
-// =====================================================
 
 export class UsuariosView {
 
@@ -34,53 +35,221 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // MOSTRAR
-    // =================================================
+    // =====================================================
 
     mostrar() {
 
         const usuarios =
-            this.usuarioService
-                .obtenerTodos();
+            this.obtenerUsuarios();
+
+
+        const activos =
+            usuarios.filter(
+                usuario =>
+                    usuario.activo !==
+                    false
+            ).length;
+
+
+        const administradores =
+            usuarios.filter(
+                usuario =>
+                    usuario.rol ===
+                    ROLES_USUARIO.ADMINISTRADOR
+            ).length;
+
+
+        const encargados =
+            usuarios.filter(
+                usuario =>
+                    usuario.rol ===
+                    ROLES_USUARIO.ENCARGADO
+            ).length;
+
+
+        const trabajadores =
+            usuarios.filter(
+                usuario =>
+                    usuario.rol ===
+                    ROLES_USUARIO.TRABAJADOR
+            ).length;
 
 
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="usuarios-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Usuarios y permisos
-                    </h2>
+                <section class="usuarios-hero">
 
-                    <p>
-                        Gestiona los usuarios que pueden acceder a GestaCamps
-                    </p>
+                    <div class="usuarios-hero-content">
+
+                        <span class="usuarios-eyebrow">
+                            🔐 SISTEMA
+                        </span>
+
+
+                        <h1>
+                            Cada usuario,
+                            <span>
+                                solo donde debe.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Controla quién puede acceder a GestaCamps,
+                            qué rol tiene cada persona y qué usuarios
+                            están activos en la explotación.
+                        </p>
+
+
+                        <button
+                            id="nuevoUsuario"
+                            class="
+                                primary-button
+                                usuarios-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo usuario
+                        </button>
+
+                    </div>
+
+
+                    <div class="usuarios-hero-image">
+
+                        <div class="usuarios-hero-badge">
+
+                            <span>
+                                Usuarios activos
+                            </span>
+
+
+                            <strong>
+                                ${activos}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="usuarios-hero-copy">
+
+                            <small>
+                                ACCESO · ROLES · CONTROL
+                            </small>
+
+
+                            <strong>
+                                Seguridad sencilla,<br>
+                                acceso controlado
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats usuarios-stats">
+
+                    ${this.crearStat(
+                        "👥",
+                        "Usuarios",
+                        usuarios.length
+                    )}
+
+
+                    ${this.crearStat(
+                        "✅",
+                        "Activos",
+                        activos
+                    )}
+
+
+                    ${this.crearStat(
+                        "🔐",
+                        "Administradores",
+                        administradores
+                    )}
+
+
+                    ${this.crearStat(
+                        "👨‍🌾",
+                        "Encargados / trabajadores",
+                        encargados + trabajadores
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA
+                =========================================== -->
+
+                <div class="usuarios-section-header">
+
+                    <div>
+
+                        <span class="usuarios-section-eyebrow">
+                            CONTROL DE ACCESO
+                        </span>
+
+
+                        <h2>
+                            Usuarios y permisos
+                        </h2>
+
+
+                        <p>
+                            Gestiona accesos, roles,
+                            vinculación con trabajadores y estado.
+                        </p>
+
+                    </div>
+
+
+                    <div class="usuarios-summary">
+
+                        <span>
+                            ${usuarios.length} usuarios
+                        </span>
+
+
+                        <span class="success">
+                            ${activos} activos
+                        </span>
+
+
+                        <span>
+                            ${administradores} admin
+                        </span>
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevoUsuario"
-                    type="button"
-                    class="primary-button"
-                >
-                    + Nuevo usuario
-                </button>
+                <div id="listaUsuarios">
 
-            </header>
+                    ${this.crearListado(
+                        usuarios
+                    )}
 
+                </div>
 
-            ${this.crearResumen(
-                usuarios
-            )}
-
-
-            ${this.crearListado(
-                usuarios
-            )}
+            </div>
 
         `;
 
@@ -90,147 +259,50 @@ export class UsuariosView {
     }
 
 
-    // =================================================
-    // RESUMEN
-    // =================================================
+    // =====================================================
+    // STAT
+    // =====================================================
 
-    crearResumen(
-        usuarios
+    crearStat(
+        icono,
+        titulo,
+        valor
     ) {
-
-        const activos =
-            usuarios.filter(
-                usuario =>
-                    usuario.activo !==
-                    false
-            )
-                .length;
-
-
-        const administradores =
-            usuarios.filter(
-                usuario =>
-                    usuario.rol ===
-                    ROLES_USUARIO.ADMINISTRADOR
-            )
-                .length;
-
-
-        const encargados =
-            usuarios.filter(
-                usuario =>
-                    usuario.rol ===
-                    ROLES_USUARIO.ENCARGADO
-            )
-                .length;
-
-
-        const trabajadores =
-            usuarios.filter(
-                usuario =>
-                    usuario.rol ===
-                    ROLES_USUARIO.TRABAJADOR
-            )
-                .length;
-
 
         return `
 
-            <div class="stats usuarios-stats">
+            <article class="card">
 
-                <div class="card">
-
-                    <div class="card-icon">
-                        👥
-                    </div>
-
-                    <div>
-
-                        <p>
-                            Usuarios
-                        </p>
-
-                        <h3>
-                            ${usuarios.length}
-                        </h3>
-
-                    </div>
-
-                </div>
+                <span class="card-icon">
+                    ${icono}
+                </span>
 
 
-                <div class="card">
+                <div>
 
-                    <div class="card-icon">
-                        ✅
-                    </div>
+                    <p>
+                        ${escaparHTML(
+                            titulo
+                        )}
+                    </p>
 
-                    <div>
 
-                        <p>
-                            Activos
-                        </p>
-
-                        <h3>
-                            ${activos}
-                        </h3>
-
-                    </div>
+                    <h3>
+                        ${valor}
+                    </h3>
 
                 </div>
 
-
-                <div class="card">
-
-                    <div class="card-icon">
-                        🔐
-                    </div>
-
-                    <div>
-
-                        <p>
-                            Administradores
-                        </p>
-
-                        <h3>
-                            ${administradores}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-
-                <div class="card">
-
-                    <div class="card-icon">
-                        👨‍🌾
-                    </div>
-
-                    <div>
-
-                        <p>
-                            Encargados / trabajadores
-                        </p>
-
-                        <h3>
-                            ${encargados + trabajadores}
-                        </h3>
-
-                    </div>
-
-                </div>
-
-            </div>
+            </article>
 
         `;
 
     }
 
 
-    // =================================================
+    // =====================================================
     // LISTADO
-    // =================================================
+    // =====================================================
 
     crearListado(
         usuarios
@@ -243,19 +315,31 @@ export class UsuariosView {
 
             return `
 
-                <section class="empty-state usuarios-empty-state">
+                <section class="usuarios-empty">
 
-                    <div class="empty-icon">
+                    <div class="usuarios-empty-icon">
                         👥
                     </div>
+
 
                     <h3>
                         No hay usuarios
                     </h3>
 
+
                     <p>
-                        Crea el primer usuario de GestaCamps.
+                        Crea el primer usuario
+                        para empezar a gestionar accesos.
                     </p>
+
+
+                    <button
+                        id="crearPrimerUsuario"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Crear usuario
+                    </button>
 
                 </section>
 
@@ -264,22 +348,22 @@ export class UsuariosView {
         }
 
 
-        const tarjetas =
-            usuarios
-                .map(
-                    usuario =>
-                        this.crearTarjetaUsuario(
-                            usuario
-                        )
-                )
-                .join("");
-
-
         return `
 
             <div class="usuarios-grid">
 
-                ${tarjetas}
+                ${usuarios
+                    .map(
+                        (
+                            usuario,
+                            index
+                        ) =>
+                            this.crearTarjetaUsuario(
+                                usuario,
+                                index
+                            )
+                    )
+                    .join("")}
 
             </div>
 
@@ -288,12 +372,13 @@ export class UsuariosView {
     }
 
 
-    // =================================================
-    // TARJETA USUARIO
-    // =================================================
+    // =====================================================
+    // TARJETA
+    // =====================================================
 
     crearTarjetaUsuario(
-        usuario
+        usuario,
+        index
     ) {
 
         const nombreCompleto =
@@ -301,9 +386,7 @@ export class UsuariosView {
                 usuario.nombre,
                 usuario.apellidos
             ]
-                .filter(
-                    Boolean
-                )
+                .filter(Boolean)
                 .join(" ")
             ||
             usuario.usuario;
@@ -317,23 +400,23 @@ export class UsuariosView {
             "Usuario";
 
 
-        const estadoClase =
+        const activo =
             usuario.activo !==
-            false
-                ? "completed"
-                : "pending";
+            false;
 
 
-        const estadoTexto =
-            usuario.activo !==
-            false
-                ? "Activo"
-                : "Desactivado";
+        const imagen =
+            (
+                index %
+                3
+            )
+            +
+            1;
 
 
-        const icono =
-            this.obtenerIconoRol(
-                usuario.rol
+        const iniciales =
+            this.obtenerIniciales(
+                nombreCompleto
             );
 
 
@@ -341,40 +424,214 @@ export class UsuariosView {
 
             <article class="usuario-card">
 
-                <div class="usuario-card-header">
+                <div
+                    class="
+                        usuario-cover
+                        usuario-cover-${imagen}
+                    "
+                >
 
-                    <div class="usuario-card-main">
+                    <div class="usuario-cover-overlay"></div>
 
-                        <div class="usuario-icon">
-                            ${icono}
+
+                    <div class="usuario-cover-top">
+
+                        <span
+                            class="
+                                usuario-status
+                                ${
+                                    activo
+                                        ? "activo"
+                                        : "inactivo"
+                                }
+                            "
+                        >
+                            ●
+                            ${
+                                activo
+                                    ? "Activo"
+                                    : "Desactivado"
+                            }
+                        </span>
+
+
+                        <button
+                            type="button"
+                            class="
+                                usuario-edit-icon
+                                editar-usuario
+                            "
+                            data-id="${escaparHTML(
+                                usuario.id
+                            )}"
+                            title="Editar usuario"
+                        >
+                            ✎
+                        </button>
+
+                    </div>
+
+
+                    <div class="usuario-cover-bottom">
+
+                        <div class="usuario-avatar">
+                            ${escaparHTML(
+                                iniciales
+                            )}
                         </div>
 
 
-                        <div class="usuario-card-identidad">
+                        <div>
 
-                            <h3>
-                                ${escaparHTML(
-                                    nombreCompleto
-                                )}
-                            </h3>
-
-
-                            <p class="usuario-rol">
+                            <small>
                                 ${escaparHTML(
                                     nombreRol
                                 )}
-                            </p>
+                            </small>
+
+
+                            <strong>
+                                ${escaparHTML(
+                                    nombreCompleto
+                                )}
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="usuario-card-body">
+
+                    <div class="usuario-role-row">
+
+                        <span class="usuario-role-chip">
+
+                            ${this.obtenerIconoRol(
+                                usuario.rol
+                            )}
+
+                            ${escaparHTML(
+                                nombreRol
+                            )}
+
+                        </span>
+
+                    </div>
+
+
+                    <div class="usuario-info-grid">
+
+                        <div>
+
+                            <span>
+                                Usuario
+                            </span>
+
+
+                            <strong>
+                                ${escaparHTML(
+                                    usuario.usuario
+                                    ||
+                                    "—"
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Estado
+                            </span>
+
+
+                            <strong>
+                                ${
+                                    activo
+                                        ? "Activo"
+                                        : "Desactivado"
+                                }
+                            </strong>
 
                         </div>
 
                     </div>
 
 
+                    ${
+                        usuario.trabajadorId
+
+                            ? `
+
+                                <div class="usuario-linked">
+
+                                    <span>
+                                        👷
+                                    </span>
+
+
+                                    <div>
+
+                                        <small>
+                                            Trabajador vinculado
+                                        </small>
+
+
+                                        <strong>
+                                            ${escaparHTML(
+                                                this.obtenerNombreTrabajador(
+                                                    usuario.trabajadorId
+                                                )
+                                            )}
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            `
+
+                            : ""
+                    }
+
+
                     <div class="usuario-actions">
 
                         <button
                             type="button"
-                            class="secondary-button editar-usuario"
+                            class="
+                                secondary-button
+                                cambiar-estado-usuario
+                            "
+                            data-id="${escaparHTML(
+                                usuario.id
+                            )}"
+                            data-activo="${
+                                activo
+                                    ? "false"
+                                    : "true"
+                            }"
+                        >
+
+                            ${
+                                activo
+                                    ? "Desactivar"
+                                    : "Activar"
+                            }
+
+                        </button>
+
+
+                        <button
+                            type="button"
+                            class="
+                                secondary-button
+                                editar-usuario
+                            "
                             data-id="${escaparHTML(
                                 usuario.id
                             )}"
@@ -382,83 +639,13 @@ export class UsuariosView {
                             Editar
                         </button>
 
-                    </div>
-
-                </div>
-
-
-                <div class="usuario-info">
-
-                    <div>
-
-                        <span>
-                            Usuario
-                        </span>
-
-                        <strong>
-                            ${escaparHTML(
-                                usuario.usuario
-                            )}
-                        </strong>
-
-                    </div>
-
-
-                    <div>
-
-                        <span>
-                            Estado
-                        </span>
-
-                        <strong>
-                            ${escaparHTML(
-                                estadoTexto
-                            )}
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-                <div class="usuario-status-row">
-
-                    <span
-                        class="status ${estadoClase}"
-                    >
-                        ${escaparHTML(
-                            estadoTexto
-                        )}
-                    </span>
-
-
-                    <div class="usuario-state-actions">
 
                         <button
                             type="button"
-                            class="task-state-button cambiar-estado-usuario"
-                            data-id="${escaparHTML(
-                                usuario.id
-                            )}"
-                            data-activo="${
-                                usuario.activo !==
-                                false
-                                    ? "false"
-                                    : "true"
-                            }"
-                        >
-                            ${
-                                usuario.activo !==
-                                false
-                                    ? "Desactivar"
-                                    : "Activar"
-                            }
-                        </button>
-
-
-                        <button
-                            type="button"
-                            class="delete-button eliminar-usuario"
+                            class="
+                                delete-button
+                                eliminar-usuario
+                            "
                             data-id="${escaparHTML(
                                 usuario.id
                             )}"
@@ -479,72 +666,40 @@ export class UsuariosView {
     }
 
 
-    // =================================================
-    // ICONO ROL
-    // =================================================
-
-    obtenerIconoRol(
-        rol
-    ) {
-
-        if (
-            rol ===
-            ROLES_USUARIO.ADMINISTRADOR
-        ) {
-
-            return "🔐";
-
-        }
-
-
-        if (
-            rol ===
-            ROLES_USUARIO.ENCARGADO
-        ) {
-
-            return "🧑‍🌾";
-
-        }
-
-
-        if (
-            rol ===
-            ROLES_USUARIO.TRABAJADOR
-        ) {
-
-            return "👷";
-
-        }
-
-
-        return "👤";
-
-    }
-
-
-    // =================================================
+    // =====================================================
     // EVENTOS LISTADO
-    // =================================================
+    // =====================================================
 
     configurarEventosListado() {
 
         const nuevo =
-            document.getElementById(
-                "nuevoUsuario"
-            );
+            document
+                .getElementById(
+                    "nuevoUsuario"
+                );
 
 
-        if (
-            nuevo
-        ) {
+        const primero =
+            document
+                .getElementById(
+                    "crearPrimerUsuario"
+                );
 
-            nuevo.addEventListener(
+
+        nuevo
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrarFormulario()
             );
 
-        }
+
+        primero
+            ?.addEventListener(
+                "click",
+                () =>
+                    this.mostrarFormulario()
+            );
 
 
         document
@@ -608,9 +763,9 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // FORMULARIO
-    // =================================================
+    // =====================================================
 
     mostrarFormulario(
         id = null
@@ -623,10 +778,12 @@ export class UsuariosView {
 
         const usuario =
             editando
+
                 ? this.usuarioService
                     .obtenerPorId(
                         id
                     )
+
                 : null;
 
 
@@ -640,7 +797,9 @@ export class UsuariosView {
                 "El usuario no existe."
             );
 
+
             this.mostrar();
+
 
             return;
 
@@ -653,244 +812,412 @@ export class UsuariosView {
 
         this.mainContent.innerHTML = `
 
-            <button
-                type="button"
-                id="volverUsuarios"
-                class="back-button"
-            >
-                ← Volver
-            </button>
+            <div class="usuario-form-page">
+
+                <button
+                    type="button"
+                    id="volverUsuarios"
+                    class="back-button"
+                >
+                    ← Volver
+                </button>
 
 
-            <header class="topbar">
+                <header class="usuario-form-header">
 
-                <div>
+                    <span>
+                        🔐 SISTEMA
+                    </span>
 
-                    <h2>
+
+                    <h1>
+
                         ${
                             editando
                                 ? "Editar usuario"
                                 : "Nuevo usuario"
                         }
-                    </h2>
+
+                    </h1>
+
 
                     <p>
-                        Configura el acceso y el rol del usuario
+                        Configura los datos de acceso,
+                        el rol y la vinculación con trabajadores.
                     </p>
 
-                </div>
-
-            </header>
+                </header>
 
 
-            <section class="form-panel usuarios-form-panel">
+                <div class="usuario-form-layout">
 
-                <div class="usuarios-form-grid">
+                    <section class="form-panel usuario-form-panel">
 
+                        <div class="usuario-form-section">
 
-                    <div class="form-group">
-
-                        <label for="usuarioNombre">
-                            Nombre *
-                        </label>
-
-                        <input
-                            id="usuarioNombre"
-                            type="text"
-                            value="${escaparHTML(
-                                usuario?.nombre
-                                ??
-                                ""
-                            )}"
-                        >
-
-                    </div>
+                            <span>
+                                👤
+                            </span>
 
 
-                    <div class="form-group">
+                            <div>
 
-                        <label for="usuarioApellidos">
-                            Apellidos
-                        </label>
-
-                        <input
-                            id="usuarioApellidos"
-                            type="text"
-                            value="${escaparHTML(
-                                usuario?.apellidos
-                                ??
-                                ""
-                            )}"
-                        >
-
-                    </div>
+                                <h3>
+                                    Datos del usuario
+                                </h3>
 
 
-                    <div class="form-group">
+                                <p>
+                                    Información de acceso y permisos.
+                                </p>
 
-                        <label for="usuarioLogin">
-                            Nombre de usuario *
-                        </label>
+                            </div>
 
-                        <input
-                            id="usuarioLogin"
-                            type="text"
-                            autocomplete="username"
-                            value="${escaparHTML(
-                                usuario?.usuario
-                                ??
-                                ""
-                            )}"
-                        >
-
-                    </div>
+                        </div>
 
 
-                    <div class="form-group">
+                        <div class="usuario-form-grid">
 
-                        <label for="usuarioRol">
-                            Rol *
-                        </label>
+                            <div class="form-group">
 
-                        <select
-                            id="usuarioRol"
-                        >
-
-                            ${this.crearOpcionesRol(
-                                usuario?.rol
-                            )}
-
-                        </select>
-
-                    </div>
+                                <label for="usuarioNombre">
+                                    Nombre *
+                                </label>
 
 
-                    <div class="form-group">
+                                <input
+                                    id="usuarioNombre"
+                                    type="text"
+                                    value="${escaparHTML(
+                                        usuario?.nombre
+                                        ??
+                                        ""
+                                    )}"
+                                >
 
-                        <label for="usuarioTrabajador">
-                            Trabajador vinculado
-                        </label>
-
-                        <select
-                            id="usuarioTrabajador"
-                        >
-
-                            <option value="">
-                                Sin vincular
-                            </option>
-
-                            ${this.crearOpcionesTrabajadores(
-                                trabajadores,
-                                usuario?.trabajadorId
-                            )}
-
-                        </select>
-
-                        <small class="form-help">
-                            Es opcional. Permite relacionar el usuario con un trabajador existente.
-                        </small>
-
-                    </div>
+                            </div>
 
 
-                    <div class="form-group">
+                            <div class="form-group">
 
-                        <label for="usuarioPin">
-                            ${
-                                editando
-                                    ? "Nuevo PIN"
-                                    : "PIN *"
-                            }
-                        </label>
-
-                        <input
-                            id="usuarioPin"
-                            type="password"
-                            inputmode="numeric"
-                            autocomplete="new-password"
-                            maxlength="8"
-                            placeholder="${
-                                editando
-                                    ? "Déjalo vacío para mantener el actual"
-                                    : "Entre 4 y 8 números"
-                            }"
-                        >
-
-                    </div>
+                                <label for="usuarioApellidos">
+                                    Apellidos
+                                </label>
 
 
-                    <div class="form-group">
+                                <input
+                                    id="usuarioApellidos"
+                                    type="text"
+                                    value="${escaparHTML(
+                                        usuario?.apellidos
+                                        ??
+                                        ""
+                                    )}"
+                                >
 
-                        <label for="usuarioRepetirPin">
-                            ${
-                                editando
-                                    ? "Repetir nuevo PIN"
-                                    : "Repetir PIN *"
-                            }
-                        </label>
-
-                        <input
-                            id="usuarioRepetirPin"
-                            type="password"
-                            inputmode="numeric"
-                            autocomplete="new-password"
-                            maxlength="8"
-                        >
-
-                    </div>
+                            </div>
 
 
-                    <div class="form-group usuario-activo-box">
+                            <div class="form-group">
 
-                        <label>
+                                <label for="usuarioLogin">
+                                    Nombre de usuario *
+                                </label>
 
-                            <input
-                                id="usuarioActivo"
-                                type="checkbox"
-                                ${
-                                    usuario?.activo !==
-                                    false
-                                        ? "checked"
-                                        : ""
-                                }
+
+                                <input
+                                    id="usuarioLogin"
+                                    type="text"
+                                    autocomplete="username"
+                                    value="${escaparHTML(
+                                        usuario?.usuario
+                                        ??
+                                        ""
+                                    )}"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="usuarioRol">
+                                    Rol *
+                                </label>
+
+
+                                <select id="usuarioRol">
+
+                                    ${this.crearOpcionesRol(
+                                        usuario?.rol
+                                    )}
+
+                                </select>
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    form-group
+                                    usuario-form-wide
+                                "
                             >
 
-                            Usuario activo
+                                <label for="usuarioTrabajador">
+                                    Trabajador vinculado
+                                </label>
 
-                        </label>
 
-                    </div>
+                                <select id="usuarioTrabajador">
 
+                                    <option value="">
+                                        Sin vincular
+                                    </option>
+
+
+                                    ${this.crearOpcionesTrabajadores(
+                                        trabajadores,
+                                        usuario?.trabajadorId
+                                    )}
+
+                                </select>
+
+
+                                <small class="form-help">
+                                    Opcional. Permite relacionar
+                                    el usuario con un trabajador existente.
+                                </small>
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="usuarioPin">
+
+                                    ${
+                                        editando
+                                            ? "Nuevo PIN"
+                                            : "PIN *"
+                                    }
+
+                                </label>
+
+
+                                <input
+                                    id="usuarioPin"
+                                    type="password"
+                                    inputmode="numeric"
+                                    autocomplete="new-password"
+                                    maxlength="8"
+                                    placeholder="${
+                                        editando
+                                            ? "Déjalo vacío para mantener el actual"
+                                            : "Entre 4 y 8 números"
+                                    }"
+                                >
+
+                            </div>
+
+
+                            <div class="form-group">
+
+                                <label for="usuarioRepetirPin">
+
+                                    ${
+                                        editando
+                                            ? "Repetir nuevo PIN"
+                                            : "Repetir PIN *"
+                                    }
+
+                                </label>
+
+
+                                <input
+                                    id="usuarioRepetirPin"
+                                    type="password"
+                                    inputmode="numeric"
+                                    autocomplete="new-password"
+                                    maxlength="8"
+                                >
+
+                            </div>
+
+
+                            <div
+                                class="
+                                    form-group
+                                    usuario-form-wide
+                                "
+                            >
+
+                                <label class="usuario-active-label">
+
+                                    <input
+                                        id="usuarioActivo"
+                                        type="checkbox"
+                                        ${
+                                            usuario?.activo !==
+                                            false
+                                                ? "checked"
+                                                : ""
+                                        }
+                                    >
+
+
+                                    <span>
+
+                                        <strong>
+                                            Usuario activo
+                                        </strong>
+
+
+                                        <small>
+                                            Permite iniciar sesión
+                                            y acceder según su rol.
+                                        </small>
+
+                                    </span>
+
+                                </label>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="form-actions">
+
+                            <button
+                                id="cancelarUsuario"
+                                type="button"
+                                class="secondary-button"
+                            >
+                                Cancelar
+                            </button>
+
+
+                            <button
+                                id="guardarUsuario"
+                                type="button"
+                                class="primary-button"
+                            >
+
+                                ${
+                                    editando
+                                        ? "Guardar cambios"
+                                        : "Crear usuario"
+                                }
+
+                            </button>
+
+                        </div>
+
+                    </section>
+
+
+                    <aside class="usuario-form-aside">
+
+                        <div class="usuario-form-photo">
+
+                            <div>
+
+                                <span>
+                                    CONTROL DE ACCESO
+                                </span>
+
+
+                                <strong>
+                                    Cada rol,
+                                    con el acceso adecuado.
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="usuario-role-help">
+
+                            <div>
+
+                                <span>
+                                    🔐
+                                </span>
+
+
+                                <div>
+
+                                    <strong>
+                                        Administrador
+                                    </strong>
+
+
+                                    <p>
+                                        Acceso completo
+                                        a la gestión.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    🧑‍🌾
+                                </span>
+
+
+                                <div>
+
+                                    <strong>
+                                        Encargado
+                                    </strong>
+
+
+                                    <p>
+                                        Gestión operativa
+                                        con permisos limitados.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                            <div>
+
+                                <span>
+                                    👷
+                                </span>
+
+
+                                <div>
+
+                                    <strong>
+                                        Trabajador
+                                    </strong>
+
+
+                                    <p>
+                                        Acceso únicamente
+                                        a sus funciones autorizadas.
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </aside>
 
                 </div>
 
-
-                <div class="form-actions">
-
-                    <button
-                        id="cancelarUsuario"
-                        type="button"
-                        class="secondary-button"
-                    >
-                        Cancelar
-                    </button>
-
-
-                    <button
-                        id="guardarUsuario"
-                        type="button"
-                        class="primary-button"
-                    >
-                        ${
-                            editando
-                                ? "Guardar cambios"
-                                : "Crear usuario"
-                        }
-                    </button>
-
-                </div>
-
-            </section>
+            </div>
 
         `;
 
@@ -902,9 +1229,9 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // OPCIONES ROL
-    // =================================================
+    // =====================================================
 
     crearOpcionesRol(
         rolActual = null
@@ -948,9 +1275,9 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // TRABAJADORES
-    // =================================================
+    // =====================================================
 
     obtenerTrabajadores() {
 
@@ -964,7 +1291,8 @@ export class UsuariosView {
 
 
         if (
-            typeof this.trabajadorService
+            typeof
+            this.trabajadorService
                 .obtenerTodos ===
             "function"
         ) {
@@ -980,7 +1308,8 @@ export class UsuariosView {
 
 
         if (
-            typeof this.trabajadorService
+            typeof
+            this.trabajadorService
                 .obtenerTrabajadores ===
             "function"
         ) {
@@ -1014,9 +1343,7 @@ export class UsuariosView {
                             trabajador.nombre,
                             trabajador.apellidos
                         ]
-                            .filter(
-                                Boolean
-                            )
+                            .filter(Boolean)
                             .join(" ")
                         ||
                         `Trabajador ${trabajador.id}`;
@@ -1058,63 +1385,53 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // EVENTOS FORMULARIO
-    // =================================================
+    // =====================================================
 
     configurarEventosFormulario(
         usuario
     ) {
 
         const volver =
-            document.getElementById(
-                "volverUsuarios"
-            );
+            document
+                .getElementById(
+                    "volverUsuarios"
+                );
 
 
         const cancelar =
-            document.getElementById(
-                "cancelarUsuario"
-            );
+            document
+                .getElementById(
+                    "cancelarUsuario"
+                );
 
 
         const guardar =
-            document.getElementById(
-                "guardarUsuario"
-            );
+            document
+                .getElementById(
+                    "guardarUsuario"
+                );
 
 
-        if (
-            volver
-        ) {
-
-            volver.addEventListener(
+        volver
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
             );
 
-        }
 
-
-        if (
-            cancelar
-        ) {
-
-            cancelar.addEventListener(
+        cancelar
+            ?.addEventListener(
                 "click",
                 () =>
                     this.mostrar()
             );
 
-        }
 
-
-        if (
-            guardar
-        ) {
-
-            guardar.addEventListener(
+        guardar
+            ?.addEventListener(
                 "click",
                 () =>
                     this.guardar(
@@ -1122,20 +1439,16 @@ export class UsuariosView {
                     )
             );
 
-        }
-
 
         const repetirPin =
-            document.getElementById(
-                "usuarioRepetirPin"
-            );
+            document
+                .getElementById(
+                    "usuarioRepetirPin"
+                );
 
 
-        if (
-            repetirPin
-        ) {
-
-            repetirPin.addEventListener(
+        repetirPin
+            ?.addEventListener(
                 "keydown",
                 event => {
 
@@ -1153,14 +1466,12 @@ export class UsuariosView {
                 }
             );
 
-        }
-
     }
 
 
-    // =================================================
+    // =====================================================
     // GUARDAR
-    // =================================================
+    // =====================================================
 
     async guardar(
         usuarioActual
@@ -1242,30 +1553,27 @@ export class UsuariosView {
                         usuarioActual.id,
                         {
 
-                            nombre:
-                                nombre,
+                            nombre,
 
-                            apellidos:
-                                apellidos,
+                            apellidos,
 
                             usuario:
                                 login,
 
-                            rol:
-                                rol,
+                            rol,
 
-                            activo:
-                                activo,
+                            activo,
 
-                            trabajadorId:
-                                trabajadorId,
+                            trabajadorId,
 
                             permisos:
                                 cambioRol
+
                                     ? this.usuarioService
                                         .crearPermisosRol(
                                             rol
                                         )
+
                                     : usuarioActual.permisos,
 
                             pinNuevo:
@@ -1286,29 +1594,22 @@ export class UsuariosView {
                     .crear(
                         {
 
-                            nombre:
-                                nombre,
+                            nombre,
 
-                            apellidos:
-                                apellidos,
+                            apellidos,
 
                             usuario:
                                 login,
 
-                            rol:
-                                rol,
+                            rol,
 
-                            activo:
-                                activo,
+                            activo,
 
-                            trabajadorId:
-                                trabajadorId,
+                            trabajadorId,
 
-                            pin:
-                                pin,
+                            pin,
 
-                            repetirPin:
-                                repetirPin
+                            repetirPin
 
                         }
                     );
@@ -1328,6 +1629,7 @@ export class UsuariosView {
                 "No se ha podido guardar el usuario."
             );
 
+
             return;
 
         }
@@ -1338,9 +1640,9 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // CAMBIAR ESTADO
-    // =================================================
+    // =====================================================
 
     cambiarEstado(
         id,
@@ -1367,6 +1669,7 @@ export class UsuariosView {
                 "No se ha podido cambiar el estado."
             );
 
+
             return;
 
         }
@@ -1377,9 +1680,9 @@ export class UsuariosView {
     }
 
 
-    // =================================================
+    // =====================================================
     // ELIMINAR
-    // =================================================
+    // =====================================================
 
     eliminar(
         id
@@ -1406,9 +1709,7 @@ export class UsuariosView {
                 usuario.nombre,
                 usuario.apellidos
             ]
-                .filter(
-                    Boolean
-                )
+                .filter(Boolean)
                 .join(" ")
             ||
             usuario.usuario;
@@ -1448,6 +1749,7 @@ export class UsuariosView {
                 "No se ha podido eliminar el usuario."
             );
 
+
             return;
 
         }
@@ -1458,9 +1760,131 @@ export class UsuariosView {
     }
 
 
-    // =================================================
-    // OBTENER VALOR
-    // =================================================
+    // =====================================================
+    // HELPERS
+    // =====================================================
+
+    obtenerUsuarios() {
+
+        const usuarios =
+            this.usuarioService
+                ?.obtenerTodos?.();
+
+
+        return Array.isArray(
+            usuarios
+        )
+            ? usuarios
+            : [];
+
+    }
+
+
+    obtenerIconoRol(
+        rol
+    ) {
+
+        if (
+            rol ===
+            ROLES_USUARIO.ADMINISTRADOR
+        ) {
+
+            return "🔐";
+
+        }
+
+
+        if (
+            rol ===
+            ROLES_USUARIO.ENCARGADO
+        ) {
+
+            return "🧑‍🌾";
+
+        }
+
+
+        if (
+            rol ===
+            ROLES_USUARIO.TRABAJADOR
+        ) {
+
+            return "👷";
+
+        }
+
+
+        return "👤";
+
+    }
+
+
+    obtenerIniciales(
+        nombre
+    ) {
+
+        return String(
+            nombre
+            ||
+            "U"
+        )
+            .trim()
+            .split(/\s+/)
+            .slice(
+                0,
+                2
+            )
+            .map(
+                parte =>
+                    parte
+                        .charAt(0)
+                        .toUpperCase()
+            )
+            .join("");
+
+    }
+
+
+    obtenerNombreTrabajador(
+        id
+    ) {
+
+        const trabajador =
+            this.obtenerTrabajadores()
+                .find(
+                    item =>
+                        String(
+                            item.id
+                        )
+                        ===
+                        String(
+                            id
+                        )
+                );
+
+
+        if (
+            !trabajador
+        ) {
+
+            return "Trabajador vinculado";
+
+        }
+
+
+        return (
+            [
+                trabajador.nombre,
+                trabajador.apellidos
+            ]
+                .filter(Boolean)
+                .join(" ")
+            ||
+            `Trabajador ${trabajador.id}`
+        );
+
+    }
+
 
     obtenerValor(
         id

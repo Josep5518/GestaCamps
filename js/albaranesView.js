@@ -1,22 +1,38 @@
 import {
+
     escaparHTML,
+
     formatearFecha,
+
     formatearNumero,
+
     formatearDinero,
+
     obtenerFechaHoy
+
 } from "./utils.js";
 
+
 import {
+
     crearAlbaranesCardsHelper
+
 } from "./albaranes/albaranesCards.js";
 
-import {
-    crearAlbaranesLineasHelper
-} from "./albaranes/albaranesLineas.js";
 
 import {
+
+    crearAlbaranesLineasHelper
+
+} from "./albaranes/albaranesLineas.js";
+
+
+import {
+
     crearAlbaranesFormHelper
+
 } from "./albaranes/albaranesForm.js";
+
 
 
 export class AlbaranesView {
@@ -31,6 +47,7 @@ export class AlbaranesView {
 
         this.mainContent =
             mainContent;
+
 
         this.albaranService =
             albaranService;
@@ -118,8 +135,7 @@ export class AlbaranesView {
     mostrar() {
 
         const albaranes =
-            this.albaranService
-                .obtenerTodos();
+            this.obtenerAlbaranes();
 
 
         const borradores =
@@ -157,82 +173,300 @@ export class AlbaranesView {
             ).length;
 
 
+        const cancelados =
+            albaranes.filter(
+                albaran =>
+                    albaran.estado ===
+                    "Cancelado"
+            ).length;
+
+
+        const importeTotal =
+            albaranes
+                .filter(
+                    albaran =>
+                        albaran.estado !==
+                        "Cancelado"
+                )
+                .reduce(
+                    (
+                        suma,
+                        albaran
+                    ) =>
+                        suma
+                        +
+                        Number(
+                            albaran.total
+                            ||
+                            0
+                        ),
+                    0
+                );
+
+
         this.mainContent.innerHTML = `
 
-            <header class="topbar">
+            <div class="albaranes-page">
 
-                <div>
+                <!-- ==========================================
+                     HERO
+                =========================================== -->
 
-                    <h2>
-                        Albaranes
-                    </h2>
+                <section class="albaranes-hero">
 
-                    <p>
-                        Gestiona reservas, salidas y entregas de producción
-                    </p>
+                    <div class="albaranes-hero-content">
+
+                        <span class="albaranes-eyebrow">
+                            🧾 COMERCIAL Y FINANZAS
+                        </span>
+
+
+                        <h1>
+                            Del almacén,
+                            <span>
+                                hasta el cliente.
+                            </span>
+                        </h1>
+
+
+                        <p>
+                            Gestiona reservas, salidas y entregas
+                            de producción manteniendo siempre
+                            el stock y la trazabilidad bajo control.
+                        </p>
+
+
+                        <button
+                            id="nuevoAlbaran"
+                            class="
+                                primary-button
+                                albaranes-hero-button
+                            "
+                            type="button"
+                        >
+                            + Nuevo albarán
+                        </button>
+
+                    </div>
+
+
+                    <div class="albaranes-hero-image">
+
+                        <div class="albaranes-hero-badge">
+
+                            <span>
+                                Importe gestionado
+                            </span>
+
+
+                            <strong>
+                                ${formatearDinero(
+                                    importeTotal
+                                )}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="albaranes-hero-copy">
+
+                            <small>
+                                RESERVA · ENTREGA · FACTURA
+                            </small>
+
+
+                            <strong>
+                                Cada salida,<br>
+                                perfectamente trazada
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     KPIs
+                =========================================== -->
+
+                <section class="stats albaranes-stats">
+
+                    ${this.crearTarjetaEstadistica(
+                        "📝",
+                        "Borradores",
+                        borradores
+                    )}
+
+
+                    ${this.crearTarjetaEstadistica(
+                        "🕒",
+                        "Pendientes",
+                        pendientes
+                    )}
+
+
+                    ${this.crearTarjetaEstadistica(
+                        "🚚",
+                        "Entregados",
+                        entregados
+                    )}
+
+
+                    ${this.crearTarjetaEstadistica(
+                        "💶",
+                        "Facturados",
+                        facturados
+                    )}
+
+                </section>
+
+
+                <!-- ==========================================
+                     CONTROL STOCK
+                =========================================== -->
+
+                <section class="albaranes-stock-guide">
+
+                    <div class="albaranes-stock-guide-title">
+
+                        <span>
+                            📦
+                        </span>
+
+
+                        <div>
+
+                            <strong>
+                                Control automático de stock
+                            </strong>
+
+
+                            <p>
+                                El estado del albarán determina
+                                cómo afecta a la producción disponible.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="albaranes-stock-guide-items">
+
+                        <span class="draft">
+                            <i></i>
+                            Borrador · no reserva
+                        </span>
+
+
+                        <span class="pending">
+                            <i></i>
+                            Pendiente · reserva
+                        </span>
+
+
+                        <span class="delivered">
+                            <i></i>
+                            Entregado · consume
+                        </span>
+
+
+                        <span class="invoiced">
+                            <i></i>
+                            Facturado · mantiene
+                        </span>
+
+
+                        <span class="cancelled">
+                            <i></i>
+                            Cancelado · libera
+                        </span>
+
+                    </div>
+
+                </section>
+
+
+                <!-- ==========================================
+                     CABECERA LISTADO
+                =========================================== -->
+
+                <div class="albaranes-section-header">
+
+                    <div>
+
+                        <span class="albaranes-section-eyebrow">
+                            DOCUMENTOS DE SALIDA
+                        </span>
+
+
+                        <h2>
+                            Albaranes
+                        </h2>
+
+
+                        <p>
+                            Consulta clientes, productos, cantidades,
+                            importes y estado de cada entrega.
+                        </p>
+
+                    </div>
+
+
+                    <div class="albaranes-summary">
+
+                        <span>
+                            ${albaranes.length}
+                            ${
+                                albaranes.length ===
+                                1
+                                    ? "albarán"
+                                    : "albaranes"
+                            }
+                        </span>
+
+
+                        ${
+                            pendientes >
+                            0
+
+                                ? `
+
+                                    <span class="warning">
+                                        ${pendientes} pendientes
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+
+                        ${
+                            cancelados >
+                            0
+
+                                ? `
+
+                                    <span class="neutral">
+                                        ${cancelados} cancelados
+                                    </span>
+
+                                `
+
+                                : ""
+                        }
+
+                    </div>
 
                 </div>
 
 
-                <button
-                    id="nuevoAlbaran"
-                    type="button"
-                    class="primary-button"
-                >
-                    + Nuevo albarán
-                </button>
-
-            </header>
-
-
-            <section class="stats albaranes-stats">
-
-                ${this.crearTarjetaEstadistica(
-                    "📝",
-                    "Borradores",
-                    borradores
-                )}
-
-
-                ${this.crearTarjetaEstadistica(
-                    "🕒",
-                    "Pendientes",
-                    pendientes
-                )}
-
-
-                ${this.crearTarjetaEstadistica(
-                    "🚚",
-                    "Entregados",
-                    entregados
-                )}
-
-
-                ${this.crearTarjetaEstadistica(
-                    "💶",
-                    "Facturados",
-                    facturados
-                )}
-
-            </section>
-
-
-            <div class="albaranes-stock-info">
-
-                <strong>
-                    Control de stock:
-                </strong>
-
-                Borrador no reserva ·
-                Pendiente reserva ·
-                Entregado consume ·
-                Facturado mantiene ·
-                Cancelado libera.
+                <div id="listaAlbaranes"></div>
 
             </div>
-
-
-            <div id="listaAlbaranes"></div>
 
         `;
 
@@ -243,11 +477,8 @@ export class AlbaranesView {
             )
             ?.addEventListener(
                 "click",
-                () => {
-
-                    this.mostrarFormulario();
-
-                }
+                () =>
+                    this.mostrarFormulario()
             );
 
 
@@ -268,11 +499,12 @@ export class AlbaranesView {
 
         return `
 
-            <div class="card">
+            <article class="card">
 
                 <span class="card-icon">
                     ${icono}
                 </span>
+
 
                 <div>
 
@@ -282,6 +514,7 @@ export class AlbaranesView {
                         )}
                     </p>
 
+
                     <h3>
                         ${formatearNumero(
                             valor
@@ -290,7 +523,7 @@ export class AlbaranesView {
 
                 </div>
 
-            </div>
+            </article>
 
         `;
 
@@ -304,28 +537,47 @@ export class AlbaranesView {
     mostrarLista() {
 
         const albaranes =
-            this.albaranService
-                .obtenerTodos()
+            this.obtenerAlbaranes()
                 .slice()
                 .sort(
                     (
                         a,
                         b
-                    ) =>
-                        new Date(
-                            b.fecha
-                        )
-                        -
-                        new Date(
-                            a.fecha
-                        )
+                    ) => {
+
+                        const fechaA =
+                            new Date(
+                                a.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        const fechaB =
+                            new Date(
+                                b.fecha
+                                ||
+                                0
+                            )
+                                .getTime();
+
+
+                        return (
+                            fechaB
+                            -
+                            fechaA
+                        );
+
+                    }
                 );
 
 
         const contenedor =
-            document.getElementById(
-                "listaAlbaranes"
-            );
+            document
+                .getElementById(
+                    "listaAlbaranes"
+                );
 
 
         if (
@@ -344,23 +596,47 @@ export class AlbaranesView {
 
             contenedor.innerHTML = `
 
-                <div class="empty-state">
+                <div class="albaranes-empty">
 
-                    <div class="empty-icon">
+                    <div class="albaranes-empty-icon">
                         🧾
                     </div>
+
 
                     <h3>
                         Todavía no tienes albaranes
                     </h3>
 
+
                     <p>
-                        Crea el primer albarán de salida de producción.
+                        Crea el primer albarán de salida
+                        para empezar a gestionar reservas
+                        y entregas de producción.
                     </p>
+
+
+                    <button
+                        id="crearPrimerAlbaran"
+                        class="primary-button"
+                        type="button"
+                    >
+                        + Crear albarán
+                    </button>
 
                 </div>
 
             `;
+
+
+            document
+                .getElementById(
+                    "crearPrimerAlbaran"
+                )
+                ?.addEventListener(
+                    "click",
+                    () =>
+                        this.mostrarFormulario()
+                );
 
 
             return;
@@ -510,11 +786,13 @@ export class AlbaranesView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido eliminar el albarán."
             );
 
 
@@ -564,11 +842,13 @@ export class AlbaranesView {
 
 
         if (
-            !resultado.ok
+            !resultado?.ok
         ) {
 
             alert(
-                resultado.mensaje
+                resultado?.mensaje
+                ||
+                "No se ha podido cambiar el estado del albarán."
             );
 
 
@@ -594,6 +874,26 @@ export class AlbaranesView {
             .mostrarFormulario(
                 id
             );
+
+    }
+
+
+    // =====================================================
+    // DATOS
+    // =====================================================
+
+    obtenerAlbaranes() {
+
+        const albaranes =
+            this.albaranService
+                ?.obtenerTodos?.();
+
+
+        return Array.isArray(
+            albaranes
+        )
+            ? albaranes
+            : [];
 
     }
 

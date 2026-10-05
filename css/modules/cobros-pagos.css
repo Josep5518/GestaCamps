@@ -1,68 +1,555 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · COBROS Y PAGOS
-   Día 26 · Cierre Refactorización 1
+   DÍA 28 · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   ESTADÍSTICAS
+   PÁGINA
+===================================================== */
+
+.cobros-pagos-page {
+    width: 100%;
+    padding-bottom: 40px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.cobros-pagos-hero {
+    display: grid;
+
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
+
+    gap: 18px;
+
+    margin-bottom: 18px;
+}
+
+
+.cobros-pagos-hero-content {
+    min-height: 215px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.cobros-pagos-eyebrow {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #39725b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cobros-pagos-hero h1 {
+    max-width: 530px;
+
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.cobros-pagos-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.cobros-pagos-hero-content > p {
+    max-width: 500px;
+
+    margin:
+        14px
+        0
+        18px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+.cobros-pagos-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+
+    gap: 8px;
+}
+
+
+/* =====================================================
+   FOTO HERO
+===================================================== */
+
+.cobros-pagos-hero-image {
+    position: relative;
+
+    min-height: 215px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        url("../../assets/images/cobros-pagos-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dce9df;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.cobros-pagos-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0),
+            rgba(8,37,26,0.04) 40%,
+            rgba(8,37,26,0.56)
+        );
+}
+
+
+.cobros-pagos-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 135px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(255,255,255,0.91);
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.cobros-pagos-hero-badge span {
+    display: block;
+
+    color: #687a71;
+
+    font-size: 8px;
+}
+
+
+.cobros-pagos-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 16px;
+}
+
+
+.cobros-pagos-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(0,0,0,0.32);
+}
+
+
+.cobros-pagos-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.cobros-pagos-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    line-height: 1.03;
+}
+
+
+/* =====================================================
+   KPIs
 ===================================================== */
 
 .cobros-pagos-stats {
-    display: grid;
+    display: grid !important;
 
     grid-template-columns:
         repeat(
             4,
             minmax(0, 1fr)
-        );
+        ) !important;
 
-    gap: 16px;
+    gap: 13px !important;
+
+    margin-bottom: 14px !important;
+}
+
+
+.cobros-pagos-stats .card {
+    min-width: 0;
+
+    min-height: 76px;
+
+    padding: 14px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 14px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(18,55,42,0.045);
+}
+
+
+/* =====================================================
+   BALANCE
+===================================================== */
+
+.cobros-balance {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 18px;
 
     margin-bottom: 20px;
+
+    padding:
+        14px
+        16px;
+
+    border:
+        1px solid
+        #dce9e2;
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #eef7f2,
+            #f9fbfa
+        );
 }
 
 
-/* =====================================================
-   ACCIONES SUPERIORES
-===================================================== */
-
-.cobros-top-actions {
+.cobros-balance-main {
     display: flex;
-
     align-items: center;
 
-    gap: 10px;
+    gap: 11px;
+}
+
+
+.cobros-balance-main > span {
+    width: 43px;
+    height: 43px;
+
+    flex:
+        0
+        0
+        43px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: white;
+
+    font-size: 20px;
+}
+
+
+.cobros-balance-main small {
+    display: block;
+
+    color: #527263;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.09em;
+}
+
+
+.cobros-balance-main strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #17553e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 20px;
+}
+
+
+.cobros-balance-main p {
+    margin:
+        3px
+        0
+        0;
+
+    color: #718078;
+
+    font-size: 7px;
+}
+
+
+.cobros-balance-data {
+    display: grid;
+
+    grid-template-columns:
+        repeat(
+            3,
+            minmax(70px, 1fr)
+        );
+
+    gap: 7px;
+}
+
+
+.cobros-balance-data > div {
+    padding:
+        8px
+        10px;
+
+    border-radius: 9px;
+
+    background: white;
+
+    text-align: center;
+}
+
+
+.cobros-balance-data span {
+    display: block;
+
+    color: var(--gc-muted);
+
+    font-size: 6px;
+}
+
+
+.cobros-balance-data strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: var(--gc-text);
+
+    font-size: 11px;
 }
 
 
 /* =====================================================
-   FACTURAS POR COBRAR
+   PANEL
 ===================================================== */
 
-.cobros-facturas-panel {
-    margin-top: 22px;
+.cobros-panel {
+    padding: 16px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(18,55,42,0.04);
 }
 
 
-.cobros-panel-subtitle {
+.cobros-panel-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 14px;
+
+    margin-bottom: 12px;
+}
+
+
+.cobros-section-eyebrow {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.09em;
+}
+
+
+.cobros-panel-header h3,
+.cobros-movimientos-header h3 {
+    margin: 0;
+
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 18px;
+}
+
+
+.cobros-panel-header p,
+.cobros-movimientos-header p {
     margin:
         4px
         0
         0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 11px;
+    font-size: 8px;
 
-    line-height: 1.4;
+    line-height: 1.45;
+}
+
+
+.cobros-panel-icon {
+    width: 37px;
+    height: 37px;
+
+    flex:
+        0
+        0
+        37px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: #eaf4ee;
+
+    font-size: 17px;
 }
 
 
 /* =====================================================
-   BLOQUES DE RESUMEN
+   GRID INFERIOR
 ===================================================== */
 
 .cobros-dashboard-grid {
@@ -74,26 +561,103 @@
             minmax(0, 1fr)
         );
 
-    gap: 18px;
+    gap: 14px;
 
-    margin-top: 20px;
-}
-
-
-.cobros-dashboard-grid
-.panel {
-    min-width: 0;
+    margin-top: 14px;
 }
 
 
 /* =====================================================
-   RESUMEN DE CAJA
+   RESUMEN CAJA
 ===================================================== */
 
-.cobros-resumen-list {
+.cobros-caja-list {
     display: grid;
 
-    gap: 10px;
+    gap: 8px;
+}
+
+
+/* =====================================================
+   TASKS GENERADAS POR HELPER
+===================================================== */
+
+.cobros-panel .task {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-top: 7px;
+
+    padding:
+        10px;
+
+    border:
+        1px solid
+        #e7ece9;
+
+    border-radius: 9px;
+
+    background: #f8faf8;
+}
+
+
+.cobros-panel .task > div {
+    min-width: 0;
+}
+
+
+.cobros-panel .task strong {
+    color: var(--gc-text);
+
+    font-size: 9px;
+}
+
+
+.cobros-panel .task p {
+    margin:
+        3px
+        0
+        0;
+
+    color: var(--gc-muted);
+
+    font-size: 7px;
+}
+
+
+/* =====================================================
+   BOTÓN COBRAR FACTURA
+===================================================== */
+
+.cobrar-factura-directo {
+    min-height: 30px;
+
+    padding:
+        0
+        9px;
+
+    border:
+        1px solid
+        #cce2d5;
+
+    border-radius: 8px;
+
+    background: #e9f5ee;
+
+    color: #1d6046;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    cursor: pointer;
+}
+
+
+.cobrar-factura-directo:hover {
+    background: #dcefe4;
 }
 
 
@@ -102,88 +666,99 @@
 ===================================================== */
 
 .cobros-movimientos-panel {
-    margin-top: 20px;
+    margin-top: 14px;
+}
+
+
+.cobros-movimientos-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 15px;
+
+    margin-bottom: 11px;
+}
+
+
+.cobros-count {
+    padding:
+        6px
+        9px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 8px;
+    font-weight: 700;
 }
 
 
 .movimientos-list {
-    display: flex;
+    display: grid;
 
-    flex-direction: column;
+    gap: 8px;
 }
 
 
 .movimiento-item {
     display: flex;
+    align-items: center;
+    justify-content: space-between;
 
-    justify-content:
-        space-between;
+    gap: 15px;
 
-    align-items:
-        center;
-
-    gap: 20px;
-
-    padding:
-        16px
-        0;
-
-    border-bottom:
-        1px solid
-        var(--gc-border-soft);
-}
-
-
-.movimiento-item:last-child {
-    border-bottom:
-        none;
-}
-
-
-/* =====================================================
-   PARTE IZQUIERDA DEL MOVIMIENTO
-===================================================== */
-
-.movimiento-main {
     min-width: 0;
 
+    padding:
+        10px
+        11px;
+
+    border:
+        1px solid
+        #e6ece8;
+
+    border-radius: 10px;
+
+    background: #fafbfa;
+}
+
+
+.movimiento-main {
     display: flex;
+    align-items: center;
 
-    align-items:
-        center;
+    gap: 9px;
 
-    gap: 12px;
+    min-width: 0;
 }
 
 
 .movimiento-icon {
-    width: 42px;
-    height: 42px;
+    width: 35px;
+    height: 35px;
 
     flex:
         0
         0
-        42px;
+        35px;
 
     display: flex;
+    align-items: center;
+    justify-content: center;
 
-    align-items:
-        center;
+    border-radius: 9px;
 
-    justify-content:
-        center;
+    background: #eaf4ee;
 
-    border-radius: 10px;
-
-    background-color:
-        var(--gc-green-soft);
-
-    font-size: 20px;
+    font-size: 16px;
 }
 
 
-.movimiento-main
-> div {
+.movimiento-main > div {
     min-width: 0;
 }
 
@@ -191,41 +766,33 @@
 .movimiento-main strong {
     display: block;
 
-    margin-bottom: 4px;
+    overflow-wrap: anywhere;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    overflow-wrap:
-        anywhere;
+    font-size: 9px;
 }
 
 
 .movimiento-main p {
-    margin: 0;
+    margin:
+        3px
+        0
+        0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 11px;
+    font-size: 7px;
 
     line-height: 1.4;
-
-    overflow-wrap:
-        anywhere;
 }
 
 
-/* =====================================================
-   PARTE DERECHA DEL MOVIMIENTO
-===================================================== */
-
 .movimiento-right {
     display: flex;
-
     align-items: center;
 
-    gap: 14px;
+    gap: 8px;
 
     flex:
         0
@@ -234,38 +801,193 @@
 }
 
 
-.movimiento-right strong {
-    white-space: nowrap;
+.movimiento-right > strong {
+    font-size: 10px;
 }
 
 
 .movimiento-cobro {
-    color:
-        var(--gc-green-success);
+    color: #187348;
 }
 
 
 .movimiento-pago {
-    color:
-        #b33d3d;
+    color: #ae4747;
+}
+
+
+.movimiento-right
+.delete-button {
+    width: 29px;
+    min-width: 29px;
+    height: 29px;
+
+    padding: 0;
+
+    border-radius: 8px;
 }
 
 
 /* =====================================================
-   ESTADO VACÍO
+   EMPTY
 ===================================================== */
 
-.cobros-empty-text {
+.cobros-empty {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.cobros-empty-icon {
+    width: 58px;
+    height: 58px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 10px;
+
+    border-radius: 17px;
+
+    background:
+        linear-gradient(
+            145deg,
+            #e1f1e7,
+            #f2f6e9
+        );
+
+    font-size: 27px;
+}
+
+
+.cobros-empty h3 {
     margin: 0;
 
-    padding:
-        10px
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+}
+
+
+.cobros-empty p {
+    max-width: 390px;
+
+    margin:
+        6px
+        0
         0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 11px;
+    font-size: 8px;
+
+    line-height: 1.5;
+}
+
+
+/* =====================================================
+   FORMULARIOS EXISTENTES
+===================================================== */
+
+#volverCobros {
+    margin-bottom: 10px;
+}
+
+
+#volverCobros
++
+.topbar {
+    margin-bottom: 16px;
+}
+
+
+#volverCobros
++
+.topbar
+h2 {
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 29px;
+}
+
+
+#volverCobros
+~
+.form-panel {
+    max-width: 900px;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(18,55,42,0.045);
+}
+
+
+/* =====================================================
+   FORMULARIO COBRO/PAGO
+===================================================== */
+
+.cobro-form-panel,
+.pago-form-panel,
+.cobros-form-panel {
+    max-width: 900px;
+
+    padding: 20px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 15px;
+
+    background: white;
+
+    box-shadow:
+        0 7px 21px
+        rgba(18,55,42,0.045);
+}
+
+
+.cobro-form-panel input,
+.cobro-form-panel select,
+.cobro-form-panel textarea,
+.pago-form-panel input,
+.pago-form-panel select,
+.pago-form-panel textarea,
+.cobros-form-panel input,
+.cobros-form-panel select,
+.cobros-form-panel textarea {
+    width: 100%;
+
+    box-sizing: border-box;
+
+    border-color: #dce6e0;
+
+    background: #fbfcfb;
 }
 
 
@@ -273,37 +995,41 @@
    TABLET
 ===================================================== */
 
-@media (max-width: 1250px) {
+@media (max-width: 1100px) {
+
+    .cobros-pagos-hero {
+        grid-template-columns: 1fr;
+    }
+
+
+    .cobros-pagos-hero-content {
+        min-height: 0;
+    }
+
+
+    .cobros-pagos-hero-image {
+        min-height: 185px;
+    }
+
 
     .cobros-pagos-stats {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
-            );
+            ) !important;
     }
 
 
-    .cobros-dashboard-grid {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            );
+    .cobros-balance {
+        align-items: flex-start;
+
+        flex-direction: column;
     }
 
-}
 
-
-/* =====================================================
-   TABLET PEQUEÑA
-===================================================== */
-
-@media (max-width: 900px) {
-
-    .cobros-dashboard-grid {
-        grid-template-columns:
-            1fr;
+    .cobros-balance-data {
+        width: 100%;
     }
 
 }
@@ -315,148 +1041,148 @@
 
 @media (max-width: 760px) {
 
-    /* ---------------------------------------------
-       KPIs
-    ---------------------------------------------- */
+    .cobros-pagos-page {
+        padding-bottom: 24px;
+    }
+
+
+    .cobros-pagos-hero {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+
+        margin-bottom: 13px;
+    }
+
+
+    .cobros-pagos-hero-content {
+        min-height: 0;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .cobros-pagos-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .cobros-pagos-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .cobros-pagos-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .cobros-pagos-hero-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+
+    .cobros-pagos-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .cobros-pagos-hero-copy strong {
+        font-size: 18px;
+    }
+
 
     .cobros-pagos-stats {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
-            );
+            ) !important;
 
-        gap: 8px;
-
-        margin-bottom: 14px;
+        gap: 8px !important;
     }
 
 
-    /* ---------------------------------------------
-       CABECERA / BOTONES
-    ---------------------------------------------- */
-
-    .cobros-top-actions {
-        display: grid;
-
+    .cobros-balance-data {
         grid-template-columns:
-            1fr
-            1fr;
-
-        width: 100%;
-
-        gap: 8px;
-    }
-
-
-    .cobros-top-actions
-    button {
-        width: 100%;
-
-        min-height: 40px;
-
-        justify-content: center;
-    }
-
-
-    /* ---------------------------------------------
-       PANELES
-    ---------------------------------------------- */
-
-    .cobros-facturas-panel {
-        margin-top: 14px;
+            repeat(
+                3,
+                minmax(0, 1fr)
+            );
     }
 
 
     .cobros-dashboard-grid {
-        grid-template-columns:
-            1fr;
-
-        gap: 12px;
-
-        margin-top: 12px;
+        grid-template-columns: 1fr;
     }
 
 
-    .cobros-movimientos-panel {
-        margin-top: 12px;
+    .cobros-movimientos-header {
+        align-items: flex-start;
+
+        flex-direction: column;
     }
 
-
-    .cobros-panel-subtitle {
-        font-size: 10px;
-    }
-
-
-    /* ---------------------------------------------
-       MOVIMIENTOS
-    ---------------------------------------------- */
 
     .movimiento-item {
-        align-items:
-            flex-start;
+        align-items: flex-start;
 
-        flex-direction:
-            column;
-
-        gap: 10px;
-
-        padding:
-            13px
-            0;
-    }
-
-
-    .movimiento-icon {
-        width: 38px;
-        height: 38px;
-
-        flex-basis:
-            38px;
-
-        border-radius: 9px;
-
-        font-size: 18px;
-    }
-
-
-    .movimiento-main {
-        gap: 10px;
-    }
-
-
-    .movimiento-main p {
-        font-size: 10px;
+        flex-direction: column;
     }
 
 
     .movimiento-right {
         width: 100%;
 
-        justify-content:
-            space-between;
+        justify-content: space-between;
+    }
 
-        gap: 10px;
+
+    #volverCobros
+    ~
+    .form-panel,
+    .cobro-form-panel,
+    .pago-form-panel,
+    .cobros-form-panel {
+        padding: 14px;
+
+        border-radius: 12px;
     }
 
 }
 
 
 /* =====================================================
-   MÓVIL ESTRECHO
+   MÓVIL PEQUEÑO
 ===================================================== */
 
 @media (max-width: 420px) {
 
-    .cobros-pagos-stats {
-        grid-template-columns:
-            1fr;
+    .cobros-pagos-hero-actions {
+        display: grid;
+
+        grid-template-columns: 1fr;
     }
 
 
-    .cobros-top-actions {
-        grid-template-columns:
-            1fr;
+    .cobros-pagos-hero-actions button {
+        width: 100%;
+    }
+
+
+    .cobros-balance-data {
+        grid-template-columns: 1fr;
     }
 
 }

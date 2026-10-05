@@ -1,61 +1,400 @@
 /* =====================================================
    GESTACAMPS
    MÓDULO · ESTADÍSTICAS
-   Día 26 · Cierre Refactorización 1
+   DÍA 28 · FRUIT ATTRACTION
 ===================================================== */
 
 
 /* =====================================================
-   CABECERAS DE SECCIÓN
+   PÁGINA
+===================================================== */
+
+.estadisticas-page {
+    width: 100%;
+    padding-bottom: 45px;
+}
+
+
+/* =====================================================
+   HERO
+===================================================== */
+
+.estadisticas-hero {
+    display: grid;
+
+    grid-template-columns:
+        minmax(340px, 0.82fr)
+        minmax(520px, 1.38fr);
+
+    gap: 18px;
+
+    margin-bottom: 25px;
+}
+
+
+.estadisticas-hero-content {
+    min-height: 220px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding:
+        10px
+        18px
+        10px
+        2px;
+}
+
+
+.estadisticas-eyebrow {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #39725b;
+
+    font-size: 9px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
+}
+
+
+.estadisticas-hero h1 {
+    max-width: 550px;
+
+    margin: 0;
+
+    color: #17241e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size:
+        clamp(
+            36px,
+            3.1vw,
+            52px
+        );
+
+    line-height: 0.98;
+
+    letter-spacing: -0.045em;
+}
+
+
+.estadisticas-hero h1 span {
+    display: block;
+
+    color: #195b42;
+}
+
+
+.estadisticas-hero-content > p {
+    max-width: 505px;
+
+    margin:
+        14px
+        0
+        16px;
+
+    color: var(--gc-muted);
+
+    font-size: 12px;
+
+    line-height: 1.55;
+}
+
+
+/* =====================================================
+   HIGHLIGHT HERO
+===================================================== */
+
+.estadisticas-hero-highlight {
+    align-self: flex-start;
+
+    display: flex;
+    align-items: center;
+
+    gap: 9px;
+
+    padding:
+        8px
+        11px;
+
+    border:
+        1px solid
+        #dce9e2;
+
+    border-radius: 10px;
+
+    background: #f4f9f6;
+}
+
+
+.estadisticas-hero-highlight > span {
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 8px;
+
+    background: white;
+}
+
+
+.estadisticas-hero-highlight small {
+    display: block;
+
+    color: #607269;
+
+    font-size: 6px;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+}
+
+
+.estadisticas-hero-highlight strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #17543e;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 15px;
+}
+
+
+/* =====================================================
+   HERO IMAGEN
+===================================================== */
+
+.estadisticas-hero-image {
+    position: relative;
+
+    min-height: 220px;
+
+    overflow: hidden;
+
+    border-radius: 19px;
+
+    background:
+        url("../../assets/images/estadisticas-hero.jpg")
+        center
+        center
+        /
+        cover
+        no-repeat,
+        #dce9df;
+
+    box-shadow:
+        0 10px 30px
+        rgba(
+            19,
+            59,
+            43,
+            0.09
+        );
+}
+
+
+.estadisticas-hero-image::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+        linear-gradient(
+            90deg,
+            rgba(255,255,255,0),
+            rgba(8,37,26,0.04) 42%,
+            rgba(8,37,26,0.58)
+        );
+}
+
+
+.estadisticas-hero-badge {
+    position: absolute;
+
+    z-index: 3;
+
+    top: 17px;
+    right: 17px;
+
+    min-width: 120px;
+
+    padding:
+        9px
+        11px;
+
+    border:
+        1px solid
+        rgba(255,255,255,0.38);
+
+    border-radius: 11px;
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.91
+        );
+
+    backdrop-filter:
+        blur(9px);
+}
+
+
+.estadisticas-hero-badge span {
+    display: block;
+
+    color: #687a71;
+
+    font-size: 8px;
+}
+
+
+.estadisticas-hero-badge strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #175039;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 17px;
+}
+
+
+.estadisticas-hero-copy {
+    position: absolute;
+
+    z-index: 3;
+
+    right: 22px;
+    bottom: 20px;
+
+    color: white;
+
+    text-align: right;
+
+    text-shadow:
+        0 2px 15px
+        rgba(
+            0,
+            0,
+            0,
+            0.32
+        );
+}
+
+
+.estadisticas-hero-copy small {
+    display: block;
+
+    margin-bottom: 5px;
+
+    font-size: 7px;
+    font-weight: 700;
+
+    letter-spacing: 0.1em;
+}
+
+
+.estadisticas-hero-copy strong {
+    display: block;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
+
+    font-size: 25px;
+
+    line-height: 1.03;
+}
+
+
+/* =====================================================
+   TÍTULOS DE SECCIÓN
 ===================================================== */
 
 .estadistica-seccion-titulo {
     margin:
-        24px
+        27px
         0
-        10px;
+        11px;
 }
 
 
-.estadistica-seccion-titulo:first-of-type {
-    margin-top: 8px;
+.estadistica-kicker {
+    display: block;
+
+    margin-bottom: 4px;
+
+    color: #4e7c68;
+
+    font-size: 7px;
+    font-weight: 800;
+
+    letter-spacing: 0.1em;
 }
 
 
 .estadistica-seccion-titulo h3 {
-    margin:
-        0
-        0
-        4px;
+    margin: 0;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size: 17px;
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
-    line-height: 1.25;
+    font-size: 21px;
 }
 
 
 .estadistica-seccion-titulo p {
-    margin: 0;
+    margin:
+        4px
+        0
+        0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 12px;
+    font-size: 9px;
 
-    line-height: 1.4;
+    line-height: 1.45;
 }
 
 
 /* =====================================================
-   KPIs PRINCIPALES
+   STATS
 ===================================================== */
 
-.main-content
-.estadistica-seccion-titulo
-+ .stats {
+.estadisticas-main-stats,
+.estadisticas-mini-stats,
+.estadisticas-pasadas {
     display: grid !important;
 
     grid-template-columns:
@@ -64,30 +403,46 @@
             minmax(0, 1fr)
         ) !important;
 
-    gap: 16px;
-
-    margin-bottom: 18px;
+    gap: 11px !important;
 }
 
 
-/* =====================================================
-   KPIs SECUNDARIOS
-===================================================== */
-
 .estadisticas-mini-stats {
-    display: grid !important;
-
     grid-template-columns:
         repeat(
             2,
             minmax(0, 1fr)
         ) !important;
 
-    gap: 16px;
+    margin-top: 10px !important;
+}
 
-    margin-top: 12px !important;
 
-    margin-bottom: 18px;
+.estadisticas-main-stats .card,
+.estadisticas-mini-stats .card,
+.estadisticas-pasadas .card {
+    min-width: 0;
+
+    min-height: 76px;
+
+    padding: 13px;
+
+    border:
+        1px solid
+        var(--gc-border-soft);
+
+    border-radius: 13px;
+
+    background: white;
+
+    box-shadow:
+        0 6px 18px
+        rgba(
+            18,
+            55,
+            42,
+            0.04
+        );
 }
 
 
@@ -104,20 +459,25 @@
             minmax(0, 1fr)
         );
 
-    gap: 16px;
+    gap: 14px;
 
-    margin-top: 14px;
+    margin-top: 0;
+}
+
+
+.estadisticas-graficos-grid {
+    align-items: stretch;
 }
 
 
 /* =====================================================
-   PANELES
+   PANEL
 ===================================================== */
 
 .estadistica-panel {
     min-width: 0;
 
-    padding: 18px;
+    padding: 16px;
 
     border:
         1px solid
@@ -128,272 +488,73 @@
     background: white;
 
     box-shadow:
-        0
-        7px
-        20px
+        0 7px 21px
         rgba(
             18,
             55,
             42,
-            0.05
+            0.045
         );
 }
 
 
 .estadistica-panel h3 {
-    margin:
-        0
-        0
-        4px;
+    margin: 0;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     font-size: 16px;
-
-    line-height: 1.25;
 }
 
 
 .estadistica-subtitulo {
     margin:
+        4px
         0
-        0
-        16px;
+        14px;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 11px;
+    font-size: 8px;
 
-    line-height: 1.35;
-}
-
-
-.estadistica-vacio {
-    color:
-        var(--gc-muted);
-
-    font-size: 12px;
+    line-height: 1.4;
 }
 
 
 /* =====================================================
-   BARRAS HORIZONTALES
+   PANEL DE GRÁFICO
 ===================================================== */
-
-.gc-chart-bars {
-    display: grid;
-
-    gap: 13px;
-}
-
-
-.estadistica-barra-item {
-    margin: 0;
-}
-
-
-.estadistica-barra-cabecera {
-    display: flex;
-
-    align-items: center;
-
-    justify-content:
-        space-between;
-
-    gap: 12px;
-
-    margin-bottom: 6px;
-}
-
-
-.estadistica-barra-cabecera strong {
-    min-width: 0;
-
-    overflow: hidden;
-
-    color:
-        var(--gc-text);
-
-    font-size: 11px;
-
-    line-height: 1.3;
-
-    white-space: nowrap;
-
-    text-overflow: ellipsis;
-}
-
-
-.estadistica-barra-cabecera span {
-    flex:
-        0
-        0
-        auto;
-
-    color:
-        var(--gc-muted);
-
-    font-size: 10px;
-}
-
-
-.estadistica-barra-fondo {
-    width: 100%;
-    height: 8px;
-
-    overflow: hidden;
-
-    border-radius: 999px;
-
-    background:
-        #e8efeb;
-}
-
-
-.estadistica-barra {
-    min-width: 3px;
-    height: 100%;
-
-    border-radius:
-        inherit;
-
-    background:
-        linear-gradient(
-            90deg,
-            var(--gc-green),
-            #4ca374
-        );
-}
-
-
-/* =====================================================
-   RESÚMENES
-===================================================== */
-
-.estadistica-resumen-fila {
-    min-height: 39px;
-
-    display: flex;
-
-    align-items: center;
-
-    justify-content:
-        space-between;
-
-    gap: 16px;
-
-    padding:
-        10px
-        0;
-
-    border-bottom:
-        1px solid
-        var(--gc-border-soft);
-}
-
-
-.estadistica-resumen-fila:last-child {
-    border-bottom: none;
-}
-
-
-.estadistica-resumen-fila span {
-    color:
-        var(--gc-muted-strong);
-
-    font-size: 11px;
-}
-
-
-.estadistica-resumen-fila strong {
-    color:
-        var(--gc-text);
-
-    font-size: 12px;
-
-    white-space: nowrap;
-}
-
-
-.estadistica-separador {
-    height: 1px;
-
-    margin:
-        6px
-        0;
-
-    background:
-        var(--gc-green-success);
-}
-
-
-.estadistica-resumen-destacado strong {
-    color:
-        var(--gc-green-success);
-
-    font-size: 16px;
-}
-
-
-.valor-positivo,
-.resultado-positivo {
-    color:
-        var(--gc-green-success) !important;
-}
-
-
-.valor-negativo,
-.resultado-negativo {
-    color:
-        #c0392b !important;
-}
-
-
-/* =====================================================
-   GRID DE GRÁFICOS
-===================================================== */
-
-.estadisticas-graficos-grid {
-    grid-template-columns:
-        repeat(
-            2,
-            minmax(0, 1fr)
-        );
-
-    align-items: stretch;
-}
-
 
 .gc-chart-panel {
-    min-height: 300px;
+    min-height: 310px;
 
     display: flex;
-
     flex-direction: column;
 
-    justify-content:
-        flex-start;
+    justify-content: flex-start;
+
+    overflow: hidden;
 }
 
 
 /* =====================================================
-   CABECERA DE GRÁFICOS
+   CABECERA DE GRÁFICO
 ===================================================== */
 
 .gc-chart-panel-header {
     display: flex;
 
-    align-items:
-        flex-start;
-
-    justify-content:
-        space-between;
+    align-items: flex-start;
+    justify-content: space-between;
 
     gap: 14px;
 
-    margin-bottom: 16px;
+    margin-bottom: 18px;
 }
 
 
@@ -408,68 +569,135 @@
         0
         auto;
 
-    min-height: 26px;
-
-    display:
-        inline-flex;
-
+    display: inline-flex;
     align-items: center;
-
     justify-content: center;
+
+    min-height: 27px;
 
     padding:
         0
-        9px;
+        10px;
 
     border-radius: 999px;
 
-    background:
-        var(--gc-green-soft);
+    background: #eaf4ee;
 
-    color:
-        var(--gc-green-text);
+    color: #31654f;
 
-    font-size: 9px;
-
+    font-size: 10px;
     font-weight: 700;
 }
 
 
 /* =====================================================
-   GRÁFICOS VACÍOS
+   ESTADO VACÍO
 ===================================================== */
 
 .gc-chart-empty {
-    min-height: 170px;
-
     flex: 1;
 
-    display: flex;
+    min-height: 180px;
 
+    display: flex;
     flex-direction: column;
 
     align-items: center;
-
     justify-content: center;
 
     gap: 8px;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
     text-align: center;
 }
 
 
 .gc-chart-empty span {
-    font-size: 28px;
+    font-size: 30px;
 }
 
 
 .gc-chart-empty p {
     margin: 0;
 
+    font-size: 12px;
+}
+
+
+/* =====================================================
+   BARRAS HORIZONTALES
+===================================================== */
+
+.gc-chart-bars {
+    display: grid;
+
+    gap: 14px;
+}
+
+
+.estadistica-barra-item {
+    margin: 0;
+}
+
+
+.estadistica-barra-cabecera {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 12px;
+
+    margin-bottom: 7px;
+}
+
+
+.estadistica-barra-cabecera strong {
+    min-width: 0;
+
+    color: var(--gc-text);
+
+    font-size: 12px;
+}
+
+
+.estadistica-barra-cabecera span {
+    flex:
+        0
+        0
+        auto;
+
+    color: var(--gc-muted);
+
     font-size: 11px;
+}
+
+
+.estadistica-barra-fondo {
+    width: 100%;
+    height: 9px;
+
+    overflow: hidden;
+
+    border-radius: 999px;
+
+    background: #e8efeb;
+}
+
+
+.estadistica-barra {
+    min-width: 3px;
+    height: 100%;
+
+    border-radius: inherit;
+
+    background:
+        linear-gradient(
+            90deg,
+            var(--gc-green),
+            #4ca374
+        );
 }
 
 
@@ -483,18 +711,12 @@
     display: grid;
 
     grid-template-columns:
-        minmax(
-            155px,
-            0.8fr
-        )
-        minmax(
-            0,
-            1.2fr
-        );
+        minmax(160px, 0.8fr)
+        minmax(0, 1.2fr);
 
     align-items: center;
 
-    gap: 24px;
+    gap: 28px;
 }
 
 
@@ -502,21 +724,24 @@
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 }
 
 
 .gc-donut {
+    width: 180px;
+    height: 180px;
+
     position: relative;
 
-    width: 165px;
-    height: 165px;
+    flex:
+        0
+        0
+        180px;
 
     display: flex;
 
     align-items: center;
-
     justify-content: center;
 
     border-radius: 50%;
@@ -541,8 +766,8 @@
 
     position: absolute;
 
-    width: 100px;
-    height: 100px;
+    width: 110px;
+    height: 110px;
 
     border-radius: 50%;
 
@@ -568,59 +793,56 @@
     z-index: 2;
 
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
 
-    gap: 3px;
+    gap: 4px;
 
     text-align: center;
 }
 
 
 .gc-donut-center span {
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 9px;
+    font-size: 10px;
 }
 
 
 .gc-donut-center strong {
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size: 15px;
+    font-size: 16px;
 }
 
 
 .gc-donut-legend {
     display: grid;
 
-    gap: 9px;
+    gap: 10px;
 }
 
 
 .gc-donut-legend-item {
-    min-width: 0;
-
     display: flex;
 
     align-items: center;
 
-    gap: 8px;
+    gap: 9px;
+
+    min-width: 0;
 }
 
 
 .gc-donut-dot {
-    width: 9px;
-    height: 9px;
+    width: 10px;
+    height: 10px;
 
     flex:
         0
         0
-        9px;
+        10px;
 
     border-radius: 50%;
 }
@@ -636,13 +858,11 @@
 
     overflow: hidden;
 
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size: 10px;
+    font-size: 11px;
 
     white-space: nowrap;
-
     text-overflow: ellipsis;
 }
 
@@ -652,32 +872,29 @@
 
     margin-top: 2px;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 9px;
+    font-size: 10px;
 }
 
 
 /* =====================================================
-   GRÁFICO DE COLUMNAS
+   GRÁFICO COLUMNAS
 ===================================================== */
 
 .gc-column-chart {
     position: relative;
 
-    min-height: 210px;
+    min-height: 220px;
 
     flex: 1;
 
     display: flex;
-
     flex-direction: column;
 
-    justify-content:
-        flex-end;
+    justify-content: flex-end;
 
-    padding-top: 16px;
+    padding-top: 18px;
 }
 
 
@@ -685,17 +902,15 @@
     position: absolute;
 
     inset:
-        16px
+        18px
         0
-        34px
+        37px
         0;
 
     display: flex;
-
     flex-direction: column;
 
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
     pointer-events: none;
 }
@@ -705,8 +920,7 @@
     width: 100%;
 
     border-top:
-        1px
-        dashed
+        1px dashed
         rgba(
             18,
             55,
@@ -721,15 +935,12 @@
 
     z-index: 1;
 
-    height: 180px;
+    height: 190px;
 
     display: flex;
 
-    align-items:
-        flex-end;
-
-    justify-content:
-        space-around;
+    align-items: flex-end;
+    justify-content: space-around;
 
     gap: 10px;
 }
@@ -743,26 +954,21 @@
     height: 100%;
 
     display: flex;
-
     flex-direction: column;
 
     align-items: center;
-
-    justify-content:
-        flex-end;
+    justify-content: flex-end;
 
     gap: 6px;
 }
 
 
 .gc-column-value {
-    min-height: 15px;
+    min-height: 16px;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 8px;
-
+    font-size: 9px;
     font-weight: 600;
 
     text-align: center;
@@ -772,18 +978,11 @@
 
 
 .gc-column-track {
-    width:
-        min(
-            40px,
-            70%
-        );
-
-    height: 135px;
+    width: min(42px, 70%);
+    height: 145px;
 
     display: flex;
-
-    align-items:
-        flex-end;
+    align-items: flex-end;
 
     overflow: hidden;
 
@@ -793,13 +992,14 @@
         4px
         4px;
 
-    background:
-        #edf3ef;
+    background: #edf3ef;
 }
 
 
 .gc-column-bar {
     width: 100%;
+
+    min-height: 3px;
 
     border-radius:
         8px
@@ -832,45 +1032,40 @@
 
     overflow: hidden;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 9px;
-
+    font-size: 10px;
     font-weight: 600;
 
     text-align: center;
 
     white-space: nowrap;
-
     text-overflow: ellipsis;
 }
 
 
 /* =====================================================
-   COMPARACIONES
+   GRÁFICO COMPARACIÓN
 ===================================================== */
 
 .gc-comparison-chart {
-    min-height: 180px;
-
     flex: 1;
 
     display: flex;
-
     flex-direction: column;
 
-    justify-content:
-        center;
+    justify-content: center;
 
-    gap: 22px;
+    gap: 24px;
+
+    min-height: 190px;
 }
 
 
 .gc-comparison-item {
     display: grid;
 
-    gap: 8px;
+    gap: 9px;
 }
 
 
@@ -878,44 +1073,40 @@
     display: flex;
 
     align-items: center;
-
-    justify-content:
-        space-between;
+    justify-content: space-between;
 
     gap: 12px;
 }
 
 
 .gc-comparison-header span {
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 10px;
+    font-size: 11px;
 }
 
 
 .gc-comparison-header strong {
-    color:
-        var(--gc-text);
+    color: var(--gc-text);
 
-    font-size: 12px;
+    font-size: 13px;
 }
 
 
 .gc-comparison-track {
     width: 100%;
-    height: 12px;
+    height: 14px;
 
     overflow: hidden;
 
     border-radius: 999px;
 
-    background:
-        #edf3ef;
+    background: #edf3ef;
 }
 
 
 .gc-comparison-bar {
+    min-width: 3px;
     height: 100%;
 
     border-radius: inherit;
@@ -943,11 +1134,77 @@
 
 
 /* =====================================================
+   FILAS DE RESUMEN
+===================================================== */
+
+.estadistica-resumen-fila {
+    min-height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding:
+        9px
+        10px;
+
+    border-radius: 8px;
+
+    background: #f7f9f7;
+}
+
+
+.estadistica-resumen-fila + .estadistica-resumen-fila {
+    margin-top: 6px;
+}
+
+
+.estadistica-resumen-fila span {
+    color: var(--gc-muted);
+
+    font-size: 10px;
+}
+
+
+.estadistica-resumen-fila strong {
+    color: var(--gc-text);
+
+    font-size: 11px;
+
+    white-space: nowrap;
+}
+
+
+.estadistica-resumen-destacado {
+    background: #e9f5ee;
+}
+
+
+.estadistica-resumen-destacado strong {
+    color: #176044;
+}
+
+
+.estadistica-separador {
+    height: 1px;
+
+    margin:
+        7px
+        0;
+
+    background: #e6ece8;
+}
+
+
+/* =====================================================
    RENTABILIDAD
 ===================================================== */
 
 .rentabilidad-bloque {
-    margin-top: 24px;
+    margin-top: 28px;
 }
 
 
@@ -956,20 +1213,18 @@
 
     grid-template-columns:
         repeat(
-            3,
+            2,
             minmax(0, 1fr)
         );
 
-    gap: 16px;
-
-    margin-top: 12px;
+    gap: 14px;
 }
 
 
 .rentabilidad-card {
     min-width: 0;
 
-    padding: 18px;
+    padding: 15px;
 
     border:
         1px solid
@@ -980,14 +1235,12 @@
     background: white;
 
     box-shadow:
-        0
-        7px
-        20px
+        0 7px 21px
         rgba(
             18,
             55,
             42,
-            0.05
+            0.045
         );
 }
 
@@ -995,39 +1248,57 @@
 .rentabilidad-card-header {
     display: flex;
 
-    align-items:
-        flex-start;
+    align-items: flex-start;
+    justify-content: space-between;
 
-    gap: 11px;
+    gap: 10px;
 
-    margin-bottom: 14px;
-}
-
-
-.rentabilidad-card-header > div {
-    min-width: 0;
-
-    flex: 1;
+    margin-bottom: 12px;
 }
 
 
 .rentabilidad-card-header h3 {
-    margin:
-        0
-        0
-        3px;
+    margin: 0;
+
+    font-family:
+        Georgia,
+        "Times New Roman",
+        serif;
 
     font-size: 15px;
 }
 
 
 .rentabilidad-card-header p {
-    margin: 0;
+    margin:
+        3px
+        0
+        0;
 
-    color:
-        var(--gc-muted);
+    color: var(--gc-muted);
 
-    font-size: 10px;
+    font-size: 8px;
+}
+
+
+.campania-status {
+    flex:
+        0
+        0
+        auto;
+
+    padding:
+        5px
+        7px;
+
+    border-radius: 999px;
+
+    background: #eaf4ee;
+
+    color: #31654f;
+
+    font-size: 7px;
+    font-weight: 800;
 }
 
 
@@ -1040,105 +1311,110 @@
             minmax(0, 1fr)
         );
 
-    gap: 8px;
+    gap: 7px;
 }
 
 
 .rentabilidad-card-grid > div {
     min-width: 0;
 
-    padding: 10px;
+    padding: 9px;
 
     border-radius: 9px;
 
-    background:
-        var(--gc-surface-soft);
+    background: #f7f9f7;
 }
 
 
 .rentabilidad-card-grid span {
     display: block;
 
-    margin-bottom: 3px;
+    color: var(--gc-muted);
 
-    color:
-        var(--gc-muted);
-
-    font-size: 9px;
+    font-size: 7px;
 }
 
 
 .rentabilidad-card-grid strong {
     display: block;
 
-    color:
-        var(--gc-text);
-
-    font-size: 12px;
+    margin-top: 2px;
 
     overflow-wrap: anywhere;
+
+    color: var(--gc-text);
+
+    font-size: 10px;
 }
 
 
 .rentabilidad-footer {
     display: flex;
 
-    justify-content:
-        space-between;
-
     align-items: center;
+    justify-content: space-between;
 
     gap: 10px;
 
-    margin-top: 11px;
+    margin-top: 10px;
 
-    padding: 10px;
+    padding-top: 10px;
 
-    border-radius: 9px;
-
-    background:
-        var(--gc-green-soft);
+    border-top:
+        1px solid
+        var(--gc-border-soft);
 }
 
 
 .rentabilidad-footer span {
-    font-size: 10px;
+    color: var(--gc-muted);
+
+    font-size: 8px;
 }
 
 
 .rentabilidad-footer strong {
-    color:
-        var(--gc-green-success);
+    color: #176044;
 
-    font-size: 12px;
+    font-size: 10px;
 }
 
 
 /* =====================================================
-   TABLET
+   EMPTY INLINE
 ===================================================== */
 
-@media (max-width: 1250px) {
+.estadisticas-empty-inline {
+    grid-column:
+        1
+        /
+        -1;
 
-    .main-content
-    .estadistica-seccion-titulo
-    + .stats {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            ) !important;
-    }
+    padding: 18px;
+
+    border:
+        1px dashed
+        #dbe5df;
+
+    border-radius: 12px;
+
+    background: white;
+
+    color: var(--gc-muted);
+
+    font-size: 9px;
+
+    text-align: center;
+}
 
 
-    .estadisticas-graficos-grid,
-    .estadisticas-grid {
-        grid-template-columns:
-            1fr;
-    }
+/* =====================================================
+   DESKTOP GRANDE
+===================================================== */
 
+@media (min-width: 1181px) {
 
-    .rentabilidad-grid {
+    .estadisticas-graficos-grid {
         grid-template-columns:
             repeat(
                 2,
@@ -1150,66 +1426,185 @@
 
 
 /* =====================================================
+   TABLET GRANDE
+===================================================== */
+
+@media (max-width: 1200px) {
+
+    .estadisticas-hero {
+        grid-template-columns: 1fr;
+    }
+
+
+    .estadisticas-hero-content {
+        min-height: 0;
+    }
+
+
+    .estadisticas-hero-image {
+        min-height: 190px;
+    }
+
+}
+
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1180px) {
+
+    .estadisticas-graficos-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .gc-chart-panel {
+        min-height: 280px;
+    }
+
+}
+
+
+@media (max-width: 1000px) {
+
+    .estadisticas-main-stats,
+    .estadisticas-pasadas {
+        grid-template-columns:
+            repeat(
+                2,
+                minmax(0, 1fr)
+            ) !important;
+    }
+
+
+    .estadisticas-grid {
+        grid-template-columns: 1fr;
+    }
+
+
+    .rentabilidad-grid {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+
+/* =====================================================
    MÓVIL
 ===================================================== */
 
 @media (max-width: 760px) {
 
+    .estadisticas-page {
+        padding-bottom: 24px;
+    }
+
+
+    /* HERO */
+
+    .estadisticas-hero {
+        grid-template-columns: 1fr;
+
+        gap: 11px;
+
+        margin-bottom: 18px;
+    }
+
+
+    .estadisticas-hero-content {
+        min-height: 0;
+
+        padding:
+            0
+            2px;
+    }
+
+
+    .estadisticas-hero h1 {
+        font-size: 30px;
+    }
+
+
+    .estadisticas-hero-content > p {
+        margin:
+            9px
+            0
+            13px;
+
+        font-size: 10px;
+    }
+
+
+    .estadisticas-hero-image {
+        min-height: 145px;
+
+        border-radius: 13px;
+    }
+
+
+    .estadisticas-hero-badge {
+        top: 10px;
+        right: 10px;
+    }
+
+
+    .estadisticas-hero-copy {
+        right: 13px;
+        bottom: 12px;
+    }
+
+
+    .estadisticas-hero-copy strong {
+        font-size: 18px;
+    }
+
+
+    /* TITULOS */
+
     .estadistica-seccion-titulo {
         margin:
-            18px
+            20px
             0
             8px;
     }
 
 
     .estadistica-seccion-titulo h3 {
-        font-size: 16px;
+        font-size: 17px;
     }
 
 
     .estadistica-seccion-titulo p {
-        font-size: 10px;
+        font-size: 9px;
     }
 
 
-    .main-content
-    .estadistica-seccion-titulo
-    + .stats {
+    /* STATS */
+
+    .estadisticas-main-stats,
+    .estadisticas-mini-stats,
+    .estadisticas-pasadas {
         grid-template-columns:
             repeat(
                 2,
                 minmax(0, 1fr)
             ) !important;
 
-        gap: 8px;
-
-        margin-bottom: 14px;
+        gap: 8px !important;
     }
 
 
-    .estadisticas-mini-stats {
-        grid-template-columns:
-            repeat(
-                2,
-                minmax(0, 1fr)
-            ) !important;
+    .estadisticas-main-stats .card,
+    .estadisticas-mini-stats .card,
+    .estadisticas-pasadas .card {
+        min-height: 66px;
 
-        gap: 8px;
-
-        margin-top: 8px !important;
+        padding: 11px;
     }
 
 
-    .estadisticas-grid {
-        grid-template-columns:
-            1fr;
-
-        gap: 11px;
-
-        margin-top: 12px;
-    }
-
+    /* PANEL */
 
     .estadistica-panel {
         padding: 13px;
@@ -1219,7 +1614,7 @@
 
 
     .estadistica-panel h3 {
-        font-size: 14px;
+        font-size: 15px;
     }
 
 
@@ -1230,40 +1625,48 @@
     }
 
 
+    /* CHART PANEL */
+
     .gc-chart-panel {
         min-height: auto;
+
+        padding: 13px;
     }
 
 
     .gc-chart-panel-header {
-        margin-bottom: 12px;
+        margin-bottom: 14px;
     }
 
 
     .gc-chart-badge {
-        min-height: 23px;
+        min-height: 24px;
 
         padding:
             0
-            7px;
+            8px;
 
-        font-size: 8px;
+        font-size: 9px;
     }
 
 
     /* DONUT */
 
     .gc-donut-layout {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
 
-        gap: 16px;
+        gap: 18px;
     }
 
 
     .gc-donut {
         width: 135px;
         height: 135px;
+
+        flex:
+            0
+            0
+            135px;
     }
 
 
@@ -1275,6 +1678,26 @@
 
     .gc-donut-center strong {
         font-size: 13px;
+    }
+
+
+    .gc-donut-center span {
+        font-size: 9px;
+    }
+
+
+    .gc-donut-legend {
+        gap: 8px;
+    }
+
+
+    .gc-donut-legend-item strong {
+        font-size: 10px;
+    }
+
+
+    .gc-donut-legend-item small {
+        font-size: 9px;
     }
 
 
@@ -1297,44 +1720,92 @@
 
 
     .gc-column-track {
-        width:
-            min(
-                34px,
-                65%
-            );
-
         height: 105px;
+
+        width: min(36px, 65%);
     }
 
 
-    /* COMPARACIONES */
+    .gc-column-value {
+        font-size: 8px;
+    }
+
+
+    .gc-column-label {
+        font-size: 8px;
+    }
+
+
+    /* COMPARACIÓN */
 
     .gc-comparison-chart {
         min-height: 125px;
 
-        gap: 17px;
+        gap: 18px;
     }
 
 
     .gc-comparison-track {
-        height: 10px;
+        height: 11px;
+    }
+
+
+    .gc-comparison-header span {
+        font-size: 10px;
+    }
+
+
+    .gc-comparison-header strong {
+        font-size: 11px;
     }
 
 
     /* RENTABILIDAD */
 
-    .rentabilidad-grid {
-        grid-template-columns:
-            1fr;
+    .rentabilidad-bloque {
+        margin-top: 20px;
+    }
 
-        gap: 11px;
+
+    .rentabilidad-grid {
+        grid-template-columns: 1fr !important;
+
+        gap: 12px;
     }
 
 
     .rentabilidad-card {
-        padding: 13px;
+        padding: 14px;
 
-        border-radius: 12px;
+        border-radius: 13px;
+    }
+
+
+    .rentabilidad-card-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        margin-bottom: 12px;
+    }
+
+
+    .rentabilidad-card-header h3 {
+        font-size: 14px;
+    }
+
+
+    .rentabilidad-card-header p {
+        font-size: 10px;
+    }
+
+
+    .campania-status {
+        padding:
+            4px
+            7px;
+
+        font-size: 9px;
     }
 
 
@@ -1348,32 +1819,60 @@
         gap: 7px;
     }
 
+
+    .rentabilidad-card-grid > div {
+        padding: 9px;
+
+        border-radius: 9px;
+    }
+
+
+    .rentabilidad-card-grid span {
+        font-size: 9px;
+    }
+
+
+    .rentabilidad-card-grid strong {
+        margin-top: 2px;
+
+        font-size: 12px;
+    }
+
+
+    .rentabilidad-footer {
+        margin-top: 9px;
+
+        padding-top: 9px;
+    }
+
+
+    .rentabilidad-footer span {
+        font-size: 10px;
+    }
+
+
+    .rentabilidad-footer strong {
+        font-size: 12px;
+    }
+
 }
 
 
 /* =====================================================
-   MÓVIL ESTRECHO
+   MÓVIL PEQUEÑO
 ===================================================== */
 
-@media (max-width: 420px) {
+@media (max-width: 430px) {
 
-    .main-content
-    .estadistica-seccion-titulo
-    + .stats {
-        grid-template-columns:
-            1fr;
-    }
-
-
-    .estadisticas-mini-stats {
-        grid-template-columns:
-            1fr !important;
+    .estadisticas-main-stats,
+    .estadisticas-mini-stats,
+    .estadisticas-pasadas {
+        grid-template-columns: 1fr !important;
     }
 
 
     .rentabilidad-card-grid {
-        grid-template-columns:
-            1fr;
+        grid-template-columns: 1fr;
     }
 
 }
