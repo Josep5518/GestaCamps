@@ -1,176 +1,37 @@
-// =====================================================
-// GESTACAMPS
-// SERVICE WORKER
-// =====================================================
-
-const CACHE_PREFIX =
-    "gestacamps-";
-
-
-const CACHE_NAME =
-    "gestacamps-v10";
+/* =====================================================
+   GESTACAMPS
+   SERVICE WORKER
+   FREEZE · FRUIT ATTRACTION
+===================================================== */
 
 
 // =====================================================
-// ARCHIVOS PRINCIPALES
+// VERSIÓN DE CACHÉ
 // =====================================================
 
-const ARCHIVOS_INICIALES = [
+const CACHE_VERSION =
+    "gestacamps-fruit-attraction-v1";
+
+
+// =====================================================
+// ARCHIVOS BASE
+// =====================================================
+
+const APP_SHELL = [
 
     "./",
 
     "./index.html",
 
-    "./manifest.json",
-
     "./css/style.css",
-
-
-    // =================================================
-    // APP
-    // =================================================
 
     "./js/app.js",
 
-    "./js/services.js",
+    "./manifest.json",
 
-    "./js/views.js",
+    "./icons/icon-192.svg",
 
-    "./js/utils.js",
-
-    "./js/entityHelpers.js",
-
-
-    // =================================================
-    // SEGURIDAD / AUTENTICACIÓN
-    // =================================================
-
-    "./js/auth.js",
-
-    "./js/loginView.js",
-
-    "./js/seguridadView.js",
-
-    "./js/usuario.js",
-
-    "./js/usuariosView.js",
-
-
-    // =================================================
-    // SERVICES / MODELOS
-    // =================================================
-
-    "./js/storage.js",
-
-    "./js/finca.js",
-
-    "./js/parcela.js",
-
-    "./js/campania.js",
-
-    "./js/cultivo.js",
-
-    "./js/cuadernoCampo.js",
-
-    "./js/tratamiento.js",
-
-    "./js/trabajo.js",
-
-    "./js/trabajador.js",
-
-    "./js/fichaje.js",
-
-    "./js/incidencia.js",
-
-    "./js/historial.js",
-
-    "./js/buscadorGlobal.js",
-
-    "./js/maquinaria.js",
-
-    "./js/inventario.js",
-
-    "./js/produccion.js",
-
-    "./js/clienteProveedor.js",
-
-    "./js/explotacion.js",
-
-    "./js/albaran.js",
-
-    "./js/factura.js",
-
-    "./js/gasto.js",
-
-    "./js/cobroPago.js",
-
-    "./js/estadisticas.js",
-
-    "./js/backup.js",
-
-
-    // =================================================
-    // VISTAS
-    // =================================================
-
-    "./js/inicioView.js",
-
-    "./js/fincasView.js",
-
-    "./js/campaniasView.js",
-
-    "./js/cultivosView.js",
-
-    "./js/cuadernoCampoView.js",
-
-    "./js/tratamientosView.js",
-
-    "./js/trabajosView.js",
-
-    "./js/trabajadoresView.js",
-
-    "./js/fichajesView.js",
-
-    "./js/incidenciasView.js",
-
-    "./js/historialView.js",
-
-    "./js/buscadorGlobalView.js",
-
-    "./js/trabajadorPortalView.js",
-
-    "./js/maquinariaView.js",
-
-    "./js/inventarioView.js",
-
-    "./js/produccionView.js",
-
-    "./js/clientesProveedoresView.js",
-
-    "./js/albaranesView.js",
-
-    "./js/facturacionView.js",
-
-    "./js/gastosView.js",
-
-    "./js/cobrosPagosView.js",
-
-    "./js/estadisticasView.js",
-
-    "./js/perfilView.js",
-
-
-    // =================================================
-    // ICONOS
-    // =================================================
-
-    "./icons/icon-192.png",
-
-    "./icons/icon-512.png",
-
-    "./icons/apple-touch-icon.png",
-
-    "./icons/favicon-64.png"
+    "./icons/icon-512.svg"
 
 ];
 
@@ -187,26 +48,22 @@ self.addEventListener(
 
             caches
                 .open(
-                    CACHE_NAME
+                    CACHE_VERSION
                 )
                 .then(
-                    cache => {
-
-                        return cache.addAll(
-                            ARCHIVOS_INICIALES
-                        );
-
-                    }
-                )
-                .then(
-                    () => {
-
-                        return self.skipWaiting();
-
-                    }
+                    cache =>
+                        cache.addAll(
+                            APP_SHELL
+                        )
                 )
 
         );
+
+
+        // Activa inmediatamente
+        // la nueva versión
+
+        self.skipWaiting();
 
     }
 );
@@ -225,63 +82,39 @@ self.addEventListener(
             caches
                 .keys()
                 .then(
-                    nombresCache => {
+                    keys =>
+                        Promise.all(
 
-                        return Promise.all(
-
-                            nombresCache
+                            keys
+                                .filter(
+                                    key =>
+                                        key !==
+                                        CACHE_VERSION
+                                )
                                 .map(
-                                    nombre => {
-
-                                        const esCacheGestaCamps =
-                                            nombre.startsWith(
-                                                CACHE_PREFIX
-                                            );
-
-
-                                        const esCacheActual =
-                                            nombre ===
-                                            CACHE_NAME;
-
-
-                                        if (
-                                            esCacheGestaCamps
-                                            &&
-                                            !esCacheActual
-                                        ) {
-
-                                            return caches.delete(
-                                                nombre
-                                            );
-
-                                        }
-
-
-                                        return Promise.resolve();
-
-                                    }
+                                    key =>
+                                        caches.delete(
+                                            key
+                                        )
                                 )
 
-                        );
-
-                    }
-                )
-                .then(
-                    () => {
-
-                        return self.clients.claim();
-
-                    }
+                        )
                 )
 
         );
+
+
+        // Toma control de las páginas
+        // abiertas inmediatamente
+
+        self.clients.claim();
 
     }
 );
 
 
 // =====================================================
-// PETICIONES
+// FETCH
 // =====================================================
 
 self.addEventListener(
@@ -291,6 +124,8 @@ self.addEventListener(
         const request =
             event.request;
 
+
+        // Solo GET
 
         if (
             request.method !==
@@ -308,6 +143,9 @@ self.addEventListener(
             );
 
 
+        // Solo recursos del propio
+        // dominio de GestaCamps
+
         if (
             url.origin !==
             self.location.origin
@@ -319,7 +157,7 @@ self.addEventListener(
 
 
         // =================================================
-        // NAVEGACIÓN HTML
+        // NAVEGACIÓN
         // NETWORK FIRST
         // =================================================
 
@@ -333,76 +171,37 @@ self.addEventListener(
                 fetch(
                     request
                 )
+
                     .then(
-                        async respuesta => {
+                        response => {
 
-                            if (
-                                respuesta
-                                &&
-                                respuesta.status ===
-                                200
-                            ) {
-
-                                const copia =
-                                    respuesta.clone();
+                            const copia =
+                                response.clone();
 
 
-                                const cache =
-                                    await caches.open(
-                                        CACHE_NAME
-                                    );
-
-
-                                await cache.put(
-                                    request,
-                                    copia
+                            caches
+                                .open(
+                                    CACHE_VERSION
+                                )
+                                .then(
+                                    cache =>
+                                        cache.put(
+                                            "./index.html",
+                                            copia
+                                        )
                                 );
 
-                            }
 
-
-                            return respuesta;
+                            return response;
 
                         }
                     )
+
                     .catch(
-                        async () => {
-
-                            const paginaExacta =
-                                await caches.match(
-                                    request
-                                );
-
-
-                            if (
-                                paginaExacta
-                            ) {
-
-                                return paginaExacta;
-
-                            }
-
-
-                            const indexCacheado =
-                                await caches.match(
-                                    "./index.html"
-                                );
-
-
-                            if (
-                                indexCacheado
-                            ) {
-
-                                return indexCacheado;
-
-                            }
-
-
-                            return caches.match(
-                                "./"
-                            );
-
-                        }
+                        () =>
+                            caches.match(
+                                "./index.html"
+                            )
                     )
 
             );
@@ -414,84 +213,90 @@ self.addEventListener(
 
 
         // =================================================
-        // RESTO DE ARCHIVOS
-        // NETWORK FIRST
+        // ARCHIVOS ESTÁTICOS
+        // CACHE FIRST
         // =================================================
 
         event.respondWith(
 
-            fetch(
-                request
-            )
+            caches
+                .match(
+                    request
+                )
+
                 .then(
-                    async respuesta => {
+                    cached => {
 
                         if (
-                            !respuesta
-                            ||
-                            respuesta.status !==
-                            200
+                            cached
                         ) {
 
-                            return respuesta;
+                            return cached;
 
                         }
 
 
-                        const copia =
-                            respuesta.clone();
-
-
-                        const cache =
-                            await caches.open(
-                                CACHE_NAME
-                            );
-
-
-                        await cache.put(
-                            request,
-                            copia
-                        );
-
-
-                        return respuesta;
-
-                    }
-                )
-                .catch(
-                    () => {
-
-                        return caches.match(
+                        return fetch(
                             request
-                        );
+                        )
+
+                            .then(
+                                response => {
+
+                                    if (
+                                        !response
+                                        ||
+                                        response.status !==
+                                        200
+                                    ) {
+
+                                        return response;
+
+                                    }
+
+
+                                    const copia =
+                                        response.clone();
+
+
+                                    caches
+                                        .open(
+                                            CACHE_VERSION
+                                        )
+
+                                        .then(
+                                            cache =>
+                                                cache.put(
+                                                    request,
+                                                    copia
+                                                )
+                                        );
+
+
+                                    return response;
+
+                                }
+                            )
+
+                            .catch(
+                                error => {
+
+                                    console.warn(
+                                        "GestaCamps: recurso no disponible.",
+                                        request.url,
+                                        error
+                                    );
+
+
+                                    throw error;
+
+                                }
+                            );
 
                     }
                 )
 
         );
-
-    }
-);
-
-
-// =====================================================
-// MENSAJES
-// =====================================================
-
-self.addEventListener(
-    "message",
-    event => {
-
-        if (
-            event.data
-            &&
-            event.data.type ===
-            "SKIP_WAITING"
-        ) {
-
-            self.skipWaiting();
-
-        }
 
     }
 );
