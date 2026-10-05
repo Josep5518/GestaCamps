@@ -10,7 +10,7 @@
 // =====================================================
 
 const CACHE_VERSION =
-    "gestacamps-fruit-attraction-v1";
+    "gestacamps-fruit-attraction-v2";
 
 
 // =====================================================
@@ -29,9 +29,13 @@ const APP_SHELL = [
 
     "./manifest.json",
 
-    "./icons/icon-192.svg",
+    "./icons/favicon-64.png",
 
-    "./icons/icon-512.svg"
+    "./icons/apple-touch-icon.png",
+
+    "./icons/icon-192.png",
+
+    "./icons/icon-512.png"
 
 ];
 
@@ -59,9 +63,6 @@ self.addEventListener(
 
         );
 
-
-        // Activa inmediatamente
-        // la nueva versión
 
         self.skipWaiting();
 
@@ -104,9 +105,6 @@ self.addEventListener(
         );
 
 
-        // Toma control de las páginas
-        // abiertas inmediatamente
-
         self.clients.claim();
 
     }
@@ -114,7 +112,7 @@ self.addEventListener(
 
 
 // =====================================================
-// FETCH
+// PETICIONES
 // =====================================================
 
 self.addEventListener(
@@ -125,7 +123,9 @@ self.addEventListener(
             event.request;
 
 
-        // Solo GET
+        // =================================================
+        // SOLO GET
+        // =================================================
 
         if (
             request.method !==
@@ -143,8 +143,9 @@ self.addEventListener(
             );
 
 
-        // Solo recursos del propio
-        // dominio de GestaCamps
+        // =================================================
+        // SOLO MISMO DOMINIO
+        // =================================================
 
         if (
             url.origin !==
@@ -174,6 +175,17 @@ self.addEventListener(
 
                     .then(
                         response => {
+
+                            if (
+                                !response
+                                ||
+                                !response.ok
+                            ) {
+
+                                return response;
+
+                            }
+
 
                             const copia =
                                 response.clone();
@@ -263,7 +275,6 @@ self.addEventListener(
                                         .open(
                                             CACHE_VERSION
                                         )
-
                                         .then(
                                             cache =>
                                                 cache.put(
@@ -274,21 +285,6 @@ self.addEventListener(
 
 
                                     return response;
-
-                                }
-                            )
-
-                            .catch(
-                                error => {
-
-                                    console.warn(
-                                        "GestaCamps: recurso no disponible.",
-                                        request.url,
-                                        error
-                                    );
-
-
-                                    throw error;
 
                                 }
                             );

@@ -16,11 +16,6 @@
     >
 
     <meta
-        name="description"
-        content="GestaCamps - Gestión agrícola de fincas, campanyas, cultivos, producción, facturación y explotación."
-    >
-
-    <meta
         name="mobile-web-app-capable"
         content="yes"
     >
@@ -40,14 +35,30 @@
         content="GestaCamps"
     >
 
+    <meta
+        name="description"
+        content="GestaCamps - Gestión agrícola de fincas, campañas, producción, albaranes, facturación, cobros, pagos y estadísticas."
+    >
+
+
     <title>
         GestaCamps
     </title>
+
+
+    <!-- ==========================================
+         PWA
+    =========================================== -->
 
     <link
         rel="manifest"
         href="./manifest.json"
     >
+
+
+    <!-- ==========================================
+         ICONOS
+    =========================================== -->
 
     <link
         rel="icon"
@@ -62,20 +73,10 @@
         href="./icons/apple-touch-icon.png"
     >
 
-    <link
-        rel="stylesheet"
-        href="./css/base.css"
-    >
 
-    <link
-        rel="stylesheet"
-        href="./css/layout.css"
-    >
-
-    <link
-        rel="stylesheet"
-        href="./css/components.css"
-    >
+    <!-- ==========================================
+         CSS
+    =========================================== -->
 
     <link
         rel="stylesheet"
@@ -90,9 +91,9 @@
     <div class="app">
 
 
-        <!-- =================================================
+        <!-- ==========================================
              CABECERA MÓVIL
-        ================================================== -->
+        =========================================== -->
 
         <header class="mobile-header">
 
@@ -123,19 +124,14 @@
         </header>
 
 
-        <!-- =================================================
+        <!-- ==========================================
              SIDEBAR
-        ================================================== -->
+        =========================================== -->
 
         <aside
             id="sidebar"
             class="sidebar"
         >
-
-
-            <!-- =============================================
-                 CABECERA MÓVIL SIDEBAR
-            ============================================== -->
 
             <div class="sidebar-mobile-top">
 
@@ -164,10 +160,6 @@
             </div>
 
 
-            <!-- =============================================
-                 MARCA ESCRITORIO
-            ============================================== -->
-
             <div class="sidebar-desktop-brand">
 
                 <h1>
@@ -181,46 +173,30 @@
             </div>
 
 
-            <!-- =============================================
-                 NAVEGACIÓN
-            ============================================== -->
+            <nav aria-label="Navegación principal">
 
-            <nav class="sidebar-nav">
-
-
-                <!-- =========================================
-                     ACCESOS FIJOS
-                ========================================== -->
-
-                <div class="sidebar-fixed-links">
-
-                    <a
-                        href="#inicio"
-                        data-page="inicio"
-                        class="active"
-                    >
-                        🏠 Inicio
-                    </a>
-
-
-                    <a
-                        href="#buscador"
-                        data-page="buscador"
-                    >
-                        🔎 Buscar global
-                    </a>
-
-                </div>
-
-
-                <!-- =========================================
-                     1. GESTIÓN AGRÍCOLA
-                ========================================== -->
-
-                <div
-                    class="sidebar-group"
-                    data-menu-group="gestion-agricola"
+                <a
+                    href="#inicio"
+                    data-page="inicio"
+                    class="active"
                 >
+                    🏠 Inicio
+                </a>
+
+
+                <a
+                    href="#buscador"
+                    data-page="buscador"
+                >
+                    🔎 Buscar global
+                </a>
+
+
+                <!-- ======================================
+                     GESTIÓN AGRÍCOLA
+                ======================================= -->
+
+                <div class="sidebar-group">
 
                     <button
                         class="sidebar-group-toggle"
@@ -228,18 +204,11 @@
                         aria-expanded="false"
                     >
 
-                        <span class="sidebar-group-title">
-
-                            <span>
-                                🌾
-                            </span>
-
-                            GESTIÓN AGRÍCOLA
-
+                        <span>
+                            🌾 GESTIÓN AGRÍCOLA
                         </span>
 
-
-                        <span class="sidebar-group-arrow">
+                        <span>
                             ›
                         </span>
 
@@ -273,8 +242,8 @@
 
 
                         <a
-                            href="#cuadernoCampo"
-                            data-page="cuadernoCampo"
+                            href="#cuaderno"
+                            data-page="cuaderno"
                         >
                             📖 Cuaderno de campo
                         </a>
@@ -292,7 +261,7 @@
                             href="#trabajos"
                             data-page="trabajos"
                         >
-                            👨‍🌾 Trabajos y tareas
+                            🚜 Trabajos y tareas
                         </a>
 
                     </div>
@@ -300,14 +269,11 @@
                 </div>
 
 
-                <!-- =========================================
-                     2. PERSONAL
-                ========================================== -->
+                <!-- ======================================
+                     PERSONAL
+                ======================================= -->
 
-                <div
-                    class="sidebar-group"
-                    data-menu-group="personal"
-                >
+                <div class="sidebar-group">
 
                     <button
                         class="sidebar-group-toggle"
@@ -315,18 +281,11 @@
                         aria-expanded="false"
                     >
 
-                        <span class="sidebar-group-title">
-
-                            <span>
-                                👤
-                            </span>
-
-                            PERSONAL
-
+                        <span>
+                            👤 PERSONAL
                         </span>
 
-
-                        <span class="sidebar-group-arrow">
+                        <span>
                             ›
                         </span>
 
@@ -355,7 +314,7 @@
                             href="#trabajadorPortal"
                             data-page="trabajadorPortal"
                         >
-                            👤 Portal trabajador
+                            📱 Portal trabajador
                         </a>
 
 
@@ -371,14 +330,11 @@
                 </div>
 
 
-                <!-- =========================================
-                     3. RECURSOS Y PRODUCCIÓN
-                ========================================== -->
+                <!-- ======================================
+                     RECURSOS Y PRODUCCIÓN
+                ======================================= -->
 
-                <div
-                    class="sidebar-group"
-                    data-menu-group="recursos-produccion"
-                >
+                <div class="sidebar-group">
 
                     <button
                         class="sidebar-group-toggle"
@@ -386,18 +342,11 @@
                         aria-expanded="false"
                     >
 
-                        <span class="sidebar-group-title">
-
-                            <span>
-                                📦
-                            </span>
-
-                            RECURSOS Y PRODUCCIÓN
-
+                        <span>
+                            📦 RECURSOS Y PRODUCCIÓN
                         </span>
 
-
-                        <span class="sidebar-group-arrow">
+                        <span>
                             ›
                         </span>
 
@@ -434,14 +383,11 @@
                 </div>
 
 
-                <!-- =========================================
-                     4. COMERCIAL Y FINANZAS
-                ========================================== -->
+                <!-- ======================================
+                     COMERCIAL Y FINANZAS
+                ======================================= -->
 
-                <div
-                    class="sidebar-group"
-                    data-menu-group="comercial-finanzas"
-                >
+                <div class="sidebar-group">
 
                     <button
                         class="sidebar-group-toggle"
@@ -449,18 +395,11 @@
                         aria-expanded="false"
                     >
 
-                        <span class="sidebar-group-title">
-
-                            <span>
-                                💶
-                            </span>
-
-                            COMERCIAL Y FINANZAS
-
+                        <span>
+                            💶 COMERCIAL Y FINANZAS
                         </span>
 
-
-                        <span class="sidebar-group-arrow">
+                        <span>
                             ›
                         </span>
 
@@ -470,8 +409,8 @@
                     <div class="sidebar-group-content">
 
                         <a
-                            href="#clientesProveedores"
-                            data-page="clientesProveedores"
+                            href="#clientes"
+                            data-page="clientes"
                         >
                             👥 Clientes y Proveedores
                         </a>
@@ -494,8 +433,8 @@
 
 
                         <a
-                            href="#cobrosPagos"
-                            data-page="cobrosPagos"
+                            href="#cobros"
+                            data-page="cobros"
                         >
                             💳 Cobros y pagos
                         </a>
@@ -521,14 +460,11 @@
                 </div>
 
 
-                <!-- =========================================
-                     5. SISTEMA
-                ========================================== -->
+                <!-- ======================================
+                     SISTEMA
+                ======================================= -->
 
-                <div
-                    class="sidebar-group"
-                    data-menu-group="sistema"
-                >
+                <div class="sidebar-group">
 
                     <button
                         class="sidebar-group-toggle"
@@ -536,18 +472,11 @@
                         aria-expanded="false"
                     >
 
-                        <span class="sidebar-group-title">
-
-                            <span>
-                                ⚙️
-                            </span>
-
-                            SISTEMA
-
+                        <span>
+                            ⚙️ SISTEMA
                         </span>
 
-
-                        <span class="sidebar-group-arrow">
+                        <span>
                             ›
                         </span>
 
@@ -586,10 +515,6 @@
             </nav>
 
 
-            <!-- =============================================
-                 CERRAR SESIÓN
-            ============================================== -->
-
             <div class="sidebar-footer">
 
                 <button
@@ -605,9 +530,9 @@
         </aside>
 
 
-        <!-- =================================================
-             FONDO MENÚ MÓVIL
-        ================================================== -->
+        <!-- ==========================================
+             BACKDROP
+        =========================================== -->
 
         <button
             id="sidebarBackdrop"
@@ -617,18 +542,21 @@
         ></button>
 
 
-        <!-- =================================================
+        <!-- ==========================================
              CONTENIDO
-        ================================================== -->
+        =========================================== -->
 
         <main
             id="main-content"
             class="main-content"
-        >
-        </main>
+        ></main>
 
     </div>
 
+
+    <!-- ==========================================
+         JS
+    =========================================== -->
 
     <script
         type="module"
