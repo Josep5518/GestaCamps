@@ -1,23 +1,20 @@
 // =====================================================
 // GESTACAMPS
 // SERVICE WORKER
-// Estrategia: Network First + fallback a caché
+// Network First + fallback a caché
 // =====================================================
 
 
 // =====================================================
 // VERSIÓN DE CACHÉ
-// IMPORTANTE:
-// Cada vez que hagas una publicación importante,
-// cambia v2 por v3, v4, etc.
 // =====================================================
 
 const CACHE_VERSION =
-    "gestacamps-v2";
+    "gestacamps-v3";
 
 
 // =====================================================
-// ARCHIVOS PRINCIPALES DE LA APP
+// ARCHIVOS PRINCIPALES
 // =====================================================
 
 const APP_SHELL = [
@@ -32,9 +29,9 @@ const APP_SHELL = [
 
     "./manifest.json",
 
-    "./icons/icon-192.svg",
+    "./icons/icon-192.png",
 
-    "./icons/icon-512.svg"
+    "./icons/icon-512.png"
 
 ];
 
@@ -66,7 +63,6 @@ self.addEventListener(
         );
 
 
-        // Activa inmediatamente esta nueva versión
         self.skipWaiting();
 
     }
@@ -75,7 +71,7 @@ self.addEventListener(
 
 // =====================================================
 // ACTIVACIÓN
-// ELIMINA CACHÉS ANTIGUAS
+// BORRAR VERSIONES ANTIGUAS
 // =====================================================
 
 self.addEventListener(
@@ -94,6 +90,11 @@ self.addEventListener(
                             cacheNames
                                 .filter(
                                     cacheName =>
+                                        cacheName
+                                            .startsWith(
+                                                "gestacamps-"
+                                            )
+                                        &&
                                         cacheName !==
                                         CACHE_VERSION
                                 )
@@ -112,7 +113,6 @@ self.addEventListener(
         );
 
 
-        // Toma control de las pestañas abiertas
         self.clients.claim();
 
     }
@@ -120,7 +120,7 @@ self.addEventListener(
 
 
 // =====================================================
-// GUARDAR RESPUESTA EN CACHÉ
+// GUARDAR EN CACHÉ
 // =====================================================
 
 async function guardarEnCache(
@@ -173,7 +173,7 @@ async function guardarEnCache(
 
 // =====================================================
 // NAVEGACIÓN
-// SIEMPRE INTENTA INTERNET PRIMERO
+// INTERNET PRIMERO
 // =====================================================
 
 async function responderNavegacion(
@@ -243,9 +243,9 @@ async function responderNavegacion(
 
 
 // =====================================================
-// RECURSOS ESTÁTICOS
+// RECURSOS
 // CSS / JS / IMÁGENES / ICONOS
-// NETWORK FIRST
+// INTERNET PRIMERO
 // =====================================================
 
 async function responderRecurso(
@@ -312,7 +312,6 @@ self.addEventListener(
             event.request;
 
 
-        // Solo GET
         if (
             request.method !==
             "GET"
@@ -329,7 +328,6 @@ self.addEventListener(
             );
 
 
-        // Solo recursos de nuestro propio dominio
         if (
             url.origin !==
             self.location.origin
@@ -339,10 +337,6 @@ self.addEventListener(
 
         }
 
-
-        // =================================================
-        // NAVEGACIÓN
-        // =================================================
 
         if (
             request.mode ===
@@ -363,10 +357,6 @@ self.addEventListener(
         }
 
 
-        // =================================================
-        // RECURSOS ESTÁTICOS
-        // =================================================
-
         event.respondWith(
 
             responderRecurso(
@@ -380,8 +370,7 @@ self.addEventListener(
 
 
 // =====================================================
-// MENSAJE OPCIONAL
-// PERMITE FORZAR ACTIVACIÓN DESDE LA APP
+// FORZAR NUEVA VERSIÓN
 // =====================================================
 
 self.addEventListener(

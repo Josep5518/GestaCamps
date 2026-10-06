@@ -1,12 +1,33 @@
 /* =====================================================
    GESTACAMPS
    STYLE.CSS DEFINITIVO
-   Día 26 · Refactorización 1
+   FREEZE · PWA / NETLIFY
 ===================================================== */
 
 
 /* =====================================================
-   MÓDULOS BASE
+   1. BASE GLOBAL
+===================================================== */
+
+@import url("./base.css");
+
+
+/* =====================================================
+   2. COMPONENTES COMPARTIDOS
+===================================================== */
+
+@import url("./components.css");
+
+
+/* =====================================================
+   3. LAYOUT GENERAL
+===================================================== */
+
+@import url("./layout.css");
+
+
+/* =====================================================
+   4. MÓDULOS
 ===================================================== */
 
 @import url("./modules/inicio.css");
@@ -26,18 +47,6 @@
 @import url("./modules/cobros-pagos.css");
 
 @import url("./modules/campanias.css");
-
-
-/* =====================================================
-   RESPONSIVE GLOBAL / PWA
-===================================================== */
-
-@import url("./modules/responsive-global.css");
-
-
-/* =====================================================
-   MÓDULOS CON AJUSTES ESPECÍFICOS POSTERIORES
-===================================================== */
 
 @import url("./modules/auth.css");
 
@@ -72,10 +81,18 @@
 @import url("./modules/usuarios.css");
 
 @import url("./modules/buscador-global.css");
+
+
 /* =====================================================
-   SIDEBAR
-   Se carga al final para conservar sus correcciones
-   definitivas de escritorio y móvil.
+   5. SIDEBAR
 ===================================================== */
 
 @import url("./modules/sidebar.css");
+
+
+/* =====================================================
+   6. RESPONSIVE GLOBAL
+   SIEMPRE EL ÚLTIMO
+===================================================== */
+
+@import url("./modules/responsive-global.css");
