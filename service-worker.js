@@ -1,20 +1,23 @@
-/* =====================================================
-   GESTACAMPS
-   SERVICE WORKER
-   FREEZE · FRUIT ATTRACTION
-===================================================== */
+// =====================================================
+// GESTACAMPS
+// SERVICE WORKER
+// Estrategia: Network First + fallback a caché
+// =====================================================
 
 
 // =====================================================
 // VERSIÓN DE CACHÉ
+// IMPORTANTE:
+// Cada vez que hagas una publicación importante,
+// cambia v2 por v3, v4, etc.
 // =====================================================
 
 const CACHE_VERSION =
-    "gestacamps-fruit-attraction-v2";
+    "gestacamps-v2";
 
 
 // =====================================================
-// ARCHIVOS BASE
+// ARCHIVOS PRINCIPALES DE LA APP
 // =====================================================
 
 const APP_SHELL = [
@@ -29,13 +32,9 @@ const APP_SHELL = [
 
     "./manifest.json",
 
-    "./icons/favicon-64.png",
+    "./icons/icon-192.svg",
 
-    "./icons/apple-touch-icon.png",
-
-    "./icons/icon-192.png",
-
-    "./icons/icon-512.png"
+    "./icons/icon-512.svg"
 
 ];
 
@@ -55,15 +54,19 @@ self.addEventListener(
                     CACHE_VERSION
                 )
                 .then(
-                    cache =>
-                        cache.addAll(
+                    cache => {
+
+                        return cache.addAll(
                             APP_SHELL
-                        )
+                        );
+
+                    }
                 )
 
         );
 
 
+        // Activa inmediatamente esta nueva versión
         self.skipWaiting();
 
     }
@@ -72,6 +75,7 @@ self.addEventListener(
 
 // =====================================================
 // ACTIVACIÓN
+// ELIMINA CACHÉS ANTIGUAS
 // =====================================================
 
 self.addEventListener(
@@ -83,28 +87,32 @@ self.addEventListener(
             caches
                 .keys()
                 .then(
-                    keys =>
-                        Promise.all(
+                    cacheNames => {
 
-                            keys
+                        return Promise.all(
+
+                            cacheNames
                                 .filter(
-                                    key =>
-                                        key !==
+                                    cacheName =>
+                                        cacheName !==
                                         CACHE_VERSION
                                 )
                                 .map(
-                                    key =>
+                                    cacheName =>
                                         caches.delete(
-                                            key
+                                            cacheName
                                         )
                                 )
 
-                        )
+                        );
+
+                    }
                 )
 
         );
 
 
+        // Toma control de las pestañas abiertas
         self.clients.claim();
 
     }
@@ -112,7 +120,188 @@ self.addEventListener(
 
 
 // =====================================================
-// PETICIONES
+// GUARDAR RESPUESTA EN CACHÉ
+// =====================================================
+
+async function guardarEnCache(
+    request,
+    response
+) {
+
+    if (
+        !response
+        ||
+        response.status !== 200
+        ||
+        response.type === "opaque"
+    ) {
+
+        return;
+
+    }
+
+
+    try {
+
+        const cache =
+            await caches.open(
+                CACHE_VERSION
+            );
+
+
+        await cache.put(
+            request,
+            response.clone()
+        );
+
+    }
+
+    catch (
+        error
+    ) {
+
+        console.warn(
+            "GestaCamps: no se pudo guardar en caché:",
+            request.url,
+            error
+        );
+
+    }
+
+}
+
+
+// =====================================================
+// NAVEGACIÓN
+// SIEMPRE INTENTA INTERNET PRIMERO
+// =====================================================
+
+async function responderNavegacion(
+    request
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                request,
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        if (
+            response
+            &&
+            response.status === 200
+        ) {
+
+            const cache =
+                await caches.open(
+                    CACHE_VERSION
+                );
+
+
+            await cache.put(
+                "./index.html",
+                response.clone()
+            );
+
+        }
+
+
+        return response;
+
+    }
+
+    catch (
+        error
+    ) {
+
+        const cachedIndex =
+            await caches.match(
+                "./index.html"
+            );
+
+
+        if (
+            cachedIndex
+        ) {
+
+            return cachedIndex;
+
+        }
+
+
+        throw error;
+
+    }
+
+}
+
+
+// =====================================================
+// RECURSOS ESTÁTICOS
+// CSS / JS / IMÁGENES / ICONOS
+// NETWORK FIRST
+// =====================================================
+
+async function responderRecurso(
+    request
+) {
+
+    try {
+
+        const response =
+            await fetch(
+                request,
+                {
+                    cache:
+                        "no-store"
+                }
+            );
+
+
+        await guardarEnCache(
+            request,
+            response
+        );
+
+
+        return response;
+
+    }
+
+    catch (
+        error
+    ) {
+
+        const cachedResponse =
+            await caches.match(
+                request
+            );
+
+
+        if (
+            cachedResponse
+        ) {
+
+            return cachedResponse;
+
+        }
+
+
+        throw error;
+
+    }
+
+}
+
+
+// =====================================================
+// FETCH
 // =====================================================
 
 self.addEventListener(
@@ -123,10 +312,7 @@ self.addEventListener(
             event.request;
 
 
-        // =================================================
-        // SOLO GET
-        // =================================================
-
+        // Solo GET
         if (
             request.method !==
             "GET"
@@ -143,10 +329,7 @@ self.addEventListener(
             );
 
 
-        // =================================================
-        // SOLO MISMO DOMINIO
-        // =================================================
-
+        // Solo recursos de nuestro propio dominio
         if (
             url.origin !==
             self.location.origin
@@ -159,7 +342,6 @@ self.addEventListener(
 
         // =================================================
         // NAVEGACIÓN
-        // NETWORK FIRST
         // =================================================
 
         if (
@@ -169,52 +351,9 @@ self.addEventListener(
 
             event.respondWith(
 
-                fetch(
+                responderNavegacion(
                     request
                 )
-
-                    .then(
-                        response => {
-
-                            if (
-                                !response
-                                ||
-                                !response.ok
-                            ) {
-
-                                return response;
-
-                            }
-
-
-                            const copia =
-                                response.clone();
-
-
-                            caches
-                                .open(
-                                    CACHE_VERSION
-                                )
-                                .then(
-                                    cache =>
-                                        cache.put(
-                                            "./index.html",
-                                            copia
-                                        )
-                                );
-
-
-                            return response;
-
-                        }
-                    )
-
-                    .catch(
-                        () =>
-                            caches.match(
-                                "./index.html"
-                            )
-                    )
 
             );
 
@@ -225,74 +364,40 @@ self.addEventListener(
 
 
         // =================================================
-        // ARCHIVOS ESTÁTICOS
-        // CACHE FIRST
+        // RECURSOS ESTÁTICOS
         // =================================================
 
         event.respondWith(
 
-            caches
-                .match(
-                    request
-                )
-
-                .then(
-                    cached => {
-
-                        if (
-                            cached
-                        ) {
-
-                            return cached;
-
-                        }
-
-
-                        return fetch(
-                            request
-                        )
-
-                            .then(
-                                response => {
-
-                                    if (
-                                        !response
-                                        ||
-                                        response.status !==
-                                        200
-                                    ) {
-
-                                        return response;
-
-                                    }
-
-
-                                    const copia =
-                                        response.clone();
-
-
-                                    caches
-                                        .open(
-                                            CACHE_VERSION
-                                        )
-                                        .then(
-                                            cache =>
-                                                cache.put(
-                                                    request,
-                                                    copia
-                                                )
-                                        );
-
-
-                                    return response;
-
-                                }
-                            );
-
-                    }
-                )
+            responderRecurso(
+                request
+            )
 
         );
+
+    }
+);
+
+
+// =====================================================
+// MENSAJE OPCIONAL
+// PERMITE FORZAR ACTIVACIÓN DESDE LA APP
+// =====================================================
+
+self.addEventListener(
+    "message",
+    event => {
+
+        if (
+            event.data
+            &&
+            event.data.type ===
+            "SKIP_WAITING"
+        ) {
+
+            self.skipWaiting();
+
+        }
 
     }
 );
