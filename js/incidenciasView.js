@@ -1136,6 +1136,7 @@ export class IncidenciasView {
                                     Evidencias
                                 </label>
 
+
                                 <div class="gc-evidence-picker">
 
                                     <div class="gc-evidence-picker-copy">
@@ -1143,6 +1144,7 @@ export class IncidenciasView {
                                         <span>
                                             📷
                                         </span>
+
 
                                         <div>
 
@@ -1165,8 +1167,15 @@ export class IncidenciasView {
                                             class="secondary-button gc-evidence-file-button"
                                             for="evidenciasIncidencia"
                                         >
-                                            📎 Elegir archivos
+                                            <span class="gc-evidence-button-icon">
+                                                📎
+                                            </span>
+
+                                            <span class="gc-evidence-button-text">
+                                                Elegir archivos
+                                            </span>
                                         </label>
+
 
                                         <input
                                             id="evidenciasIncidencia"
@@ -1181,8 +1190,15 @@ export class IncidenciasView {
                                             class="primary-button gc-evidence-file-button"
                                             for="fotoIncidencia"
                                         >
-                                            📷 Hacer foto
+                                            <span class="gc-evidence-button-icon">
+                                                📷
+                                            </span>
+
+                                            <span class="gc-evidence-button-text">
+                                                Hacer foto
+                                            </span>
                                         </label>
+
 
                                         <input
                                             id="fotoIncidencia"
@@ -1453,6 +1469,7 @@ export class IncidenciasView {
 
                             </span>
 
+
                             <div>
 
                                 <strong>
@@ -1468,6 +1485,7 @@ export class IncidenciasView {
                                 </small>
 
                             </div>
+
 
                             <button
                                 class="gc-evidence-remove-pending"
@@ -1866,8 +1884,15 @@ export class IncidenciasView {
                             class="secondary-button gc-evidence-file-button"
                             for="anadirEvidencias"
                         >
-                            📎 Elegir archivos
+                            <span class="gc-evidence-button-icon">
+                                📎
+                            </span>
+
+                            <span class="gc-evidence-button-text">
+                                Elegir archivos
+                            </span>
                         </label>
+
 
                         <input
                             id="anadirEvidencias"
@@ -1882,8 +1907,15 @@ export class IncidenciasView {
                             class="primary-button gc-evidence-file-button"
                             for="anadirFoto"
                         >
-                            📷 Hacer foto
+                            <span class="gc-evidence-button-icon">
+                                📷
+                            </span>
+
+                            <span class="gc-evidence-button-text">
+                                Hacer foto
+                            </span>
                         </label>
+
 
                         <input
                             id="anadirFoto"
@@ -2245,11 +2277,6 @@ export class IncidenciasView {
     async abrirEvidencia(
         ruta
     ) {
-
-        /*
-         * Abrimos la pestaña antes del await para evitar
-         * que Safari/iOS bloquee la apertura.
-         */
 
         const ventana =
             window.open(
@@ -2751,342 +2778,1408 @@ export class IncidenciasView {
 
         style.textContent = `
 
+            /* =============================================
+               RESUMEN DE EVIDENCIAS
+            ============================================= */
+
             .gc-evidence-summary {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 12px;
-                margin-top: 14px;
-                padding: 11px 12px;
-                border: 1px solid #e1e9e4;
-                border-radius: 12px;
-                background: #f8fbf9;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    space-between;
+
+                gap:
+                    12px;
+
+                margin-top:
+                    14px;
+
+                padding:
+                    11px
+                    12px;
+
+                border:
+                    1px
+                    solid
+                    #e1e9e4;
+
+                border-radius:
+                    12px;
+
+                background:
+                    #f8fbf9;
+
             }
+
 
             .gc-evidence-summary > div {
-                display: flex;
-                align-items: center;
-                gap: 10px;
-                min-width: 0;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                gap:
+                    10px;
+
+                min-width:
+                    0;
+
             }
 
+
             .gc-evidence-summary-icon {
-                display: grid;
-                place-items: center;
-                width: 34px;
-                height: 34px;
-                flex: 0 0 34px;
-                border-radius: 10px;
-                background: #eaf4ee;
+
+                display:
+                    grid;
+
+                place-items:
+                    center;
+
+                width:
+                    34px;
+
+                height:
+                    34px;
+
+                flex:
+                    0 0
+                    34px;
+
+                border-radius:
+                    10px;
+
+                background:
+                    #eaf4ee;
+
             }
+
 
             .gc-evidence-summary small,
             .gc-evidence-summary strong {
-                display: block;
+
+                display:
+                    block;
+
             }
+
 
             .gc-evidence-summary small {
-                color: #6d7d74;
-                font-size: 8px;
-                font-weight: 800;
-                letter-spacing: .08em;
+
+                color:
+                    #6d7d74;
+
+                font-size:
+                    8px;
+
+                font-weight:
+                    800;
+
+                letter-spacing:
+                    .08em;
+
             }
+
 
             .gc-evidence-summary strong {
-                margin-top: 2px;
-                color: #183d2d;
-                font-size: 12px;
+
+                margin-top:
+                    2px;
+
+                color:
+                    #183d2d;
+
+                font-size:
+                    12px;
+
             }
+
+
+            /* =============================================
+               SELECTOR DE ARCHIVOS
+            ============================================= */
 
             .gc-evidence-picker {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                gap: 14px;
-                padding: 14px;
-                border: 1px dashed #b9cdc1;
-                border-radius: 14px;
-                background: #f8fbf9;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    space-between;
+
+                gap:
+                    14px;
+
+                width:
+                    100%;
+
+                box-sizing:
+                    border-box;
+
+                padding:
+                    14px;
+
+                border:
+                    1px
+                    dashed
+                    #b9cdc1;
+
+                border-radius:
+                    14px;
+
+                background:
+                    #f8fbf9;
+
             }
+
 
             .gc-evidence-picker-copy {
-                display: flex;
-                align-items: center;
-                gap: 11px;
-                min-width: 0;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                gap:
+                    11px;
+
+                min-width:
+                    0;
+
             }
 
+
             .gc-evidence-picker-copy > span {
-                display: grid;
-                place-items: center;
-                width: 40px;
-                height: 40px;
-                flex: 0 0 40px;
-                border-radius: 12px;
-                background: #e8f3ec;
-                font-size: 18px;
+
+                display:
+                    grid;
+
+                place-items:
+                    center;
+
+                width:
+                    40px;
+
+                height:
+                    40px;
+
+                flex:
+                    0 0
+                    40px;
+
+                border-radius:
+                    12px;
+
+                background:
+                    #e8f3ec;
+
+                font-size:
+                    18px;
+
             }
+
 
             .gc-evidence-picker-copy strong,
             .gc-evidence-picker-copy p {
-                display: block;
-                margin: 0;
+
+                display:
+                    block;
+
+                margin:
+                    0;
+
             }
+
 
             .gc-evidence-picker-copy strong {
-                color: #193d2e;
-                font-size: 13px;
+
+                color:
+                    #193d2e;
+
+                font-size:
+                    13px;
+
             }
 
+
             .gc-evidence-picker-copy p {
-                margin-top: 3px;
-                color: #708078;
-                font-size: 11px;
+
+                margin-top:
+                    3px;
+
+                color:
+                    #708078;
+
+                font-size:
+                    11px;
+
+                line-height:
+                    1.35;
+
             }
+
+
+            /* =============================================
+               ACCIONES
+            ============================================= */
 
             .gc-evidence-picker-actions,
             .gc-evidence-manager-upload {
-                display: flex;
-                align-items: center;
-                flex-wrap: wrap;
-                gap: 8px;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    center;
+
+                flex-wrap:
+                    wrap;
+
+                gap:
+                    8px;
+
             }
+
+
+            /* =============================================
+               INPUT REAL OCULTO
+            ============================================= */
 
             .gc-evidence-input {
-                position: absolute !important;
-                width: 1px !important;
-                height: 1px !important;
-                padding: 0 !important;
-                margin: -1px !important;
-                overflow: hidden !important;
-                clip: rect(0, 0, 0, 0) !important;
-                white-space: nowrap !important;
-                border: 0 !important;
+
+                position:
+                    absolute
+                    !important;
+
+                width:
+                    1px
+                    !important;
+
+                height:
+                    1px
+                    !important;
+
+                padding:
+                    0
+                    !important;
+
+                margin:
+                    -1px
+                    !important;
+
+                overflow:
+                    hidden
+                    !important;
+
+                clip:
+                    rect(
+                        0,
+                        0,
+                        0,
+                        0
+                    )
+                    !important;
+
+                white-space:
+                    nowrap
+                    !important;
+
+                border:
+                    0
+                    !important;
+
             }
+
+
+            /* =============================================
+               BOTONES DE EVIDENCIAS
+            ============================================= */
 
             .gc-evidence-file-button {
-                margin: 0;
-                cursor: pointer;
+
+                display:
+                    inline-flex
+                    !important;
+
+                align-items:
+                    center
+                    !important;
+
+                justify-content:
+                    center
+                    !important;
+
+                gap:
+                    6px
+                    !important;
+
+                min-height:
+                    40px;
+
+                box-sizing:
+                    border-box;
+
+                margin:
+                    0
+                    !important;
+
+                padding:
+                    0
+                    14px
+                    !important;
+
+                line-height:
+                    1
+                    !important;
+
+                text-align:
+                    center
+                    !important;
+
+                white-space:
+                    nowrap;
+
+                cursor:
+                    pointer;
+
+                user-select:
+                    none;
+
+                -webkit-user-select:
+                    none;
+
             }
+
+
+            .gc-evidence-button-icon {
+
+                display:
+                    inline-flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    center;
+
+                flex:
+                    0 0
+                    auto;
+
+                width:
+                    16px;
+
+                height:
+                    16px;
+
+                line-height:
+                    1;
+
+                font-size:
+                    12px;
+
+            }
+
+
+            .gc-evidence-button-text {
+
+                display:
+                    inline-flex;
+
+                align-items:
+                    center;
+
+                justify-content:
+                    center;
+
+                line-height:
+                    1;
+
+                text-align:
+                    center;
+
+            }
+
+
+            /* =============================================
+               ARCHIVOS PENDIENTES
+            ============================================= */
 
             .gc-evidence-pending {
-                display: grid;
-                gap: 8px;
-                margin-top: 10px;
+
+                display:
+                    grid;
+
+                gap:
+                    8px;
+
+                margin-top:
+                    10px;
+
             }
 
+
             .gc-evidence-pending-item {
-                display: grid;
-                grid-template-columns: 32px minmax(0, 1fr) 30px;
-                align-items: center;
-                gap: 9px;
-                padding: 9px 10px;
-                border: 1px solid #e1e9e4;
-                border-radius: 10px;
-                background: white;
+
+                display:
+                    grid;
+
+                grid-template-columns:
+                    32px
+                    minmax(
+                        0,
+                        1fr
+                    )
+                    30px;
+
+                align-items:
+                    center;
+
+                gap:
+                    9px;
+
+                padding:
+                    9px
+                    10px;
+
+                border:
+                    1px
+                    solid
+                    #e1e9e4;
+
+                border-radius:
+                    10px;
+
+                background:
+                    #ffffff;
+
             }
+
 
             .gc-evidence-pending-item strong,
             .gc-evidence-pending-item small {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+
+                display:
+                    block;
+
+                overflow:
+                    hidden;
+
+                text-overflow:
+                    ellipsis;
+
+                white-space:
+                    nowrap;
+
             }
+
 
             .gc-evidence-pending-item strong {
-                color: #213c30;
-                font-size: 11px;
+
+                color:
+                    #213c30;
+
+                font-size:
+                    11px;
+
             }
 
+
             .gc-evidence-pending-item small {
-                margin-top: 2px;
-                color: #78857f;
-                font-size: 9px;
+
+                margin-top:
+                    2px;
+
+                color:
+                    #78857f;
+
+                font-size:
+                    9px;
+
             }
+
 
             .gc-evidence-remove-pending,
             .gc-evidence-delete {
-                display: grid;
-                place-items: center;
-                width: 30px;
-                height: 30px;
-                padding: 0;
-                border: 1px solid #ecd9d9;
-                border-radius: 8px;
-                background: #fff8f8;
-                color: #9b3636;
-                cursor: pointer;
+
+                display:
+                    grid;
+
+                place-items:
+                    center;
+
+                width:
+                    30px;
+
+                height:
+                    30px;
+
+                padding:
+                    0;
+
+                border:
+                    1px
+                    solid
+                    #ecd9d9;
+
+                border-radius:
+                    8px;
+
+                background:
+                    #fff8f8;
+
+                color:
+                    #9b3636;
+
+                cursor:
+                    pointer;
+
             }
+
+
+            /* =============================================
+               GESTOR DE ARCHIVOS
+            ============================================= */
 
             .gc-evidence-manager {
-                margin-top: 14px;
+
+                margin-top:
+                    14px;
+
             }
+
 
             .gc-evidence-manager-head {
-                display: flex;
-                align-items: flex-start;
-                justify-content: space-between;
-                gap: 14px;
-                margin-bottom: 16px;
+
+                display:
+                    flex;
+
+                align-items:
+                    flex-start;
+
+                justify-content:
+                    space-between;
+
+                gap:
+                    14px;
+
+                margin-bottom:
+                    16px;
+
             }
+
 
             .gc-evidence-manager-head h2 {
-                margin: 3px 0 4px;
-                color: #192a22;
-                font-family: Georgia, "Times New Roman", serif;
-                font-size: 25px;
+
+                margin:
+                    3px
+                    0
+                    4px;
+
+                color:
+                    #192a22;
+
+                font-family:
+                    Georgia,
+                    "Times New Roman",
+                    serif;
+
+                font-size:
+                    25px;
+
             }
+
 
             .gc-evidence-manager-head p {
-                margin: 0;
-                color: #6d7b73;
-                font-size: 11px;
+
+                margin:
+                    0;
+
+                color:
+                    #6d7b73;
+
+                font-size:
+                    11px;
+
             }
+
 
             .gc-evidence-manager-upload {
-                margin-bottom: 16px;
-                padding-bottom: 16px;
-                border-bottom: 1px solid #e4eae6;
+
+                justify-content:
+                    flex-start;
+
+                margin-bottom:
+                    16px;
+
+                padding-bottom:
+                    16px;
+
+                border-bottom:
+                    1px
+                    solid
+                    #e4eae6;
+
             }
+
+
+            /* =============================================
+               GRID DE ARCHIVOS
+            ============================================= */
 
             .gc-evidence-grid {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 10px;
+
+                display:
+                    grid;
+
+                grid-template-columns:
+                    repeat(
+                        2,
+                        minmax(
+                            0,
+                            1fr
+                        )
+                    );
+
+                gap:
+                    10px;
+
             }
+
 
             .gc-evidence-card {
-                display: grid;
-                grid-template-columns: 42px minmax(0, 1fr) auto;
-                align-items: center;
-                gap: 10px;
-                padding: 12px;
-                border: 1px solid #e0e8e3;
-                border-radius: 13px;
-                background: #fff;
+
+                display:
+                    grid;
+
+                grid-template-columns:
+                    42px
+                    minmax(
+                        0,
+                        1fr
+                    )
+                    auto;
+
+                align-items:
+                    center;
+
+                gap:
+                    10px;
+
+                padding:
+                    12px;
+
+                border:
+                    1px
+                    solid
+                    #e0e8e3;
+
+                border-radius:
+                    13px;
+
+                background:
+                    #ffffff;
+
             }
+
 
             .gc-evidence-card-icon {
-                display: grid;
-                place-items: center;
-                width: 42px;
-                height: 42px;
-                border-radius: 11px;
-                background: #edf5f0;
-                font-size: 19px;
+
+                display:
+                    grid;
+
+                place-items:
+                    center;
+
+                width:
+                    42px;
+
+                height:
+                    42px;
+
+                border-radius:
+                    11px;
+
+                background:
+                    #edf5f0;
+
+                font-size:
+                    19px;
+
             }
 
+
             .gc-evidence-card-body {
-                min-width: 0;
+
+                min-width:
+                    0;
+
             }
+
 
             .gc-evidence-card-body strong,
             .gc-evidence-card-body span {
-                display: block;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                white-space: nowrap;
+
+                display:
+                    block;
+
+                overflow:
+                    hidden;
+
+                text-overflow:
+                    ellipsis;
+
+                white-space:
+                    nowrap;
+
             }
+
 
             .gc-evidence-card-body strong {
-                color: #18392b;
-                font-size: 11px;
+
+                color:
+                    #18392b;
+
+                font-size:
+                    11px;
+
             }
+
 
             .gc-evidence-card-body span {
-                margin-top: 3px;
-                color: #758078;
-                font-size: 9px;
+
+                margin-top:
+                    3px;
+
+                color:
+                    #758078;
+
+                font-size:
+                    9px;
+
             }
+
 
             .gc-evidence-card-actions {
-                display: flex;
-                align-items: center;
-                gap: 6px;
+
+                display:
+                    flex;
+
+                align-items:
+                    center;
+
+                gap:
+                    6px;
+
             }
+
+
+            /* =============================================
+               ESTADO VACÍO
+            ============================================= */
 
             .gc-evidence-empty {
-                grid-column: 1 / -1;
-                padding: 34px 20px;
-                border: 1px dashed #cad8d0;
-                border-radius: 14px;
-                text-align: center;
-                background: #fafcfb;
+
+                grid-column:
+                    1
+                    /
+                    -1;
+
+                padding:
+                    34px
+                    20px;
+
+                border:
+                    1px
+                    dashed
+                    #cad8d0;
+
+                border-radius:
+                    14px;
+
+                text-align:
+                    center;
+
+                background:
+                    #fafcfb;
+
             }
+
 
             .gc-evidence-empty > span {
-                display: block;
-                margin-bottom: 7px;
-                font-size: 28px;
+
+                display:
+                    block;
+
+                margin-bottom:
+                    7px;
+
+                font-size:
+                    28px;
+
             }
+
 
             .gc-evidence-empty strong {
-                display: block;
-                color: #1a3f2f;
-                font-size: 13px;
+
+                display:
+                    block;
+
+                color:
+                    #1a3f2f;
+
+                font-size:
+                    13px;
+
             }
+
 
             .gc-evidence-empty p {
-                max-width: 360px;
-                margin: 5px auto 0;
-                color: #718078;
-                font-size: 11px;
-                line-height: 1.5;
+
+                max-width:
+                    360px;
+
+                margin:
+                    5px
+                    auto
+                    0;
+
+                color:
+                    #718078;
+
+                font-size:
+                    11px;
+
+                line-height:
+                    1.5;
+
             }
 
 
-            @media (max-width: 760px) {
+            /* =============================================
+               TABLET / MÓVIL
+            ============================================= */
 
-                .gc-evidence-summary,
-                .gc-evidence-picker,
-                .gc-evidence-manager-head {
-                    align-items: stretch;
-                    flex-direction: column;
+            @media (
+                max-width:
+                760px
+            ) {
+
+                .gc-evidence-summary {
+
+                    align-items:
+                        stretch;
+
+                    flex-direction:
+                        column;
+
                 }
 
-                .gc-evidence-summary .incidencia-evidencias {
-                    width: 100%;
+
+                .gc-evidence-summary
+                .incidencia-evidencias {
+
+                    width:
+                        100%;
+
                 }
+
+
+                .gc-evidence-picker {
+
+                    display:
+                        flex;
+
+                    flex-direction:
+                        column;
+
+                    align-items:
+                        stretch;
+
+                    justify-content:
+                        flex-start;
+
+                    gap:
+                        14px;
+
+                    padding:
+                        14px;
+
+                }
+
+
+                .gc-evidence-picker-copy {
+
+                    width:
+                        100%;
+
+                }
+
 
                 .gc-evidence-picker-actions,
                 .gc-evidence-manager-upload {
-                    display: grid;
-                    grid-template-columns: 1fr 1fr;
-                    width: 100%;
+
+                    display:
+                        grid;
+
+                    grid-template-columns:
+                        1fr
+                        1fr;
+
+                    align-items:
+                        stretch;
+
+                    justify-content:
+                        stretch;
+
+                    gap:
+                        8px;
+
+                    width:
+                        100%;
+
+                    box-sizing:
+                        border-box;
+
                 }
+
 
                 .gc-evidence-file-button {
-                    width: 100%;
-                    min-height: 40px;
+
+                    display:
+                        flex
+                        !important;
+
+                    align-items:
+                        center
+                        !important;
+
+                    justify-content:
+                        center
+                        !important;
+
+                    width:
+                        100%
+                        !important;
+
+                    min-width:
+                        0;
+
+                    height:
+                        42px;
+
+                    min-height:
+                        42px;
+
+                    padding:
+                        0
+                        10px
+                        !important;
+
+                    margin:
+                        0
+                        !important;
+
+                    gap:
+                        6px
+                        !important;
+
+                    text-align:
+                        center
+                        !important;
+
+                    line-height:
+                        1
+                        !important;
+
+                    box-sizing:
+                        border-box;
+
                 }
+
+
+                .gc-evidence-button-icon {
+
+                    display:
+                        inline-flex;
+
+                    align-items:
+                        center;
+
+                    justify-content:
+                        center;
+
+                    width:
+                        15px;
+
+                    height:
+                        15px;
+
+                    min-width:
+                        15px;
+
+                    line-height:
+                        1;
+
+                }
+
+
+                .gc-evidence-button-text {
+
+                    display:
+                        inline-flex;
+
+                    align-items:
+                        center;
+
+                    justify-content:
+                        center;
+
+                    min-width:
+                        0;
+
+                    line-height:
+                        1;
+
+                    text-align:
+                        center;
+
+                }
+
+
+                .gc-evidence-manager-head {
+
+                    display:
+                        flex;
+
+                    flex-direction:
+                        column;
+
+                    align-items:
+                        stretch;
+
+                }
+
 
                 .gc-evidence-grid {
-                    grid-template-columns: 1fr;
+
+                    grid-template-columns:
+                        1fr;
+
                 }
+
 
                 .gc-evidence-card {
-                    grid-template-columns: 38px minmax(0, 1fr);
+
+                    grid-template-columns:
+                        38px
+                        minmax(
+                            0,
+                            1fr
+                        );
+
                 }
+
 
                 .gc-evidence-card-actions {
-                    grid-column: 1 / -1;
-                    display: grid;
-                    grid-template-columns: 1fr 42px;
+
+                    grid-column:
+                        1
+                        /
+                        -1;
+
+                    display:
+                        grid;
+
+                    grid-template-columns:
+                        1fr
+                        42px;
+
+                    gap:
+                        7px;
+
                 }
 
-                .gc-evidence-card-actions .secondary-button {
-                    width: 100%;
+
+                .gc-evidence-card-actions
+                .secondary-button {
+
+                    width:
+                        100%;
+
                 }
 
             }
 
 
-            @media (max-width: 420px) {
+            /* =============================================
+               MÓVILES PEQUEÑOS
+            ============================================= */
+
+            @media (
+                max-width:
+                420px
+            ) {
+
+                .gc-evidence-picker {
+
+                    padding:
+                        12px;
+
+                    gap:
+                        12px;
+
+                }
+
+
+                .gc-evidence-picker-copy {
+
+                    align-items:
+                        center;
+
+                    gap:
+                        10px;
+
+                }
+
+
+                .gc-evidence-picker-copy > span {
+
+                    width:
+                        38px;
+
+                    height:
+                        38px;
+
+                    flex:
+                        0
+                        0
+                        38px;
+
+                }
+
+
+                .gc-evidence-picker-copy strong {
+
+                    font-size:
+                        12px;
+
+                }
+
+
+                .gc-evidence-picker-copy p {
+
+                    font-size:
+                        10px;
+
+                }
+
 
                 .gc-evidence-picker-actions,
                 .gc-evidence-manager-upload {
-                    grid-template-columns: 1fr;
+
+                    display:
+                        grid;
+
+                    grid-template-columns:
+                        1fr;
+
+                    gap:
+                        8px;
+
+                    width:
+                        100%;
+
+                }
+
+
+                .gc-evidence-file-button {
+
+                    display:
+                        flex
+                        !important;
+
+                    align-items:
+                        center
+                        !important;
+
+                    justify-content:
+                        center
+                        !important;
+
+                    width:
+                        100%
+                        !important;
+
+                    height:
+                        42px;
+
+                    min-height:
+                        42px;
+
+                    padding:
+                        0
+                        12px
+                        !important;
+
+                    margin:
+                        0
+                        !important;
+
+                    gap:
+                        7px
+                        !important;
+
+                    border-radius:
+                        9px;
+
+                    font-size:
+                        11px
+                        !important;
+
+                    line-height:
+                        1
+                        !important;
+
+                    text-align:
+                        center
+                        !important;
+
+                    white-space:
+                        nowrap;
+
+                }
+
+
+                .gc-evidence-button-icon,
+                .gc-evidence-button-text {
+
+                    display:
+                        inline-flex;
+
+                    align-items:
+                        center;
+
+                    justify-content:
+                        center;
+
+                    line-height:
+                        1;
+
+                }
+
+
+                .gc-evidence-pending-item {
+
+                    grid-template-columns:
+                        30px
+                        minmax(
+                            0,
+                            1fr
+                        )
+                        30px;
+
+                    padding:
+                        9px;
+
+                }
+
+
+                .gc-evidence-manager {
+
+                    padding:
+                        14px;
+
+                }
+
+
+                .gc-evidence-manager-head h2 {
+
+                    font-size:
+                        22px;
+
+                }
+
+            }
+
+
+            /* =============================================
+               320 PX
+            ============================================= */
+
+            @media (
+                max-width:
+                340px
+            ) {
+
+                .gc-evidence-picker {
+
+                    padding:
+                        11px;
+
+                }
+
+
+                .gc-evidence-picker-actions,
+                .gc-evidence-manager-upload {
+
+                    gap:
+                        7px;
+
+                }
+
+
+                .gc-evidence-file-button {
+
+                    width:
+                        100%
+                        !important;
+
+                    height:
+                        40px;
+
+                    min-height:
+                        40px;
+
+                    padding:
+                        0
+                        8px
+                        !important;
+
+                    font-size:
+                        10px
+                        !important;
+
+                }
+
+
+                .gc-evidence-button-icon {
+
+                    width:
+                        14px;
+
+                    min-width:
+                        14px;
+
+                    height:
+                        14px;
+
+                    font-size:
+                        10px;
+
                 }
 
             }

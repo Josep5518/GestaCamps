@@ -15,8 +15,8 @@ import {
 } from "./cultivo.js";
 
 import {
-    TrabajoService
-} from "./trabajo.js";
+    TrabajoServiceEvidencias
+} from "./trabajoEvidencias.js";
 
 import {
     TrabajadorService
@@ -115,7 +115,7 @@ export const cultivoService =
 
 
 export const trabajoService =
-    new TrabajoService(
+    new TrabajoServiceEvidencias(
         fincaService,
         campaniaService
     );

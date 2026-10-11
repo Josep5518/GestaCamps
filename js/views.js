@@ -23,8 +23,8 @@ import {
 } from "./tratamientosView.js";
 
 import {
-    TrabajosView
-} from "./trabajosView.js";
+    TrabajosViewEvidencias
+} from "./trabajosViewEvidencias.js";
 
 import {
     TrabajadoresView
@@ -103,6 +103,10 @@ import {
 } from "./auth.js";
 
 import {
+    NotificacionesUI
+} from "./notificaciones.js";
+
+import {
     services
 } from "./services.js";
 
@@ -117,6 +121,10 @@ export function crearVistas(
     salirModoTrabajador
 ) {
 
+    // =================================================
+    // SERVICIOS LOCALES
+    // =================================================
+
     const usuarioService =
         new UsuarioService();
 
@@ -125,221 +133,300 @@ export function crearVistas(
         new AuthService();
 
 
+    // =================================================
+    // NOTIFICACIONES
+    // =================================================
+
+    const notificacionesUI =
+        new NotificacionesUI(
+            services,
+            navegarA
+        );
+
+
+    notificacionesUI.iniciar();
+
+
+    // =================================================
+    // VISTAS
+    // =================================================
+
+    const inicioView =
+        new InicioView(
+            mainContent,
+            services.finca,
+            services.trabajo,
+            services.produccion,
+            services.explotacion
+        );
+
+
+    const fincasView =
+        new FincasView(
+            mainContent,
+            services.finca,
+            services.parcela
+        );
+
+
+    const campaniasView =
+        new CampaniasView(
+            mainContent,
+            services.campania,
+            services.finca
+        );
+
+
+    const cultivosView =
+        new CultivosView(
+            mainContent,
+            services.finca,
+            services.cultivo,
+            services.campania
+        );
+
+
+    const cuadernoCampoView =
+        new CuadernoCampoView(
+            mainContent,
+            services.cuadernoCampo
+        );
+
+
+    const tratamientosView =
+        new TratamientosView(
+            mainContent,
+            services.tratamiento
+        );
+
+
+    const trabajosView =
+        new TrabajosViewEvidencias(
+            mainContent,
+            services.finca,
+            services.trabajo,
+            services.trabajador,
+            services.maquinaria,
+            services.campania
+        );
+
+
+    const trabajadoresView =
+        new TrabajadoresView(
+            mainContent,
+            services.trabajador
+        );
+
+
+    const fichajesView =
+        new FichajesView(
+            mainContent,
+            services.fichaje,
+            services.trabajador,
+            authService
+        );
+
+
+    const incidenciasView =
+        new IncidenciasView(
+            mainContent,
+            services.incidencia,
+            services.finca,
+            services.trabajo,
+            services.trabajador
+        );
+
+
+    const historialView =
+        new HistorialView(
+            mainContent,
+            services.historial
+        );
+
+
+    const buscadorGlobalView =
+        new BuscadorGlobalView(
+            mainContent,
+            services.buscadorGlobal,
+            pagina => {
+
+                navegarA(
+                    pagina
+                );
+
+            }
+        );
+
+
+    const trabajadorPortalView =
+        new TrabajadorPortalView(
+            mainContent,
+            services.trabajador,
+            services.trabajo,
+            services.incidencia,
+            services.finca,
+            services.fichaje,
+            () => {
+
+                salirModoTrabajador();
+
+                navegarA(
+                    "inicio"
+                );
+
+            }
+        );
+
+
+    const maquinariaView =
+        new MaquinariaView(
+            mainContent,
+            services.maquinaria
+        );
+
+
+    const inventarioView =
+        new InventarioView(
+            mainContent,
+            services.inventario
+        );
+
+
+    const produccionView =
+        new ProduccionView(
+            mainContent,
+            services.finca,
+            services.produccion,
+            services.campania,
+            services.cultivo,
+            services.albaran
+        );
+
+
+    const clientesProveedoresView =
+        new ClientesProveedoresView(
+            mainContent,
+            services.clienteProveedor
+        );
+
+
+    const albaranesView =
+        new AlbaranesView(
+            mainContent,
+            services.finca,
+            services.produccion,
+            services.albaran,
+            services.clienteProveedor
+        );
+
+
+    const facturacionView =
+        new FacturacionView(
+            mainContent,
+            services.factura,
+            services.albaran,
+            services.explotacion,
+            services.clienteProveedor
+        );
+
+
+    const gastosView =
+        new GastosView(
+            mainContent,
+            services.gasto,
+            services.finca,
+            services.maquinaria,
+            services.clienteProveedor,
+            services.campania
+        );
+
+
+    const cobrosPagosView =
+        new CobrosPagosView(
+            mainContent,
+            services.cobroPago,
+            services.factura,
+            services.gasto
+        );
+
+
+    const estadisticasView =
+        new EstadisticasView(
+            mainContent,
+            services.estadisticas
+        );
+
+
+    const usuariosView =
+        new UsuariosView(
+            mainContent,
+            usuarioService,
+            services.trabajador
+        );
+
+
+    const perfilView =
+        new PerfilView(
+            mainContent,
+            services.explotacion
+        );
+
+
+    // =================================================
+    // DEVOLVER VISTAS
+    // =================================================
+
     return {
 
-        inicioView:
-            new InicioView(
-                mainContent,
-                services.finca,
-                services.trabajo,
-                services.produccion,
-                services.explotacion
-            ),
+        inicioView,
 
+        fincasView,
 
-        fincasView:
-            new FincasView(
-                mainContent,
-                services.finca,
-                services.parcela
-            ),
+        campaniasView,
 
+        cultivosView,
 
-        campaniasView:
-            new CampaniasView(
-                mainContent,
-                services.campania,
-                services.finca
-            ),
+        cuadernoCampoView,
 
+        tratamientosView,
 
-        cultivosView:
-            new CultivosView(
-                mainContent,
-                services.finca,
-                services.cultivo,
-                services.campania
-            ),
+        trabajosView,
 
+        trabajadoresView,
 
-        cuadernoCampoView:
-            new CuadernoCampoView(
-                mainContent,
-                services.cuadernoCampo
-            ),
+        fichajesView,
 
+        incidenciasView,
 
-        tratamientosView:
-            new TratamientosView(
-                mainContent,
-                services.tratamiento
-            ),
+        historialView,
 
+        buscadorGlobalView,
 
-        trabajosView:
-            new TrabajosView(
-                mainContent,
-                services.finca,
-                services.trabajo,
-                services.trabajador,
-                services.maquinaria,
-                services.campania
-            ),
+        trabajadorPortalView,
 
+        maquinariaView,
 
-        trabajadoresView:
-            new TrabajadoresView(
-                mainContent,
-                services.trabajador
-            ),
+        inventarioView,
 
+        produccionView,
 
-        fichajesView:
-            new FichajesView(
-                mainContent,
-                services.fichaje,
-                services.trabajador,
-                authService
-            ),
+        clientesProveedoresView,
 
+        albaranesView,
 
-        incidenciasView:
-            new IncidenciasView(
-                mainContent,
-                services.incidencia,
-                services.finca,
-                services.trabajo,
-                services.trabajador
-            ),
+        facturacionView,
 
+        gastosView,
 
-        historialView:
-            new HistorialView(
-                mainContent,
-                services.historial
-            ),
+        cobrosPagosView,
 
+        estadisticasView,
 
-        buscadorGlobalView:
-            new BuscadorGlobalView(
-                mainContent,
-                services.buscadorGlobal,
-                navegarA
-            ),
+        usuariosView,
 
+        perfilView,
 
-        trabajadorPortalView:
-            new TrabajadorPortalView(
-                mainContent,
-                services.trabajador,
-                services.trabajo,
-                services.incidencia,
-                services.finca,
-                services.fichaje,
-                () => {
-
-                    salirModoTrabajador();
-
-                    navegarA(
-                        "inicio"
-                    );
-
-                }
-            ),
-
-
-        maquinariaView:
-            new MaquinariaView(
-                mainContent,
-                services.maquinaria
-            ),
-
-
-        inventarioView:
-            new InventarioView(
-                mainContent,
-                services.inventario
-            ),
-
-
-        produccionView:
-            new ProduccionView(
-                mainContent,
-                services.finca,
-                services.produccion,
-                services.campania,
-                services.cultivo,
-                services.albaran
-            ),
-
-
-        clientesProveedoresView:
-            new ClientesProveedoresView(
-                mainContent,
-                services.clienteProveedor
-            ),
-
-
-        albaranesView:
-            new AlbaranesView(
-                mainContent,
-                services.finca,
-                services.produccion,
-                services.albaran,
-                services.clienteProveedor
-            ),
-
-
-        facturacionView:
-            new FacturacionView(
-                mainContent,
-                services.factura,
-                services.albaran,
-                services.explotacion,
-                services.clienteProveedor
-            ),
-
-
-        gastosView:
-            new GastosView(
-                mainContent,
-                services.gasto,
-                services.finca,
-                services.maquinaria,
-                services.clienteProveedor,
-                services.campania
-            ),
-
-
-        cobrosPagosView:
-            new CobrosPagosView(
-                mainContent,
-                services.cobroPago,
-                services.factura,
-                services.gasto
-            ),
-
-
-        estadisticasView:
-            new EstadisticasView(
-                mainContent,
-                services.estadisticas
-            ),
-
-
-        usuariosView:
-            new UsuariosView(
-                mainContent,
-                usuarioService,
-                services.trabajador
-            ),
-
-
-        perfilView:
-            new PerfilView(
-                mainContent,
-                services.explotacion
-            )
+        notificacionesUI
 
     };
 

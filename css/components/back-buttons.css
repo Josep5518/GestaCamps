@@ -1,0 +1,515 @@
+/* =====================================================
+   GESTACAMPS
+   COMPONENTE · BOTÓN VOLVER
+   DISEÑO GLOBAL
+===================================================== */
+
+
+/* =====================================================
+   BOTÓN PRINCIPAL
+===================================================== */
+
+.back-button {
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+    gap:
+        7px;
+
+
+    width:
+        fit-content;
+
+    max-width:
+        100%;
+
+
+    min-height:
+        36px;
+
+
+    margin:
+        0 0 14px 0;
+
+    padding:
+        8px 13px;
+
+
+    border:
+        1px solid
+        rgba(
+            30,
+            83,
+            59,
+            0.16
+        );
+
+    border-radius:
+        999px;
+
+
+    background:
+        rgba(
+            255,
+            255,
+            255,
+            0.86
+        );
+
+
+    color:
+        #174a35;
+
+
+    font-family:
+        Arial,
+        Helvetica,
+        sans-serif;
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+
+    letter-spacing:
+        0;
+
+
+    text-align:
+        center;
+
+    text-decoration:
+        none;
+
+
+    box-shadow:
+        0 3px 10px
+        rgba(
+            20,
+            55,
+            40,
+            0.05
+        );
+
+
+    cursor:
+        pointer;
+
+
+    appearance:
+        none;
+
+    -webkit-appearance:
+        none;
+
+
+    touch-action:
+        manipulation;
+
+
+    transition:
+        background 0.18s ease,
+        border-color 0.18s ease,
+        color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+
+}
+
+
+/* =====================================================
+   CÍRCULO DE LA FLECHA
+===================================================== */
+
+.back-button::before {
+
+    content:
+        "←";
+
+
+    display:
+        inline-flex;
+
+    align-items:
+        center;
+
+    justify-content:
+        center;
+
+
+    width:
+        23px;
+
+    height:
+        23px;
+
+    flex:
+        0 0 23px;
+
+
+    margin-left:
+        -5px;
+
+
+    border-radius:
+        50%;
+
+
+    background:
+        #e8f2ec;
+
+
+    color:
+        #176443;
+
+
+    font-size:
+        14px;
+
+    font-weight:
+        800;
+
+    line-height:
+        1;
+
+
+    transition:
+        background 0.18s ease,
+        color 0.18s ease,
+        transform 0.18s ease;
+
+}
+
+
+/* =====================================================
+   OCULTAR LA FLECHA ESCRITA EN EL HTML
+
+   Los botones actuales contienen:
+   ← Volver
+
+   El carácter original se mantiene en el DOM,
+   pero visualmente lo sustituimos por el círculo.
+===================================================== */
+
+.back-button {
+
+    font-size:
+        0;
+
+}
+
+
+.back-button::after {
+
+    content:
+        "Volver";
+
+
+    font-size:
+        11px;
+
+    font-weight:
+        700;
+
+    line-height:
+        1;
+
+}
+
+
+/* =====================================================
+   HOVER
+===================================================== */
+
+@media (hover: hover) {
+
+    .back-button:hover {
+
+        border-color:
+            rgba(
+                24,
+                101,
+                67,
+                0.28
+            );
+
+
+        background:
+            #ffffff;
+
+
+        color:
+            #0e5b3b;
+
+
+        box-shadow:
+            0 6px 16px
+            rgba(
+                20,
+                66,
+                45,
+                0.09
+            );
+
+
+        transform:
+            translateY(
+                -1px
+            );
+
+    }
+
+
+    .back-button:hover::before {
+
+        background:
+            #176443;
+
+
+        color:
+            #ffffff;
+
+
+        transform:
+            translateX(
+                -2px
+            );
+
+    }
+
+}
+
+
+/* =====================================================
+   ACTIVE
+===================================================== */
+
+.back-button:active {
+
+    transform:
+        translateY(
+            0
+        )
+        scale(
+            0.98
+        );
+
+}
+
+
+/* =====================================================
+   FOCUS
+===================================================== */
+
+.back-button:focus-visible {
+
+    outline:
+        3px solid
+        rgba(
+            40,
+            143,
+            91,
+            0.22
+        );
+
+    outline-offset:
+        2px;
+
+}
+
+
+/* =====================================================
+   DISABLED
+===================================================== */
+
+.back-button:disabled {
+
+    opacity:
+        0.55;
+
+    cursor:
+        default;
+
+    transform:
+        none;
+
+}
+
+
+/* =====================================================
+   CUANDO ESTÁ DENTRO DE CABECERAS
+===================================================== */
+
+.detail-header
+.back-button,
+
+.topbar
+.back-button,
+
+.factura-screen-actions
+.back-button {
+
+    margin-bottom:
+        0;
+
+}
+
+
+/* =====================================================
+   MÓVIL
+===================================================== */
+
+@media (max-width: 760px) {
+
+    .back-button {
+
+        min-height:
+            38px;
+
+
+        margin-bottom:
+            12px;
+
+
+        padding:
+            7px 12px;
+
+
+        border-radius:
+            999px;
+
+
+        font-size:
+            0;
+
+    }
+
+
+    .back-button::before {
+
+        width:
+            24px;
+
+        height:
+            24px;
+
+        flex-basis:
+            24px;
+
+
+        font-size:
+            14px;
+
+    }
+
+
+    .back-button::after {
+
+        font-size:
+            11px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MÓVIL PEQUEÑO
+===================================================== */
+
+@media (max-width: 420px) {
+
+    .back-button {
+
+        min-height:
+            36px;
+
+
+        padding:
+            6px 11px;
+
+
+        margin-bottom:
+            11px;
+
+    }
+
+
+    .back-button::before {
+
+        width:
+            22px;
+
+        height:
+            22px;
+
+        flex-basis:
+            22px;
+
+
+        font-size:
+            13px;
+
+    }
+
+
+    .back-button::after {
+
+        font-size:
+            10px;
+
+    }
+
+}
+
+
+/* =====================================================
+   MUY ESTRECHO
+===================================================== */
+
+@media (max-width: 340px) {
+
+    .back-button {
+
+        min-height:
+            35px;
+
+
+        padding:
+            6px 10px;
+
+    }
+
+}
+
+
+/* =====================================================
+   REDUCIR MOVIMIENTO
+===================================================== */
+
+@media (
+    prefers-reduced-motion:
+    reduce
+) {
+
+    .back-button,
+    .back-button::before {
+
+        transition:
+            none;
+
+    }
+
+}

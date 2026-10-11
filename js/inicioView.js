@@ -1,6 +1,5 @@
 import { StorageService } from "./storage.js";
 
-
 export class InicioView {
 
     constructor(
@@ -105,6 +104,7 @@ export class InicioView {
                         this.normalizar(
                             trabajo.estado
                         );
+
 
                     return (
                         estado !== "completada"
@@ -354,13 +354,17 @@ export class InicioView {
                     <div class="inicio-toolbar-actions">
 
                         <button
+                            id="notificacionesButton"
                             class="inicio-toolbar-icon"
                             type="button"
                             aria-label="Notificaciones"
+                            data-gc-notifications-trigger="1"
                         >
                             🔔
+
                             <span class="inicio-notification-dot"></span>
                         </button>
+
 
                         <button
                             class="inicio-toolbar-icon"
@@ -370,18 +374,24 @@ export class InicioView {
                             ?
                         </button>
 
+
                         <div class="inicio-user-pill">
 
                             <span class="inicio-user-avatar">
+
                                 ${this.escapar(
                                     inicialUsuario
                                 )}
+
                             </span>
 
+
                             <strong>
+
                                 ${this.escapar(
                                     usuario
                                 )}
+
                             </strong>
 
                         </div>
@@ -400,18 +410,29 @@ export class InicioView {
                     <div class="inicio-welcome">
 
                         <p class="inicio-eyebrow">
+
                             ${this.obtenerSaludo()}, ${this.escapar(usuario)} 👋
+
                         </p>
 
+
                         <h1>
+
                             Tu campo
-                            <span>en tus manos.</span>
+
+                            <span>
+                                en tus manos.
+                            </span>
+
                         </h1>
 
+
                         <p class="inicio-welcome-text">
+
                             Gestiona, produce y haz crecer
                             ${this.escapar(nombreExplotacion)}
                             con GestaCamps.
+
                         </p>
 
                     </div>
@@ -420,8 +441,11 @@ export class InicioView {
                     <div class="inicio-hero-photo">
 
                         <div class="inicio-campaign-pill">
+
                             🌿 ${this.escapar(nombreExplotacion)}
+
                         </div>
+
 
                         <div class="inicio-hero-overlay">
 
@@ -429,9 +453,12 @@ export class InicioView {
                                 Gestión agrícola inteligente
                             </span>
 
+
                             <strong>
+
                                 Tu campo,<br>
                                 nuestro compromiso
+
                             </strong>
 
                         </div>
@@ -526,9 +553,12 @@ export class InicioView {
 
                             </div>
 
+
                             <span class="inicio-details-link">
+
                                 Resumen
                                 →
+
                             </span>
 
                         </div>
@@ -545,6 +575,7 @@ export class InicioView {
                                 "green"
                             )}
 
+
                             ${this.crearMiniKpi(
                                 "🕒",
                                 "Pendiente de cobro",
@@ -554,6 +585,7 @@ export class InicioView {
                                 "orange"
                             )}
 
+
                             ${this.crearMiniKpi(
                                 "📤",
                                 "Pagado",
@@ -562,6 +594,7 @@ export class InicioView {
                                 ),
                                 "rose"
                             )}
+
 
                             ${this.crearMiniKpi(
                                 "⌛",
@@ -595,9 +628,12 @@ export class InicioView {
 
                             </div>
 
+
                             <span class="inicio-details-link">
+
                                 Resumen
                                 →
+
                             </span>
 
                         </div>
@@ -614,6 +650,7 @@ export class InicioView {
                                 "green"
                             )}
 
+
                             ${this.crearMiniKpi(
                                 "🕒",
                                 "Reservado",
@@ -623,6 +660,7 @@ export class InicioView {
                                 "blue"
                             )}
 
+
                             ${this.crearMiniKpi(
                                 "🚚",
                                 "Entregado",
@@ -631,6 +669,7 @@ export class InicioView {
                                 )} kg`,
                                 "orange"
                             )}
+
 
                             ${this.crearMiniKpi(
                                 "📦",
@@ -672,10 +711,15 @@ export class InicioView {
                         ${this.crearAlertas({
 
                             facturasParciales,
+
                             facturasPendientes,
+
                             pendienteCobro,
+
                             pendientePago,
+
                             disponible,
+
                             pendientes
 
                         })}
@@ -761,9 +805,12 @@ export class InicioView {
 
                             </div>
 
+
                             <span class="inicio-details-link">
+
                                 Últimos
                                 →
+
                             </span>
 
                         </div>
@@ -914,10 +961,13 @@ export class InicioView {
                         ${icono}
                     </span>
 
+
                     <span class="inicio-kpi-trend">
+
                         ↗ ${this.escapar(
                             tendencia
                         )}
+
                     </span>
 
                 </div>
@@ -926,15 +976,20 @@ export class InicioView {
                 <div class="inicio-kpi-content">
 
                     <span>
+
                         ${this.escapar(
                             titulo
                         )}
+
                     </span>
 
+
                     <strong>
+
                         ${this.escapar(
                             valor
                         )}
+
                     </strong>
 
                 </div>
@@ -979,6 +1034,7 @@ export class InicioView {
                         fill="url(#spark-${tono})"
                     />
 
+
                     <polyline
                         points="${puntos}"
                         fill="none"
@@ -1018,19 +1074,26 @@ export class InicioView {
                         ${icono}
                     </span>
 
+
                     <span>
+
                         ${this.escapar(
                             titulo
                         )}
+
                     </span>
 
                 </div>
 
+
                 <strong>
+
                     ${this.escapar(
                         valor
                     )}
+
                 </strong>
+
 
                 <div class="inicio-mini-wave"></div>
 
@@ -1238,10 +1301,13 @@ export class InicioView {
                     ${icono}
                 </span>
 
+
                 <span>
+
                     ${this.escapar(
                         texto
                     )}
+
                 </span>
 
             </div>
@@ -1267,6 +1333,7 @@ export class InicioView {
                         📋
                     </span>
 
+
                     <span class="inicio-empty-leaf">
                         🌿
                     </span>
@@ -1280,8 +1347,10 @@ export class InicioView {
 
 
                 <p>
+
                     Cuando tengas tareas asignadas para hoy,
                     aparecerán aquí.
+
                 </p>
 
 
@@ -1321,6 +1390,7 @@ export class InicioView {
                 <div class="inicio-task-content">
 
                     <strong>
+
                         ${this.escapar(
                             trabajo.titulo
                             ||
@@ -1328,7 +1398,9 @@ export class InicioView {
                             ||
                             "Trabajo"
                         )}
+
                     </strong>
+
 
                     <p>
 
@@ -1337,6 +1409,7 @@ export class InicioView {
                             ||
                             "Sin finca"
                         )}
+
 
                         ${
                             trabajo.parcelaNombre
@@ -1550,10 +1623,13 @@ export class InicioView {
                 a,
                 b
             ) =>
+
                 this.obtenerTimestamp(
                     b.fecha
                 )
+
                 -
+
                 this.obtenerTimestamp(
                     a.fecha
                 )
@@ -1578,24 +1654,31 @@ export class InicioView {
                 <div class="inicio-activity-content">
 
                     <strong>
+
                         ${this.escapar(
                             item.titulo
                         )}
+
                     </strong>
 
+
                     <p>
+
                         ${this.escapar(
                             item.detalle
                         )}
+
                     </p>
 
                 </div>
 
 
                 <span class="inicio-activity-time">
+
                     ${this.formatearFechaActividad(
                         item.fecha
                     )}
+
                 </span>
 
             </div>
@@ -1616,6 +1699,7 @@ export class InicioView {
             const datos =
                 StorageService
                     .obtenerFacturas();
+
 
             return Array.isArray(
                 datos
@@ -1642,6 +1726,7 @@ export class InicioView {
                 StorageService
                     .obtenerGastos();
 
+
             return Array.isArray(
                 datos
             )
@@ -1667,6 +1752,7 @@ export class InicioView {
                 StorageService
                     .obtenerCobrosPagos();
 
+
             return Array.isArray(
                 datos
             )
@@ -1691,6 +1777,7 @@ export class InicioView {
             const datos =
                 StorageService
                     .obtenerAlbaranes();
+
 
             return Array.isArray(
                 datos
@@ -1723,10 +1810,13 @@ export class InicioView {
         albaranes
             .filter(
                 albaran =>
+
                     this.normalizar(
                         albaran.estado
                     )
+
                     ===
+
                     "pendiente"
             )
             .forEach(
@@ -2449,7 +2539,10 @@ export class InicioView {
             .toLocaleString(
                 "es-ES",
                 {
-                    maximumFractionDigits: 2
+
+                    maximumFractionDigits:
+                        2
+
                 }
             );
 
@@ -2461,6 +2554,7 @@ export class InicioView {
     ) {
 
         return (
+
             Number(
                 numero
                 ||
@@ -2469,12 +2563,20 @@ export class InicioView {
                 .toLocaleString(
                     "es-ES",
                     {
-                        minimumFractionDigits: 2,
-                        maximumFractionDigits: 2
+
+                        minimumFractionDigits:
+                            2,
+
+                        maximumFractionDigits:
+                            2
+
                     }
                 )
+
             +
+
             " €"
+
         );
 
     }
