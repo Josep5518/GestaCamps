@@ -10,7 +10,7 @@
 // =====================================================
 
 const CACHE_VERSION =
-    "gestacamps-v3";
+    "gestacamps-v5";
 
 
 // =====================================================
@@ -90,11 +90,14 @@ self.addEventListener(
                             cacheNames
                                 .filter(
                                     cacheName =>
+
                                         cacheName
                                             .startsWith(
                                                 "gestacamps-"
                                             )
+
                                         &&
+
                                         cacheName !==
                                         CACHE_VERSION
                                 )
@@ -120,7 +123,7 @@ self.addEventListener(
 
 
 // =====================================================
-// GUARDAR EN CACHÉ
+// GUARDAR RESPUESTA EN CACHÉ
 // =====================================================
 
 async function guardarEnCache(
@@ -129,11 +132,19 @@ async function guardarEnCache(
 ) {
 
     if (
+
         !response
+
         ||
-        response.status !== 200
+
+        response.status !==
+        200
+
         ||
-        response.type === "opaque"
+
+        response.type ===
+        "opaque"
+
     ) {
 
         return;
@@ -150,8 +161,11 @@ async function guardarEnCache(
 
 
         await cache.put(
+
             request,
+
             response.clone()
+
         );
 
     }
@@ -161,9 +175,13 @@ async function guardarEnCache(
     ) {
 
         console.warn(
+
             "GestaCamps: no se pudo guardar en caché:",
+
             request.url,
+
             error
+
         );
 
     }
@@ -184,18 +202,28 @@ async function responderNavegacion(
 
         const response =
             await fetch(
+
                 request,
+
                 {
+
                     cache:
                         "no-store"
+
                 }
+
             );
 
 
         if (
+
             response
+
             &&
-            response.status === 200
+
+            response.status ===
+            200
+
         ) {
 
             const cache =
@@ -205,8 +233,11 @@ async function responderNavegacion(
 
 
             await cache.put(
+
                 "./index.html",
+
                 response.clone()
+
             );
 
         }
@@ -256,17 +287,25 @@ async function responderRecurso(
 
         const response =
             await fetch(
+
                 request,
+
                 {
+
                     cache:
                         "no-store"
+
                 }
+
             );
 
 
         await guardarEnCache(
+
             request,
+
             response
+
         );
 
 
@@ -312,9 +351,12 @@ self.addEventListener(
             event.request;
 
 
+        // Solo peticiones GET
         if (
+
             request.method !==
             "GET"
+
         ) {
 
             return;
@@ -328,9 +370,12 @@ self.addEventListener(
             );
 
 
+        // Solo recursos del mismo dominio
         if (
+
             url.origin !==
             self.location.origin
+
         ) {
 
             return;
@@ -338,9 +383,15 @@ self.addEventListener(
         }
 
 
+        // =============================================
+        // NAVEGACIÓN
+        // =============================================
+
         if (
+
             request.mode ===
             "navigate"
+
         ) {
 
             event.respondWith(
@@ -356,6 +407,10 @@ self.addEventListener(
 
         }
 
+
+        // =============================================
+        // RECURSOS ESTÁTICOS
+        // =============================================
 
         event.respondWith(
 
@@ -378,10 +433,14 @@ self.addEventListener(
     event => {
 
         if (
+
             event.data
+
             &&
+
             event.data.type ===
             "SKIP_WAITING"
+
         ) {
 
             self.skipWaiting();

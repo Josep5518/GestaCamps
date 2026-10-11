@@ -26,6 +26,36 @@ export class IncidenciaService {
 
 
     // =====================================================
+    // COMPARAR IDS
+    // Compatible con IDs numéricos y UUID.
+    // =====================================================
+
+    mismoId(
+        a,
+        b
+    ) {
+
+        if (
+            a === null
+            ||
+            a === undefined
+            ||
+            b === null
+            ||
+            b === undefined
+        ) {
+
+            return false;
+
+        }
+
+
+        return String(a) === String(b);
+
+    }
+
+
+    // =====================================================
     // OBTENER TODAS
     // =====================================================
 
@@ -36,10 +66,14 @@ export class IncidenciaService {
                 (a, b) =>
                     new Date(
                         b.fechaCreacion
+                        ||
+                        0
                     )
                     -
                     new Date(
                         a.fechaCreacion
+                        ||
+                        0
                     )
             );
 
@@ -57,11 +91,8 @@ export class IncidenciaService {
         return (
             this.incidencias.find(
                 incidencia =>
-                    Number(
-                        incidencia.id
-                    )
-                    ===
-                    Number(
+                    this.mismoId(
+                        incidencia.id,
                         id
                     )
             )
@@ -83,11 +114,8 @@ export class IncidenciaService {
         return this.obtenerTodas()
             .filter(
                 incidencia =>
-                    Number(
-                        incidencia.trabajadorId
-                    )
-                    ===
-                    Number(
+                    this.mismoId(
+                        incidencia.trabajadorId,
                         trabajadorId
                     )
             );
@@ -137,8 +165,7 @@ export class IncidenciaService {
             finca,
             trabajo,
             trabajador
-        } =
-            relaciones;
+        } = relaciones;
 
 
         const ahora =
@@ -182,7 +209,13 @@ export class IncidenciaService {
 
             trabajoNombre:
                 trabajo
-                    ? trabajo.titulo
+                    ? (
+                        trabajo.titulo
+                        ||
+                        trabajo.nombre
+                        ||
+                        ""
+                    )
                     : "",
 
             trabajadorId:
@@ -192,10 +225,9 @@ export class IncidenciaService {
 
             trabajadorNombre:
                 trabajador
-                    ? this.trabajadorService
-                        .obtenerNombreCompleto(
-                            trabajador
-                        )
+                    ? this.obtenerNombreTrabajador(
+                        trabajador
+                    )
                     : "",
 
             origen:
@@ -210,7 +242,10 @@ export class IncidenciaService {
                 "",
 
             observacionesResolucion:
-                ""
+                "",
+
+            evidencias:
+                []
 
         };
 
@@ -232,11 +267,8 @@ export class IncidenciaService {
                 this.incidencias
                     .filter(
                         incidencia =>
-                            Number(
-                                incidencia.id
-                            )
-                            !==
-                            Number(
+                            !this.mismoId(
+                                incidencia.id,
                                 nuevaIncidencia.id
                             )
                     );
@@ -374,12 +406,13 @@ export class IncidenciaService {
         ) {
 
             finca =
-                this.fincaService
-                    .obtenerPorId(
-                        Number(
-                            datos.fincaId
-                        )
-                    );
+                this.buscarPorIdEnServicio(
+                    this.fincaService,
+                    datos.fincaId,
+                    [
+                        "obtenerPorId"
+                    ]
+                );
 
 
             if (
@@ -408,12 +441,13 @@ export class IncidenciaService {
         ) {
 
             trabajo =
-                this.trabajoService
-                    .obtenerPorId(
-                        Number(
-                            datos.trabajoId
-                        )
-                    );
+                this.buscarPorIdEnServicio(
+                    this.trabajoService,
+                    datos.trabajoId,
+                    [
+                        "obtenerPorId"
+                    ]
+                );
 
 
             if (
@@ -436,11 +470,8 @@ export class IncidenciaService {
                 &&
                 trabajo.fincaId
                 &&
-                Number(
-                    trabajo.fincaId
-                )
-                !==
-                Number(
+                !this.mismoId(
+                    trabajo.fincaId,
                     finca.id
                 )
             ) {
@@ -467,12 +498,13 @@ export class IncidenciaService {
         ) {
 
             trabajador =
-                this.trabajadorService
-                    .obtenerPorId(
-                        Number(
-                            datos.trabajadorId
-                        )
-                    );
+                this.buscarPorIdEnServicio(
+                    this.trabajadorService,
+                    datos.trabajadorId,
+                    [
+                        "obtenerPorId"
+                    ]
+                );
 
 
             if (
@@ -496,15 +528,186 @@ export class IncidenciaService {
             ok:
                 true,
 
-            finca:
-                finca,
-
-            trabajo:
-                trabajo,
-
-            trabajador:
-                trabajador
+            finca,
+            trabajo,
+            trabajador
         };
+
+    }
+
+
+    // =====================================================
+    // BUSCAR ID EN SERVICIO
+    // =====================================================
+
+    buscarPorIdEnServicio(
+        servicio,
+        id,
+        metodos = []
+    ) {
+
+        if (
+            !servicio
+        ) {
+
+            return null;
+
+        }
+
+
+        for (
+            const metodo
+            of metodos
+        ) {
+
+            if (
+                typeof servicio[metodo] ===
+                "function"
+            ) {
+
+                const directo =
+                    servicio[metodo](
+                        id
+                    );
+
+
+                if (
+                    directo
+                ) {
+
+                    return directo;
+
+                }
+
+
+                const numero =
+                    Number(
+                        id
+                    );
+
+
+                if (
+                    Number.isFinite(
+                        numero
+                    )
+                ) {
+
+                    const numerico =
+                        servicio[metodo](
+                            numero
+                        );
+
+
+                    if (
+                        numerico
+                    ) {
+
+                        return numerico;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+
+        const candidatos = [
+            "obtenerTodas",
+            "obtenerTodos"
+        ];
+
+
+        for (
+            const metodo
+            of candidatos
+        ) {
+
+            if (
+                typeof servicio[metodo] ===
+                "function"
+            ) {
+
+                const lista =
+                    servicio[metodo]();
+
+
+                if (
+                    Array.isArray(
+                        lista
+                    )
+                ) {
+
+                    return (
+                        lista.find(
+                            item =>
+                                this.mismoId(
+                                    item?.id,
+                                    id
+                                )
+                        )
+                        ||
+                        null
+                    );
+
+                }
+
+            }
+
+        }
+
+
+        return null;
+
+    }
+
+
+    // =====================================================
+    // NOMBRE TRABAJADOR
+    // =====================================================
+
+    obtenerNombreTrabajador(
+        trabajador
+    ) {
+
+        if (
+            !trabajador
+        ) {
+
+            return "";
+
+        }
+
+
+        if (
+            typeof this.trabajadorService
+                ?.obtenerNombreCompleto ===
+            "function"
+        ) {
+
+            return (
+                this.trabajadorService
+                    .obtenerNombreCompleto(
+                        trabajador
+                    )
+                ||
+                ""
+            );
+
+        }
+
+
+        return [
+            trabajador.nombre,
+            trabajador.apellidos
+        ]
+            .filter(
+                Boolean
+            )
+            .join(
+                " "
+            );
 
     }
 
@@ -642,8 +845,7 @@ export class IncidenciaService {
             ok:
                 true,
 
-            incidencia:
-                incidencia
+            incidencia
         };
 
     }
@@ -734,7 +936,246 @@ export class IncidenciaService {
 
         return {
             ok:
-                true
+                true,
+
+            incidencia
+        };
+
+    }
+
+
+    // =====================================================
+    // OBTENER EVIDENCIAS
+    // =====================================================
+
+    obtenerEvidencias(
+        id
+    ) {
+
+        const incidencia =
+            this.obtenerPorId(
+                id
+            );
+
+
+        if (
+            !incidencia
+        ) {
+
+            return [];
+
+        }
+
+
+        return Array.isArray(
+            incidencia.evidencias
+        )
+            ? [...incidencia.evidencias]
+            : [];
+
+    }
+
+
+    // =====================================================
+    // AÑADIR EVIDENCIA
+    // =====================================================
+
+    agregarEvidencia(
+        id,
+        evidencia
+    ) {
+
+        const incidencia =
+            this.obtenerPorId(
+                id
+            );
+
+
+        if (
+            !incidencia
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "La incidencia no existe."
+            };
+
+        }
+
+
+        if (
+            !evidencia
+            ||
+            !evidencia.id
+            ||
+            !evidencia.ruta
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "La evidencia no es válida."
+            };
+
+        }
+
+
+        const anteriores =
+            Array.isArray(
+                incidencia.evidencias
+            )
+                ? [...incidencia.evidencias]
+                : [];
+
+
+        incidencia.evidencias = [
+            ...anteriores,
+            evidencia
+        ];
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            incidencia.evidencias =
+                anteriores;
+
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido asociar la evidencia a la incidencia."
+            };
+
+        }
+
+
+        return {
+            ok:
+                true,
+
+            incidencia,
+            evidencia
+        };
+
+    }
+
+
+    // =====================================================
+    // QUITAR EVIDENCIA
+    // =====================================================
+
+    quitarEvidencia(
+        id,
+        evidenciaId
+    ) {
+
+        const incidencia =
+            this.obtenerPorId(
+                id
+            );
+
+
+        if (
+            !incidencia
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "La incidencia no existe."
+            };
+
+        }
+
+
+        const anteriores =
+            Array.isArray(
+                incidencia.evidencias
+            )
+                ? [...incidencia.evidencias]
+                : [];
+
+
+        const evidencia =
+            anteriores.find(
+                item =>
+                    this.mismoId(
+                        item?.id,
+                        evidenciaId
+                    )
+            )
+            ||
+            null;
+
+
+        if (
+            !evidencia
+        ) {
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "La evidencia no existe."
+            };
+
+        }
+
+
+        incidencia.evidencias =
+            anteriores.filter(
+                item =>
+                    !this.mismoId(
+                        item?.id,
+                        evidenciaId
+                    )
+            );
+
+
+        const guardado =
+            this.guardar();
+
+
+        if (
+            !guardado
+        ) {
+
+            incidencia.evidencias =
+                anteriores;
+
+
+            return {
+                ok:
+                    false,
+
+                mensaje:
+                    "No se ha podido quitar la evidencia."
+            };
+
+        }
+
+
+        return {
+            ok:
+                true,
+
+            evidencia
         };
 
     }
@@ -826,14 +1267,19 @@ export class IncidenciaService {
             ];
 
 
+        const evidencias =
+            Array.isArray(
+                incidencia.evidencias
+            )
+                ? [...incidencia.evidencias]
+                : [];
+
+
         this.incidencias =
             this.incidencias.filter(
                 item =>
-                    Number(
-                        item.id
-                    )
-                    !==
-                    Number(
+                    !this.mismoId(
+                        item.id,
                         id
                     )
             );
@@ -864,7 +1310,10 @@ export class IncidenciaService {
 
         return {
             ok:
-                true
+                true,
+
+            incidencia,
+            evidencias
         };
 
     }

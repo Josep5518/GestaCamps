@@ -7,14 +7,17 @@
 // =====================================================
 // GESTACAMPS
 // SUPABASE SYNC (ESPEJO EN LA NUBE)
+// CLOUD V2 · DATOS AISLADOS POR USUARIO
 // =====================================================
 //
 // La app sigue funcionando con localStorage.
-// Este archivo solo copia cada colección a Supabase
-// y trae los cambios de otros dispositivos.
+// Supabase sirve como copia/sincronización en la nube.
+//
+// Cada usuario autenticado solo puede acceder
+// a sus propias colecciones gracias a user_id + RLS.
 //
 // Si no hay internet o Supabase falla, GestaCamps
-// sigue funcionando en local igual que antes.
+// sigue funcionando en local.
 // =====================================================
 
 
@@ -25,47 +28,71 @@
 const SUPABASE_URL =
     "https://gqlbnxnjzsaowwthrlsz.supabase.co";
 
+
 const SUPABASE_CLAVE_PUBLICA =
     "sb_publishable_Kl2_v1Y_gNN1bnmuUOvSKw_QVqtULB9";
+
 
 const SUPABASE_LIBRERIA =
     "https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm";
 
+
 const TABLA =
-    "gc_colecciones";
+    "gc_colecciones_v2";
+
 
 const PREFIJO_DATOS =
     "gestacamps_";
 
 
-// Claves que son de cada dispositivo y NO se comparten.
+// =====================================================
+// CLAVES QUE NO SE SINCRONIZAN
+// =====================================================
+
 const CLAVES_EXCLUIDAS = [
+
     "gestacamps_trabajador_sesion",
+
     "gestacamps_admin_sesion",
+
     "gestacamps_modo_campo",
+
     "gestacamps_meta_ultima_copia"
+
 ];
 
 
-// Claves internas de la sincronización.
+// =====================================================
+// CLAVES INTERNAS DE SINCRONIZACIÓN
+// =====================================================
+
 const CLAVE_PENDIENTES =
     "gcsync_pendientes";
+
 
 const CLAVE_VERSIONES =
     "gcsync_versiones";
 
+
 const CLAVE_INICIADO =
     "gcsync_iniciado";
 
+
 const CLAVE_DISPOSITIVO =
     "gcsync_dispositivo";
+
 
 const CLAVE_RECARGAS =
     "gcsync_recargas";
 
 
+// =====================================================
+// TIEMPOS
+// =====================================================
+
 const ESPERA_SUBIDA_MS =
     500;
+
 
 const INTERVALO_REVISION_MS =
     15000;
@@ -78,29 +105,42 @@ const INTERVALO_REVISION_MS =
 let cliente =
     null;
 
+
 let sesionActiva =
     false;
+
+
+let usuarioNubeId =
+    null;
+
 
 let canal =
     null;
 
+
 let temporizadorSubida =
     null;
+
 
 let temporizadorRecarga =
     null;
 
+
 let subiendo =
     false;
+
 
 let bajando =
     false;
 
+
 let estado =
     "local";
 
+
 let mensajeError =
     "";
+
 
 let iniciadoModulo =
     false;
@@ -122,8 +162,11 @@ function leerJSON(
                 clave
             );
 
+
         return valor === null
+
             ? valorDefecto
+
             : JSON.parse(
                 valor
             );
@@ -140,6 +183,10 @@ function leerJSON(
 
 }
 
+
+// =====================================================
+// GUARDAR JSON
+// =====================================================
 
 function guardarJSON(
     clave,
@@ -172,34 +219,53 @@ function guardarJSON(
 }
 
 
+// =====================================================
+// SABER SI UNA CLAVE SE SINCRONIZA
+// =====================================================
+
 function esClaveSincronizable(
     clave
 ) {
 
     return Boolean(
+
         clave
+
         &&
+
         clave.startsWith(
             PREFIJO_DATOS
         )
+
         &&
+
         !CLAVES_EXCLUIDAS.includes(
             clave
         )
+
     );
 
 }
 
+
+// =====================================================
+// OBTENER CLAVES LOCALES
+// =====================================================
 
 function obtenerClavesLocales() {
 
     const claves =
         [];
 
+
     for (
+
         let i = 0;
+
         i < localStorage.length;
+
         i++
+
     ) {
 
         const clave =
@@ -207,10 +273,13 @@ function obtenerClavesLocales() {
                 i
             );
 
+
         if (
+
             esClaveSincronizable(
                 clave
             )
+
         ) {
 
             claves.push(
@@ -221,10 +290,15 @@ function obtenerClavesLocales() {
 
     }
 
+
     return claves;
 
 }
 
+
+// =====================================================
+// ID DEL DISPOSITIVO
+// =====================================================
 
 function obtenerDispositivo() {
 
@@ -233,17 +307,31 @@ function obtenerDispositivo() {
             CLAVE_DISPOSITIVO
         );
 
+
     if (
         !id
     ) {
 
         id =
+
             "disp-"
-            + Date.now().toString(36)
+
+            + Date.now()
+                .toString(
+                    36
+                )
+
             + "-"
+
             + Math.random()
-                .toString(36)
-                .slice(2, 8);
+                .toString(
+                    36
+                )
+                .slice(
+                    2,
+                    8
+                );
+
 
         localStorage.setItem(
             CLAVE_DISPOSITIVO,
@@ -252,10 +340,15 @@ function obtenerDispositivo() {
 
     }
 
+
     return id;
 
 }
 
+
+// =====================================================
+// CAMBIOS PENDIENTES
+// =====================================================
 
 function obtenerPendientes() {
 
@@ -267,6 +360,10 @@ function obtenerPendientes() {
 }
 
 
+// =====================================================
+// MARCAR PENDIENTE
+// =====================================================
+
 function marcarPendiente(
     clave
 ) {
@@ -274,15 +371,19 @@ function marcarPendiente(
     const pendientes =
         obtenerPendientes();
 
+
     if (
+
         !pendientes.includes(
             clave
         )
+
     ) {
 
         pendientes.push(
             clave
         );
+
 
         guardarJSON(
             CLAVE_PENDIENTES,
@@ -294,33 +395,51 @@ function marcarPendiente(
 }
 
 
+// =====================================================
+// QUITAR PENDIENTE
+// =====================================================
+
 function quitarPendiente(
     clave
 ) {
 
     guardarJSON(
+
         CLAVE_PENDIENTES,
+
         obtenerPendientes()
             .filter(
                 item =>
-                    item !== clave
+                    item !==
+                    clave
             )
+
     );
 
 }
 
 
+// =====================================================
+// SABER SI LA SINCRONIZACIÓN YA SE INICIÓ
+// =====================================================
+
 function yaIniciado() {
 
-    return localStorage.getItem(
-        CLAVE_INICIADO
-    ) === "1";
+    return (
+
+        localStorage.getItem(
+            CLAVE_INICIADO
+        )
+        ===
+        "1"
+
+    );
 
 }
 
 
 // =====================================================
-// CONEXIÓN
+// SUPABASE CLIENTE
 // =====================================================
 
 async function obtenerCliente() {
@@ -333,21 +452,31 @@ async function obtenerCliente() {
 
     }
 
+
     const libreria =
         await import(
             SUPABASE_LIBRERIA
         );
 
+
     cliente =
         libreria.createClient(
+
             SUPABASE_URL,
+
             SUPABASE_CLAVE_PUBLICA
+
         );
+
 
     return cliente;
 
 }
 
+
+// =====================================================
+// ARRANCAR CONEXIÓN
+// =====================================================
 
 async function arrancarConexion() {
 
@@ -356,16 +485,38 @@ async function arrancarConexion() {
         const supabase =
             await obtenerCliente();
 
+
         const {
             data
         } =
-            await supabase.auth
+            await supabase
+                .auth
                 .getSession();
+
+
+        usuarioNubeId =
+
+            data
+                ?.session
+                ?.user
+                ?.id
+
+            ||
+
+            null;
+
 
         sesionActiva =
             Boolean(
+
                 data?.session
+
+                &&
+
+                usuarioNubeId
+
             );
+
 
         if (
             !sesionActiva
@@ -375,9 +526,11 @@ async function arrancarConexion() {
                 "desconectado"
             );
 
+
             return;
 
         }
+
 
         await despuesDeEntrar();
 
@@ -388,9 +541,13 @@ async function arrancarConexion() {
     ) {
 
         console.warn(
+
             "GestaCamps Sync: sin conexión, modo local.",
+
             error
+
         );
+
 
         cambiarEstado(
             "sin-conexion"
@@ -401,7 +558,27 @@ async function arrancarConexion() {
 }
 
 
+// =====================================================
+// DESPUÉS DE ENTRAR
+// =====================================================
+
 async function despuesDeEntrar() {
+
+    if (
+
+        !usuarioNubeId
+
+    ) {
+
+        cambiarEstado(
+            "desconectado"
+        );
+
+
+        return;
+
+    }
+
 
     if (
         !yaIniciado()
@@ -409,6 +586,7 @@ async function despuesDeEntrar() {
 
         const filasRemotas =
             await contarRemoto();
+
 
         if (
             filasRemotas === 0
@@ -424,7 +602,9 @@ async function despuesDeEntrar() {
                 "elegir"
             );
 
+
             abrirPanel();
+
 
             return;
 
@@ -432,14 +612,19 @@ async function despuesDeEntrar() {
 
     }
 
+
     await subirPendientes();
+
 
     await bajarCambios();
 
+
     suscribirTiempoReal();
 
+
     if (
-        estado !== "error"
+        estado !==
+        "error"
     ) {
 
         cambiarEstado(
@@ -451,23 +636,59 @@ async function despuesDeEntrar() {
 }
 
 
+// =====================================================
+// CONTAR DATOS REMOTOS DEL USUARIO
+// =====================================================
+
 async function contarRemoto() {
 
+    if (
+        !usuarioNubeId
+    ) {
+
+        return 0;
+
+    }
+
+
     const {
+
         count,
+
         error
+
     } =
+
         await cliente
+
             .from(
                 TABLA
             )
+
             .select(
+
                 "clave",
+
                 {
-                    count: "exact",
-                    head: true
+
+                    count:
+                        "exact",
+
+                    head:
+                        true
+
                 }
+
+            )
+
+            .eq(
+
+                "user_id",
+
+                usuarioNubeId
+
             );
+
 
     if (
         error
@@ -477,13 +698,18 @@ async function contarRemoto() {
 
     }
 
-    return count || 0;
+
+    return (
+        count
+        ||
+        0
+    );
 
 }
 
 
 // =====================================================
-// SUBIR
+// PROGRAMAR SUBIDA
 // =====================================================
 
 function programarSubida() {
@@ -492,37 +718,59 @@ function programarSubida() {
         temporizadorSubida
     );
 
+
     temporizadorSubida =
         setTimeout(
+
             () => {
 
                 subirPendientes();
 
             },
+
             ESPERA_SUBIDA_MS
+
         );
 
 }
 
 
+// =====================================================
+// SUBIR PENDIENTES
+// =====================================================
+
 async function subirPendientes() {
 
     if (
+
         !cliente
+
         ||
+
         !sesionActiva
+
         ||
+
+        !usuarioNubeId
+
+        ||
+
         !yaIniciado()
+
         ||
+
         subiendo
+
     ) {
 
         return;
 
     }
 
+
     const pendientes =
         obtenerPendientes();
+
 
     if (
         pendientes.length === 0
@@ -532,24 +780,30 @@ async function subirPendientes() {
 
     }
 
+
     subiendo =
         true;
+
 
     cambiarEstado(
         "sincronizando"
     );
 
+
     let huboError =
         false;
 
+
     for (
-        const clave of pendientes
+        const clave
+        of pendientes
     ) {
 
         const textoLocal =
             localStorage.getItem(
                 clave
             );
+
 
         if (
             textoLocal === null
@@ -559,11 +813,14 @@ async function subirPendientes() {
                 clave
             );
 
+
             continue;
 
         }
 
+
         let datos;
+
 
         try {
 
@@ -582,34 +839,63 @@ async function subirPendientes() {
                 clave
             );
 
+
             continue;
 
         }
 
+
         try {
 
             const {
+
                 data,
+
                 error
+
             } =
+
                 await cliente
+
                     .from(
                         TABLA
                     )
+
                     .upsert(
+
                         {
-                            clave,
-                            datos,
+
+                            user_id:
+                                usuarioNubeId,
+
+                            clave:
+                                clave,
+
+                            datos:
+                                datos,
+
                             updated_at:
                                 new Date()
                                     .toISOString(),
+
                             updated_by:
                                 obtenerDispositivo()
+
+                        },
+
+                        {
+
+                            onConflict:
+                                "user_id,clave"
+
                         }
+
                     )
+
                     .select(
                         "clave,updated_at"
                     );
+
 
             if (
                 error
@@ -619,27 +905,47 @@ async function subirPendientes() {
 
             }
 
+
             const versiones =
                 leerJSON(
                     CLAVE_VERSIONES,
                     {}
                 );
 
-            versiones[clave] =
-                data?.[0]?.updated_at
-                || "";
+
+            versiones[
+                clave
+            ] =
+
+                data
+                    ?.[0]
+                    ?.updated_at
+
+                ||
+
+                "";
+
 
             guardarJSON(
                 CLAVE_VERSIONES,
                 versiones
             );
 
-            // Si mientras subía se volvió a guardar,
-            // se deja pendiente para la siguiente vuelta.
+
+            /*
+             * Si mientras se estaba subiendo
+             * la colección volvió a cambiar,
+             * se mantiene pendiente.
+             */
+
             if (
+
                 localStorage.getItem(
                     clave
-                ) === textoLocal
+                )
+                ===
+                textoLocal
+
             ) {
 
                 quitarPendiente(
@@ -657,43 +963,67 @@ async function subirPendientes() {
             huboError =
                 true;
 
+
             mensajeError =
+
                 error?.message
-                || "No se pudo subir.";
+
+                ||
+
+                "No se pudo subir.";
+
 
             console.warn(
+
                 "GestaCamps Sync: error subiendo",
+
                 clave,
+
                 error
+
             );
 
         }
 
     }
 
+
     subiendo =
         false;
+
 
     if (
         huboError
     ) {
 
         cambiarEstado(
+
             navigator.onLine
+
                 ? "error"
+
                 : "sin-conexion"
+
         );
+
 
         return;
 
     }
 
+
     cambiarEstado(
         "sincronizado"
     );
 
+
     if (
-        obtenerPendientes().length > 0
+
+        obtenerPendientes()
+            .length
+        >
+        0
+
     ) {
 
         programarSubida();
@@ -703,6 +1033,10 @@ async function subirPendientes() {
 }
 
 
+// =====================================================
+// SUBIR TODO
+// =====================================================
+
 async function subirTodo() {
 
     obtenerClavesLocales()
@@ -710,10 +1044,12 @@ async function subirTodo() {
             marcarPendiente
         );
 
+
     localStorage.setItem(
         CLAVE_INICIADO,
         "1"
     );
+
 
     await subirPendientes();
 
@@ -721,7 +1057,7 @@ async function subirTodo() {
 
 
 // =====================================================
-// BAJAR
+// BAJAR CAMBIOS
 // =====================================================
 
 async function bajarCambios(
@@ -729,43 +1065,76 @@ async function bajarCambios(
 ) {
 
     if (
+
         !cliente
+
         ||
+
         !sesionActiva
+
         ||
+
+        !usuarioNubeId
+
+        ||
+
         bajando
+
     ) {
 
         return;
 
     }
+
 
     if (
+
         !forzarTodo
+
         &&
+
         !yaIniciado()
+
     ) {
 
         return;
 
     }
+
 
     bajando =
         true;
 
+
     try {
 
         const {
-            data: filas,
+
+            data:
+                filas,
+
             error
+
         } =
+
             await cliente
+
                 .from(
                     TABLA
                 )
+
                 .select(
                     "clave,updated_at"
+                )
+
+                .eq(
+
+                    "user_id",
+
+                    usuarioNubeId
+
                 );
+
 
         if (
             error
@@ -775,67 +1144,121 @@ async function bajarCambios(
 
         }
 
+
         const versiones =
             leerJSON(
                 CLAVE_VERSIONES,
                 {}
             );
 
+
         const pendientes =
+
             forzarTodo
+
                 ? []
+
                 : obtenerPendientes();
 
+
         const cambiadas =
-            (filas || [])
+
+            (
+                filas
+                ||
+                []
+            )
+
                 .filter(
+
                     fila =>
+
                         esClaveSincronizable(
                             fila.clave
                         )
+
                         &&
+
                         !pendientes.includes(
                             fila.clave
                         )
+
                         &&
+
                         (
+
                             forzarTodo
+
                             ||
-                            versiones[fila.clave]
-                            !== fila.updated_at
+
+                            versiones[
+                                fila.clave
+                            ]
+                            !==
+                            fila.updated_at
+
                         )
+
                 )
+
                 .map(
+
                     fila =>
                         fila.clave
+
                 );
 
+
         if (
-            cambiadas.length === 0
+            cambiadas.length ===
+            0
         ) {
 
             bajando =
                 false;
 
+
             return;
 
         }
 
+
         const {
-            data: completas,
-            error: errorDatos
+
+            data:
+                completas,
+
+            error:
+                errorDatos
+
         } =
+
             await cliente
+
                 .from(
                     TABLA
                 )
+
                 .select(
                     "clave,datos,updated_at"
                 )
+
+                .eq(
+
+                    "user_id",
+
+                    usuarioNubeId
+
+                )
+
                 .in(
+
                     "clave",
+
                     cambiadas
+
                 );
+
 
         if (
             errorDatos
@@ -845,11 +1268,18 @@ async function bajarCambios(
 
         }
 
+
         let hayDatosNuevos =
             false;
 
-        (completas || [])
+
+        (
+            completas
+            ||
+            []
+        )
             .forEach(
+
                 fila => {
 
                     const textoNuevo =
@@ -857,32 +1287,47 @@ async function bajarCambios(
                             fila.datos
                         );
 
+
                     if (
+
                         localStorage.getItem(
                             fila.clave
-                        ) !== textoNuevo
+                        )
+                        !==
+                        textoNuevo
+
                     ) {
 
                         localStorage.setItem(
+
                             fila.clave,
+
                             textoNuevo
+
                         );
+
 
                         hayDatosNuevos =
                             true;
 
                     }
 
-                    versiones[fila.clave] =
+
+                    versiones[
+                        fila.clave
+                    ] =
                         fila.updated_at;
 
                 }
+
             );
+
 
         guardarJSON(
             CLAVE_VERSIONES,
             versiones
         );
+
 
         if (
             forzarTodo
@@ -895,8 +1340,10 @@ async function bajarCambios(
 
         }
 
+
         bajando =
             false;
+
 
         if (
             hayDatosNuevos
@@ -915,19 +1362,33 @@ async function bajarCambios(
         bajando =
             false;
 
+
         mensajeError =
+
             error?.message
-            || "No se pudo descargar.";
+
+            ||
+
+            "No se pudo descargar.";
+
 
         console.warn(
+
             "GestaCamps Sync: error bajando",
+
             error
+
         );
 
+
         cambiarEstado(
+
             navigator.onLine
+
                 ? "error"
+
                 : "sin-conexion"
+
         );
 
     }
@@ -942,42 +1403,83 @@ async function bajarCambios(
 function suscribirTiempoReal() {
 
     if (
+
         canal
+
         ||
+
         !cliente
+
+        ||
+
+        !usuarioNubeId
+
     ) {
 
         return;
 
     }
 
+
     canal =
+
         cliente
+
             .channel(
-                "gc-colecciones"
+
+                `gc-colecciones-${usuarioNubeId}`
+
             )
+
             .on(
+
                 "postgres_changes",
+
                 {
-                    event: "*",
-                    schema: "public",
-                    table: TABLA
+
+                    event:
+                        "*",
+
+                    schema:
+                        "public",
+
+                    table:
+                        TABLA,
+
+                    filter:
+                        `user_id=eq.${usuarioNubeId}`
+
                 },
+
                 cambio => {
 
+                    /*
+                     * Ignoramos nuestros propios cambios.
+                     */
+
                     if (
-                        cambio?.new?.updated_by
-                        === obtenerDispositivo()
+
+                        cambio
+                            ?.new
+                            ?.updated_by
+
+                        ===
+
+                        obtenerDispositivo()
+
                     ) {
 
                         return;
 
                     }
 
+
                     bajarCambios();
 
                 }
+
             )
+
             .subscribe();
 
 }
@@ -986,71 +1488,100 @@ function suscribirTiempoReal() {
 // =====================================================
 // RECARGA SEGURA
 // =====================================================
-//
-// Los servicios de GestaCamps cargan los datos al
-// arrancar. Para que vean los datos nuevos hay que
-// recargar la página. Solo se hace cuando no se
-// está escribiendo en un formulario.
-// =====================================================
 
 function esMomentoSeguro() {
 
     const activo =
         document.activeElement;
 
+
     const escribiendo =
+
         activo
+
         &&
+
         (
+
             [
+
                 "INPUT",
+
                 "TEXTAREA",
+
                 "SELECT"
-            ].includes(
-                activo.tagName
-            )
+
+            ]
+                .includes(
+                    activo.tagName
+                )
+
             ||
+
             activo.isContentEditable
+
         );
+
 
     const dialogoAbierto =
         Boolean(
+
             document.querySelector(
                 "dialog[open]"
             )
+
         );
+
 
     const panelAbierto =
         Boolean(
+
             document.getElementById(
                 "gcsync-panel"
             )
+
         );
 
+
     return (
+
         !escribiendo
+
         &&
+
         !dialogoAbierto
+
         &&
+
         !panelAbierto
+
     );
 
 }
 
 
+// =====================================================
+// EVITAR RECARGAS EN BUCLE
+// =====================================================
+
 function recargaPermitida() {
 
-    // Protección contra recargas en bucle.
     let registro;
+
 
     try {
 
         registro =
             JSON.parse(
+
                 sessionStorage.getItem(
                     CLAVE_RECARGAS
                 )
-                || "[]"
+
+                ||
+
+                "[]"
+
             );
 
     }
@@ -1064,44 +1595,66 @@ function recargaPermitida() {
 
     }
 
+
     const ahora =
         Date.now();
 
+
     registro =
         registro.filter(
+
             momento =>
-                ahora - momento < 20000
+
+                ahora
+                -
+                momento
+                <
+                20000
+
         );
 
+
     if (
-        registro.length >= 3
+        registro.length >=
+        3
     ) {
 
         return false;
 
     }
 
+
     registro.push(
         ahora
     );
 
+
     sessionStorage.setItem(
+
         CLAVE_RECARGAS,
+
         JSON.stringify(
             registro
         )
+
     );
+
 
     return true;
 
 }
 
 
+// =====================================================
+// PEDIR RECARGA
+// =====================================================
+
 function pedirRecarga() {
 
     cambiarEstado(
         "datos-nuevos"
     );
+
 
     if (
         temporizadorRecarga
@@ -1111,8 +1664,10 @@ function pedirRecarga() {
 
     }
 
+
     temporizadorRecarga =
         setInterval(
+
             () => {
 
                 if (
@@ -1123,12 +1678,15 @@ function pedirRecarga() {
 
                 }
 
+
                 clearInterval(
                     temporizadorRecarga
                 );
 
+
                 temporizadorRecarga =
                     null;
+
 
                 if (
                     recargaPermitida()
@@ -1139,180 +1697,485 @@ function pedirRecarga() {
                 }
 
             },
+
             1200
+
         );
 
 }
 
 
 // =====================================================
-// INTERFAZ: INDICADOR Y PANEL
+// TEXTOS DE ESTADO
 // =====================================================
 
 const TEXTOS_ESTADO = {
 
-    "local": {
-        texto: "",
-        color: "#9aa59d"
+    local: {
+
+        texto:
+            "",
+
+        color:
+            "#9aa59d"
+
     },
 
-    "desconectado": {
-        texto: "Conectar nube",
-        color: "#9aa59d"
+
+    desconectado: {
+
+        texto:
+            "Conectar nube",
+
+        color:
+            "#9aa59d"
+
     },
 
-    "elegir": {
-        texto: "Elegir datos",
-        color: "#d9a520"
+
+    elegir: {
+
+        texto:
+            "Elegir datos",
+
+        color:
+            "#d9a520"
+
     },
 
-    "sincronizando": {
-        texto: "",
-        color: "#d9a520"
+
+    sincronizando: {
+
+        texto:
+            "",
+
+        color:
+            "#d9a520"
+
     },
 
-    "sincronizado": {
-        texto: "",
-        color: "#2e9e5b"
+
+    sincronizado: {
+
+        texto:
+            "",
+
+        color:
+            "#2e9e5b"
+
     },
+
 
     "datos-nuevos": {
-        texto: "Datos nuevos…",
-        color: "#2e9e5b"
+
+        texto:
+            "Datos nuevos…",
+
+        color:
+            "#2e9e5b"
+
     },
+
 
     "sin-conexion": {
-        texto: "Sin conexión",
-        color: "#d9a520"
+
+        texto:
+            "Sin conexión",
+
+        color:
+            "#d9a520"
+
     },
 
-    "error": {
-        texto: "Error de nube",
-        color: "#c0392b"
+
+    error: {
+
+        texto:
+            "Error de nube",
+
+        color:
+            "#c0392b"
+
     }
 
 };
 
 
+// =====================================================
+// ESTILOS DEL PANEL DE NUBE
+// =====================================================
+
 function insertarEstilos() {
 
     if (
+
         document.getElementById(
             "gcsync-estilos"
         )
+
     ) {
 
         return;
 
     }
 
+
     const estilos =
         document.createElement(
             "style"
         );
 
+
     estilos.id =
         "gcsync-estilos";
 
+
     estilos.textContent = `
+
         #gcsync-indicador {
+
             position: fixed;
+
             right: 12px;
-            bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+
+            bottom:
+                calc(
+                    12px
+                    +
+                    env(
+                        safe-area-inset-bottom,
+                        0px
+                    )
+                );
+
             z-index: 9000;
+
             display: flex;
+
             align-items: center;
+
             gap: 8px;
+
             min-height: 28px;
-            padding: 6px 10px;
-            border: 1px solid rgba(20, 60, 40, 0.14);
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.94);
-            color: #1f3d2b;
-            font: 600 12px/1 system-ui, sans-serif;
-            box-shadow: 0 4px 14px rgba(20, 60, 40, 0.12);
-            cursor: pointer;
+
+            padding:
+                6px
+                10px;
+
+            border:
+                1px
+                solid
+                rgba(
+                    20,
+                    60,
+                    40,
+                    0.14
+                );
+
+            border-radius:
+                999px;
+
+            background:
+                rgba(
+                    255,
+                    255,
+                    255,
+                    0.94
+                );
+
+            color:
+                #1f3d2b;
+
+            font:
+                600
+                12px/1
+                system-ui,
+                sans-serif;
+
+            box-shadow:
+                0
+                4px
+                14px
+                rgba(
+                    20,
+                    60,
+                    40,
+                    0.12
+                );
+
+            cursor:
+                pointer;
+
         }
-        #gcsync-indicador .gcsync-punto {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            flex: none;
+
+
+        #gcsync-indicador
+        .gcsync-punto {
+
+            width:
+                10px;
+
+            height:
+                10px;
+
+            border-radius:
+                50%;
+
+            flex:
+                none;
+
         }
+
+
         #gcsync-fondo {
-            position: fixed;
-            inset: 0;
-            z-index: 9001;
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding: 16px;
-            background: rgba(15, 35, 25, 0.45);
+
+            position:
+                fixed;
+
+            inset:
+                0;
+
+            z-index:
+                9001;
+
+            display:
+                flex;
+
+            align-items:
+                flex-end;
+
+            justify-content:
+                center;
+
+            padding:
+                16px;
+
+            background:
+                rgba(
+                    15,
+                    35,
+                    25,
+                    0.45
+                );
+
         }
-        @media (min-width: 640px) {
+
+
+        @media (
+            min-width:
+            640px
+        ) {
+
             #gcsync-fondo {
-                align-items: center;
+
+                align-items:
+                    center;
+
             }
+
         }
+
+
         #gcsync-panel {
-            width: 100%;
-            max-width: 380px;
-            padding: 22px;
-            border-radius: 20px;
-            background: #fbfaf6;
-            color: #1f3d2b;
-            font: 400 14px/1.45 system-ui, sans-serif;
-            box-shadow: 0 20px 50px rgba(15, 35, 25, 0.3);
+
+            width:
+                100%;
+
+            max-width:
+                380px;
+
+            padding:
+                22px;
+
+            border-radius:
+                20px;
+
+            background:
+                #fbfaf6;
+
+            color:
+                #1f3d2b;
+
+            font:
+                400
+                14px/1.45
+                system-ui,
+                sans-serif;
+
+            box-shadow:
+                0
+                20px
+                50px
+                rgba(
+                    15,
+                    35,
+                    25,
+                    0.3
+                );
+
         }
-        #gcsync-panel h3 {
-            margin: 0 0 6px;
-            font-size: 18px;
+
+
+        #gcsync-panel
+        h3 {
+
+            margin:
+                0
+                0
+                6px;
+
+            font-size:
+                18px;
+
         }
-        #gcsync-panel p {
-            margin: 0 0 14px;
-            color: #55685c;
+
+
+        #gcsync-panel
+        p {
+
+            margin:
+                0
+                0
+                14px;
+
+            color:
+                #55685c;
+
         }
-        #gcsync-panel label {
-            display: block;
-            margin: 0 0 4px;
-            font-weight: 600;
-            font-size: 13px;
+
+
+        #gcsync-panel
+        label {
+
+            display:
+                block;
+
+            margin:
+                0
+                0
+                4px;
+
+            font-weight:
+                600;
+
+            font-size:
+                13px;
+
         }
-        #gcsync-panel input {
-            width: 100%;
-            box-sizing: border-box;
-            margin: 0 0 12px;
-            padding: 12px;
-            border: 1px solid #cfd8d1;
-            border-radius: 12px;
-            background: #fff;
-            font-size: 16px;
+
+
+        #gcsync-panel
+        input {
+
+            width:
+                100%;
+
+            box-sizing:
+                border-box;
+
+            margin:
+                0
+                0
+                12px;
+
+            padding:
+                12px;
+
+            border:
+                1px
+                solid
+                #cfd8d1;
+
+            border-radius:
+                12px;
+
+            background:
+                #ffffff;
+
+            font-size:
+                16px;
+
         }
-        #gcsync-panel button {
-            width: 100%;
-            margin: 0 0 8px;
-            padding: 13px;
-            border: 0;
-            border-radius: 12px;
-            background: #1f4d36;
-            color: #fff;
-            font: 600 15px/1 system-ui, sans-serif;
-            cursor: pointer;
+
+
+        #gcsync-panel
+        button {
+
+            width:
+                100%;
+
+            margin:
+                0
+                0
+                8px;
+
+            padding:
+                13px;
+
+            border:
+                0;
+
+            border-radius:
+                12px;
+
+            background:
+                #1f4d36;
+
+            color:
+                #ffffff;
+
+            font:
+                600
+                15px/1
+                system-ui,
+                sans-serif;
+
+            cursor:
+                pointer;
+
         }
-        #gcsync-panel button.gcsync-secundario {
-            background: #e7ece6;
-            color: #1f3d2b;
+
+
+        #gcsync-panel
+        button.gcsync-secundario {
+
+            background:
+                #e7ece6;
+
+            color:
+                #1f3d2b;
+
         }
-        #gcsync-panel button.gcsync-texto {
-            background: transparent;
-            color: #55685c;
-            margin: 0;
+
+
+        #gcsync-panel
+        button.gcsync-texto {
+
+            background:
+                transparent;
+
+            color:
+                #55685c;
+
+            margin:
+                0;
+
         }
-        #gcsync-panel .gcsync-aviso {
-            color: #c0392b;
-            font-weight: 600;
+
+
+        #gcsync-panel
+        .gcsync-aviso {
+
+            color:
+                #c0392b;
+
+            font-weight:
+                600;
+
         }
+
     `;
+
 
     document.head.appendChild(
         estilos
@@ -1320,6 +2183,10 @@ function insertarEstilos() {
 
 }
 
+
+// =====================================================
+// INDICADOR
+// =====================================================
 
 function pintarIndicador() {
 
@@ -1331,12 +2198,15 @@ function pintarIndicador() {
 
     }
 
+
     insertarEstilos();
+
 
     let indicador =
         document.getElementById(
             "gcsync-indicador"
         );
+
 
     if (
         !indicador
@@ -1347,16 +2217,20 @@ function pintarIndicador() {
                 "button"
             );
 
+
         indicador.id =
             "gcsync-indicador";
 
+
         indicador.type =
             "button";
+
 
         indicador.addEventListener(
             "click",
             abrirPanel
         );
+
 
         document.body.appendChild(
             indicador
@@ -1364,28 +2238,54 @@ function pintarIndicador() {
 
     }
 
+
     const info =
-        TEXTOS_ESTADO[estado]
-        || TEXTOS_ESTADO.local;
+
+        TEXTOS_ESTADO[
+            estado
+        ]
+
+        ||
+
+        TEXTOS_ESTADO.local;
+
 
     indicador.style.display =
-        estado === "local"
+
+        estado ===
+        "local"
+
             ? "none"
+
             : "flex";
+
 
     indicador.title =
         "Nube GestaCamps";
 
+
     indicador.innerHTML =
+
         `<span class="gcsync-punto" style="background:${info.color}"></span>`
-        + (
+
+        +
+
+        (
+
             info.texto
+
                 ? `<span>${info.texto}</span>`
+
                 : ""
+
         );
 
 }
 
+
+// =====================================================
+// CAMBIAR ESTADO
+// =====================================================
 
 function cambiarEstado(
     nuevoEstado
@@ -1394,54 +2294,75 @@ function cambiarEstado(
     estado =
         nuevoEstado;
 
+
     pintarIndicador();
 
 }
 
 
+// =====================================================
+// CERRAR PANEL
+// =====================================================
+
 function cerrarPanel() {
 
     document
+
         .getElementById(
             "gcsync-fondo"
         )
+
         ?.remove();
 
 }
 
 
+// =====================================================
+// ABRIR PANEL
+// =====================================================
+
 function abrirPanel() {
 
     cerrarPanel();
 
+
     insertarEstilos();
+
 
     const fondo =
         document.createElement(
             "div"
         );
 
+
     fondo.id =
         "gcsync-fondo";
+
 
     const panel =
         document.createElement(
             "div"
         );
 
+
     panel.id =
         "gcsync-panel";
+
 
     fondo.appendChild(
         panel
     );
 
+
     fondo.addEventListener(
+
         "click",
+
         event => {
 
             if (
-                event.target === fondo
+                event.target ===
+                fondo
             ) {
 
                 cerrarPanel();
@@ -1449,7 +2370,9 @@ function abrirPanel() {
             }
 
         }
+
     );
+
 
     if (
         !sesionActiva
@@ -1479,6 +2402,7 @@ function abrirPanel() {
 
     }
 
+
     document.body.appendChild(
         fondo
     );
@@ -1486,77 +2410,154 @@ function abrirPanel() {
 }
 
 
+// =====================================================
+// PANEL LOGIN SUPABASE
+// =====================================================
+
 function pintarPanelEntrada(
     panel
 ) {
 
     panel.innerHTML = `
-        <h3>Conectar con la nube</h3>
-        <p>Entra con la cuenta de la explotación para compartir los datos entre dispositivos.</p>
+
+        <h3>
+            Conectar con la nube
+        </h3>
+
+        <p>
+            Entra con la cuenta de la explotación para compartir los datos entre dispositivos.
+        </p>
+
         <form id="gcsync-form">
-            <label for="gcsync-email">Email</label>
-            <input id="gcsync-email" type="email" autocomplete="username" required>
-            <label for="gcsync-clave">Contraseña</label>
-            <input id="gcsync-clave" type="password" autocomplete="current-password" required>
-            <p class="gcsync-aviso" id="gcsync-aviso"></p>
-            <button type="submit">Conectar</button>
-            <button type="button" class="gcsync-texto" id="gcsync-cerrar">Seguir solo en este dispositivo</button>
+
+            <label for="gcsync-email">
+                Email
+            </label>
+
+            <input
+                id="gcsync-email"
+                type="email"
+                autocomplete="username"
+                required
+            >
+
+            <label for="gcsync-clave">
+                Contraseña
+            </label>
+
+            <input
+                id="gcsync-clave"
+                type="password"
+                autocomplete="current-password"
+                required
+            >
+
+            <p
+                class="gcsync-aviso"
+                id="gcsync-aviso"
+            ></p>
+
+            <button type="submit">
+                Conectar
+            </button>
+
+            <button
+                type="button"
+                class="gcsync-texto"
+                id="gcsync-cerrar"
+            >
+                Seguir solo en este dispositivo
+            </button>
+
         </form>
+
     `;
 
+
     panel
+
         .querySelector(
             "#gcsync-cerrar"
         )
+
         .addEventListener(
             "click",
             cerrarPanel
         );
 
+
     panel
+
         .querySelector(
             "#gcsync-form"
         )
+
         .addEventListener(
+
             "submit",
+
             async event => {
 
                 event.preventDefault();
+
 
                 const aviso =
                     panel.querySelector(
                         "#gcsync-aviso"
                     );
 
+
                 aviso.textContent =
                     "Conectando…";
+
 
                 try {
 
                     const supabase =
                         await obtenerCliente();
 
+
                     const {
+
+                        data,
+
                         error
+
                     } =
-                        await supabase.auth
+
+                        await supabase
+                            .auth
                             .signInWithPassword(
+
                                 {
+
                                     email:
+
                                         panel
+
                                             .querySelector(
                                                 "#gcsync-email"
                                             )
+
                                             .value
+
                                             .trim(),
+
+
                                     password:
+
                                         panel
+
                                             .querySelector(
                                                 "#gcsync-clave"
                                             )
+
                                             .value
+
                                 }
+
                             );
+
 
                     if (
                         error
@@ -1566,10 +2567,50 @@ function pintarPanelEntrada(
 
                     }
 
+
+                    usuarioNubeId =
+
+                        data?.user?.id
+
+                        ||
+
+                        data
+                            ?.session
+                            ?.user
+                            ?.id
+
+                        ||
+
+                        null;
+
+
                     sesionActiva =
-                        true;
+                        Boolean(
+                            usuarioNubeId
+                        );
+
+
+                    if (
+                        !sesionActiva
+                    ) {
+
+                        throw new Error(
+                            "No se pudo identificar el usuario de Supabase."
+                        );
+
+                    }
+
+
+                    /*
+                     * Las marcas de sincronización pertenecen
+                     * a la cuenta conectada.
+                     *
+                     * Al cambiar de usuario, empezamos
+                     * la negociación de datos de nuevo.
+                     */
 
                     cerrarPanel();
+
 
                     await despuesDeEntrar();
 
@@ -1580,82 +2621,155 @@ function pintarPanelEntrada(
                 ) {
 
                     aviso.textContent =
+
                         error?.message
-                            === "Invalid login credentials"
+                        ===
+                        "Invalid login credentials"
+
                             ? "Email o contraseña incorrectos."
+
                             : (
+
                                 "No se pudo conectar: "
-                                + (
+
+                                +
+
+                                (
+
                                     error?.message
-                                    || "sin internet"
+
+                                    ||
+
+                                    "sin internet"
+
                                 )
+
                             );
 
                 }
 
             }
+
         );
 
 }
 
+
+// =====================================================
+// PANEL ELEGIR DATOS
+// =====================================================
 
 function pintarPanelEleccion(
     panel
 ) {
 
     panel.innerHTML = `
-        <h3>¿Qué datos mandan?</h3>
-        <p>En la nube ya hay datos de GestaCamps. Elige qué hacer en este dispositivo. Solo se pregunta la primera vez.</p>
-        <button type="button" id="gcsync-bajar">Descargar los datos de la nube</button>
-        <button type="button" class="gcsync-secundario" id="gcsync-subir">Subir los datos de este dispositivo</button>
-        <p class="gcsync-aviso" id="gcsync-aviso"></p>
-        <button type="button" class="gcsync-texto" id="gcsync-cerrar">Decidir más tarde</button>
+
+        <h3>
+            ¿Qué datos mandan?
+        </h3>
+
+        <p>
+            En la nube ya hay datos de GestaCamps.
+            Elige qué hacer en este dispositivo.
+            Solo se pregunta la primera vez.
+        </p>
+
+        <button
+            type="button"
+            id="gcsync-bajar"
+        >
+            Descargar los datos de la nube
+        </button>
+
+        <button
+            type="button"
+            class="gcsync-secundario"
+            id="gcsync-subir"
+        >
+            Subir los datos de este dispositivo
+        </button>
+
+        <p
+            class="gcsync-aviso"
+            id="gcsync-aviso"
+        ></p>
+
+        <button
+            type="button"
+            class="gcsync-texto"
+            id="gcsync-cerrar"
+        >
+            Decidir más tarde
+        </button>
+
     `;
 
+
     panel
+
         .querySelector(
             "#gcsync-cerrar"
         )
+
         .addEventListener(
             "click",
             cerrarPanel
         );
 
+
     panel
+
         .querySelector(
             "#gcsync-bajar"
         )
+
         .addEventListener(
+
             "click",
+
             async () => {
 
                 if (
+
                     !window.confirm(
                         "Los datos de este dispositivo se sustituirán por los de la nube. ¿Continuar?"
                     )
+
                 ) {
 
                     return;
 
                 }
 
+
                 localStorage.setItem(
                     CLAVE_INICIADO,
                     "1"
                 );
 
+
                 cerrarPanel();
+
 
                 await bajarCambios(
                     true
                 );
 
+
                 suscribirTiempoReal();
 
+
                 if (
-                    estado !== "datos-nuevos"
+
+                    estado !==
+                    "datos-nuevos"
+
                     &&
-                    estado !== "error"
+
+                    estado !==
+                    "error"
+
                 ) {
 
                     cambiarEstado(
@@ -1665,127 +2779,223 @@ function pintarPanelEleccion(
                 }
 
             }
+
         );
 
+
     panel
+
         .querySelector(
             "#gcsync-subir"
         )
+
         .addEventListener(
+
             "click",
+
             async () => {
 
                 if (
+
                     !window.confirm(
                         "Los datos de la nube se sustituirán por los de este dispositivo. ¿Continuar?"
                     )
+
                 ) {
 
                     return;
 
                 }
 
+
                 cerrarPanel();
 
+
                 await subirTodo();
+
 
                 suscribirTiempoReal();
 
             }
+
         );
 
 }
 
+
+// =====================================================
+// PANEL CONECTADO
+// =====================================================
 
 function pintarPanelConectado(
     panel
 ) {
 
     const pendientes =
-        obtenerPendientes().length;
+        obtenerPendientes()
+            .length;
+
 
     panel.innerHTML = `
-        <h3>Nube GestaCamps</h3>
+
+        <h3>
+            Nube GestaCamps
+        </h3>
+
         <p>
+
             ${
-                estado === "error"
-                    ? "Error: " + mensajeError
-                    : estado === "sin-conexion"
+
+                estado ===
+                "error"
+
+                    ? "Error: "
+                        +
+                        mensajeError
+
+                    : estado ===
+                        "sin-conexion"
+
                         ? "Sin conexión. Los cambios se guardan aquí y se subirán al volver internet."
+
                         : "Conectado. Los cambios se comparten entre dispositivos."
+
             }
+
             ${
+
                 pendientes > 0
-                    ? "<br>Cambios por subir: " + pendientes
+
+                    ? "<br>Cambios por subir: "
+                        +
+                        pendientes
+
                     : ""
+
             }
+
         </p>
-        <button type="button" id="gcsync-ahora">Sincronizar ahora</button>
-        <button type="button" class="gcsync-secundario" id="gcsync-subir-todo">Subir todos los datos de este dispositivo</button>
-        <button type="button" class="gcsync-secundario" id="gcsync-salir">Desconectar la nube</button>
-        <button type="button" class="gcsync-texto" id="gcsync-cerrar">Cerrar</button>
+
+        <button
+            type="button"
+            id="gcsync-ahora"
+        >
+            Sincronizar ahora
+        </button>
+
+        <button
+            type="button"
+            class="gcsync-secundario"
+            id="gcsync-subir-todo"
+        >
+            Subir todos los datos de este dispositivo
+        </button>
+
+        <button
+            type="button"
+            class="gcsync-secundario"
+            id="gcsync-salir"
+        >
+            Desconectar la nube
+        </button>
+
+        <button
+            type="button"
+            class="gcsync-texto"
+            id="gcsync-cerrar"
+        >
+            Cerrar
+        </button>
+
     `;
 
+
     panel
+
         .querySelector(
             "#gcsync-cerrar"
         )
+
         .addEventListener(
             "click",
             cerrarPanel
         );
 
+
     panel
+
         .querySelector(
             "#gcsync-ahora"
         )
+
         .addEventListener(
+
             "click",
+
             async () => {
 
                 cerrarPanel();
 
+
                 await subirPendientes();
+
 
                 await bajarCambios();
 
             }
+
         );
 
+
     panel
+
         .querySelector(
             "#gcsync-subir-todo"
         )
+
         .addEventListener(
+
             "click",
+
             async () => {
 
                 if (
+
                     !window.confirm(
                         "Los datos de la nube se sustituirán por los de este dispositivo. ¿Continuar?"
                     )
+
                 ) {
 
                     return;
 
                 }
 
+
                 cerrarPanel();
+
 
                 await subirTodo();
 
             }
+
         );
 
+
     panel
+
         .querySelector(
             "#gcsync-salir"
         )
+
         .addEventListener(
+
             "click",
+
             async () => {
 
                 cerrarPanel();
+
 
                 try {
 
@@ -1793,16 +3003,20 @@ function pintarPanelConectado(
                         canal
                     ) {
 
-                        await cliente.removeChannel(
-                            canal
-                        );
+                        await cliente
+                            .removeChannel(
+                                canal
+                            );
+
 
                         canal =
                             null;
 
                     }
 
-                    await cliente.auth
+
+                    await cliente
+                        .auth
                         .signOut();
 
                 }
@@ -1812,39 +3026,46 @@ function pintarPanelConectado(
                 ) {
 
                     console.warn(
+
                         "GestaCamps Sync: error al desconectar",
+
                         error
+
                     );
 
                 }
 
+
                 sesionActiva =
                     false;
+
+
+                usuarioNubeId =
+                    null;
+
 
                 localStorage.removeItem(
                     CLAVE_INICIADO
                 );
+
 
                 cambiarEstado(
                     "desconectado"
                 );
 
             }
+
         );
 
 }
 
 
 // =====================================================
-// API PÚBLICA
+// API PÚBLICA DE SINCRONIZACIÓN
 // =====================================================
 
 const SupabaseSync = {
 
-    /*
-     * Lo llama StorageService.escribir()
-     * cada vez que se guarda algo.
-     */
     registrarEscritura(
         clave
     ) {
@@ -1852,18 +3073,22 @@ const SupabaseSync = {
         try {
 
             if (
+
                 !esClaveSincronizable(
                     clave
                 )
+
             ) {
 
                 return;
 
             }
 
+
             marcarPendiente(
                 clave
             );
+
 
             programarSubida();
 
@@ -1874,8 +3099,11 @@ const SupabaseSync = {
         ) {
 
             console.warn(
+
                 "GestaCamps Sync: aviso de escritura fallido",
+
                 error
+
             );
 
         }
@@ -1886,34 +3114,49 @@ const SupabaseSync = {
     iniciar() {
 
         if (
+
             iniciadoModulo
+
             ||
-            typeof window === "undefined"
+
+            typeof window ===
+            "undefined"
+
         ) {
 
             return;
 
         }
 
+
         iniciadoModulo =
             true;
+
 
         const empezar =
             () => {
 
                 pintarIndicador();
 
+
                 arrancarConexion();
 
             };
 
+
         if (
-            document.readyState === "loading"
+
+            document.readyState ===
+            "loading"
+
         ) {
 
             document.addEventListener(
+
                 "DOMContentLoaded",
+
                 empezar
+
             );
 
         }
@@ -1924,31 +3167,45 @@ const SupabaseSync = {
 
         }
 
+
         window.addEventListener(
+
             "online",
+
             async () => {
 
                 if (
+
                     !cliente
+
                     ||
+
                     !sesionActiva
+
                 ) {
 
                     await arrancarConexion();
+
 
                     return;
 
                 }
 
+
                 await subirPendientes();
+
 
                 await bajarCambios();
 
             }
+
         );
 
+
         window.addEventListener(
+
             "offline",
+
             () => {
 
                 if (
@@ -1962,50 +3219,68 @@ const SupabaseSync = {
                 }
 
             }
+
         );
 
+
         document.addEventListener(
+
             "visibilitychange",
+
             () => {
 
                 if (
+
                     document.visibilityState
-                    === "visible"
+                    ===
+                    "visible"
+
                 ) {
 
                     subirPendientes();
+
 
                     bajarCambios();
 
                 }
 
             }
+
         );
 
+
         setInterval(
+
             () => {
 
                 if (
+
                     document.visibilityState
-                    === "visible"
+                    ===
+                    "visible"
+
                     &&
+
                     navigator.onLine
+
                 ) {
 
                     subirPendientes();
+
 
                     bajarCambios();
 
                 }
 
             },
+
             INTERVALO_REVISION_MS
+
         );
 
     }
 
 };
-
 
 
 // =====================================================
@@ -2017,65 +3292,86 @@ const CLAVES = {
     FINCAS:
         "gestacamps_fincas",
 
+
     CULTIVOS:
         "gestacamps_cultivos",
+
 
     CUADERNO_CAMPO:
         "gestacamps_cuaderno_campo",
 
+
     TRATAMIENTOS:
         "gestacamps_tratamientos",
+
 
     TRABAJOS:
         "gestacamps_trabajos",
 
+
     TRABAJADORES:
         "gestacamps_trabajadores",
+
 
     USUARIOS:
         "gestacamps_usuarios",
 
+
     FICHAJES:
         "gestacamps_fichajes",
+
 
     INCIDENCIAS:
         "gestacamps_incidencias",
 
+
     MAQUINARIA:
         "gestacamps_maquinaria",
+
 
     INVENTARIO:
         "gestacamps_inventario",
 
+
     PRODUCCION:
         "gestacamps_produccion",
+
 
     ALBARANES:
         "gestacamps_albaranes",
 
+
     FACTURAS:
         "gestacamps_facturas",
+
 
     GASTOS:
         "gestacamps_gastos",
 
+
     CLIENTES_PROVEEDORES:
         "gestacamps_clientes_proveedores",
+
 
     COBROS_PAGOS:
         "gestacamps_cobros_pagos",
 
+
     CAMPANIAS:
         "gestacamps_campanias",
+
 
     EXPLOTACION:
         "gestacamps_explotacion",
 
+
     HISTORIAL:
         "gestacamps_historial",
 
+
     SESION_TRABAJADOR:
         "gestacamps_trabajador_sesion",
+
 
     SESION_ADMIN:
         "gestacamps_admin_sesion"
@@ -2100,8 +3396,10 @@ const NOMBRES_ROL = {
     administrador:
         "Administrador",
 
+
     encargado:
         "Encargado",
+
 
     trabajador:
         "Trabajador"
@@ -2116,147 +3414,200 @@ const NOMBRES_ROL = {
 const COLECCIONES = {
 
     fincas: {
+
         clave:
             CLAVES.FINCAS,
 
         modulo:
             "Fincas"
+
     },
 
+
     cultivos: {
+
         clave:
             CLAVES.CULTIVOS,
 
         modulo:
             "Cultivos"
+
     },
 
+
     cuadernoCampo: {
+
         clave:
             CLAVES.CUADERNO_CAMPO,
 
         modulo:
             "Cuaderno de campo"
+
     },
 
+
     tratamientos: {
+
         clave:
             CLAVES.TRATAMIENTOS,
 
         modulo:
             "Tratamientos"
+
     },
 
+
     trabajos: {
+
         clave:
             CLAVES.TRABAJOS,
 
         modulo:
             "Trabajos"
+
     },
 
+
     trabajadores: {
+
         clave:
             CLAVES.TRABAJADORES,
 
         modulo:
             "Trabajadores"
+
     },
 
+
     usuarios: {
+
         clave:
             CLAVES.USUARIOS,
 
         modulo:
             "Usuarios"
+
     },
 
+
     fichajes: {
+
         clave:
             CLAVES.FICHAJES,
 
         modulo:
             "Fichajes"
+
     },
 
+
     incidencias: {
+
         clave:
             CLAVES.INCIDENCIAS,
 
         modulo:
             "Incidencias"
+
     },
 
+
     maquinaria: {
+
         clave:
             CLAVES.MAQUINARIA,
 
         modulo:
             "Maquinaria"
+
     },
 
+
     inventario: {
+
         clave:
             CLAVES.INVENTARIO,
 
         modulo:
             "Inventario"
+
     },
 
+
     produccion: {
+
         clave:
             CLAVES.PRODUCCION,
 
         modulo:
             "Producción"
+
     },
 
+
     albaranes: {
+
         clave:
             CLAVES.ALBARANES,
 
         modulo:
             "Albaranes"
+
     },
 
+
     facturas: {
+
         clave:
             CLAVES.FACTURAS,
 
         modulo:
             "Facturación"
+
     },
 
+
     gastos: {
+
         clave:
             CLAVES.GASTOS,
 
         modulo:
             "Gastos"
+
     },
 
+
     clientesProveedores: {
+
         clave:
             CLAVES.CLIENTES_PROVEEDORES,
 
         modulo:
             "Clientes y Proveedores"
+
     },
 
+
     cobrosPagos: {
+
         clave:
             CLAVES.COBROS_PAGOS,
 
         modulo:
             "Cobros y pagos"
+
     },
 
+
     campanias: {
+
         clave:
             CLAVES.CAMPANIAS,
 
         modulo:
             "Campanyas"
+
     }
 
 };
@@ -2286,7 +3637,8 @@ export class StorageService {
 
 
             if (
-                valor === null
+                valor ===
+                null
             ) {
 
                 return valorDefecto;
@@ -2329,17 +3681,21 @@ export class StorageService {
         try {
 
             localStorage.setItem(
+
                 clave,
+
                 JSON.stringify(
                     valor
                 )
+
             );
 
 
             /*
-             * Copia en la nube (Supabase).
-             * Si falla, el guardado local sigue siendo válido.
+             * La copia local es siempre la primera.
+             * Después notificamos al sincronizador.
              */
+
             SupabaseSync.registrarEscritura(
                 clave
             );
@@ -2402,9 +3758,11 @@ export class StorageService {
 
 
         if (
+
             !Array.isArray(
                 datos
             )
+
         ) {
 
             console.error(
@@ -2452,9 +3810,11 @@ export class StorageService {
 
 
         if (
+
             !Array.isArray(
                 datos
             )
+
         ) {
 
             console.error(
@@ -2467,11 +3827,16 @@ export class StorageService {
         }
 
 
-        return this.guardarColeccionConAuditoria(
-            configuracion.clave,
-            datos,
-            configuracion.modulo
-        );
+        return this
+            .guardarColeccionConAuditoria(
+
+                configuracion.clave,
+
+                datos,
+
+                configuracion.modulo
+
+            );
 
     }
 
@@ -2510,21 +3875,29 @@ export class StorageService {
 
 
         if (
+
             Array.isArray(
                 datosAnteriores
             )
+
             &&
+
             Array.isArray(
                 datosNuevos
             )
+
         ) {
 
             try {
 
                 this.compararColeccion(
+
                     datosAnteriores,
+
                     datosNuevos,
+
                     modulo
+
                 );
 
             }
@@ -2571,23 +3944,35 @@ export class StorageService {
 
 
         this.auditarCreaciones(
+
             mapaAnterior,
+
             mapaNuevo,
+
             modulo
+
         );
 
 
         this.auditarEliminaciones(
+
             mapaAnterior,
+
             mapaNuevo,
+
             modulo
+
         );
 
 
         this.auditarModificaciones(
+
             mapaAnterior,
+
             mapaNuevo,
+
             modulo
+
         );
 
     }
@@ -2606,16 +3991,23 @@ export class StorageService {
 
 
         elementos.forEach(
+
             elemento => {
 
                 if (
+
                     !elemento
+
                     ||
+
                     elemento.id ===
                     undefined
+
                     ||
+
                     elemento.id ===
                     null
+
                 ) {
 
                     return;
@@ -2624,13 +4016,17 @@ export class StorageService {
 
 
                 mapa.set(
+
                     String(
                         elemento.id
                     ),
+
                     elemento
+
                 );
 
             }
+
         );
 
 
@@ -2650,15 +4046,18 @@ export class StorageService {
     ) {
 
         mapaNuevo.forEach(
+
             (
                 item,
                 id
             ) => {
 
                 if (
+
                     mapaAnterior.has(
                         id
                     )
+
                 ) {
 
                     return;
@@ -2667,29 +4066,36 @@ export class StorageService {
 
 
                 this.registrarAuditoria(
+
                     {
 
                         modulo:
                             modulo,
 
+
                         accion:
                             "Creación",
 
+
                         entidadId:
                             item.id,
+
 
                         referencia:
                             this.obtenerReferencia(
                                 item
                             ),
 
+
                         cambios:
                             []
 
                     }
+
                 );
 
             }
+
         );
 
     }
@@ -2706,15 +4112,18 @@ export class StorageService {
     ) {
 
         mapaAnterior.forEach(
+
             (
                 item,
                 id
             ) => {
 
                 if (
+
                     mapaNuevo.has(
                         id
                     )
+
                 ) {
 
                     return;
@@ -2723,29 +4132,36 @@ export class StorageService {
 
 
                 this.registrarAuditoria(
+
                     {
 
                         modulo:
                             modulo,
 
+
                         accion:
                             "Eliminación",
 
+
                         entidadId:
                             item.id,
+
 
                         referencia:
                             this.obtenerReferencia(
                                 item
                             ),
 
+
                         cambios:
                             []
 
                     }
+
                 );
 
             }
+
         );
 
     }
@@ -2762,6 +4178,7 @@ export class StorageService {
     ) {
 
         mapaNuevo.forEach(
+
             (
                 itemNuevo,
                 id
@@ -2783,10 +4200,12 @@ export class StorageService {
 
 
                 if (
+
                     this.sonIguales(
                         itemAnterior,
                         itemNuevo
                     )
+
                 ) {
 
                     return;
@@ -2796,39 +4215,53 @@ export class StorageService {
 
                 const cambios =
                     this.obtenerCamposModificados(
+
                         itemAnterior,
+
                         itemNuevo
+
                     );
 
 
                 this.registrarAuditoria(
+
                     {
 
                         modulo:
                             modulo,
 
+
                         accion:
                             this.detectarAccionEspecial(
+
                                 modulo,
+
                                 itemAnterior,
+
                                 itemNuevo
+
                             ),
+
 
                         entidadId:
                             itemNuevo.id,
+
 
                         referencia:
                             this.obtenerReferencia(
                                 itemNuevo
                             ),
 
+
                         cambios:
                             cambios
 
                     }
+
                 );
 
             }
+
         );
 
     }
@@ -2844,13 +4277,17 @@ export class StorageService {
     ) {
 
         return (
+
             JSON.stringify(
                 valorA
             )
+
             ===
+
             JSON.stringify(
                 valorB
             )
+
         );
 
     }
@@ -2867,8 +4304,10 @@ export class StorageService {
     ) {
 
         if (
+
             anterior.estado ===
             nuevo.estado
+
         ) {
 
             return "Modificación";
@@ -2890,9 +4329,11 @@ export class StorageService {
 
 
         if (
+
             modulosConEstado.includes(
                 modulo
             )
+
         ) {
 
             return (
@@ -2926,19 +4367,29 @@ export class StorageService {
 
 
         return Object
+
             .keys(
+
                 {
+
                     ...anterior,
+
                     ...nuevo
+
                 }
+
             )
+
             .filter(
+
                 campo => {
 
                     if (
+
                         camposIgnorados.includes(
                             campo
                         )
+
                     ) {
 
                         return false;
@@ -2947,17 +4398,23 @@ export class StorageService {
 
 
                     return (
+
                         !this.sonIguales(
+
                             anterior[
                                 campo
                             ],
+
                             nuevo[
                                 campo
                             ]
+
                         )
+
                     );
 
                 }
+
             );
 
     }
@@ -3006,14 +4463,19 @@ export class StorageService {
 
 
         for (
+
             const propiedad
+
             of propiedades
+
         ) {
 
             if (
+
                 item[
                     propiedad
                 ]
+
             ) {
 
                 return item[
@@ -3042,11 +4504,6 @@ export class StorageService {
 
             /*
              * El portal trabajador tiene prioridad.
-             *
-             * Puede existir simultáneamente una sesión
-             * administrativa abierta en el navegador.
-             * Si el usuario está actuando desde el portal,
-             * la auditoría debe atribuirse al trabajador.
              */
 
             const trabajadorId =
@@ -3060,16 +4517,24 @@ export class StorageService {
             ) {
 
                 const trabajador =
-                    this.obtenerTrabajadores()
+
+                    this
+                        .obtenerTrabajadores()
+
                         .find(
+
                             item =>
+
                                 String(
                                     item.id
                                 )
+
                                 ===
+
                                 String(
                                     trabajadorId
                                 )
+
                         );
 
 
@@ -3082,14 +4547,19 @@ export class StorageService {
                         tipo:
                             "Trabajador",
 
+
                         id:
                             trabajador.id,
 
+
                         nombre:
+
                             this.obtenerNombreCompleto(
                                 trabajador
                             )
+
                             ||
+
                             "Trabajador"
 
                     };
@@ -3100,7 +4570,7 @@ export class StorageService {
 
 
             /*
-             * SESIÓN DE ADMINISTRACIÓN / ENCARGADO
+             * SESIÓN ADMINISTRATIVA
              */
 
             const sesionAdmin =
@@ -3122,34 +4592,52 @@ export class StorageService {
 
 
                     if (
+
                         sesion
+
                         &&
+
                         sesion.usuarioId !==
                         undefined
+
                         &&
+
                         sesion.usuarioId !==
                         null
+
                     ) {
 
                         const usuario =
-                            this.obtenerUsuarios()
+
+                            this
+                                .obtenerUsuarios()
+
                                 .find(
+
                                     item =>
+
                                         String(
                                             item.id
                                         )
+
                                         ===
+
                                         String(
                                             sesion.usuarioId
                                         )
+
                                 );
 
 
                         if (
+
                             usuario
+
                             &&
+
                             usuario.activo !==
                             false
+
                         ) {
 
                             return {
@@ -3159,16 +4647,23 @@ export class StorageService {
                                         usuario.rol
                                     ),
 
+
                                 id:
                                     usuario.id,
 
+
                                 nombre:
+
                                     this.obtenerNombreCompleto(
                                         usuario
                                     )
+
                                     ||
+
                                     usuario.usuario
+
                                     ||
+
                                     "Usuario"
 
                             };
@@ -3184,8 +4679,11 @@ export class StorageService {
                 ) {
 
                     console.error(
+
                         "Error leyendo sesión administrativa para auditoría:",
+
                         error
+
                     );
 
                 }
@@ -3194,7 +4692,7 @@ export class StorageService {
 
 
             /*
-             * COMPATIBILIDAD CON SISTEMA ANTIGUO
+             * COMPATIBILIDAD
              */
 
             const explotacion =
@@ -3206,12 +4704,17 @@ export class StorageService {
                 tipo:
                     "Administración",
 
+
                 id:
                     null,
 
+
                 nombre:
+
                     explotacion.nombreUsuario
+
                     ||
+
                     "Administración"
 
             };
@@ -3223,8 +4726,11 @@ export class StorageService {
         ) {
 
             console.error(
+
                 "Error obteniendo usuario actual:",
+
                 error
+
             );
 
 
@@ -3233,8 +4739,10 @@ export class StorageService {
                 tipo:
                     "Administración",
 
+
                 id:
                     null,
+
 
                 nombre:
                     "Administración"
@@ -3255,16 +4763,22 @@ export class StorageService {
     ) {
 
         return (
+
             NOMBRES_ROL[
+
                 String(
                     rol
                     ||
                     ""
                 )
                     .toLowerCase()
+
             ]
+
             ||
+
             "Usuario"
+
         );
 
     }
@@ -3294,9 +4808,11 @@ export class StorageService {
             persona.apellidos
 
         ]
+
             .filter(
                 Boolean
             )
+
             .join(
                 " "
             );
@@ -3329,51 +4845,77 @@ export class StorageService {
             id:
                 this.generarId(),
 
+
             modulo:
+
                 datos.modulo
+
                 ||
+
                 "Sistema",
 
+
             accion:
+
                 datos.accion
+
                 ||
+
                 "Modificación",
 
+
             entidadId:
+
                 datos.entidadId
+
                 ??
+
                 null,
 
+
             referencia:
+
                 datos.referencia
+
                 ||
+
                 "",
 
+
             cambios:
+
                 Array.isArray(
                     datos.cambios
                 )
+
                     ? datos.cambios
+
                     : [],
+
 
             usuarioTipo:
                 usuario.tipo,
 
+
             usuarioId:
                 usuario.id,
 
+
             usuarioNombre:
                 usuario.nombre,
+
 
             fecha:
                 this.obtenerFechaLocal(
                     ahora
                 ),
 
+
             hora:
                 this.obtenerHoraLocal(
                     ahora
                 ),
+
 
             fechaHora:
                 ahora.toISOString()
@@ -3399,14 +4941,45 @@ export class StorageService {
 
     static generarId() {
 
+        if (
+
+            typeof crypto !==
+            "undefined"
+
+            &&
+
+            typeof crypto.randomUUID ===
+            "function"
+
+        ) {
+
+            return crypto.randomUUID();
+
+        }
+
+
         return (
+
             Date.now()
+                .toString(
+                    36
+                )
+
             +
-            Math.floor(
-                Math.random()
-                *
-                1000
-            )
+
+            "-"
+
+            +
+
+            Math.random()
+                .toString(
+                    36
+                )
+                .slice(
+                    2,
+                    10
+                )
+
         );
 
     }
@@ -3428,7 +5001,9 @@ export class StorageService {
         return Array.isArray(
             historial
         )
+
             ? historial
+
             : [];
 
     }
@@ -3439,9 +5014,11 @@ export class StorageService {
     ) {
 
         if (
+
             !Array.isArray(
                 historial
             )
+
         ) {
 
             console.error(
@@ -3455,17 +5032,23 @@ export class StorageService {
 
 
         const historialLimitado =
+
             historial.length >
             MAX_REGISTROS_HISTORIAL
+
                 ? historial.slice(
                     -MAX_REGISTROS_HISTORIAL
                 )
+
                 : historial;
 
 
         return this.escribir(
+
             CLAVES.HISTORIAL,
+
             historialLimitado
+
         );
 
     }
@@ -3480,8 +5063,11 @@ export class StorageService {
     ) {
 
         const fechaValida =
+
             fecha instanceof Date
+
                 ? fecha
+
                 : new Date(
                     fecha
                 );
@@ -3492,11 +5078,15 @@ export class StorageService {
 
 
         const mes =
+
             String(
+
                 fechaValida.getMonth()
                 +
                 1
+
             )
+
                 .padStart(
                     2,
                     "0"
@@ -3504,9 +5094,11 @@ export class StorageService {
 
 
         const dia =
+
             String(
                 fechaValida.getDate()
             )
+
                 .padStart(
                     2,
                     "0"
@@ -3529,8 +5121,11 @@ export class StorageService {
     ) {
 
         const fechaValida =
+
             fecha instanceof Date
+
                 ? fecha
+
                 : new Date(
                     fecha
                 );
@@ -3538,7 +5133,9 @@ export class StorageService {
 
         return fechaValida
             .toLocaleTimeString(
+
                 "es-ES",
+
                 {
 
                     hour:
@@ -3551,6 +5148,7 @@ export class StorageService {
                         "2-digit"
 
                 }
+
             );
 
     }
@@ -4014,58 +5612,78 @@ export class StorageService {
 
         const datos =
             this.leer(
+
                 CLAVES.EXPLOTACION,
+
                 {
 
                     nombreExplotacion:
                         "",
 
+
                     titular:
                         "",
+
 
                     nif:
                         "",
 
+
                     telefono:
                         "",
+
 
                     email:
                         "",
 
+
                     direccion:
                         "",
+
 
                     localidad:
                         "",
 
+
                     provincia:
                         "",
+
 
                     codigoPostal:
                         "",
 
+
                     pais:
                         "España",
 
+
                     nombreUsuario:
                         "Josep",
+
 
                     cargoUsuario:
                         ""
 
                 }
+
             );
 
 
         if (
+
             !datos
+
             ||
+
             typeof datos !==
             "object"
+
             ||
+
             Array.isArray(
                 datos
             )
+
         ) {
 
             return {
@@ -4073,35 +5691,46 @@ export class StorageService {
                 nombreExplotacion:
                     "",
 
+
                 titular:
                     "",
+
 
                 nif:
                     "",
 
+
                 telefono:
                     "",
+
 
                 email:
                     "",
 
+
                 direccion:
                     "",
+
 
                 localidad:
                     "",
 
+
                 provincia:
                     "",
+
 
                 codigoPostal:
                     "",
 
+
                 pais:
                     "España",
 
+
                 nombreUsuario:
                     "Josep",
+
 
                 cargoUsuario:
                     ""
@@ -4121,14 +5750,20 @@ export class StorageService {
     ) {
 
         if (
+
             !datos
+
             ||
+
             typeof datos !==
             "object"
+
             ||
+
             Array.isArray(
                 datos
             )
+
         ) {
 
             console.error(
@@ -4162,40 +5797,56 @@ export class StorageService {
 
 
         if (
+
             !this.sonIguales(
                 anterior,
                 datos
             )
+
         ) {
 
             try {
 
                 this.registrarAuditoria(
+
                     {
 
                         modulo:
                             "Perfil y explotación",
 
+
                         accion:
                             "Modificación",
+
 
                         entidadId:
                             null,
 
+
                         referencia:
+
                             datos.nombre
+
                             ||
+
                             datos.nombreExplotacion
+
                             ||
+
                             "Datos de explotación",
+
 
                         cambios:
                             this.obtenerCamposModificados(
+
                                 anterior,
+
                                 datos
+
                             )
 
                     }
+
                 );
 
             }
@@ -4205,8 +5856,11 @@ export class StorageService {
             ) {
 
                 console.error(
+
                     "Error registrando auditoría de Perfil y explotación:",
+
                     error
+
                 );
 
             }
@@ -4222,7 +5876,7 @@ export class StorageService {
 
 
 // =====================================================
-// SINCRONIZACIÓN CON LA NUBE
+// INICIAR SINCRONIZACIÓN
 // =====================================================
 
 SupabaseSync.iniciar();

@@ -42,6 +42,24 @@ const MODOS_INTERFAZ = {
 
 
 // =====================================================
+// ALIAS DE RUTAS ANTIGUAS
+// =====================================================
+
+const ALIAS_PAGINAS = {
+
+    cuaderno:
+        "cuadernoCampo",
+
+    clientes:
+        "clientesProveedores",
+
+    cobros:
+        "cobrosPagos"
+
+};
+
+
+// =====================================================
 // ELEMENTOS PRINCIPALES
 // =====================================================
 
@@ -128,7 +146,7 @@ function normalizarPagina(
     pagina
 ) {
 
-    return (
+    const paginaNormalizada =
         String(
             pagina
             ??
@@ -136,14 +154,22 @@ function normalizarPagina(
         )
             .trim()
         ||
-        PAGINA_INICIO
+        PAGINA_INICIO;
+
+
+    return (
+        ALIAS_PAGINAS[
+            paginaNormalizada
+        ]
+        ||
+        paginaNormalizada
     );
 
 }
 
 
 // =====================================================
-// NAVEGACIÓN PÚBLICA
+// NAVEGACIÓN
 // =====================================================
 
 function navegarA(
@@ -226,7 +252,7 @@ function navegarA(
 
 
 // =====================================================
-// PERMISO DE VISUALIZACIÓN
+// PERMISOS
 // =====================================================
 
 function puedeVerPaginaAdministracion(
@@ -321,7 +347,7 @@ function resolverPaginaAdministracion(
 
 
 // =====================================================
-// ESTADO DE GRUPO
+// GRUPOS SIDEBAR
 // =====================================================
 
 function establecerEstadoGrupo(
@@ -360,10 +386,6 @@ function establecerEstadoGrupo(
 }
 
 
-// =====================================================
-// CERRAR TODOS LOS GRUPOS
-// =====================================================
-
 function cerrarTodosLosGrupos(
     excepto = null
 ) {
@@ -391,10 +413,6 @@ function cerrarTodosLosGrupos(
 
 }
 
-
-// =====================================================
-// ABRIR GRUPO
-// =====================================================
 
 function abrirGrupo(
     grupo
@@ -424,10 +442,6 @@ function abrirGrupo(
 }
 
 
-// =====================================================
-// OBTENER GRUPO DE UNA PÁGINA
-// =====================================================
-
 function obtenerGrupoDePagina(
     pagina
 ) {
@@ -455,10 +469,6 @@ function obtenerGrupoDePagina(
 }
 
 
-// =====================================================
-// ABRIR GRUPO DE PÁGINA ACTIVA
-// =====================================================
-
 function abrirGrupoDePagina(
     pagina
 ) {
@@ -468,11 +478,6 @@ function abrirGrupoDePagina(
             pagina
         );
 
-
-    /*
-     * Inicio y Buscar global están fuera
-     * de los desplegables.
-     */
 
     if (
         !grupo
@@ -493,7 +498,7 @@ function abrirGrupoDePagina(
 
 
 // =====================================================
-// EVENTOS DE LOS 5 DESPLEGABLES
+// DESPLEGABLES
 // =====================================================
 
 navGroupToggles.forEach(
@@ -717,7 +722,7 @@ function aplicarPermisosSidebar() {
 
 
 // =====================================================
-// OBTENER PÁGINA DE URL
+// URL
 // =====================================================
 
 function obtenerPaginaDeURL() {
@@ -849,7 +854,7 @@ function aplicarModoInterfaz(
 
 
 // =====================================================
-// MODO TRABAJADOR
+// PORTAL TRABAJADOR
 // =====================================================
 
 function entrarModoTrabajador() {
@@ -860,10 +865,6 @@ function entrarModoTrabajador() {
 
 }
 
-
-// =====================================================
-// SALIR DEL PORTAL TRABAJADOR
-// =====================================================
 
 function salirModoTrabajador() {
 
@@ -1244,7 +1245,7 @@ function mostrarSinPermisos() {
 
 
 // =====================================================
-// PORTAL TRABAJADOR
+// MOSTRAR PORTAL TRABAJADOR
 // =====================================================
 
 function mostrarPortalTrabajador() {
@@ -1356,21 +1357,11 @@ function asegurarBotonCerrarSesion() {
     }
 
 
-    /*
-     * Primero utilizamos el botón que ya existe
-     * en index.html.
-     */
-
     let boton =
         document.getElementById(
             "cerrarSesion"
         );
 
-
-    /*
-     * Compatibilidad por si algún HTML antiguo
-     * todavía utiliza cerrarSesionAdmin.
-     */
 
     if (
         !boton
@@ -1383,10 +1374,6 @@ function asegurarBotonCerrarSesion() {
 
     }
 
-
-    /*
-     * Si no existe ninguno, lo creamos.
-     */
 
     if (
         !boton
@@ -1447,11 +1434,6 @@ function asegurarBotonCerrarSesion() {
 
     }
 
-
-    /*
-     * Evitamos añadir el mismo listener
-     * varias veces.
-     */
 
     if (
         boton.dataset.logoutReady ===
@@ -1538,7 +1520,6 @@ function procesarNavegacionNavegador(
 
         mostrarPortalTrabajador();
 
-
         cerrarMenuMovil();
 
         return;
@@ -1552,7 +1533,6 @@ function procesarNavegacionNavegador(
     ) {
 
         mostrarAccesoAdministracion();
-
 
         cerrarMenuMovil();
 
@@ -1812,12 +1792,6 @@ function arrancar() {
 
     asegurarBotonCerrarSesion();
 
-
-    /*
-     * Los cinco bloques empiezan cerrados.
-     * Después activarMenu abrirá únicamente
-     * el correspondiente a la página actual.
-     */
 
     cerrarTodosLosGrupos();
 
